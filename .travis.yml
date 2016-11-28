@@ -1,0 +1,17 @@
+language: objective-c
+osx_image: xcode8.1
+sudo: false
+notifications:
+  email: false
+before_install:
+  - gem install cocoapods --no-rdoc --no-ri --no-document --quiet
+  - git clone https://github.com/phacility/arcanist.git
+  - git clone https://github.com/phacility/libphutil.git
+  - git clone --recursive https://github.com/material-foundation/material-arc-tools.git
+  - pod install --repo-update
+script:
+  - set -o pipefail
+  - arcanist/bin/arc unit --everything --trace
+  - xcodebuild build -workspace MaterialMotionStreams.xcworkspace -scheme Catalog -sdk "iphonesimulator10.1" -destination "name=iPhone 6s,OS=10.1" ONLY_ACTIVE_ARCH=YES | xcpretty -c;
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

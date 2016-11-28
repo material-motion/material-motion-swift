@@ -1,0 +1,44 @@
+{
+  "linters": {
+    "chmod": {
+      "type": "chmod"
+    },
+    "text": {
+      "type": "text",
+      "include": "(\\.(m|h|mm|md|swift)$)",
+      "exclude": [
+        "(/Pods/)"
+      ],
+      "severity": {
+        "3": "disabled",
+        "5": "disabled"
+      }
+    },
+    "prose": {
+      "type": "prose",
+      "include": "(\\.(md)$)",
+      "exclude": [
+        "(^CHANGELOG.md)"
+      ],
+      "severity": {
+        "typography.symbols.curly_quotes": "disabled",
+        "typography.symbols.ellipsis": "disabled",
+        "leonard.exclamation.30ppm": "disabled",
+        "misc.annotations": "warning"
+      }
+    },
+    "spelling": {
+      "type": "spelling",
+      "include": "(\\.(md)$)"
+    },
+    "clang-format": {
+      "type": "clang-format",
+      "include": "(\\.(m|h|mm)$)",
+      "exclude": "(/Pods/)"
+    },
+    "jazzy": {
+      "type": "jazzy",
+      "include": "(src/[^\/]+?\\.(h|swift)$)"
+    }
+  }
+}

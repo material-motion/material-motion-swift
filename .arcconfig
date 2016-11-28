@@ -1,0 +1,26 @@
+{
+  "load": [
+    "material-arc-tools/third_party/arc-hook-conphig",
+    "material-arc-tools/third_party/arc-hook-github-issues",
+    "material-arc-tools/third_party/arc-jazzy-linter",
+    "material-arc-tools/third_party/arc-proselint",
+    "material-arc-tools/third_party/arc-xcode-test-engine",
+    "material-arc-tools/third_party/clang-format-linter"
+  ],
+  "arcanist_configuration": "HookConphig",
+  "phabricator.uri": "http://codereview.cc/",
+  "arc.land.onto.default": "develop",
+  "arc.feature.start.default": "origin/develop",
+  "unit.xcode": {
+    "build": {
+      "workspace": "MaterialMotionStreams.xcworkspace",
+      "scheme": "UnitTests",
+      "configuration": "Debug",
+      "destination": "platform=iOS Simulator,name=iPhone 6s"
+    },
+    "coverage": {
+      "product": "MaterialMotionStreams.framework/MaterialMotionStreams"
+    },
+    "pre-build": "pod install"
+  }
+}

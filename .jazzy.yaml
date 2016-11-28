@@ -1,0 +1,10 @@
+module: MaterialMotionStreams
+module_version: 1.0.0
+sdk: iphonesimulator
+xcodebuild_arguments:
+  - -workspace
+  - MaterialMotionStreams.xcworkspace
+  - -scheme
+  - MaterialMotionStreams
+github_url: https://github.com/material-motion/streams-swift
+github_file_prefix: https://github.com/material-motion/streams-swift/tree/v1.0.0
