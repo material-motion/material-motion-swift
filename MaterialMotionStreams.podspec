@@ -12,6 +12,8 @@ Pod::Spec.new do |s|
 
   s.subspec "lib" do |ss|
     ss.source_files = "src/*.{swift}", "src/private/*.{swift}"
+
+    ss.dependency "IndefiniteObservable"
   end
 
   s.subspec "examples" do |ss|

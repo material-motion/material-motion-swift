@@ -16,8 +16,10 @@
 
 // MARK: Catalog by convention
 
-extension ExampleViewController {
+import MaterialMotionStreams
+
+extension TargetActionBridgeExampleViewController {
   class func catalogBreadcrumbs() -> [String] {
-    return ["Example"]
+    return ["Target/action bridging"]
   }
 }

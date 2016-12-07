@@ -1,0 +1,29 @@
+PODS:
+  - CatalogByConvention (2.0.0)
+  - IndefiniteObservable (2.0.0):
+    - IndefiniteObservable/lib (= 2.0.0)
+  - IndefiniteObservable/lib (2.0.0)
+  - MaterialMotionStreams/examples (1.0.0):
+    - MaterialMotionStreams/lib
+  - MaterialMotionStreams/lib (1.0.0):
+    - IndefiniteObservable
+  - MaterialMotionStreams/tests (1.0.0):
+    - MaterialMotionStreams/lib
+
+DEPENDENCIES:
+  - CatalogByConvention
+  - MaterialMotionStreams/examples (from `./`)
+  - MaterialMotionStreams/tests (from `./`)
+
+EXTERNAL SOURCES:
+  MaterialMotionStreams:
+    :path: "./"
+
+SPEC CHECKSUMS:
+  CatalogByConvention: be55c2263132e4f9f59299ac8a528ee8715b3275
+  IndefiniteObservable: 12422f0efd81b8d436a7f83366f93489ff93155d
+  MaterialMotionStreams: 7f71a3ee549cfa9e22b8443917cd124be499850f
+
+PODFILE CHECKSUM: 99dcd9b4c5334eda66d28ad66fb128a3679e56cd
+
+COCOAPODS: 1.1.1
