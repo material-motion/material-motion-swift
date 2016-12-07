@@ -1,8 +1,6 @@
 language: objective-c
 osx_image: xcode8.1
 sudo: false
-notifications:
-  email: false
 before_install:
   - gem install cocoapods --no-rdoc --no-ri --no-document --quiet
   - git clone https://github.com/phacility/arcanist.git
