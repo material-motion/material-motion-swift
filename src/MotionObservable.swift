@@ -22,8 +22,6 @@ import IndefiniteObservable
  that specializes in motion systems that can be either active or at rest.
 
  Throughout this documentation we will treat the words "observable" and "stream" as synonyms.
-
- Spec: https://material-motion.github.io/material-motion/starmap/specifications/streams/MotionObservable
  */
 public class MotionObservable<T>: IndefiniteObservable<MotionObserver<T>> {
 

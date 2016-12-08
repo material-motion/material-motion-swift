@@ -18,11 +18,7 @@ import Foundation
 
 extension MotionObservable {
 
-  /**
-   Transform the items emitted by an Observable by applying a function to each item.
-
-   Spec: https://material-motion.github.io/material-motion/starmap/specifications/streams/operators/$._map
-   */
+  /** Transform the items emitted by an Observable by applying a function to each item. */
   func _map<U>(_ transform: @escaping (T) -> U) -> MotionObservable<U> {
     return _operator { observer, value in
       observer.next(transform(value))

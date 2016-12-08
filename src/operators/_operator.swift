@@ -23,8 +23,6 @@ extension MotionObservable {
 
    This is the preferred method for building new operators. This builder can be used to create any
    operator that only needs to modify values. All state events are forwarded along.
-
-   Spec: https://material-motion.github.io/material-motion/starmap/specifications/streams/operators/$._operator
    */
   func _operator<U>(_ operation: @escaping (MotionObserver<U>, T) -> Void) -> MotionObservable<U> {
     return MotionObservable<U> { observer in
