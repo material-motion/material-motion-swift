@@ -25,12 +25,12 @@ import IndefiniteObservable
 
  Spec: https://material-motion.github.io/material-motion/starmap/specifications/streams/MotionObservable
  */
-public class MotionObservable<V>: IndefiniteObservable<MotionObserver<V>> {
+public class MotionObservable<T>: IndefiniteObservable<MotionObserver<T>> {
 
   /** Sugar for subscribing a MotionObserver. */
-  public func subscribe(next: @escaping (V) -> Void,
+  public func subscribe(next: @escaping (T) -> Void,
                         state: @escaping (MotionState) -> Void) -> Subscription {
-    return super.subscribe(observer: MotionObserver<V>(next: next, state: state))
+    return super.subscribe(observer: MotionObserver<T>(next: next, state: state))
   }
 }
 
@@ -55,15 +55,15 @@ public enum MotionState {
 }
 
 // Used internally to store observer state.
-final class MotionObserver<V>: Observer {
-  public typealias Value = V
+final class MotionObserver<T>: Observer {
+  public typealias Value = T
 
-  public init(next: @escaping (V) -> Void,
+  public init(next: @escaping (T) -> Void,
               state: @escaping (MotionState) -> Void) {
     self.next = next
     self.state = state
   }
 
-  public let next: (V) -> Void
+  public let next: (T) -> Void
   public let state: (MotionState) -> Void
 }
