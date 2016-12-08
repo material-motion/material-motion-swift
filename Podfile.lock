@@ -22,7 +22,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   CatalogByConvention: be55c2263132e4f9f59299ac8a528ee8715b3275
   IndefiniteObservable: 12422f0efd81b8d436a7f83366f93489ff93155d
-  MaterialMotionStreams: 7f71a3ee549cfa9e22b8443917cd124be499850f
+  MaterialMotionStreams: 2fd21b7f6d418629ecc4b874915bc9601aaa94ff
 
 PODFILE CHECKSUM: 99dcd9b4c5334eda66d28ad66fb128a3679e56cd
 

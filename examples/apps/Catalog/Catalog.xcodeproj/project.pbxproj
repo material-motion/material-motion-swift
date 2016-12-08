@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		237F8136357F3FA9B6DFA82F /* Pods_UnitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B05E63B8F92D94A8819B0ABB /* Pods_UnitTests.framework */; };
 		6627FC0E1DF7B1A2003DB567 /* MotionObservableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6627FC0D1DF7B1A2003DB567 /* MotionObservableTests.swift */; };
+		6627FC101DF7B7FB003DB567 /* _operatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6627FC0F1DF7B7FB003DB567 /* _operatorTests.swift */; };
 		664A5B771DD10D320082B5DF /* TableOfContents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 664A5B761DD10D320082B5DF /* TableOfContents.swift */; };
 		666FAA841D384A6B000363DA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666FAA831D384A6B000363DA /* AppDelegate.swift */; };
 		666FAA8B1D384A6B000363DA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 666FAA8A1D384A6B000363DA /* Assets.xcassets */; };
@@ -30,6 +31,7 @@
 		151ACFA24257B9AC82434343 /* Pods-Catalog.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Catalog.debug.xcconfig"; path = "../../../Pods/Target Support Files/Pods-Catalog/Pods-Catalog.debug.xcconfig"; sourceTree = "<group>"; };
 		1ED93D5A76FA3E96C6C84FF6 /* Pods-Catalog.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Catalog.release.xcconfig"; path = "../../../Pods/Target Support Files/Pods-Catalog/Pods-Catalog.release.xcconfig"; sourceTree = "<group>"; };
 		6627FC0D1DF7B1A2003DB567 /* MotionObservableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionObservableTests.swift; sourceTree = "<group>"; };
+		6627FC0F1DF7B7FB003DB567 /* _operatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = _operatorTests.swift; sourceTree = "<group>"; };
 		664A5B761DD10D320082B5DF /* TableOfContents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TableOfContents.swift; path = Catalog/TableOfContents.swift; sourceTree = "<group>"; };
 		666FAA801D384A6B000363DA /* Catalog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Catalog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		666FAA831D384A6B000363DA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Catalog/AppDelegate.swift; sourceTree = "<group>"; };
@@ -76,6 +78,7 @@
 		6627FC0C1DF7B1A2003DB567 /* unit */ = {
 			isa = PBXGroup;
 			children = (
+				6627FC0F1DF7B7FB003DB567 /* _operatorTests.swift */,
 				6627FC0D1DF7B1A2003DB567 /* MotionObservableTests.swift */,
 			);
 			name = unit;
@@ -370,6 +373,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6627FC0E1DF7B1A2003DB567 /* MotionObservableTests.swift in Sources */,
+				6627FC101DF7B7FB003DB567 /* _operatorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
