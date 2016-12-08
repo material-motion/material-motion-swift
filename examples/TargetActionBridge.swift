@@ -25,17 +25,20 @@ import MaterialMotionStreams
 // The source we create here will allow someone to subscribe to UITapGestureRecognizer events, so
 // we'll call it tapSource.
 
-func tapSource(_ gesture: UITapGestureRecognizer) -> MotionObservable<TapProducer.Value> {
+func tapSource(_ gesture: UITapGestureRecognizer) -> MotionObservable<TapSubscription.Value> {
   return MotionObservable { observer in
-    return TapProducer(subscribedTo: gesture, observer: observer).unsubscribe
+    let subscription = TapSubscription(subscribedTo: gesture, observer: observer)
+    return {
+      subscription.unsubscribe()
+    }
   }
 }
 
-// While Sources represent the connection from one system to another, Producers are the literal
-// connections. In this case our TapProducer listens to UITapGestureRecognizer events and sends
-// them through the provided observer.
+// Sources represent the connection from an external system into Material Motion. Subscriptions are
+// the literal connections. In this case our TapSubscription listens to UITapGestureRecognizer
+// vents and sends them through the provided observer’s channels.
 
-final class TapProducer: Subscription {
+final class TapSubscription: Subscription {
   typealias Value = CGPoint
 
   init(subscribedTo gesture: UITapGestureRecognizer, observer: MotionObserver<Value>) {
