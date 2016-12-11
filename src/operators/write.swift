@@ -19,7 +19,7 @@ import Foundation
 extension MotionObservable {
 
   /** Write incoming values to the provided property. */
-  public func write<S: ScopedWriteable>(to property: S) -> MotionObservable<T> where S.V == T {
+  public func write<S: ScopedWriteable>(to property: S) -> MotionObservable<T> where S.T == T {
     return _operator { observer, value in
       property.write(value)
       observer.next(value)

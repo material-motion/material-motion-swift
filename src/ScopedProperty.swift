@@ -17,16 +17,16 @@
 import Foundation
 
 /** A scoped property represents a readwrite property for a pre-determined object. */
-public class ScopedProperty<V>: ScopedReadable, ScopedWriteable {
+public class ScopedProperty<T>: ScopedReadable, ScopedWriteable {
 
   /** A block that, when invoked, returns the property's current value. */
-  public let read: () -> V
+  public let read: () -> T
 
   /** A block that, when invoked with a value, sets the property's value. */
-  public let write: (V) -> Void
+  public let write: (T) -> Void
 
   /** Initializes a new instance of ScopedProperty with the given read/write blocks. */
-  public init(read: @escaping () -> V, write: @escaping (V) -> Void) {
+  public init(read: @escaping () -> T, write: @escaping (T) -> Void) {
     self.read = read
     self.write = write
   }
@@ -34,16 +34,16 @@ public class ScopedProperty<V>: ScopedReadable, ScopedWriteable {
 
 /** A scoped readable is able to read from a specific property of pre-determined place. */
 public protocol ScopedReadable {
-  associatedtype V
+  associatedtype T
 
   /** The implementing type is expected to return the current value of the backing property. */
-  var read: () -> V { get }
+  var read: () -> T { get }
 }
 
 /** A scoped readable is able to write to a specific property of an object. */
 public protocol ScopedWriteable {
-  associatedtype V
+  associatedtype T
 
   /** The implementing type is expected to store the provided value on the backing property. */
-  var write: (V) -> Void { get }
+  var write: (T) -> Void { get }
 }
