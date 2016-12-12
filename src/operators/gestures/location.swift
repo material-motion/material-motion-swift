@@ -14,12 +14,14 @@
  limitations under the License.
  */
 
-// MARK: Catalog by convention
+import Foundation
 
-import MaterialMotionStreams
+extension MotionObservable where T: UIGestureRecognizer {
 
-extension DragSourceExampleViewController {
-  class func catalogBreadcrumbs() -> [String] {
-    return ["Drag source"]
+  /** Extract location from the incoming gesture recognizer. */
+  public func location(in view: UIView) -> MotionObservable<CGPoint> {
+    return _operator { observer, value in
+      observer.next(value.location(in: view))
+    }
   }
 }
