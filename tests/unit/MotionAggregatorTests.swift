@@ -28,7 +28,7 @@ class PropertyWriterTests: XCTestCase {
 
     let observable = MotionObservable<Int> { observer in
       observer.next(value)
-      return noopUnsubscription
+      return noopDisconnect
     }
 
     let writer = MotionAggregator()

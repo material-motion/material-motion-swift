@@ -27,7 +27,7 @@ class _operatorTests: XCTestCase {
     let observable = MotionObservable<Int> { observer in
       observer.next(value)
       observer.state(.active)
-      return noopUnsubscription
+      return noopDisconnect
     }
 
     let valueReceived = expectation(description: "Value was received")

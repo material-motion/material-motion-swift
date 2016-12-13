@@ -29,7 +29,7 @@ class _filterTests: XCTestCase {
       observer.next(value)
       observer.next(value + 1)
       observer.state(.active)
-      return noopUnsubscription
+      return noopDisconnect
     }
 
     let valueReceived = expectation(description: "Value was received")
