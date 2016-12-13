@@ -22,7 +22,7 @@ import MaterialMotionStreams
 
 public class DragSourceExampleViewController: UIViewController {
 
-  var subscription: Subscription?
+  let aggregator = MotionAggregator()
   public override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -35,11 +35,6 @@ public class DragSourceExampleViewController: UIViewController {
     let gesture = UIPanGestureRecognizer()
     view.addGestureRecognizer(gesture)
 
-    subscription = gestureSource(gesture)
-      .location(in: view)
-      .write(to: propertyOf(square).center)
-      .subscribe(next: { _ in }, state: { state in
-        print("State is \(state)")
-      })
+    aggregator.write(gestureSource(gesture).location(in: view), to: propertyOf(square).center)
   }
 }

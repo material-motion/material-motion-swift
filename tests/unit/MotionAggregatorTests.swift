@@ -14,23 +14,26 @@
  limitations under the License.
  */
 
-import Foundation
+import XCTest
+import IndefiniteObservable
+import MaterialMotionStreams
 
-extension MotionObservable {
+class PropertyWriterTests: XCTestCase {
 
-  /** Write incoming values to the provided property. */
-  public func write<S: ScopedWritable>(to property: S) -> MotionObservable<T> where S.T == T {
-    return _operator { next, value in
-      property.write(value)
-      next(value)
+  func testWrites() {
+    var someVar = 10
+    let property = ScopedProperty(read: { return someVar }, write: { someVar = $0 })
+
+    let value = 100
+
+    let observable = MotionObservable<Int> { observer in
+      observer.next(value)
+      return noopUnsubscription
     }
-  }
 
-  /** Write incoming values using the provided inline block. */
-  public func write(to inline: @escaping (T) -> Void) -> MotionObservable<T> {
-    return _operator { next, value in
-      inline(value)
-      next(value)
-    }
+    let writer = MotionAggregator()
+    writer.write(observable, to: property)
+
+    XCTAssertEqual(someVar, value)
   }
 }
