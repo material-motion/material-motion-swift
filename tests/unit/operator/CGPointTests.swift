@@ -27,7 +27,7 @@ class CGPointTests: XCTestCase {
     let observable = MotionObservable<CGPoint> { observer in
       observer.next(.init(x: value, y: value * 2))
       observer.state(.active)
-      return noopUnsubscription
+      return noopDisconnect
     }
 
     let valueReceived = expectation(description: "Value was received")
@@ -51,7 +51,7 @@ class CGPointTests: XCTestCase {
     let observable = MotionObservable<CGPoint> { observer in
       observer.next(.init(x: value, y: value * 2))
       observer.state(.active)
-      return noopUnsubscription
+      return noopDisconnect
     }
 
     let valueReceived = expectation(description: "Value was received")

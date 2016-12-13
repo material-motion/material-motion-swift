@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.subspec "lib" do |ss|
     ss.source_files = "src/**/*.{swift}"
 
-    ss.dependency "IndefiniteObservable"
+    ss.dependency "IndefiniteObservable", "~> 3.0"
   end
 
   s.subspec "examples" do |ss|
