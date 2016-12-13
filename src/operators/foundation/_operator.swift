@@ -16,7 +16,7 @@
 
 import Foundation
 
-extension MotionObservable {
+extension ExtendableMotionObservable {
 
   /**
    A light-weight operator builder.

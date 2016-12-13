@@ -16,7 +16,7 @@
 
 import Foundation
 
-extension MotionObservable {
+extension ExtendableMotionObservable {
 
   /** Only emit those items from an Observable that pass a test. */
   public func _filter(_ predicate: @escaping (T) -> Bool) -> MotionObservable<T> {

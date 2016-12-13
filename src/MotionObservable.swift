@@ -23,7 +23,7 @@ import IndefiniteObservable
 
  Throughout this documentation we will treat the words "observable" and "stream" as synonyms.
  */
-public class MotionObservable<T>: IndefiniteObservable<MotionObserver<T>> {
+public class MotionObservable<T>: IndefiniteObservable<MotionObserver<T>>, ExtendableMotionObservable {
 
   /** Sugar for subscribing a MotionObserver. */
   public func subscribe(next: @escaping (T) -> Void,
@@ -64,4 +64,22 @@ final class MotionObserver<T>: Observer {
 
   public let next: (T) -> Void
   public let state: (MotionState) -> Void
+}
+
+/**
+ This type is used for extending MotionObservable using generics.
+
+ This is required to be able to do extensions where T == some value, such as CGPoint. See
+ https://twitter.com/dgregor79/status/646167048645554176 for discussion of what appears to be a
+ bug in swift.
+ */
+public protocol ExtendableMotionObservable {
+  associatedtype T
+
+  /**
+   We define this only so that T can be inferred by the compiler so that we don't have to
+   introduce a new generic type such as Value in the associatedtype here.
+   */
+  func subscribe(next: @escaping (T) -> Void,
+                 state: @escaping (MotionState) -> Void) -> Subscription
 }

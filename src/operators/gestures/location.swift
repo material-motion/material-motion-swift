@@ -16,7 +16,7 @@
 
 import Foundation
 
-extension MotionObservable where T: UIGestureRecognizer {
+extension ExtendableMotionObservable where T: UIGestureRecognizer {
 
   /** Extract location from the incoming gesture recognizer. */
   public func location(in view: UIView) -> MotionObservable<CGPoint> {
