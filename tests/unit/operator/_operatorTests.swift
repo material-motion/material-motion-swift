@@ -32,8 +32,8 @@ class _operatorTests: XCTestCase {
 
     let valueReceived = expectation(description: "Value was received")
     let stateReceived = expectation(description: "State was received")
-    let _ = observable._operator { observer, value in
-      observer.next(value * 10)
+    let _ = observable._operator { next, value in
+      next(value * 10)
 
     }.subscribe(next: {
       if $0 == value * 10 {

@@ -20,9 +20,9 @@ extension MotionObservable {
 
   /** Only emit those items from an Observable that pass a test. */
   public func _filter(_ predicate: @escaping (T) -> Bool) -> MotionObservable<T> {
-    return _operator { observer, value in
+    return _operator { next, value in
       if predicate(value) {
-        observer.next(value)
+        next(value)
       }
     }
   }

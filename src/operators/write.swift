@@ -20,17 +20,17 @@ extension MotionObservable {
 
   /** Write incoming values to the provided property. */
   public func write<S: ScopedWritable>(to property: S) -> MotionObservable<T> where S.T == T {
-    return _operator { observer, value in
+    return _operator { next, value in
       property.write(value)
-      observer.next(value)
+      next(value)
     }
   }
 
   /** Write incoming values using the provided inline block. */
   public func write(to inline: @escaping (T) -> Void) -> MotionObservable<T> {
-    return _operator { observer, value in
+    return _operator { next, value in
       inline(value)
-      observer.next(value)
+      next(value)
     }
   }
 }
