@@ -20,8 +20,8 @@ extension MotionObservable where T: UIGestureRecognizer {
 
   /** Extract location from the incoming gesture recognizer. */
   public func location(in view: UIView) -> MotionObservable<CGPoint> {
-    return _operator { next, value in
-      next(value.location(in: view))
+    return _map { value in
+      value.location(in: view)
     }
   }
 }
