@@ -1,8 +1,8 @@
 PODS:
   - CatalogByConvention (2.0.0)
-  - IndefiniteObservable (3.0.0):
-    - IndefiniteObservable/lib (= 3.0.0)
-  - IndefiniteObservable/lib (3.0.0)
+  - IndefiniteObservable (3.1.0):
+    - IndefiniteObservable/lib (= 3.1.0)
+  - IndefiniteObservable/lib (3.1.0)
   - MaterialMotionStreams/examples (1.0.0):
     - MaterialMotionStreams/lib
   - MaterialMotionStreams/lib (1.0.0):
@@ -21,7 +21,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   CatalogByConvention: be55c2263132e4f9f59299ac8a528ee8715b3275
-  IndefiniteObservable: c5e9c8643b6fa2166e0c79bfbea79c31cfe0d14a
+  IndefiniteObservable: 2789d61f487d8d37fa2b9c3153cc44d4447ff744
   MaterialMotionStreams: 3bec6e8737840180613e203e5413650342745c87
 
 PODFILE CHECKSUM: 99dcd9b4c5334eda66d28ad66fb128a3679e56cd
