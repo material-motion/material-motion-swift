@@ -24,7 +24,7 @@ extension ExtendableMotionObservable {
    This is the preferred method for building new operators. This builder can be used to create any
    operator that only needs to modify values. All state events are forwarded along.
    */
-  func _operator<U>(_ operation: @escaping ((U) -> Void, T) -> Void) -> MotionObservable<U> {
+  func _nextOperator<U>(_ operation: @escaping ((U) -> Void, T) -> Void) -> MotionObservable<U> {
     return MotionObservable<U> { observer in
       return self.subscribe(next: {
         return operation(observer.next, $0)

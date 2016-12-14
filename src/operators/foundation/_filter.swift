@@ -20,7 +20,7 @@ extension ExtendableMotionObservable {
 
   /** Only emit those items from an Observable that pass a test. */
   public func _filter(_ predicate: @escaping (T) -> Bool) -> MotionObservable<T> {
-    return _operator { next, value in
+    return _nextOperator { next, value in
       if predicate(value) {
         next(value)
       }

@@ -19,7 +19,7 @@ import CoreGraphics
 import IndefiniteObservable
 @testable import MaterialMotionStreams
 
-class _operatorTests: XCTestCase {
+class _nextOperatorTests: XCTestCase {
 
   func testSubscription() {
     let value = 10
@@ -32,7 +32,7 @@ class _operatorTests: XCTestCase {
 
     let valueReceived = expectation(description: "Value was received")
     let stateReceived = expectation(description: "State was received")
-    let _ = observable._operator { next, value in
+    let _ = observable._nextOperator { next, value in
       next(value * 10)
 
     }.subscribe(next: {
