@@ -17,7 +17,7 @@
 import Foundation
 
 /** A scoped property represents a readwrite property for a pre-determined object. */
-public class ScopedProperty<T>: ScopedReadable, ScopedWritable {
+public final class ScopedProperty<T>: ScopedReadable, ScopedWritable {
 
   /** A block that, when invoked, returns the property's current value. */
   public let read: () -> T
