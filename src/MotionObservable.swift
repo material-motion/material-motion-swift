@@ -52,8 +52,8 @@ public enum MotionState {
   case active
 }
 
-// Used internally to store observer state.
-final class MotionObserver<T>: Observer {
+/** A MotionObserver receives values and state updates from a MotionObservable subscription. */
+public final class MotionObserver<T>: Observer {
   public typealias Value = T
 
   public init(next: @escaping (T) -> Void,
