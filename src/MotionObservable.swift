@@ -23,7 +23,7 @@ import IndefiniteObservable
 
  Throughout this documentation we will treat the words "observable" and "stream" as synonyms.
  */
-public class MotionObservable<T>: IndefiniteObservable<MotionObserver<T>>, ExtendableMotionObservable {
+public final class MotionObservable<T>: IndefiniteObservable<MotionObserver<T>>, ExtendableMotionObservable {
 
   /** Sugar for subscribing a MotionObserver. */
   public func subscribe(next: @escaping (T) -> Void,
