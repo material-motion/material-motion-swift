@@ -23,6 +23,13 @@ extension ExtendableMotionObservable {
    it is active.
 
    Both streams must emit the same type.
+
+   The provided stream will be subscribed to so long as this operator is subscribed to.
+   This stream will be unsubscribed when the provided stream is active.
+   This stream will be subscribed when the provided stream is at rest.
+
+   We unsubscribe from this stream so it does not perform unnecessary calculations. This works
+   well for spring streams where a gesture stream is the preferred stream.
    */
   public func toggled(with preferredStream: MotionObservable<T>) -> MotionObservable<T> {
     return MotionObservable<T> { observer in
