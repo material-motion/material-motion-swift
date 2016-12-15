@@ -16,17 +16,20 @@
 
 import Foundation
 
+public typealias ScopedRead<T> = () -> T
+public typealias ScopedWrite<T> = (T) -> Void
+
 /** A scoped property represents a readwrite property for a pre-determined object. */
 public final class ScopedProperty<T>: ScopedReadable, ScopedWritable {
 
   /** A block that, when invoked, returns the property's current value. */
-  public let read: () -> T
+  public let read: ScopedRead<T>
 
   /** A block that, when invoked with a value, sets the property's value. */
-  public let write: (T) -> Void
+  public let write: ScopedWrite<T>
 
   /** Initializes a new instance of ScopedProperty with the given read/write blocks. */
-  public init(read: @escaping () -> T, write: @escaping (T) -> Void) {
+  public init(read: @escaping ScopedRead<T>, write: @escaping ScopedWrite<T>) {
     self.read = read
     self.write = write
   }
@@ -37,7 +40,7 @@ public protocol ScopedReadable {
   associatedtype T
 
   /** The implementing type is expected to return the current value. */
-  var read: () -> T { get }
+  var read: ScopedRead<T> { get }
 }
 
 /** A scoped writable is able to write to a specific property of an object. */
@@ -45,5 +48,5 @@ public protocol ScopedWritable {
   associatedtype T
 
   /** The implementing type is expected to store the provided value. */
-  var write: (T) -> Void { get }
+  var write: ScopedWrite<T> { get }
 }

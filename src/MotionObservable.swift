@@ -17,6 +17,10 @@
 import Foundation
 import IndefiniteObservable
 
+// Channels are functions that pass values down the stream.
+public typealias NextChannel<T> = (T) -> Void
+public typealias StateChannel = (MotionState) -> Void
+
 /**
  A MotionObservable is a type of [Observable](http://reactivex.io/documentation/observable.html)
  that specializes in motion systems that can be either active or at rest.
@@ -24,10 +28,8 @@ import IndefiniteObservable
  Throughout this documentation we will treat the words "observable" and "stream" as synonyms.
  */
 public final class MotionObservable<T>: IndefiniteObservable<MotionObserver<T>>, ExtendableMotionObservable {
-
   /** Sugar for subscribing a MotionObserver. */
-  public func subscribe(next: @escaping (T) -> Void,
-                        state: @escaping (MotionState) -> Void) -> Subscription {
+  public func subscribe(next: @escaping NextChannel<T>, state: @escaping StateChannel) -> Subscription {
     return super.subscribe(observer: MotionObserver<T>(next: next, state: state))
   }
 }
@@ -56,14 +58,13 @@ public enum MotionState {
 public final class MotionObserver<T>: Observer {
   public typealias Value = T
 
-  public init(next: @escaping (T) -> Void,
-              state: @escaping (MotionState) -> Void) {
+  public init(next: @escaping NextChannel<T>, state: @escaping StateChannel) {
     self.next = next
     self.state = state
   }
 
-  public let next: (T) -> Void
-  public let state: (MotionState) -> Void
+  public let next: NextChannel<T>
+  public let state: StateChannel
 }
 
 /**
@@ -80,6 +81,5 @@ public protocol ExtendableMotionObservable {
    We define this only so that T can be inferred by the compiler so that we don't have to
    introduce a new generic type such as Value in the associatedtype here.
    */
-  func subscribe(next: @escaping (T) -> Void,
-                 state: @escaping (MotionState) -> Void) -> Subscription
+  func subscribe(next: @escaping NextChannel<T>, state: @escaping StateChannel) -> Subscription
 }
