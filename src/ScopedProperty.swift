@@ -15,24 +15,47 @@
  */
 
 import Foundation
+import IndefiniteObservable
 
 public typealias ScopedRead<T> = () -> T
 public typealias ScopedWrite<T> = (T) -> Void
 
 /** A scoped property represents a readwrite property for a pre-determined object. */
-public final class ScopedProperty<T>: ScopedReadable, ScopedWritable {
+public final class ScopedProperty<T>: ScopedReadable, ScopedWritable, ObservableProperty {
 
   /** A block that, when invoked, returns the property's current value. */
   public let read: ScopedRead<T>
 
-  /** A block that, when invoked with a value, sets the property's value. */
-  public let write: ScopedWrite<T>
-
   /** Initializes a new instance of ScopedProperty with the given read/write blocks. */
   public init(read: @escaping ScopedRead<T>, write: @escaping ScopedWrite<T>) {
     self.read = read
-    self.write = write
+    self._write = write
   }
+
+  /** Sets the property's value with the given value. */
+  public func write(_ value: T) {
+    _write(value)
+
+    for observer in observers {
+      observer.next(value)
+    }
+  }
+
+  public func subscribe(_ next: @escaping (T) -> Void) -> Subscription {
+    let observer = ScopedPropertyObserver(next)
+    observers.append(observer)
+
+    observer.next(read())
+
+    return Subscription {
+      if let index = self.observers.index(where: { $0 === observer }) {
+        self.observers.remove(at: index)
+      }
+    }
+  }
+
+  private let _write: ScopedWrite<T>
+  private var observers: [ScopedPropertyObserver<T>] = []
 }
 
 /** A scoped readable is able to read from a specific property of pre-determined place. */
@@ -48,5 +71,25 @@ public protocol ScopedWritable {
   associatedtype T
 
   /** The implementing type is expected to store the provided value. */
-  var write: ScopedWrite<T> { get }
+  func write(_ value: T)
+}
+
+/** An observable property informs subscribed observers of writes made to the property. */
+public protocol ObservableProperty {
+  associatedtype T
+
+  /**
+   The provided function will be invoked immediately upon subscription and each time the
+   corresponding property is written to.
+
+   Invoke the returned Subscription's unsubscribe method to stop receiving updates.
+   */
+  func subscribe(_ next: @escaping (T) -> Void) -> Subscription
+}
+
+private final class ScopedPropertyObserver<T> {
+  init(_ next: @escaping (T) -> Void) {
+    self.next = next
+  }
+  let next: (T) -> Void
 }
