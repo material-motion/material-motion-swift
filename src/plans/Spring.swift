@@ -24,7 +24,7 @@ import Foundation
 public final class Spring<T: Zeroable> {
 
   /** Creates a spring with the provided properties and an initial velocity of zero. */
-  public convenience init(to destination: ScopedProperty<T>, initialValue: ScopedProperty<T>, threshold: Float) {
+  public convenience init(to destination: ScopedProperty<T>, initialValue: ScopedProperty<T>, threshold: CGFloat) {
     var velocity: T = T.zero() as! T
     let initialVelocity = ScopedProperty<T>(read: { velocity }, write: { velocity = $0 })
     self.init(to: destination, initialValue: initialValue, initialVelocity: initialVelocity, threshold: threshold)
@@ -34,13 +34,13 @@ public final class Spring<T: Zeroable> {
   public init(to destination: ScopedProperty<T>,
               initialValue: ScopedProperty<T>,
               initialVelocity: ScopedProperty<T>,
-              threshold: Float) {
+              threshold: CGFloat) {
     self.destination = destination
     self.initialValue = initialValue
     self.initialVelocity = initialVelocity
 
     var threshold = threshold
-    self.threshold = ScopedProperty<Float>(read: { threshold }, write: { threshold = $0 })
+    self.threshold = ScopedProperty<CGFloat>(read: { threshold }, write: { threshold = $0 })
 
     var configuration = SpringConfiguration.defaultConfiguration
     self.configuration = ScopedProperty<SpringConfiguration>(read: { configuration },
@@ -60,7 +60,7 @@ public final class Spring<T: Zeroable> {
   public let configuration: ScopedProperty<SpringConfiguration>
 
   /** The value used when determining completion of the spring simulation. */
-  public let threshold: ScopedProperty<Float>
+  public let threshold: ScopedProperty<CGFloat>
 }
 
 /**
