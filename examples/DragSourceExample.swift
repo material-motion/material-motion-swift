@@ -35,6 +35,7 @@ public class DragSourceExampleViewController: UIViewController {
     let gesture = UIPanGestureRecognizer()
     view.addGestureRecognizer(gesture)
 
-    aggregator.write(gestureSource(gesture).centroid(in: view), to: propertyOf(square).center)
+    aggregator.write(gestureSource(gesture).translated(from: propertyOf(square).center, in: view),
+                     to: propertyOf(square).center)
   }
 }
