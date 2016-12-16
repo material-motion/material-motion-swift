@@ -20,6 +20,64 @@ import MaterialMotionStreams
 
 // This example demonstrates how to connect a drag source to a property on a view.
 
+protocol Interaction {
+  func connect(with aggregator: MotionAggregator)
+}
+
+class Tossable: Interaction {
+  let spring: Spring<CGPoint>
+  let viewToToss: UIView
+
+  let destination: ScopedProperty<CGPoint>
+  var positionStream: MotionObservable<CGPoint>
+  var initialVelocityStream: MotionObservable<CGPoint>
+
+  init(destination: ScopedProperty<CGPoint>,
+       viewToToss: UIView,
+       containerView: UIView,
+       springSource: (Spring<CGPoint>) -> MotionObservable<CGPoint>) {
+    self.destination = destination
+    self.viewToToss = viewToToss
+
+    let dragGesture = UIPanGestureRecognizer()
+    containerView.addGestureRecognizer(dragGesture)
+
+    let dragStream = gestureSource(dragGesture)
+
+    let initialPosition = propertyOf(viewToToss).center
+    let translationStream = dragStream.translated(from: initialPosition, in: containerView)
+
+    self.initialVelocityStream = dragStream.onRecognitionState(.ended).velocity(in: containerView)
+
+    self.spring = Spring(to: destination, initialValue: initialPosition, threshold: 1)
+    let springStream = springSource(spring)
+    self.positionStream = springStream.toggled(with: translationStream)
+  }
+
+  func connect(with aggregator: MotionAggregator) {
+    aggregator.write(initialVelocityStream, to: spring.initialVelocity)
+    aggregator.write(positionStream, to: propertyOf(viewToToss).center)
+  }
+}
+
+class TapToChangeDestination: Interaction {
+  let destination: ScopedProperty<CGPoint>
+
+  var tapStream: MotionObservable<CGPoint>
+  init(destination: ScopedProperty<CGPoint>, containerView: UIView) {
+    self.destination = destination
+
+    let tap = UITapGestureRecognizer()
+    containerView.addGestureRecognizer(tap)
+
+    self.tapStream = gestureSource(tap).onRecognitionState(.recognized).centroid(in: containerView)
+  }
+
+  func connect(with aggregator: MotionAggregator) {
+    aggregator.write(tapStream, to: destination)
+  }
+}
+
 public class DragSourceExampleViewController: UIViewController {
 
   let aggregator = MotionAggregator()
@@ -37,23 +95,13 @@ public class DragSourceExampleViewController: UIViewController {
     circle.layer.cornerRadius = circle.bounds.width / 2
     view.addSubview(circle)
 
-    let gesture = UIPanGestureRecognizer()
-    view.addGestureRecognizer(gesture)
+    let tossable = Tossable(destination: propertyOf(circle).center,
+                            viewToToss: square,
+                            containerView: view,
+                            springSource: popSpringSource)
+    tossable.connect(with: aggregator)
 
-    let circleCenter = propertyOf(circle).center
-    let spring = Spring(to: circleCenter, initialValue: propertyOf(square).center, threshold: 1)
-
-    let dragStream = gestureSource(gesture)
-    aggregator.write(dragStream.onRecognitionState(.ended).velocity(in: view), to: spring.initialVelocity)
-
-    let springStream = popSpringSource(spring)
-    let positionStream = springStream.toggled(with: dragStream.translated(from: propertyOf(square).center, in: view))
-    aggregator.write(positionStream, to: propertyOf(square).center)
-
-    let tap = UITapGestureRecognizer()
-    view.addGestureRecognizer(tap)
-
-    aggregator.write(gestureSource(tap).onRecognitionState(.recognized).centroid(in: view),
-                     to: circleCenter)
+    TapToChangeDestination(destination: tossable.destination, containerView: view)
+      .connect(with: aggregator)
   }
 }
