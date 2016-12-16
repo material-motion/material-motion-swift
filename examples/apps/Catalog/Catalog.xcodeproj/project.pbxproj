@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		237F8136357F3FA9B6DFA82F /* Pods_UnitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B05E63B8F92D94A8819B0ABB /* Pods_UnitTests.framework */; };
+		66090B8A1E046CE600B1D598 /* Spring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66090B891E046CE600B1D598 /* Spring.swift */; };
 		6627FC0E1DF7B1A2003DB567 /* MotionObservableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6627FC0D1DF7B1A2003DB567 /* MotionObservableTests.swift */; };
 		6627FC191DF7BC7D003DB567 /* _filterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6627FC161DF7BC7D003DB567 /* _filterTests.swift */; };
 		6627FC1A1DF7BC7D003DB567 /* _mapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6627FC171DF7BC7D003DB567 /* _mapTests.swift */; };
@@ -37,6 +38,7 @@
 /* Begin PBXFileReference section */
 		151ACFA24257B9AC82434343 /* Pods-Catalog.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Catalog.debug.xcconfig"; path = "../../../Pods/Target Support Files/Pods-Catalog/Pods-Catalog.debug.xcconfig"; sourceTree = "<group>"; };
 		1ED93D5A76FA3E96C6C84FF6 /* Pods-Catalog.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Catalog.release.xcconfig"; path = "../../../Pods/Target Support Files/Pods-Catalog/Pods-Catalog.release.xcconfig"; sourceTree = "<group>"; };
+		66090B891E046CE600B1D598 /* Spring.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spring.swift; sourceTree = "<group>"; };
 		6627FC0D1DF7B1A2003DB567 /* MotionObservableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionObservableTests.swift; sourceTree = "<group>"; };
 		6627FC161DF7BC7D003DB567 /* _filterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = _filterTests.swift; sourceTree = "<group>"; };
 		6627FC171DF7BC7D003DB567 /* _mapTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = _mapTests.swift; sourceTree = "<group>"; };
@@ -89,10 +91,19 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		66090B881E046CE600B1D598 /* plans */ = {
+			isa = PBXGroup;
+			children = (
+				66090B891E046CE600B1D598 /* Spring.swift */,
+			);
+			path = plans;
+			sourceTree = "<group>";
+		};
 		6627FC0C1DF7B1A2003DB567 /* unit */ = {
 			isa = PBXGroup;
 			children = (
 				6627FC151DF7BC7D003DB567 /* operator */,
+				66090B881E046CE600B1D598 /* plans */,
 				6627FC1F1DF7C76C003DB567 /* properties */,
 				6627FC0D1DF7B1A2003DB567 /* MotionObservableTests.swift */,
 				6627FC331DFFB232003DB567 /* MotionAggregatorTests.swift */,
@@ -415,6 +426,7 @@
 				6627FC2F1DFFAEB7003DB567 /* CGPointTests.swift in Sources */,
 				6627FC1B1DF7BC7D003DB567 /* _operatorTests.swift in Sources */,
 				66AA65AC1E00C37F000052A8 /* toggleTests.swift in Sources */,
+				66090B8A1E046CE600B1D598 /* Spring.swift in Sources */,
 				6627FC0E1DF7B1A2003DB567 /* MotionObservableTests.swift in Sources */,
 				6627FC341DFFB232003DB567 /* MotionAggregatorTests.swift in Sources */,
 				6627FC191DF7BC7D003DB567 /* _filterTests.swift in Sources */,
