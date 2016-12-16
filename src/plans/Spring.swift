@@ -24,15 +24,23 @@ import Foundation
 public final class Spring<T: Zeroable> {
 
   /** Creates a spring with the provided properties and an initial velocity of zero. */
-  public init(to destination: ScopedProperty<T>, initialValue: ScopedProperty<T>, threshold: Float) {
+  public convenience init(to destination: ScopedProperty<T>, initialValue: ScopedProperty<T>, threshold: Float) {
+    var velocity: T = T.zero() as! T
+    let initialVelocity = ScopedProperty<T>(read: { velocity }, write: { velocity = $0 })
+    self.init(to: destination, initialValue: initialValue, initialVelocity: initialVelocity, threshold: threshold)
+  }
+
+  /** Creates a spring with the provided properties and an initial velocity. */
+  public init(to destination: ScopedProperty<T>,
+              initialValue: ScopedProperty<T>,
+              initialVelocity: ScopedProperty<T>,
+              threshold: Float) {
     self.destination = destination
     self.initialValue = initialValue
+    self.initialVelocity = initialVelocity
 
     var threshold = threshold
     self.threshold = ScopedProperty<Float>(read: { threshold }, write: { threshold = $0 })
-
-    var velocity: T = T.zero() as! T
-    self.initialVelocity = ScopedProperty<T>(read: { velocity }, write: { velocity = $0 })
 
     var configuration = SpringConfiguration.defaultConfiguration
     self.configuration = ScopedProperty<SpringConfiguration>(read: { configuration },
@@ -40,19 +48,19 @@ public final class Spring<T: Zeroable> {
   }
 
   /** The destination value of the spring represented as a property. */
-  public var destination: ScopedProperty<T>
+  public let destination: ScopedProperty<T>
 
   /** The initial value of the spring represented as a property. */
-  public var initialValue: ScopedProperty<T>
+  public let initialValue: ScopedProperty<T>
 
   /** The initial velocity of the spring represented as a property. */
-  public var initialVelocity: ScopedProperty<T>
+  public let initialVelocity: ScopedProperty<T>
 
   /** The configuration of the spring represented as a property. */
-  public var configuration: ScopedProperty<SpringConfiguration>
+  public let configuration: ScopedProperty<SpringConfiguration>
 
   /** The value used when determining completion of the spring simulation. */
-  public var threshold: ScopedProperty<Float>
+  public let threshold: ScopedProperty<Float>
 }
 
 /**
