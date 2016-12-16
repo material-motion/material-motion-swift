@@ -23,14 +23,18 @@ class SpringTests: XCTestCase {
   func testCGPointInitialization() {
     let view = UIView()
     let target = UIView()
-    let spring = Spring(to: propertyOf(target).center, initialValue: propertyOf(view).center)
+    let spring = Spring(to: propertyOf(target).center,
+                        initialValue: propertyOf(view).center,
+                        threshold: 1)
     XCTAssertEqual(spring.initialVelocity.read(), .zero)
   }
 
   func testCGFloatInitialization() {
     let view = UIView()
     let target = UIView()
-    let spring = Spring(to: propertyOf(target).centerX, initialValue: propertyOf(view).centerX)
+    let spring = Spring(to: propertyOf(target).centerX,
+                        initialValue: propertyOf(view).centerX,
+                        threshold: 1)
     XCTAssertEqual(spring.initialVelocity.read(), 0)
   }
 }

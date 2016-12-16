@@ -24,9 +24,12 @@ import Foundation
 public final class Spring<T: Zeroable> {
 
   /** Creates a spring with the provided properties and an initial velocity of zero. */
-  public init(to destination: ScopedProperty<T>, initialValue: ScopedProperty<T>) {
+  public init(to destination: ScopedProperty<T>, initialValue: ScopedProperty<T>, threshold: Float) {
     self.destination = destination
     self.initialValue = initialValue
+
+    var threshold = threshold
+    self.threshold = ScopedProperty<Float>(read: { threshold }, write: { threshold = $0 })
 
     var velocity: T = T.zero() as! T
     self.initialVelocity = ScopedProperty<T>(read: { velocity }, write: { velocity = $0 })
@@ -47,6 +50,9 @@ public final class Spring<T: Zeroable> {
 
   /** The configuration of the spring represented as a property. */
   public var configuration: ScopedProperty<SpringConfiguration>
+
+  /** The value used when determining completion of the spring simulation. */
+  public var threshold: ScopedProperty<Float>
 }
 
 /**
