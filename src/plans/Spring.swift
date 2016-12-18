@@ -24,43 +24,43 @@ import Foundation
 public final class Spring<T: Zeroable> {
 
   /** Creates a spring with the provided properties and an initial velocity of zero. */
-  public convenience init(to destination: ScopedProperty<T>, initialValue: ScopedProperty<T>, threshold: CGFloat) {
+  public convenience init(to destination: ScopedReactiveProperty<T>, initialValue: ScopedReactiveProperty<T>, threshold: CGFloat) {
     var velocity: T = T.zero() as! T
-    let initialVelocity = ScopedProperty<T>(read: { velocity }, write: { velocity = $0 })
+    let initialVelocity = ScopedReactiveProperty<T>(read: { velocity }, write: { velocity = $0 })
     self.init(to: destination, initialValue: initialValue, initialVelocity: initialVelocity, threshold: threshold)
   }
 
   /** Creates a spring with the provided properties and an initial velocity. */
-  public init(to destination: ScopedProperty<T>,
-              initialValue: ScopedProperty<T>,
-              initialVelocity: ScopedProperty<T>,
+  public init(to destination: ScopedReactiveProperty<T>,
+              initialValue: ScopedReactiveProperty<T>,
+              initialVelocity: ScopedReactiveProperty<T>,
               threshold: CGFloat) {
     self.destination = destination
     self.initialValue = initialValue
     self.initialVelocity = initialVelocity
 
     var threshold = threshold
-    self.threshold = ScopedProperty<CGFloat>(read: { threshold }, write: { threshold = $0 })
+    self.threshold = ScopedReactiveProperty<CGFloat>(read: { threshold }, write: { threshold = $0 })
 
     var configuration = SpringConfiguration.defaultConfiguration
-    self.configuration = ScopedProperty<SpringConfiguration>(read: { configuration },
+    self.configuration = ScopedReactiveProperty<SpringConfiguration>(read: { configuration },
                                                              write: { configuration = $0 })
   }
 
   /** The destination value of the spring represented as a property. */
-  public let destination: ScopedProperty<T>
+  public let destination: ScopedReactiveProperty<T>
 
   /** The initial value of the spring represented as a property. */
-  public let initialValue: ScopedProperty<T>
+  public let initialValue: ScopedReactiveProperty<T>
 
   /** The initial velocity of the spring represented as a property. */
-  public let initialVelocity: ScopedProperty<T>
+  public let initialVelocity: ScopedReactiveProperty<T>
 
   /** The configuration of the spring represented as a property. */
-  public let configuration: ScopedProperty<SpringConfiguration>
+  public let configuration: ScopedReactiveProperty<SpringConfiguration>
 
   /** The value used when determining completion of the spring simulation. */
-  public let threshold: ScopedProperty<CGFloat>
+  public let threshold: ScopedReactiveProperty<CGFloat>
 }
 
 /**

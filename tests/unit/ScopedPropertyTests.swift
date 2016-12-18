@@ -17,11 +17,11 @@
 import XCTest
 import MaterialMotionStreams
 
-class ScopedPropertyTests: XCTestCase {
+class ScopedReactivePropertyTests: XCTestCase {
 
   func testReadsAndWrites() {
     var someVar = 10
-    let property = ScopedProperty(read: { return someVar }, write: { someVar = $0 })
+    let property = ScopedReactiveProperty(read: { return someVar }, write: { someVar = $0 })
 
     XCTAssertEqual(someVar, property.read())
 

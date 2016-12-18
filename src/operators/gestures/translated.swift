@@ -37,4 +37,15 @@ extension ExtendableMotionObservable where T: UIPanGestureRecognizer {
       }
     }
   }
+
+  /**
+   Adds the current translation to the initial position and emits the result while the gesture
+   recognizer is active.
+   */
+  func translation(in view: UIView) -> MotionObservable<CGPoint> {
+    var cachedInitialPosition: CGPoint?
+    return _map { value in
+      value.translation(in: view)
+    }
+  }
 }

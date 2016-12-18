@@ -20,29 +20,33 @@ import IndefiniteObservable
 public typealias ScopedRead<T> = () -> T
 public typealias ScopedWrite<T> = (T) -> Void
 
-/** A scoped property represents a readwrite property for a pre-determined object. */
-public final class ScopedProperty<T>: ScopedReadable, ScopedWritable, ObservableProperty {
-
+/** A scoped reactive property represents a readwrite property for a pre-determined object. */
+public final class ScopedReactiveProperty<T>: ExtendableMotionObservable, ScopedReadable, ScopedWritable {
   /** A block that, when invoked, returns the property's current value. */
   public let read: ScopedRead<T>
+  /** A block that, when invoked, writes the provided value to the backing value. */
+  public let write: ScopedWrite<T>
 
-  /** Initializes a new instance of ScopedProperty with the given read/write blocks. */
+  /** Initializes a new instance with the given read/write blocks. */
   public init(read: @escaping ScopedRead<T>, write: @escaping ScopedWrite<T>) {
     self.read = read
-    self._write = write
+    self.write = write
   }
 
-  /** Sets the property's value with the given value. */
-  public func write(_ value: T) {
-    _write(value)
-
+  public func next(_ value: T) {
     for observer in observers {
       observer.next(value)
     }
   }
 
-  public func subscribe(_ next: @escaping (T) -> Void) -> Subscription {
-    let observer = ScopedPropertyObserver(next)
+  public func state(_ state: MotionState) {
+    for observer in observers {
+      observer.state(state)
+    }
+  }
+
+  public func subscribe(next: @escaping NextChannel<T>, state: @escaping StateChannel) -> Subscription {
+    let observer = MotionObserver(next: next, state: state)
     observers.append(observer)
 
     observer.next(read())
@@ -54,8 +58,11 @@ public final class ScopedProperty<T>: ScopedReadable, ScopedWritable, Observable
     }
   }
 
-  private let _write: ScopedWrite<T>
-  private var observers: [ScopedPropertyObserver<T>] = []
+  public func subscribe(_ next: @escaping (T) -> Void) -> Subscription {
+    return self.subscribe(next: next, state: { _ in })
+  }
+
+  private var observers: [MotionObserver<T>] = []
 }
 
 /** A scoped readable is able to read from a specific property of pre-determined place. */
@@ -71,25 +78,5 @@ public protocol ScopedWritable {
   associatedtype T
 
   /** The implementing type is expected to store the provided value. */
-  func write(_ value: T)
-}
-
-/** An observable property informs subscribed observers of writes made to the property. */
-public protocol ObservableProperty {
-  associatedtype T
-
-  /**
-   The provided function will be invoked immediately upon subscription and each time the
-   corresponding property is written to.
-
-   Invoke the returned Subscription's unsubscribe method to stop receiving updates.
-   */
-  func subscribe(_ next: @escaping (T) -> Void) -> Subscription
-}
-
-private final class ScopedPropertyObserver<T> {
-  init(_ next: @escaping (T) -> Void) {
-    self.next = next
-  }
-  let next: (T) -> Void
+  var write: ScopedWrite<T> { get }
 }

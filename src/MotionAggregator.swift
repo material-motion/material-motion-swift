@@ -27,10 +27,11 @@ public class MotionAggregator {
   }
 
   /** Subscribes to the stream, writes its output to the given property, and observes its state. */
-  public func write<T, S: ScopedWritable>(_ stream: MotionObservable<T>, to property: S) where S.T == T {
+  public func write<T>(_ stream: MotionObservable<T>, to property: ScopedReactiveProperty<T>) {
     let token = NSUUID().uuidString
     subscriptions.append(stream.subscribe(next: {
       property.write($0)
+      property.next($0)
 
     }, state: { [weak self] state in
       guard let strongSelf = self else { return }
@@ -41,6 +42,8 @@ public class MotionAggregator {
       }
 
       strongSelf.aggregateState = strongSelf.activeSubscriptions.count > 0 ? .active : .atRest
+
+      property.state(state)
     }))
   }
 

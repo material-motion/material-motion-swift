@@ -28,11 +28,11 @@ class Tossable: Interaction {
   let spring: Spring<CGPoint>
   let viewToToss: UIView
 
-  let destination: ScopedProperty<CGPoint>
+  let destination: ScopedReactiveProperty<CGPoint>
   var positionStream: MotionObservable<CGPoint>
   var initialVelocityStream: MotionObservable<CGPoint>
 
-  init(destination: ScopedProperty<CGPoint>,
+  init(destination: ScopedReactiveProperty<CGPoint>,
        viewToToss: UIView,
        containerView: UIView,
        springSource: (Spring<CGPoint>) -> MotionObservable<CGPoint>) {
@@ -61,10 +61,10 @@ class Tossable: Interaction {
 }
 
 class TapToChangeDestination: Interaction {
-  let destination: ScopedProperty<CGPoint>
+  let destination: ScopedReactiveProperty<CGPoint>
 
   var tapStream: MotionObservable<CGPoint>
-  init(destination: ScopedProperty<CGPoint>, containerView: UIView) {
+  init(destination: ScopedReactiveProperty<CGPoint>, containerView: UIView) {
     self.destination = destination
 
     let tap = UITapGestureRecognizer()
