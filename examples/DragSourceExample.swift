@@ -81,10 +81,19 @@ class TapToChangeDestination: Interaction {
 public class DragSourceExampleViewController: UIViewController {
 
   let aggregator = MotionAggregator()
+  var subscription: Subscription!
   public override func viewDidLoad() {
     super.viewDidLoad()
 
     view.backgroundColor = .white
+
+    let scrollView = UIScrollView(frame: view.bounds)
+    scrollView.contentSize = .init(width: view.bounds.width, height: view.bounds.height * 10)
+    view.addSubview(scrollView)
+
+    subscription = scrollSource(scrollView).subscribe(next: {
+      self.title = "\($0)"
+    }, state: { _ in })
 
     let square = UIView(frame: .init(x: 0, y: 0, width: 64, height: 64))
     square.backgroundColor = .red
