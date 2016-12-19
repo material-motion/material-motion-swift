@@ -23,6 +23,12 @@ public typealias ScopedRead<T> = () -> T
 /** The expected shape of a write function. */
 public typealias ScopedWrite<T> = (T) -> Void
 
+/** Creates a property with a given initial value. */
+public func createProperty<T>(withInitialValue initialValue: T) -> ReactiveProperty<T> {
+  var value = initialValue
+  return ReactiveProperty(read: { value }, write: { value = $0 })
+}
+
 /**
  A reactive property represents a subscribable, readable/writable value.
 
