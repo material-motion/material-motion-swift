@@ -19,17 +19,24 @@ import UIKit
 /** A ScrollSource is a function that creates a MotionObservable from a UIScrollView. */
 public typealias ScrollSource = (UIScrollView) -> MotionObservable<CGPoint>
 
+/**
+ Creates a scroll source backed by KVO on a UIScrollView.
+
+ This scroll source will not emit state updates.
+ */
 public func scrollSource(_ scrollView: UIScrollView) -> MotionObservable<CGPoint> {
   return MotionObservable { observer in
     return ScrollViewConnection(subscribedTo: scrollView, observer: observer).disconnect
   }
 }
 
+// See the Apple developer documentation on implementing KVO in swift.
+// https://developer.apple.com/library/content/documentation/Swift/Conceptual/BuildingCocoaApps/AdoptingCocoaDesignPatterns.html#//apple_ref/doc/uid/TP40014216-CH7-ID12
 private var scrollViewConnectionContext = 0
 
 private final class ScrollViewConnection: NSObject {
   deinit {
-    self.disconnect()
+    disconnect()
   }
 
   init(subscribedTo scrollView: UIScrollView, observer: MotionObserver<CGPoint>) {
