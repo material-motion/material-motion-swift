@@ -20,7 +20,7 @@ import UIKit
 public typealias ScrollSource = (UIScrollView) -> MotionObservable<CGPoint>
 
 public func scrollSource(_ scrollView: UIScrollView) -> MotionObservable<CGPoint> {
-  return MotionObservable { observer in
+  return MotionObservable(Metadata("\(#function)", args: [scrollView])) { observer in
     return ScrollViewConnection(subscribedTo: scrollView, observer: observer).disconnect
   }
 }

@@ -24,7 +24,7 @@ extension ExtendableMotionObservable where T: UIPanGestureRecognizer {
    */
   func translated<P: ScopedReadable>(from initialPosition: P, in view: UIView) -> MotionObservable<CGPoint> where P.T == CGPoint {
     var cachedInitialPosition: CGPoint?
-    return _nextOperator { value, next in
+    return _nextOperator(Metadata("\(#function)", args: [initialPosition, view])) { value, next in
       if value.state == .began || (value.state == .changed && cachedInitialPosition == nil)  {
         cachedInitialPosition = initialPosition.read()
       } else if value.state != .began && value.state != .changed {
@@ -44,7 +44,7 @@ extension ExtendableMotionObservable where T: UIPanGestureRecognizer {
    */
   func translation(in view: UIView) -> MotionObservable<CGPoint> {
     var cachedInitialPosition: CGPoint?
-    return _map { value in
+    return _map(Metadata("\(#function)", args: [view])) { value in
       value.translation(in: view)
     }
   }

@@ -22,7 +22,7 @@ import pop
 
 /** Create a pop spring source for a CGFloat Spring plan. */
 public func popSpringSource(_ spring: Spring<CGFloat>) -> MotionObservable<CGFloat> {
-  return MotionObservable { observer in
+  return MotionObservable(Metadata("\(#function)", args: [spring])) { observer in
     let animation = POPSpringAnimation()
 
     let popProperty = POPMutableAnimatableProperty()
@@ -42,7 +42,7 @@ public func popSpringSource(_ spring: Spring<CGFloat>) -> MotionObservable<CGFlo
 
 /** Create a pop spring source for a CGPoint Spring plan. */
 public func popSpringSource(_ spring: Spring<CGPoint>) -> MotionObservable<CGPoint> {
-  return MotionObservable { observer in
+  return MotionObservable(Metadata("\(#function)", args: [spring])) { observer in
     let animation = POPSpringAnimation()
 
     let popProperty = POPMutableAnimatableProperty()

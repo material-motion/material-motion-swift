@@ -44,7 +44,7 @@ public class SwipeExampleViewController: UIViewController {
 
     var destination = card.center.x
 
-    let spring = Spring(to: ScopedReactiveProperty(read: { destination }, write: { destination = $0 }),
+    let spring = Spring(to: ScopedReactiveProperty("destination", read: { destination }, write: { destination = $0 }),
                         initialValue: propertyOf(card).centerX,
                         threshold: 1)
     let springStream = popSpringSource(spring)
@@ -53,7 +53,7 @@ public class SwipeExampleViewController: UIViewController {
                      to: spring.initialVelocity)
 
     var thisView = view!
-    aggregator.write(dragStream.onRecognitionState(.ended).velocity(in: view).x()._map {
+    aggregator.write(dragStream.onRecognitionState(.ended).velocity(in: view).x()._map(Metadata("plinko")) {
       if $0 > 10 {
         return thisView.bounds.width + card.bounds.width
       } else if $0 < -10 {

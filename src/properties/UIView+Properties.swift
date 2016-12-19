@@ -27,30 +27,30 @@ public class UIViewScopedReactivePropertyBuilder {
   /** A property representing the view's .alpha value. */
   public var alpha: ScopedReactiveProperty<CGFloat> {
     let view = self.view
-    return ScopedReactiveProperty(read: { view.alpha }, write: { view.alpha = $0 })
+    return ScopedReactiveProperty("\(#function)", read: { view.alpha }, write: { view.alpha = $0 })
   }
 
   /** A property representing the view's .center.x value. */
   public var centerX: ScopedReactiveProperty<CGFloat> {
     let view = self.view
-    return ScopedReactiveProperty(read: { view.center.x }, write: { view.center.x = $0 })
+    return ScopedReactiveProperty("\(#function)", read: { view.center.x }, write: { view.center.x = $0 })
   }
 
   /** A property representing the view's .center.y value. */
   public var centerY: ScopedReactiveProperty<CGFloat> {
     let view = self.view
-    return ScopedReactiveProperty(read: { view.center.y }, write: { view.center.y = $0 })
+    return ScopedReactiveProperty("\(#function)", read: { view.center.y }, write: { view.center.y = $0 })
   }
 
   /** A property representing the view's .center value. */
   public var center: ScopedReactiveProperty<CGPoint> {
     let view = self.view
-    return ScopedReactiveProperty(read: { view.center }, write: { view.center = $0 })
+    return ScopedReactiveProperty("\(#function)", read: { view.center }, write: { view.center = $0 })
   }
 
   public var rotation: ScopedReactiveProperty<CGFloat> {
     let view = self.view
-    return ScopedReactiveProperty(read: { view.value(forKeyPath: "layer.transform.rotation.z") as! CGFloat },
+    return ScopedReactiveProperty("\(#function)", read: { view.value(forKeyPath: "layer.transform.rotation.z") as! CGFloat },
                           write: { view.setValue($0, forKeyPath: "layer.transform.rotation.z") })
   }
 

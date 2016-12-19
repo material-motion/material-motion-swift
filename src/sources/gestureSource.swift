@@ -18,7 +18,7 @@ import Foundation
 
 /** Create a gesture source that will connect to the provided gesture recognizer. */
 public func gestureSource<T: UIGestureRecognizer>(_ gesture: T) -> MotionObservable<T> {
-  return MotionObservable { observer in
+  return MotionObservable(Metadata("\(pretty(ObjectIdentifier(gesture)))", label: "\(#function)", args: [gesture])) { observer in
     return GestureConnection(subscribedTo: gesture, observer: observer).disconnect
   }
 }

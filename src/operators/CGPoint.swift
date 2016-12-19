@@ -17,24 +17,23 @@
 extension ExtendableMotionObservable where T == CGPoint {
 
   /** Extract the x value from a CGPoint. */
-  public func x() -> MotionObservable<CGFloat> { return _map { $0.x } }
+  public func x() -> MotionObservable<CGFloat> { return _map(Metadata("\(#function)")) { $0.x } }
 
   /** Extract the y value from a CGPoint. */
-  public func y() -> MotionObservable<CGFloat> { return _map { $0.y } }
+  public func y() -> MotionObservable<CGFloat> { return _map(Metadata("\(#function)")) { $0.y } }
 }
 
 extension ExtendableMotionObservable where T == CGFloat {
 
-  public func offset(by: CGFloat) -> MotionObservable<CGFloat> { return _map { $0 + by } }
+  public func offset(by: CGFloat) -> MotionObservable<CGFloat> { return _map(Metadata("\(#function)", args: [by])) { $0 + by } }
 
-  public func scaled(by: CGFloat) -> MotionObservable<CGFloat> { return _map { $0 * by } }
+  public func scaled(by: CGFloat) -> MotionObservable<CGFloat> { return _map(Metadata("\(#function)", args: [by])) { $0 * by } }
 
-  public func normalized(by: CGFloat) -> MotionObservable<CGFloat> { return _map { $0 / by } }
+  public func normalized(by: CGFloat) -> MotionObservable<CGFloat> { return _map(Metadata("\(#function)", args: [by])) { $0 / by } }
 
-  public func bounded(amin: CGFloat, amax: CGFloat) -> MotionObservable<CGFloat> { return _map { min(max(amin, $0), amax) } }
-
+  public func bounded(amin: CGFloat, amax: CGFloat) -> MotionObservable<CGFloat> { return _map(Metadata("\(#function)")) { min(max(amin, $0), amax) } }
 }
 
 extension ExtendableMotionObservable {
-  public func constant<U>(_ value: U) -> MotionObservable<U> { return _map { _ in value } }
+  public func constant<U>(_ value: U) -> MotionObservable<U> { return _map(Metadata("\(#function)", args: [value])) { _ in value } }
 }

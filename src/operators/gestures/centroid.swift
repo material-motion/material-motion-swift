@@ -20,7 +20,7 @@ extension ExtendableMotionObservable where T: UIGestureRecognizer {
 
   /** Extract centroid from the incoming gesture recognizer. */
   public func centroid(in view: UIView) -> MotionObservable<CGPoint> {
-    return _map { value in
+    return _map(Metadata("\(#function)", args: [view])) { value in
       value.location(in: view)
     }
   }

@@ -20,7 +20,7 @@ extension ExtendableMotionObservable where T: UIPanGestureRecognizer {
 
   /** Extract translational velocity from the incoming pan gesture recognizer. */
   public func velocity(in view: UIView) -> MotionObservable<CGPoint> {
-    return _map { value in
+    return _map(Metadata("\(#function)", args: [view])) { value in
       value.velocity(in: view)
     }
   }

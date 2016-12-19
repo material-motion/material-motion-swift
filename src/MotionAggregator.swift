@@ -45,6 +45,12 @@ public class MotionAggregator {
 
       property.state(state)
     }))
+
+    let metadata = stream.metadata.with(property.metadata.name,
+                                        label: property.metadata.label,
+                                        args: property.metadata.args)
+
+    print(metadata.debugDescription)
   }
 
   public var aggregateState = MotionState.atRest

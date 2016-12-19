@@ -32,7 +32,7 @@ extension ExtendableMotionObservable {
    well for spring streams where a gesture stream is the preferred stream.
    */
   public func toggled(with preferredStream: MotionObservable<T>) -> MotionObservable<T> {
-    return MotionObservable<T> { observer in
+    return MotionObservable<T>(self.metadata.with("\(#function)", args: [preferredStream])) { observer in
       var preferredStreamSubscription: Subscription?
       var originalStreamSubscription: Subscription?
 

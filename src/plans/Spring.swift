@@ -26,7 +26,7 @@ public final class Spring<T: Zeroable> {
   /** Creates a spring with the provided properties and an initial velocity of zero. */
   public convenience init(to destination: ScopedReactiveProperty<T>, initialValue: ScopedReactiveProperty<T>, threshold: CGFloat) {
     var velocity: T = T.zero() as! T
-    let initialVelocity = ScopedReactiveProperty<T>(read: { velocity }, write: { velocity = $0 })
+    let initialVelocity = ScopedReactiveProperty<T>("initialVelocity", read: { velocity }, write: { velocity = $0 })
     self.init(to: destination, initialValue: initialValue, initialVelocity: initialVelocity, threshold: threshold)
   }
 
@@ -40,10 +40,10 @@ public final class Spring<T: Zeroable> {
     self.initialVelocity = initialVelocity
 
     var threshold = threshold
-    self.threshold = ScopedReactiveProperty<CGFloat>(read: { threshold }, write: { threshold = $0 })
+    self.threshold = ScopedReactiveProperty<CGFloat>("threshold", read: { threshold }, write: { threshold = $0 })
 
     var configuration = SpringConfiguration.defaultConfiguration
-    self.configuration = ScopedReactiveProperty<SpringConfiguration>(read: { configuration },
+    self.configuration = ScopedReactiveProperty<SpringConfiguration>("configuration", read: { configuration },
                                                              write: { configuration = $0 })
   }
 

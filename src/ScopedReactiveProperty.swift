@@ -27,10 +27,14 @@ public final class ScopedReactiveProperty<T>: ExtendableMotionObservable, Scoped
   /** A block that, when invoked, writes the provided value to the backing value. */
   public let write: ScopedWrite<T>
 
+  public var metadata: Metadata
+
   /** Initializes a new instance with the given read/write blocks. */
-  public init(read: @escaping ScopedRead<T>, write: @escaping ScopedWrite<T>) {
+  public init(_ name: String, read: @escaping ScopedRead<T>, write: @escaping ScopedWrite<T>) {
     self.read = read
     self.write = write
+    self.metadata = Metadata("Scoped property")
+    self.metadata = Metadata(pretty(self), label: name)
   }
 
   public func next(_ value: T) {

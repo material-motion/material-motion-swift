@@ -19,8 +19,8 @@ import Foundation
 extension ExtendableMotionObservable {
 
   /** Transform the items emitted by an Observable by applying a function to each item. */
-  func _map<U>(_ transform: @escaping (T) -> U) -> MotionObservable<U> {
-    return _nextOperator { value, next in
+  func _map<U>(_ metadata: Metadata, _ transform: @escaping (T) -> U) -> MotionObservable<U> {
+    return _nextOperator(metadata) { value, next in
       next(transform(value))
     }
   }
