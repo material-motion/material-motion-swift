@@ -32,10 +32,28 @@ public class DragSourceExampleViewController: UIViewController {
     square.backgroundColor = .red
     view.addSubview(square)
 
+    let circle = UIView(frame: .init(x: 0, y: 0, width: 64, height: 64))
+    circle.backgroundColor = .blue
+    circle.layer.cornerRadius = circle.bounds.width / 2
+    view.addSubview(circle)
+
     let gesture = UIPanGestureRecognizer()
     view.addGestureRecognizer(gesture)
 
-    aggregator.write(gestureSource(gesture).translated(from: propertyOf(square).center, in: view),
-                     to: propertyOf(square).center)
+    let circleCenter = propertyOf(circle).center
+    let spring = Spring(to: circleCenter, initialValue: propertyOf(square).center, threshold: 1)
+
+    let dragStream = gestureSource(gesture)
+    aggregator.write(dragStream.onRecognitionState(.ended).velocity(in: view), to: spring.initialVelocity)
+
+    let springStream = popSpringSource(spring)
+    let positionStream = springStream.toggled(with: dragStream.translated(from: propertyOf(square).center, in: view))
+    aggregator.write(positionStream, to: propertyOf(square).center)
+
+    let tap = UITapGestureRecognizer()
+    view.addGestureRecognizer(tap)
+
+    aggregator.write(gestureSource(tap).onRecognitionState(.recognized).centroid(in: view),
+                     to: circleCenter)
   }
 }

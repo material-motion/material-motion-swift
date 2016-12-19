@@ -7,8 +7,10 @@ PODS:
     - MaterialMotionStreams/lib
   - MaterialMotionStreams/lib (1.0.0):
     - IndefiniteObservable (~> 3.0)
+    - pop
   - MaterialMotionStreams/tests (1.0.0):
     - MaterialMotionStreams/lib
+  - pop (1.0.9)
 
 DEPENDENCIES:
   - CatalogByConvention
@@ -22,7 +24,8 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   CatalogByConvention: be55c2263132e4f9f59299ac8a528ee8715b3275
   IndefiniteObservable: 2789d61f487d8d37fa2b9c3153cc44d4447ff744
-  MaterialMotionStreams: 3bec6e8737840180613e203e5413650342745c87
+  MaterialMotionStreams: b73443e425318d5c658355fa2bd6fb4577c06267
+  pop: f667631a5108a2e60d9e8797c9b32ddaf2080bce
 
 PODFILE CHECKSUM: 99dcd9b4c5334eda66d28ad66fb128a3679e56cd
 

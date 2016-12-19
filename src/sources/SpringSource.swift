@@ -14,7 +14,7 @@
  limitations under the License.
  */
 
-import Foundation
+import UIKit
 
 /** A SpringSource is a function that creates a MotionObservable from a Spring. */
 public typealias SpringSource<T: Zeroable> = (Spring<T>) -> MotionObservable<T>
