@@ -17,35 +17,35 @@
 import UIKit
 
 /** Retrieve a scoped property builder for the given UIView. */
-public func propertyOf(_ view: UIView) -> UIViewScopedPropertyBuilder {
-  return UIViewScopedPropertyBuilder(view)
+public func propertyOf(_ view: UIView) -> UIViewReactivePropertyBuilder {
+  return UIViewReactivePropertyBuilder(view)
 }
 
 /** A scoped property builder for UIView instances. */
-public class UIViewScopedPropertyBuilder {
+public class UIViewReactivePropertyBuilder {
 
   /** A property representing the view's .alpha value. */
-  public var alpha: ScopedProperty<CGFloat> {
+  public var alpha: ReactiveProperty<CGFloat> {
     let view = self.view
-    return ScopedProperty(read: { view.alpha }, write: { view.alpha = $0 })
+    return ReactiveProperty(read: { view.alpha }, write: { view.alpha = $0 })
   }
 
   /** A property representing the view's .center.x value. */
-  public var centerX: ScopedProperty<CGFloat> {
+  public var centerX: ReactiveProperty<CGFloat> {
     let view = self.view
-    return ScopedProperty(read: { view.center.x }, write: { view.center.x = $0 })
+    return ReactiveProperty(read: { view.center.x }, write: { view.center.x = $0 })
   }
 
   /** A property representing the view's .center.y value. */
-  public var centerY: ScopedProperty<CGFloat> {
+  public var centerY: ReactiveProperty<CGFloat> {
     let view = self.view
-    return ScopedProperty(read: { view.center.y }, write: { view.center.y = $0 })
+    return ReactiveProperty(read: { view.center.y }, write: { view.center.y = $0 })
   }
 
   /** A property representing the view's .center value. */
-  public var center: ScopedProperty<CGPoint> {
+  public var center: ReactiveProperty<CGPoint> {
     let view = self.view
-    return ScopedProperty(read: { view.center }, write: { view.center = $0 })
+    return ReactiveProperty(read: { view.center }, write: { view.center = $0 })
   }
 
   private let view: UIView

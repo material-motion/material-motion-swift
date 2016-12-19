@@ -19,7 +19,7 @@ import CoreGraphics
 import IndefiniteObservable
 @testable import MaterialMotionStreams
 
-class UIViewScopedPropertyTests: XCTestCase {
+class UIViewReactivePropertyTests: XCTestCase {
 
   func testReads() {
     let view = UIView()
