@@ -14,13 +14,17 @@
  limitations under the License.
  */
 
-// MARK: Catalog by convention
+import Foundation
 
-import MaterialMotionStreams
+/** A subtractable type is able to subtract another instance of its type from itself. */
+public protocol Subtractable {
+  func - (left: Self, right: Self) -> Self
+}
 
-@available(iOS 9.0, *)
-extension DragSourceExampleViewController {
-  class func catalogBreadcrumbs() -> [String] {
-    return ["Drag source"]
+extension CGPoint: Subtractable {
+  public static func -(left: CGPoint, right: CGPoint) -> CGPoint {
+    return .init(x: left.x - right.x, y: left.y - right.y)
   }
 }
+
+extension CGFloat: Subtractable {}

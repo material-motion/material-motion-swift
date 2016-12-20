@@ -20,9 +20,11 @@ import MaterialMotionStreams
 
 // This example demonstrates how to connect a drag source to a property on a view.
 
+@available(iOS 9.0, *)
 public class DragSourceExampleViewController: UIViewController {
 
   let aggregator = MotionAggregator()
+  var subscription: Subscription!
   public override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -31,6 +33,10 @@ public class DragSourceExampleViewController: UIViewController {
     let square = UIView(frame: .init(x: 0, y: 0, width: 64, height: 64))
     square.backgroundColor = .red
     view.addSubview(square)
+
+    let square2 = UIView(frame: .init(x: 0, y: 0, width: 64, height: 64))
+    square2.backgroundColor = .orange
+    view.addSubview(square2)
 
     let circle = UIView(frame: .init(x: 0, y: 0, width: 64, height: 64))
     circle.backgroundColor = .blue
@@ -49,6 +55,12 @@ public class DragSourceExampleViewController: UIViewController {
 
     let positionStream = attach.positionStream.toggled(with: dragStream.translated(from: propertyOf(square).center, in: view))
     aggregator.write(positionStream, to: propertyOf(square).center)
+
+    let spring = Spring(to: attach.destination,
+                        initialValue: propertyOf(square2.layer).position(),
+                        threshold: 1)
+    let spring$ = coreAnimationSpringSource(spring)
+    aggregator.write(spring$, to: propertyOf(square2.layer).position())
 
     Tap(sets: attach.destination, containerView: view).connect(with: aggregator)
   }
