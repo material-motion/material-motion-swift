@@ -42,14 +42,28 @@ public class MotionAggregator {
         strongSelf.activeSubscriptions.remove(token)
       }
 
-      strongSelf.aggregateState = strongSelf.activeSubscriptions.count > 0 ? .active : .atRest
+      let oldState = strongSelf.aggregateState
+      let newState: MotionState = strongSelf.activeSubscriptions.count > 0 ? .active : .atRest
+      strongSelf.aggregateState = newState
+      if oldState != newState {
+        strongSelf.delegate?.motionAggregateStateDidChange(strongSelf)
+      }
     }))
   }
 
   public private(set) var aggregateState = MotionState.atRest
 
+  /** The delegate to which state change updates should be sent. */
+  public weak var delegate: MotionAggregatorDelegate?
+
   private var subscriptions: [Subscription] = []
 
   typealias Token = String
   private var activeSubscriptions = Set<Token>()
+}
+
+/** A motion aggregator delegate is able to receive updates about changes of the aggregate state. */
+public protocol MotionAggregatorDelegate: NSObjectProtocol {
+  /** Invoked each time the aggregate state changes. */
+  func motionAggregateStateDidChange(_ motionAggregate: MotionAggregator)
 }
