@@ -16,49 +16,38 @@
 
 import Foundation
 
-/** On tap, changes the destination to the tap's centroid. */
-public class TapToChangeDestination: Interaction {
-  public let destination: ReactiveProperty<CGPoint>
-  public var destinationStream: MotionObservable<CGPoint>
+/** Writes the tap's centroid to the position. */
+public class Tap: Interaction {
+
+  /** The position to which the position stream is expected to write. */
+  public let position: ReactiveProperty<CGPoint>
+
+  /** A stream that emits positional values to be written to the view. */
+  public var positionStream: MotionObservable<CGPoint>
 
   /**
+   - parameter position: The position property to which the tap centroid should be written.
    - parameter containerView: The tap gesture recognizer's centroid will be calculated relative to
                               this view. If the tap gesture recognizer isn't associated with a view
                               already, it will be added to this view.
-   - parameter destination: The destination property to which the tap centroid should be written.
    - parameter tapGestureRecognizer: The tap gesture recognizer whose taps should be observed.
    */
-  public init(containerView: UIView,
-              destination: ReactiveProperty<CGPoint>,
+  public init(sets position: ReactiveProperty<CGPoint>,
+              containerView: UIView,
               tapGestureRecognizer: UITapGestureRecognizer? = nil) {
-    self.destination = destination
+    self.position = position
 
     let tapGestureRecognizer = tapGestureRecognizer ?? UITapGestureRecognizer()
     if tapGestureRecognizer.view == nil {
       containerView.addGestureRecognizer(tapGestureRecognizer)
     }
 
-    self.destinationStream = gestureSource(tapGestureRecognizer)
+    self.positionStream = gestureSource(tapGestureRecognizer)
       .onRecognitionState(.recognized)
       .centroid(in: containerView)
   }
 
-  /**
-   A convenience method that creates the destination reactive property for you.
-
-   - parameter containerView: The tap gesture recognizer's centroid will be calculated relative to
-                              this view. If the tap gesture recognizer isn't associated with a view
-                              already, it will be added to this view.
-   - parameter destination: An initial destination value.
-   - parameter tapGestureRecognizer: The tap gesture recognizer whose taps should be observed.
-   */
-  public convenience init(containerView: UIView, destination: CGPoint, tapGestureRecognizer: UITapGestureRecognizer? = nil) {
-    self.init(containerView: containerView,
-              destination: createProperty(withInitialValue: destination),
-              tapGestureRecognizer: tapGestureRecognizer)
-  }
-
   public func connect(with aggregator: MotionAggregator) {
-    aggregator.write(destinationStream, to: destination)
+    aggregator.write(positionStream, to: position)
   }
 }

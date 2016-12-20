@@ -50,10 +50,6 @@ public class DragSourceExampleViewController: UIViewController {
     let positionStream = attach.positionStream.toggled(with: dragStream.translated(from: propertyOf(square).center, in: view))
     aggregator.write(positionStream, to: propertyOf(square).center)
 
-    let tap = UITapGestureRecognizer()
-    view.addGestureRecognizer(tap)
-
-    aggregator.write(gestureSource(tap).onRecognitionState(.recognized).centroid(in: view),
-                     to: attach.destination)
+    Tap(sets: attach.destination, containerView: view).connect(with: aggregator)
   }
 }
