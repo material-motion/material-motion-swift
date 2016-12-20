@@ -69,6 +69,12 @@ private func configureSpringAnimation<T>(_ animation: POPSpringAnimation, spring
   animation.removedOnCompletion = false
   animation.velocity = spring.initialVelocity.read()
 
+  // animationDidStartBlock is invoked at the turn of the run loop, potentially leaving this stream
+  // in an at rest state even though it's effectively active. To ensure that the stream is marked
+  // active until the run loop turns we immediately send an .active state to the observer.
+
+  observer.state(.active)
+
   animation.animationDidStartBlock = { anim in
     observer.state(.active)
   }
