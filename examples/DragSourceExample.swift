@@ -39,21 +39,21 @@ public class DragSourceExampleViewController: UIViewController {
 
     let gesture = UIPanGestureRecognizer()
     view.addGestureRecognizer(gesture)
-
-    let circleCenter = propertyOf(circle).center
-    let spring = Spring(to: circleCenter, initialValue: propertyOf(square).center, threshold: 1)
-
     let dragStream = gestureSource(gesture)
-    aggregator.write(dragStream.onRecognitionState(.ended).velocity(in: view), to: spring.initialVelocity)
 
-    let springStream = popSpringSource(spring)
-    let positionStream = springStream.toggled(with: dragStream.translated(from: propertyOf(square).center, in: view))
+    let attach = AttachWithSpring(position: propertyOf(square).center,
+                                  to: propertyOf(circle).center,
+                                  springSource: popSpringSource)
+
+    aggregator.write(dragStream.onRecognitionState(.ended).velocity(in: view), to: attach.initialVelocity)
+
+    let positionStream = attach.positionStream.toggled(with: dragStream.translated(from: propertyOf(square).center, in: view))
     aggregator.write(positionStream, to: propertyOf(square).center)
 
     let tap = UITapGestureRecognizer()
     view.addGestureRecognizer(tap)
 
     aggregator.write(gestureSource(tap).onRecognitionState(.recognized).centroid(in: view),
-                     to: circleCenter)
+                     to: attach.destination)
   }
 }
