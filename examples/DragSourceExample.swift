@@ -43,25 +43,18 @@ public class DragSourceExampleViewController: UIViewController {
     circle.layer.cornerRadius = circle.bounds.width / 2
     view.addSubview(circle)
 
-    let gesture = UIPanGestureRecognizer()
-    view.addGestureRecognizer(gesture)
-    let dragStream = gestureSource(gesture)
+    let tossable = TossableAndAttachWithSpring(position: propertyOf(square).center,
+                            to: propertyOf(circle).center,
+                            containerView: view,
+                            springSource: popSpringSource)
+    tossable.connect(with: aggregator)
 
-    let attach = AttachWithSpring(position: propertyOf(square).center,
-                                  to: propertyOf(circle).center,
-                                  springSource: popSpringSource)
-
-    aggregator.write(dragStream.onRecognitionState(.ended).velocity(in: view), to: attach.initialVelocity)
-
-    let positionStream = attach.positionStream.toggled(with: dragStream.translated(from: propertyOf(square).center, in: view))
-    aggregator.write(positionStream, to: propertyOf(square).center)
-
-    let spring = Spring(to: attach.destination,
+    let spring = Spring(to: tossable.destination,
                         initialValue: propertyOf(square2.layer).position(),
                         threshold: 1)
     let spring$ = coreAnimationSpringSource(spring)
     aggregator.write(spring$, to: propertyOf(square2.layer).position())
 
-    Tap(sets: attach.destination, containerView: view).connect(with: aggregator)
+    Tap(sets: tossable.destination, containerView: view).connect(with: aggregator)
   }
 }
