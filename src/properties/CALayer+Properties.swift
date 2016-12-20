@@ -25,25 +25,27 @@ public func propertyOf(_ layer: CALayer) -> CALayerReactivePropertyBuilder {
 public class CALayerReactivePropertyBuilder {
 
   /** A property representing the layer's .position value. */
+  public func alpha<O>() -> ReactiveProperty<(O, CGFloat)> where O: CAPropertyAnimation {
+    return coreAnimationProperty(keyPath: "opacity")
+  }
+
+  /** A property representing the layer's .position value. */
   public func position() -> ReactiveProperty<CGPoint> {
     let layer = self.layer
     return ReactiveProperty(read: { layer.position }, write: { layer.position = $0 })
   }
 
   /** A property representing the layer's .position value. */
-  @available(iOS 9.0, *)
   public func position<O>() -> ReactiveProperty<(O, CGPoint)> where O: CAPropertyAnimation {
     return coreAnimationProperty(keyPath: "position")
   }
 
   /** A property representing the layer's .position.x value. */
-  @available(iOS 9.0, *)
   public func positionX<O>() -> ReactiveProperty<(O, CGFloat)> where O: CAPropertyAnimation {
     return coreAnimationProperty(keyPath: "position.x")
   }
 
   /** A property representing the layer's .position.y value. */
-  @available(iOS 9.0, *)
   public func positionY<O>() -> ReactiveProperty<(O, CGFloat)> where O: CAPropertyAnimation {
     return coreAnimationProperty(keyPath: "position.y")
   }

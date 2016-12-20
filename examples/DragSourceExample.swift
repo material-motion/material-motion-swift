@@ -38,11 +38,9 @@ class ExampleTransitionDirector: TransitionDirector {
       to = backPositionY
     }
 
-    let spring = Spring<CGFloat>(to: createProperty(withInitialValue: to),
-                                 initialValue: createProperty(withInitialValue: from),
-                                 threshold: 1)
-    let fade$ = popSpringSource(spring)
-    transition.runtime.write(fade$, to: propertyOf(transition.fore.view).centerY)
+    let tween = Tween<CGFloat>(duration: 0.35, values: [from, to])
+    let fade$ = coreAnimationTweenSource(tween)
+    transition.runtime.write(fade$, to: propertyOf(transition.fore.view.layer).positionY())
   }
 }
 
