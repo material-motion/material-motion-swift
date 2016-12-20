@@ -20,8 +20,58 @@ import MaterialMotionStreams
 
 // This example demonstrates how to connect a drag source to a property on a view.
 
+class ExampleTransitionDirector: TransitionDirector {
+  required init() {}
+
+  func willBeginTransition(_ transition: Transition) {
+    let backPositionY = transition.containerView().bounds.height * 1.5
+    let forePositionY = transition.containerView().bounds.midY
+
+    let from: CGFloat
+    let to: CGFloat
+    switch transition.direction {
+    case .forward:
+      from = backPositionY
+      to = forePositionY
+    case .backward:
+      from = forePositionY
+      to = backPositionY
+    }
+
+    let spring = Spring<CGFloat>(to: createProperty(withInitialValue: to),
+                                 initialValue: createProperty(withInitialValue: from),
+                                 threshold: 1)
+    let fade$ = popSpringSource(spring)
+    transition.runtime.write(fade$, to: propertyOf(transition.fore.view).centerY)
+  }
+}
+
 @available(iOS 9.0, *)
 public class DragSourceExampleViewController: UIViewController {
+
+  override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+
+    navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTap))
+  }
+
+  required public init?(coder aDecoder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  func didTap() {
+    let vc = UIViewController()
+    vc.view.backgroundColor = .red
+    let tap = UITapGestureRecognizer()
+    tap.addTarget(self, action: #selector(tapToDismiss))
+    vc.view.addGestureRecognizer(tap)
+    vc.transitionController.directorType = ExampleTransitionDirector.self
+    present(vc, animated: true)
+  }
+
+  func tapToDismiss() {
+    dismiss(animated: true)
+  }
 
   let aggregator = MotionAggregator()
   var subscription: Subscription!
