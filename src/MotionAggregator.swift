@@ -46,7 +46,7 @@ public class MotionAggregator {
     }))
   }
 
-  public var aggregateState = MotionState.atRest
+  public private(set) var aggregateState = MotionState.atRest
 
   private var subscriptions: [Subscription] = []
 
