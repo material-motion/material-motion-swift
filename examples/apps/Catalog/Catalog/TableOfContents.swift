@@ -24,3 +24,9 @@ extension DragSourceExampleViewController {
     return ["Drag source"]
   }
 }
+
+extension ModalDialogExampleViewController {
+  class func catalogBreadcrumbs() -> [String] {
+    return ["Modal dialog"]
+  }
+}
