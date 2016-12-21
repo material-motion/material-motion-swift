@@ -16,44 +16,49 @@
 
 import Foundation
 
-/** Attaches a position to a destination using a spring. */
-public class AttachWithSpring: Interaction {
+/**
+ Attaches a property to a destination using a spring.
 
-  /** The position to which the position stream is expected to write. */
-  public let position: ReactiveProperty<CGPoint>
+ The spring's initial position will be the property's initial value. valueStream will emit values
+ that will cause the property to animate from its initial value to the destination property.
+ */
+public class AttachWithSpring<T: Zeroable>: Interaction {
 
-  /** A stream that emits positional values to be written to the view. */
-  public var positionStream: MotionObservable<CGPoint>
+  /** The property to which the value stream is expected to write. */
+  public let property: ReactiveProperty<T>
 
-  /** The destination to which the spring will pull the view. */
-  public let destination: ReactiveProperty<CGPoint>
+  /** A stream that emits values to be written to the property. */
+  public var valueStream: MotionObservable<T>
+
+  /** The destination to which the spring will pull the property. */
+  public let destination: ReactiveProperty<T>
 
   /** The initial velocity of the spring. */
-  public let initialVelocity: ReactiveProperty<CGPoint>
+  public let initialVelocity: ReactiveProperty<T>
 
   /** The spring configuration governing this interaction. */
   public let springConfiguration: ReactiveProperty<SpringConfiguration>
 
   /**
-   - parameter position: The position to be updated by the position stream.
-   - parameter destination: The destination property to which the position should spring.
+   - parameter property: The property to be updated by the value stream.
+   - parameter destination: The destination property to which the property should spring.
    - parameter springSource: A function capable of creating a spring source.
    */
-  public init(position: ReactiveProperty<CGPoint>,
-              to destination: ReactiveProperty<CGPoint>,
-              springSource: SpringSource<CGPoint>) {
+  public init(property: ReactiveProperty<T>,
+              to destination: ReactiveProperty<T>,
+              springSource: SpringSource<T>) {
     self.destination = destination
-    self.position = position
+    self.property = property
 
-    let spring = Spring(to: destination, initialValue: position, threshold: 1)
+    let spring = Spring(to: destination, initialValue: property, threshold: 1)
     self.springConfiguration = spring.configuration
     self.initialVelocity = spring.initialVelocity
 
     let springStream = springSource(spring)
-    self.positionStream = springStream
+    self.valueStream = springStream
   }
 
   public func connect(with aggregator: MotionAggregator) {
-    aggregator.write(positionStream, to: position)
+    aggregator.write(valueStream, to: property)
   }
 }

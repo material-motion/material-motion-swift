@@ -21,7 +21,7 @@ import Foundation
 
  Initiating a drag will stop the spring simulation.
  */
-public class TossableAndAttachWithSpring: AttachWithSpring {
+public class TossableAndAttachWithSpring: AttachWithSpring<CGPoint> {
 
   /** A stream that emits the pan gesture's velocity when the gesture ends. */
   public var initialVelocityStream: MotionObservable<CGPoint>
@@ -50,9 +50,9 @@ public class TossableAndAttachWithSpring: AttachWithSpring {
 
     self.initialVelocityStream = dragStream.onRecognitionState(.ended).velocity(in: containerView)
 
-    super.init(position: position, to: destination, springSource: springSource)
+    super.init(property: position, to: destination, springSource: springSource)
 
-    self.positionStream = self.positionStream.toggled(with: translationStream)
+    self.valueStream = self.valueStream.toggled(with: translationStream)
   }
 
   public override func connect(with aggregator: MotionAggregator) {
