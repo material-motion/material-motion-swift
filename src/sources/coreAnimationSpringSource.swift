@@ -39,7 +39,16 @@ public func coreAnimationSpringSource<T where T: Subtractable, T: Zeroable>(_ sp
       animation.fromValue = delta
       animation.toValue = T.zero()
       animation.duration = animation.settlingDuration
+
+      observer.state(.active)
+      CATransaction.begin()
+      CATransaction.setCompletionBlock {
+        observer.state(.atRest)
+      }
+
       observer.next(animation, $0)
+
+      CATransaction.commit()
     }
 
     return {
