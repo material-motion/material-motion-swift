@@ -70,7 +70,7 @@ public class CALayerReactivePropertyBuilder {
       let key = NSUUID().uuidString
       lastAnimationKey = key
       layer.add(animation, forKey: key)
-      layer.setValue(modelValue, forKeyPath: animation.keyPath!)
+      layer.setValue(modelValue, forKeyPath: keyPath)
     })
   }
 
