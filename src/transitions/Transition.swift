@@ -32,7 +32,7 @@ public class Transition: NSObject {
   }
 
   /** The direction this transition is moving in. */
-  public let direction: Direction
+  public let direction: ReactiveProperty<Direction>
 
   /** The transition window for this transition. */
   public let window: TransitionTimeWindow
@@ -67,7 +67,8 @@ public class Transition: NSObject {
   weak var delegate: TransitionDelegate?
 
   init(directorType: TransitionDirector.Type, direction: Direction, back: UIViewController, fore: UIViewController) {
-    self.direction = direction
+    self.direction = createProperty(withInitialValue: direction)
+    self.initialDirection = direction
     self.back = back
     self.fore = fore
     self.window = TransitionTimeWindow(duration: Transition.defaultDuration)
@@ -83,6 +84,7 @@ public class Transition: NSObject {
     self.runtime!.delegate = self
   }
 
+  fileprivate let initialDirection: Direction
   fileprivate var director: TransitionDirector!
   fileprivate var context: UIViewControllerContextTransitioning!
 
@@ -141,7 +143,7 @@ extension Transition {
         to.view.frame = finalFrame
       }
 
-      switch direction {
+      switch direction.read() {
       case .forward:
         context.containerView.addSubview(to.view)
 
@@ -163,7 +165,7 @@ extension Transition {
   }
 
   fileprivate func runtimeDidComeToRest() {
-    let completedInOriginalDirection = true
+    let completedInOriginalDirection = direction.read() == initialDirection
 
     // UIKit container view controllers will replay their transition animation if the transition
     // percentage is exactly 0 or 1, so we fake being super close to these values in order to avoid
