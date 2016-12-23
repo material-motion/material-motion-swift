@@ -62,7 +62,7 @@ public class Transition: NSObject {
   public let fore: UIViewController
 
   /** The runtime to which motion should be registered. */
-  public fileprivate(set) var runtime: MotionAggregator!
+  public fileprivate(set) var runtime: MotionRuntime!
 
   weak var delegate: TransitionDelegate?
 
@@ -75,7 +75,7 @@ public class Transition: NSObject {
 
     // TODO: Create a Timeline.
 
-    self.runtime = MotionAggregator()
+    self.runtime = MotionRuntime()
 
     self.director = directorType.init()
 
@@ -116,8 +116,8 @@ extension Transition: UIViewControllerInteractiveTransitioning {
   }
 }
 
-extension Transition: MotionAggregatorDelegate {
-  public func motionAggregateStateDidChange(_ motionAggregate: MotionAggregator) {
+extension Transition: MotionRuntimeDelegate {
+  public func motionAggregateStateDidChange(_ motionAggregate: MotionRuntime) {
     if motionAggregate.aggregateState == .atRest {
       runtimeDidComeToRest()
     }

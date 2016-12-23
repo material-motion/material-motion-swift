@@ -62,8 +62,8 @@ public class TransitionSpring<T: Zeroable>: Interaction {
     property.write(direction.read() == .forward ? backwardDestination : forwardDestination)
   }
 
-  public func connect(with aggregator: MotionAggregator) {
-    aggregator.write(destinationStream, to: destination)
-    aggregator.write(valueStream, to: property)
+  public func connect(with runtime: MotionRuntime) {
+    runtime.write(destinationStream, to: destination)
+    runtime.write(valueStream, to: property)
   }
 }

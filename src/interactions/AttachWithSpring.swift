@@ -58,7 +58,7 @@ public class AttachWithSpring<T: Zeroable>: Interaction {
     self.valueStream = springStream
   }
 
-  public func connect(with aggregator: MotionAggregator) {
-    aggregator.write(valueStream, to: property)
+  public func connect(with runtime: MotionRuntime) {
+    runtime.write(valueStream, to: property)
   }
 }

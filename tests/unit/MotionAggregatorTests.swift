@@ -31,7 +31,7 @@ class PropertyWriterTests: XCTestCase {
       return noopDisconnect
     }
 
-    let writer = MotionAggregator()
+    let writer = MotionRuntime()
     writer.write(observable, to: property)
 
     XCTAssertEqual(someVar, value)

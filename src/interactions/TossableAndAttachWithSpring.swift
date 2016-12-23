@@ -55,9 +55,9 @@ public class TossableAndAttachWithSpring: AttachWithSpring<CGPoint> {
     self.valueStream = self.valueStream.toggled(with: translationStream)
   }
 
-  public override func connect(with aggregator: MotionAggregator) {
-    aggregator.write(initialVelocityStream, to: initialVelocity)
+  public override func connect(with runtime: MotionRuntime) {
+    runtime.write(initialVelocityStream, to: initialVelocity)
 
-    super.connect(with: aggregator)
+    super.connect(with: runtime)
   }
 }

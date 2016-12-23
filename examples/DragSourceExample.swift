@@ -71,7 +71,7 @@ public class DragSourceExampleViewController: UIViewController {
     dismiss(animated: true)
   }
 
-  let aggregator = MotionAggregator()
+  let runtime = MotionRuntime()
   var subscription: Subscription!
   public override func viewDidLoad() {
     super.viewDidLoad()
@@ -95,14 +95,14 @@ public class DragSourceExampleViewController: UIViewController {
                             to: propertyOf(circle).center,
                             containerView: view,
                             springSource: popSpringSource)
-    tossable.connect(with: aggregator)
+    tossable.connect(with: runtime)
 
     let spring = Spring(to: tossable.destination,
                         initialValue: propertyOf(square2.layer).position(),
                         threshold: 1)
     let spring$ = coreAnimationSpringSource(spring)
-    aggregator.write(spring$, to: propertyOf(square2.layer).position())
+    runtime.write(spring$, to: propertyOf(square2.layer).position())
 
-    Tap(sets: tossable.destination, containerView: view).connect(with: aggregator)
+    Tap(sets: tossable.destination, containerView: view).connect(with: runtime)
   }
 }

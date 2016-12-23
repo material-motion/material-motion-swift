@@ -47,7 +47,7 @@ public class Tap: Interaction {
       .centroid(in: containerView)
   }
 
-  public func connect(with aggregator: MotionAggregator) {
-    aggregator.write(positionStream, to: position)
+  public func connect(with runtime: MotionRuntime) {
+    runtime.write(positionStream, to: position)
   }
 }

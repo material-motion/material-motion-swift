@@ -18,11 +18,11 @@ import Foundation
 import IndefiniteObservable
 
 /**
- A MotionAggregator writes the output of streams to properties and observes their overall state.
+ A MotionRuntime writes the output of streams to properties and observes their overall state.
  */
-public class MotionAggregator {
+public class MotionRuntime {
 
-  /** Creates a motion aggregator instance. */
+  /** Creates a motion runtime instance. */
   public init() {
   }
 
@@ -58,7 +58,7 @@ public class MotionAggregator {
   public private(set) var aggregateState = MotionState.atRest
 
   /** The delegate to which state change updates should be sent. */
-  public weak var delegate: MotionAggregatorDelegate?
+  public weak var delegate: MotionRuntimeDelegate?
 
   private var subscriptions: [Subscription] = []
 
@@ -66,8 +66,8 @@ public class MotionAggregator {
   private var activeSubscriptions = Set<Token>()
 }
 
-/** A motion aggregator delegate is able to receive updates about changes of the aggregate state. */
-public protocol MotionAggregatorDelegate: NSObjectProtocol {
+/** A motion runtime delegate is able to receive updates about changes of the aggregate state. */
+public protocol MotionRuntimeDelegate: NSObjectProtocol {
   /** Invoked each time the aggregate state changes. */
-  func motionAggregateStateDidChange(_ motionAggregate: MotionAggregator)
+  func motionAggregateStateDidChange(_ motionAggregate: MotionRuntime)
 }
