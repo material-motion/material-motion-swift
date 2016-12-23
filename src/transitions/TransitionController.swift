@@ -81,7 +81,7 @@ public class TransitionController: NSObject {
 
 extension TransitionController {
   func isInteractive() -> Bool {
-    return false // TODO: Implement by checking whether any gesture recognizers are active.
+    return dismisser.gestureRecognizers.count > 0
   }
 
   func prepareForTransition(withSource: UIViewController,
@@ -100,7 +100,11 @@ extension TransitionController {
         selfDismissingDirector.willPresent(fore: fore, dismisser: dismisser)
       }
 
-      transition = Transition(directorType: directorType, direction: direction, back: back, fore: fore)
+      transition = Transition(directorType: directorType,
+                              direction: direction,
+                              back: back,
+                              fore: fore,
+                              dismisser: dismisser)
       transition?.delegate = self
     }
   }
@@ -116,7 +120,7 @@ extension TransitionController: ViewControllerDismisserDelegate {
       return
     }
 
-    if associatedViewController.isBeingDismissed {
+    if associatedViewController.isBeingDismissed || associatedViewController.isBeingPresented {
       return
     }
 

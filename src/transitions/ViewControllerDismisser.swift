@@ -39,7 +39,7 @@ public class ViewControllerDismisser: NSObject {
   }
 
   weak var delegate: ViewControllerDismisserDelegate?
-  fileprivate var gestureRecognizers = Set<UIGestureRecognizer>()
+  private(set) var gestureRecognizers = Set<UIGestureRecognizer>()
   fileprivate var soloGestureRecognizers = Set<UIGestureRecognizer>()
 }
 

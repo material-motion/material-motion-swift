@@ -71,7 +71,6 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
 
   required init() {}
 
-  var subscription: Subscription?
   func willBeginTransition(_ transition: Transition) {
     let size = transition.fore.preferredContentSize
 
@@ -83,21 +82,40 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
     let backPositionY = bounds.maxY + size.height / 2
     let forePositionY = bounds.midY
 
-    TransitionSpring(property: propertyOf(transition.fore.view).centerY,
-                     back: backPositionY,
-                     fore: forePositionY,
-                     direction: transition.direction,
-                     springSource: popSpringSource)
-      .connect(with: transition.runtime)
+    var spring: TransitionSpring<CGFloat>!
 
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-      transition.direction.write(.backward)
+    if #available(iOS 9.0, *) {
+      spring = TransitionSpring(property: propertyOf(transition.fore.view.layer).positionY(),
+                                back: backPositionY,
+                                fore: forePositionY,
+                                direction: transition.direction,
+                                springSource: coreAnimationSpringSource)
+    } else {
+      // Fallback on earlier versions
     }
+
+    for gestureRecognizer in transition.gestureRecognizers {
+      switch gestureRecognizer {
+      case let pan as UIPanGestureRecognizer:
+        let dragStream = gestureSource(pan).translated(from: propertyOf(transition.fore.view.layer).position(),
+                                                       in: transition.containerView()).y()
+        spring.valueStream = spring.valueStream.toggled(with: dragStream)
+        let velocityStream = gestureSource(pan).onRecognitionState(.ended).velocity(in: transition.containerView()).y()
+        transition.runtime.write(velocityStream, to: spring.initialVelocity)
+      default:
+        ()
+      }
+    }
+
+    spring.connect(with: transition.runtime)
   }
 
   static func willPresent(fore: UIViewController, dismisser: ViewControllerDismisser) {
     let tap = UITapGestureRecognizer()
     fore.view.addGestureRecognizer(tap)
     dismisser.dismissWhenGestureRecognizerBegins(tap)
+    let pan = UIPanGestureRecognizer()
+    fore.view.addGestureRecognizer(pan)
+    dismisser.dismissWhenGestureRecognizerBegins(pan)
   }
 }
