@@ -58,12 +58,19 @@ extension ExtendableMotionObservable {
         }
 
         if state == .atRest && originalStreamSubscription == nil {
-          originalStreamSubscription = self.subscribe(next: observer.next, state: observer.state)
+          originalStreamSubscription = self.subscribe(next: observer.next,
+                                                      state: observer.state,
+                                                      coreAnimation: observer.coreAnimation)
         }
 
         if state == .active {
           originalStreamSubscription?.unsubscribe()
           originalStreamSubscription = nil
+        }
+
+      }, coreAnimation: { animation in
+        if emittingStream == .preferred {
+          observer.coreAnimation(animation)
         }
       })
 

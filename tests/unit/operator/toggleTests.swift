@@ -53,7 +53,7 @@ class toggleTests: XCTestCase {
     var observedValues: [WhichStream] = []
     let _ = stream.toggled(with: preferredStream).subscribe(next: {
       observedValues.append($0)
-    }, state: { _ in })
+    }, state: { _ in }, coreAnimation: { _ in })
 
     XCTAssertEqual(observedValues, [.preferredStream])
   }
@@ -75,7 +75,7 @@ class toggleTests: XCTestCase {
     var observedValues: [WhichStream] = []
     let _ = stream.toggled(with: preferredStream).subscribe(next: {
       observedValues.append($0)
-    }, state: { _ in })
+    }, state: { _ in }, coreAnimation: { _ in })
 
     XCTAssertEqual(observedValues, [.stream])
   }
@@ -97,7 +97,7 @@ class toggleTests: XCTestCase {
     var observedValues: [WhichStream] = []
     let _ = stream.toggled(with: preferredStream).subscribe(next: {
       observedValues.append($0)
-    }, state: { _ in })
+    }, state: { _ in }, coreAnimation: { _ in })
 
     XCTAssertEqual(observedValues, [.stream])
   }
@@ -119,7 +119,7 @@ class toggleTests: XCTestCase {
     var observedValues: [WhichStream] = []
     let _ = stream.toggled(with: preferredStream).subscribe(next: {
       observedValues.append($0)
-    }, state: { _ in })
+    }, state: { _ in }, coreAnimation: { _ in })
 
     XCTAssertEqual(observedValues, [.preferredStream])
   }

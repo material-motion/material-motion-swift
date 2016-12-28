@@ -28,7 +28,26 @@ extension ExtendableMotionObservable {
     return MotionObservable<U> { observer in
       return self.subscribe(next: {
         return operation($0, observer.next)
-      }, state: observer.state ).unsubscribe
+      }, state: observer.state, coreAnimation: { _ in
+        assertionFailure("Core animation is not supported by this operator.")
+      }).unsubscribe
+    }
+  }
+
+  /**
+   A light-weight operator builder with core animation support.
+
+   This is the preferred method for building new operators that support core animation. This builder
+   can be used to create any operator that only needs to modify values. All state events are
+   forwarded along.
+   */
+  func _nextOperator<U>(_ operation: @escaping (T, (U) -> Void) -> Void, coreAnimation: @escaping (CAPropertyAnimation, (CAPropertyAnimation) -> Void) -> Void) -> MotionObservable<U> {
+    return MotionObservable<U> { observer in
+      return self.subscribe(next: {
+        return operation($0, observer.next)
+      }, state: observer.state, coreAnimation: {
+        return coreAnimation($0, observer.coreAnimation)
+      }).unsubscribe
     }
   }
 }

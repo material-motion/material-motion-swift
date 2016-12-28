@@ -35,11 +35,22 @@ public func createProperty<T>(withInitialValue initialValue: T) -> ReactivePrope
  Subscribers will receive updates whenever write is invoked.
  */
 public final class ReactiveProperty<T>: Readable, Writable, ExtendableMotionObservable {
+  public let coreAnimation: CoreAnimationChannel?
 
   /** Initializes a new instance with the given read/write functions. */
   public init(read: @escaping ScopedRead<T>, write: @escaping ScopedWrite<T>) {
     self._read = read
     self._write = write
+    self.coreAnimation = nil
+  }
+
+  /** Initializes a new instance with the given read/write functions. */
+  public init(read: @escaping ScopedRead<T>,
+              write: @escaping ScopedWrite<T>,
+              coreAnimation: @escaping CoreAnimationChannel) {
+    self._read = read
+    self._write = write
+    self.coreAnimation = coreAnimation
   }
 
   /** Returns the current value. */
@@ -68,8 +79,10 @@ public final class ReactiveProperty<T>: Readable, Writable, ExtendableMotionObse
 
    Invoke unsubscribe on the returned subscription in order to stop receiving new values.
    */
-  public func subscribe(next: @escaping NextChannel<T>, state: @escaping StateChannel) -> Subscription {
-    let observer = MotionObserver(next: next, state: state)
+  public func subscribe(next: @escaping NextChannel<T>,
+                        state: @escaping StateChannel,
+                        coreAnimation: @escaping CoreAnimationChannel) -> Subscription {
+    let observer = MotionObserver(next: next, state: state, coreAnimation: coreAnimation)
     observers.append(observer)
 
     observer.next(read())
@@ -83,7 +96,7 @@ public final class ReactiveProperty<T>: Readable, Writable, ExtendableMotionObse
 
   /** A convenience function for subscribe that provides an empty state subscription. */
   public func subscribe(_ next: @escaping (T) -> Void) -> Subscription {
-    return self.subscribe(next: next, state: { _ in })
+    return self.subscribe(next: next, state: { _ in }, coreAnimation: { _ in })
   }
 
   private let _read: ScopedRead<T>

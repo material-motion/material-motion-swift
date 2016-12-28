@@ -43,7 +43,7 @@ class _mapTests: XCTestCase {
       if state == .active {
         stateReceived.fulfill()
       }
-    })
+    }, coreAnimation: { _ in })
 
     waitForExpectations(timeout: 0)
   }

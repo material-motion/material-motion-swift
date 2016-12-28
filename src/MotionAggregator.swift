@@ -29,10 +29,7 @@ public class MotionAggregator {
   /** Subscribes to the stream, writes its output to the given property, and observes its state. */
   public func write<T>(_ stream: MotionObservable<T>, to property: ReactiveProperty<T>) {
     let token = NSUUID().uuidString
-    subscriptions.append(stream.subscribe(next: {
-      property.write($0)
-
-    }, state: { [weak self] state in
+    subscriptions.append(stream.subscribe(next: property.write, state: { [weak self] state in
       property.state(state)
 
       guard let strongSelf = self else { return }
@@ -48,6 +45,13 @@ public class MotionAggregator {
       if oldState != newState {
         strongSelf.delegate?.motionAggregateStateDidChange(strongSelf)
       }
+
+    }, coreAnimation: { animation in
+      guard let coreAnimation = property.coreAnimation else {
+        assertionFailure("This property does not support core animation.")
+        return
+      }
+      coreAnimation(animation)
     }))
   }
 

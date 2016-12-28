@@ -18,7 +18,7 @@ import Foundation
 import IndefiniteObservable
 
 /** Create a core animation tween source for a Tween plan. */
-public func coreAnimationTweenSource<T>(_ tween: Tween<T>) -> MotionObservable<(CAPropertyAnimation, T)> {
+public func coreAnimationTweenSource<T>(_ tween: Tween<T>) -> MotionObservable<T> {
   return MotionObservable { observer in
     let animation: CAPropertyAnimation
 
@@ -45,7 +45,8 @@ public func coreAnimationTweenSource<T>(_ tween: Tween<T>) -> MotionObservable<(
       observer.state(.atRest)
     }
 
-    observer.next(animation, values.last!)
+    observer.next(values.last!)
+    observer.coreAnimation(animation)
 
     CATransaction.commit()
 

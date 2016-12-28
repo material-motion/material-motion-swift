@@ -24,53 +24,36 @@ public func propertyOf(_ layer: CALayer) -> CALayerReactivePropertyBuilder {
 /** A scoped property builder for CALayer instances. */
 public class CALayerReactivePropertyBuilder {
 
-  /** A property representing the layer's .position value. */
-  public func alpha<O>() -> ReactiveProperty<(O, CGFloat)> where O: CAPropertyAnimation {
-    return coreAnimationProperty(keyPath: "opacity")
+  /** A property representing the layer's .opacity value. */
+  public func opacity() -> ReactiveProperty<CGFloat> {
+    let layer = self.layer
+    return property(read: { CGFloat(layer.opacity) },
+                    write: { layer.opacity = Float($0) },
+                    keyPath: "opacity")
   }
 
   /** A property representing the layer's .position value. */
   public func position() -> ReactiveProperty<CGPoint> {
     let layer = self.layer
-    return ReactiveProperty(read: { layer.position }, write: { layer.position = $0 })
-  }
-
-  /** A property representing the layer's .position value. */
-  public func position<O>() -> ReactiveProperty<(O, CGPoint)> where O: CAPropertyAnimation {
-    return coreAnimationProperty(keyPath: "position")
-  }
-
-  /** A property representing the layer's .position.x value. */
-  public func positionX<O>() -> ReactiveProperty<(O, CGFloat)> where O: CAPropertyAnimation {
-    return coreAnimationProperty(keyPath: "position.x")
+    return property(read: { layer.position },
+                    write: { layer.position = $0 },
+                    keyPath: "position")
   }
 
   /** A property representing the layer's .position.y value. */
-  public func positionY<O>() -> ReactiveProperty<(O, CGFloat)> where O: CAPropertyAnimation {
-    return coreAnimationProperty(keyPath: "position.y")
+  public func positionY() -> ReactiveProperty<CGFloat> {
+    let layer = self.layer
+    return property(read: { layer.position.y },
+                    write: { layer.position.y = $0 },
+                    keyPath: "position.y")
   }
 
-  private func coreAnimationProperty<O, T>(keyPath: String) -> ReactiveProperty<(O, T)> where O: CAPropertyAnimation, T: Zeroable {
+  private func property<T>(read: @escaping ScopedRead<T>, write: @escaping ScopedWrite<T>, keyPath: String) -> ReactiveProperty<T> {
     let layer = self.layer
     var lastAnimationKey: String?
-    return ReactiveProperty(read: {
-
-      // Return the latest model value and the last written animation, if available.
-
-      if let lastAnimationKey = lastAnimationKey, let animation = layer.animation(forKey: lastAnimationKey) {
-        let value = layer.value(forKeyPath: keyPath) as! T
-        return (animation as! O, value)
-      } else {
-        assertionFailure("No animation information presently available for \(keyPath)")
-        return (O() as! O, T.zero() as! T)
-      }
-
-    }, write: { animation, modelValue in
+    return ReactiveProperty(read: read, write: write, coreAnimation: { animation in
       animation.keyPath = keyPath
-      let key = NSUUID().uuidString
-      lastAnimationKey = key
-      layer.add(animation, forKey: key)
-      layer.setValue(modelValue, forKeyPath: keyPath)
+      layer.add(animation, forKey: nil)
     })
   }
 

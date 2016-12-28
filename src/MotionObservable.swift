@@ -20,17 +20,23 @@ import IndefiniteObservable
 // Channels are functions that pass values down the stream.
 public typealias NextChannel<T> = (T) -> Void
 public typealias StateChannel = (MotionState) -> Void
+public typealias CoreAnimationChannel = (CAPropertyAnimation) -> Void
 
 /**
  A MotionObservable is a type of [Observable](http://reactivex.io/documentation/observable.html)
- that specializes in motion systems that can be either active or at rest.
+ that specializes in motion systems that can be either active or at rest and potentially emit core
+ animation objects.
 
  Throughout this documentation we will treat the words "observable" and "stream" as synonyms.
  */
 public final class MotionObservable<T>: IndefiniteObservable<MotionObserver<T>>, ExtendableMotionObservable {
   /** Sugar for subscribing a MotionObserver. */
-  public func subscribe(next: @escaping NextChannel<T>, state: @escaping StateChannel) -> Subscription {
-    return super.subscribe(observer: MotionObserver<T>(next: next, state: state))
+  public func subscribe(next: @escaping NextChannel<T>,
+                        state: @escaping StateChannel,
+                        coreAnimation: @escaping CoreAnimationChannel) -> Subscription {
+    return super.subscribe(observer: MotionObserver<T>(next: next,
+                                                       state: state,
+                                                       coreAnimation: coreAnimation))
   }
 }
 
@@ -54,17 +60,24 @@ public enum MotionState {
   case active
 }
 
-/** A MotionObserver receives values and state updates from a MotionObservable subscription. */
+/**
+ A MotionObserver receives values, state updates, and core animation objects from a MotionObservable
+ subscription.
+ */
 public final class MotionObserver<T>: Observer {
   public typealias Value = T
 
-  public init(next: @escaping NextChannel<T>, state: @escaping StateChannel) {
+  public init(next: @escaping NextChannel<T>,
+              state: @escaping StateChannel,
+              coreAnimation: @escaping CoreAnimationChannel) {
     self.next = next
     self.state = state
+    self.coreAnimation = coreAnimation
   }
 
   public let next: NextChannel<T>
   public let state: StateChannel
+  public let coreAnimation: CoreAnimationChannel
 }
 
 /**
@@ -81,5 +94,7 @@ public protocol ExtendableMotionObservable {
    We define this only so that T can be inferred by the compiler so that we don't have to
    introduce a new generic type such as Value in the associatedtype here.
    */
-  func subscribe(next: @escaping NextChannel<T>, state: @escaping StateChannel) -> Subscription
+  func subscribe(next: @escaping NextChannel<T>,
+                 state: @escaping StateChannel,
+                 coreAnimation: @escaping CoreAnimationChannel) -> Subscription
 }
