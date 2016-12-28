@@ -103,8 +103,6 @@ extension Transition: UIViewControllerAnimatedTransitioning {
   }
 
   public func animationEnded(_ transitionCompleted: Bool) {
-    fore.view.isUserInteractionEnabled = true
-    back.view.isUserInteractionEnabled = true
   }
 }
 
@@ -127,8 +125,6 @@ extension Transition: MotionRuntimeDelegate {
 extension Transition {
   fileprivate func initiateTransition() {
     if let from = context.viewController(forKey: .from) {
-      from.view.isUserInteractionEnabled = false
-
       let finalFrame = context.finalFrame(for: from)
       if !finalFrame.isEmpty {
         from.view.frame = finalFrame
@@ -136,8 +132,6 @@ extension Transition {
     }
 
     if let to = context.viewController(forKey: .to) {
-      to.view.isUserInteractionEnabled = false
-
       let finalFrame = context.finalFrame(for: to)
       if !finalFrame.isEmpty {
         to.view.frame = finalFrame
