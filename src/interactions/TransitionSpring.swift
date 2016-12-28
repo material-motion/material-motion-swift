@@ -31,6 +31,9 @@ public class TransitionSpring<T: Zeroable>: Interaction {
   /** A stream that writes to the spring's destination when the transition's direction changes. */
   public var destinationStream: MotionObservable<T>
 
+  /** The initial velocity of the spring. */
+  public let initialVelocity: ReactiveProperty<T>
+
   /** The spring configuration governing this interaction. */
   public let springConfiguration: ReactiveProperty<SpringConfiguration>
 
@@ -55,6 +58,7 @@ public class TransitionSpring<T: Zeroable>: Interaction {
     let spring = Spring(to: destination, initialValue: property, threshold: 1)
 
     self.springConfiguration = spring.configuration
+    self.initialVelocity = spring.initialVelocity
     self.valueStream = springSource(spring)
     self.destinationStream = direction.destinations(back: backwardDestination,
                                                     fore: forwardDestination)
