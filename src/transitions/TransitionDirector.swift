@@ -27,3 +27,11 @@ public protocol TransitionDirector {
   /** Invoked on initiation of a view controller transition. */
   func willBeginTransition(_ transition: Transition)
 }
+
+/**
+ A self-dismissing director is given an opportunity to register gesture recognizers that will
+ cause the presented view controller to be dismissed.
+ */
+public protocol SelfDismissingTransitionDirector: TransitionDirector {
+  static func willPresent(fore: UIViewController, dismisser: ViewControllerDismisser)
+}

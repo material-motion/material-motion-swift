@@ -66,11 +66,17 @@ public class TransitionController: NSObject {
 
   init(viewController: UIViewController) {
     self.associatedViewController = viewController
+    self.dismisser = ViewControllerDismisser()
+
+    super.init()
+
+    self.dismisser.delegate = self
   }
 
   fileprivate var transition: Transition?
+  fileprivate let dismisser: ViewControllerDismisser
 
-  private weak var associatedViewController: UIViewController?
+  fileprivate weak var associatedViewController: UIViewController?
 }
 
 extension TransitionController {
@@ -90,9 +96,31 @@ extension TransitionController {
     assert(transition == nil, "A transition is already active.")
 
     if let directorType = directorType {
+      if direction == .forward, let selfDismissingDirector = directorType as? SelfDismissingTransitionDirector.Type {
+        selfDismissingDirector.willPresent(fore: fore, dismisser: dismisser)
+      }
+
       transition = Transition(directorType: directorType, direction: direction, back: back, fore: fore)
       transition?.delegate = self
     }
+  }
+}
+
+extension TransitionController: ViewControllerDismisserDelegate {
+  func dismiss() {
+    guard let associatedViewController = associatedViewController else {
+      return
+    }
+
+    if associatedViewController.presentingViewController == nil {
+      return
+    }
+
+    if associatedViewController.isBeingDismissed {
+      return
+    }
+
+    associatedViewController.dismiss(animated: true)
   }
 }
 

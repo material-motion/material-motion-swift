@@ -30,9 +30,6 @@ public class ModalDialogExampleViewController: UIViewController {
 
   func didTap() {
     let vc = ModalDialogViewController()
-    let tap = UITapGestureRecognizer()
-    tap.addTarget(self, action: #selector(tapToDismiss))
-    vc.view.addGestureRecognizer(tap)
     present(vc, animated: true)
   }
 
@@ -70,7 +67,7 @@ class ModalDialogViewController: UIViewController {
   }
 }
 
-class ModalDialogTransitionDirector: TransitionDirector {
+class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
 
   required init() {}
 
@@ -96,5 +93,11 @@ class ModalDialogTransitionDirector: TransitionDirector {
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
       transition.direction.write(.backward)
     }
+  }
+
+  static func willPresent(fore: UIViewController, dismisser: ViewControllerDismisser) {
+    let tap = UITapGestureRecognizer()
+    fore.view.addGestureRecognizer(tap)
+    dismisser.dismissWhenGestureRecognizerBegins(tap)
   }
 }
