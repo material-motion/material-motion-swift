@@ -48,6 +48,13 @@ public class UIViewReactivePropertyBuilder {
     return ReactiveProperty(read: { view.center }, write: { view.center = $0 })
   }
 
+  /** A property representing the view's transform.rotation.z value. */
+  public var rotation: ReactiveProperty<CGFloat> {
+    let view = self.view
+    return ReactiveProperty(read: { view.value(forKeyPath: "layer.transform.rotation.z") as! CGFloat },
+                            write: { view.setValue($0, forKeyPath: "layer.transform.rotation.z") })
+  }
+
   private let view: UIView
   fileprivate init(_ view: UIView) {
     self.view = view

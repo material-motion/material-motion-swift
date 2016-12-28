@@ -30,3 +30,9 @@ extension ModalDialogExampleViewController {
     return ["Modal dialog"]
   }
 }
+
+extension SwipeExampleViewController {
+  class func catalogBreadcrumbs() -> [String] {
+    return ["Swipe stack"]
+  }
+}
