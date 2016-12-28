@@ -35,7 +35,7 @@ public class MotionRuntime {
   }
 
   /** Subscribes to the stream, writes its output to the given property, and observes its state. */
-  public func write<T>(_ stream: MotionObservable<T>, to property: ReactiveProperty<T>) {
+  public func write<O: ExtendableMotionObservable, T>(_ stream: O, to property: ReactiveProperty<T>) where O.T == T {
     let token = NSUUID().uuidString
     subscriptions.append(stream.subscribe(next: property.write, state: { [weak self] state in
       property.state(state)
