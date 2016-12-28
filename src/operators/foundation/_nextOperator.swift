@@ -41,7 +41,7 @@ extension ExtendableMotionObservable {
    can be used to create any operator that only needs to modify values. All state events are
    forwarded along.
    */
-  func _nextOperator<U>(_ operation: @escaping (T, (U) -> Void) -> Void, coreAnimation: @escaping (CAPropertyAnimation, (CAPropertyAnimation) -> Void) -> Void) -> MotionObservable<U> {
+  func _nextOperator<U>(_ operation: @escaping (T, (U) -> Void) -> Void, coreAnimation: @escaping (CoreAnimationChannelEvent, CoreAnimationChannel) -> Void) -> MotionObservable<U> {
     return MotionObservable<U> { observer in
       return self.subscribe(next: {
         return operation($0, observer.next)

@@ -51,9 +51,18 @@ public class CALayerReactivePropertyBuilder {
   private func property<T>(read: @escaping ScopedRead<T>, write: @escaping ScopedWrite<T>, keyPath: String) -> ReactiveProperty<T> {
     let layer = self.layer
     var lastAnimationKey: String?
-    return ReactiveProperty(read: read, write: write, coreAnimation: { animation in
-      animation.keyPath = keyPath
-      layer.add(animation, forKey: nil)
+    return ReactiveProperty(read: read, write: write, coreAnimation: { event in
+      switch event {
+      case .add(let animation, let key):
+        animation.keyPath = keyPath
+        layer.add(animation, forKey: key)
+
+      case .remove(let key):
+        if let presentationLayer = layer.presentation() {
+          layer.setValue(presentationLayer.value(forKeyPath: keyPath), forKeyPath: keyPath)
+        }
+        layer.removeAnimation(forKey: key)
+      }
     })
   }
 

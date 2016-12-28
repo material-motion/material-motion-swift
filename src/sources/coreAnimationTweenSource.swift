@@ -46,10 +46,13 @@ public func coreAnimationTweenSource<T>(_ tween: Tween<T>) -> MotionObservable<T
     }
 
     observer.next(values.last!)
-    observer.coreAnimation(animation)
+    let key = NSUUID().uuidString
+    observer.coreAnimation(.add(animation, key))
 
     CATransaction.commit()
 
-    return noopDisconnect
+    return {
+      observer.coreAnimation(.remove(key))
+    }
   }
 }

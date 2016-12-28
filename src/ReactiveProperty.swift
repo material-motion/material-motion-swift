@@ -35,13 +35,11 @@ public func createProperty<T>(withInitialValue initialValue: T) -> ReactivePrope
  Subscribers will receive updates whenever write is invoked.
  */
 public final class ReactiveProperty<T>: Readable, Writable, ExtendableMotionObservable {
-  public let coreAnimation: CoreAnimationChannel?
-
   /** Initializes a new instance with the given read/write functions. */
   public init(read: @escaping ScopedRead<T>, write: @escaping ScopedWrite<T>) {
     self._read = read
     self._write = write
-    self.coreAnimation = nil
+    self._coreAnimation = nil
   }
 
   /** Initializes a new instance with the given read/write functions. */
@@ -50,7 +48,7 @@ public final class ReactiveProperty<T>: Readable, Writable, ExtendableMotionObse
               coreAnimation: @escaping CoreAnimationChannel) {
     self._read = read
     self._write = write
-    self.coreAnimation = coreAnimation
+    self._coreAnimation = coreAnimation
   }
 
   /** Returns the current value. */
@@ -72,6 +70,19 @@ public final class ReactiveProperty<T>: Readable, Writable, ExtendableMotionObse
     for observer in observers {
       observer.state(state)
     }
+  }
+
+  /**
+   Forwards the invocation to the channel if a core animation channel was provided to this property,
+   otherwise throws an assertion.
+   */
+  public func coreAnimation(_ event: CoreAnimationChannelEvent) {
+    guard let coreAnimation = _coreAnimation else {
+      assertionFailure("This property does not support core animation.")
+      return
+    }
+
+    coreAnimation(event)
   }
 
   /**
@@ -101,6 +112,7 @@ public final class ReactiveProperty<T>: Readable, Writable, ExtendableMotionObse
 
   private let _read: ScopedRead<T>
   private let _write: ScopedWrite<T>
+  private let _coreAnimation: CoreAnimationChannel?
   private var observers: [MotionObserver<T>] = []
 }
 

@@ -20,7 +20,16 @@ import IndefiniteObservable
 // Channels are functions that pass values down the stream.
 public typealias NextChannel<T> = (T) -> Void
 public typealias StateChannel = (MotionState) -> Void
-public typealias CoreAnimationChannel = (CAPropertyAnimation) -> Void
+
+/** A Core Animation channel event. */
+public enum CoreAnimationChannelEvent {
+  /** The provided animation is expected to be added to a layer. */
+  case add(CAPropertyAnimation, String)
+
+  /** Any animation with the given key is expected to be removed from a layer. */
+  case remove(String)
+}
+public typealias CoreAnimationChannel = (CoreAnimationChannelEvent) -> Void
 
 /**
  A MotionObservable is a type of [Observable](http://reactivex.io/documentation/observable.html)

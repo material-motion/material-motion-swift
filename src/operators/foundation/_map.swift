@@ -23,27 +23,33 @@ extension ExtendableMotionObservable {
     return _nextOperator({ value, next in
       next(transform(value))
 
-    }, coreAnimation: { animation, coreAnimation in
-      let copy = animation.copy() as! CAPropertyAnimation
-      switch copy {
-      case let basicAnimation as CABasicAnimation:
-        if let fromValue = basicAnimation.fromValue {
-          basicAnimation.fromValue = transform(fromValue as! T)
-        }
-        if let toValue = basicAnimation.toValue {
-          basicAnimation.toValue = transform(toValue as! T)
-        }
-        if let byValue = basicAnimation.byValue {
-          basicAnimation.byValue = transform(byValue as! T)
-        }
-        coreAnimation(basicAnimation)
+    }, coreAnimation: { event, coreAnimation in
+      switch event {
+      case .add(let animation, let key):
+        let copy = animation.copy() as! CAPropertyAnimation
+        switch copy {
+        case let basicAnimation as CABasicAnimation:
+          if let fromValue = basicAnimation.fromValue {
+            basicAnimation.fromValue = transform(fromValue as! T)
+          }
+          if let toValue = basicAnimation.toValue {
+            basicAnimation.toValue = transform(toValue as! T)
+          }
+          if let byValue = basicAnimation.byValue {
+            basicAnimation.byValue = transform(byValue as! T)
+          }
+          coreAnimation(.add(basicAnimation, key))
 
-      case let keyframeAnimation as CAKeyframeAnimation:
-        keyframeAnimation.values = keyframeAnimation.values?.map { transform($0 as! T) }
-        coreAnimation(keyframeAnimation)
+        case let keyframeAnimation as CAKeyframeAnimation:
+          keyframeAnimation.values = keyframeAnimation.values?.map { transform($0 as! T) }
+          coreAnimation(.add(keyframeAnimation, key))
+
+        default:
+          assertionFailure("Unsupported animation type: \(type(of: animation))")
+        }
 
       default:
-        assertionFailure("Unsupported animation type: \(type(of: animation))")
+        coreAnimation(event)
       }
     })
   }

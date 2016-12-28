@@ -68,9 +68,9 @@ extension ExtendableMotionObservable {
           originalStreamSubscription = nil
         }
 
-      }, coreAnimation: { animation in
+      }, coreAnimation: { event in
         if emittingStream == .preferred {
-          observer.coreAnimation(animation)
+          observer.coreAnimation(event)
         }
       })
 

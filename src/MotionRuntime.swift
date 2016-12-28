@@ -46,13 +46,7 @@ public class MotionRuntime {
         strongSelf.delegate?.motionAggregateStateDidChange(strongSelf)
       }
 
-    }, coreAnimation: { animation in
-      guard let coreAnimation = property.coreAnimation else {
-        assertionFailure("This property does not support core animation.")
-        return
-      }
-      coreAnimation(animation)
-    }))
+    }, coreAnimation: property.coreAnimation))
   }
 
   public private(set) var aggregateState = MotionState.atRest

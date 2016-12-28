@@ -24,15 +24,17 @@ import Foundation
 @available(iOS 9.0, *)
 public func coreAnimationSpringSource<T where T: Subtractable, T: Zeroable>(_ spring: Spring<T>) -> MotionObservable<T> {
   return MotionObservable { observer in
-    let animation = CASpringAnimation()
-
-    let configuration = spring.configuration.read()
-    animation.damping = configuration.friction
-    animation.stiffness = configuration.tension
-
-    animation.isAdditive = true
+    var animationKeys: [String] = []
 
     let destinationSubscription = spring.destination.subscribe {
+      let animation = CASpringAnimation()
+
+      let configuration = spring.configuration.read()
+      animation.damping = configuration.friction
+      animation.stiffness = configuration.tension
+
+      animation.isAdditive = true
+
       let from = spring.initialValue.read()
       let to = $0
       let delta = from - to
@@ -45,14 +47,19 @@ public func coreAnimationSpringSource<T where T: Subtractable, T: Zeroable>(_ sp
       CATransaction.setCompletionBlock {
         observer.state(.atRest)
       }
-
       observer.next($0)
-      observer.coreAnimation(animation)
+
+      let key = NSUUID().uuidString
+      animationKeys.append(key)
+      observer.coreAnimation(.add(animation, key))
 
       CATransaction.commit()
     }
 
     return {
+      for key in animationKeys {
+        observer.coreAnimation(.remove(key))
+      }
       destinationSubscription.unsubscribe()
     }
   }
