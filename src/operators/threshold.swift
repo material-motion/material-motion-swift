@@ -45,25 +45,22 @@ extension ExtendableMotionObservable where T == CGFloat {
   /**
    Emit a value based on the incoming value's position around a threshold.
 
-   - paramater threshold: The position of the threshold.
-   - paramater delta: An optional delta on either side of the threshold.
-   - paramater whenWithin: The value to emit when the incoming value is within
-   threshold - delta ... threshold + delta.
-   - paramater whenBelow: The value to emit when the incoming value is below threshold - delta.
-   - paramater whenAbove: The value to emit when the incoming value is above threshold + delta.
+   - paramater min: The minimum threshold.
+   - paramater max: The maximum threshold.
+   - paramater whenWithin: The value to emit when the incoming value is within [min, max].
+   - paramater whenBelow: The value to emit when the incoming value is below min.
+   - paramater whenAbove: The value to emit when the incoming value is above max.
    */
-  public func threshold<U>(_ threshold: CGFloat,
-                        delta: CGFloat,
+  public func threshold<U>(min: CGFloat,
+                        max: CGFloat,
                         whenWithin within: U,
                         whenBelow below: U,
                         whenAbove above: U) -> MotionObservable<U> {
-    let min = threshold - delta
-    let max = threshold - delta
     return _map {
-      if $0 <= min {
+      if $0 < min {
         return below
       }
-      if $0 >= max {
+      if $0 > max {
         return above
       }
       return within

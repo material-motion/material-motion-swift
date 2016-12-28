@@ -103,8 +103,7 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
         let velocityStream = gestureSource(pan).onRecognitionState(.ended).velocity(in: transition.containerView()).y()
         transition.runtime.write(velocityStream, to: spring.initialVelocity)
 
-        let directionStream = velocityStream.threshold(0,
-                                                       delta: 100,
+        let directionStream = velocityStream.threshold(min: -100, max: 100,
                                                        whenWithin: transition.direction.read(),
                                                        whenBelow: .forward,
                                                        whenAbove: .backward)

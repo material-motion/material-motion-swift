@@ -57,7 +57,7 @@ public class SwipeExampleViewController: UIViewController {
       .onRecognitionState(.ended)
       .velocity(in: view)
       .x()
-      .threshold(0, delta: 10,
+      .threshold(min: -10, max: 10,
                  whenWithin: thisView.bounds.midX,
                  whenBelow: -card.bounds.width,
                  whenAbove: thisView.bounds.width + card.bounds.width)
