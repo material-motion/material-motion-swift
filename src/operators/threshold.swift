@@ -66,4 +66,18 @@ extension ExtendableMotionObservable where T: Comparable {
       return within
     }
   }
+
+  /** Emits either the incoming value or the provided maxValue, whichever is smaller. */
+  public func max(_ maxValue: T) -> MotionObservable<T> {
+    return _map {
+      return Swift.min($0, maxValue)
+    }
+  }
+
+  /** Emits either the incoming value or the provided minValue, whichever is larger. */
+  public func min(_ minValue: T) -> MotionObservable<T> {
+    return _map {
+      return Swift.max($0, minValue)
+    }
+  }
 }
