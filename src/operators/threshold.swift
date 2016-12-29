@@ -16,7 +16,7 @@
 
 import Foundation
 
-extension ExtendableMotionObservable where T == CGFloat {
+extension ExtendableMotionObservable where T: Comparable {
 
   /**
    Emit a value based on the incoming value's position around a threshold.
@@ -27,7 +27,7 @@ extension ExtendableMotionObservable where T == CGFloat {
    - paramater whenAbove: The value to emit when the incoming value is above threshold.
    - paramater delta: An optional delta on either side of the threshold.
    */
-  public func threshold<U>(_ threshold: CGFloat,
+  public func threshold<U>(_ threshold: T,
                         whenEqual equal: U,
                         whenBelow below: U,
                         whenAbove above: U) -> MotionObservable<U> {
@@ -51,8 +51,8 @@ extension ExtendableMotionObservable where T == CGFloat {
    - paramater whenBelow: The value to emit when the incoming value is below min.
    - paramater whenAbove: The value to emit when the incoming value is above max.
    */
-  public func threshold<U>(min: CGFloat,
-                        max: CGFloat,
+  public func threshold<U>(min: T,
+                        max: T,
                         whenWithin within: U,
                         whenBelow below: U,
                         whenAbove above: U) -> MotionObservable<U> {
