@@ -24,6 +24,13 @@ public func propertyOf(_ view: UIView) -> UIViewReactivePropertyBuilder {
 /** A scoped property builder for UIView instances. */
 public class UIViewReactivePropertyBuilder {
 
+  /** A property representing the view's .isUserInteractionEnabled value. */
+  public var isUserInteractionEnabled: ReactiveProperty<Bool> {
+    let view = self.view
+    return ReactiveProperty(read: { view.isUserInteractionEnabled },
+                            write: { view.isUserInteractionEnabled = $0 })
+  }
+
   /** A property representing the view's .alpha value. */
   public var alpha: ReactiveProperty<CGFloat> {
     let view = self.view
