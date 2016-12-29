@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import IndefiniteObservable
 
 /** A Transition represents the essential state for a UIViewController transition. */
 public class Transition: NSObject {
@@ -92,14 +93,13 @@ public class Transition: NSObject {
     self.director = directorType.init()
 
     super.init()
-
-    self.runtime!.delegate = self
   }
 
   fileprivate let initialDirection: Direction
   fileprivate var director: TransitionDirector!
   fileprivate var context: UIViewControllerContextTransitioning!
   fileprivate let dismisser: ViewControllerDismisser
+  fileprivate var stateSubscription: Subscription!
 
   private var _contextView: UIView?
 }
@@ -124,14 +124,6 @@ extension Transition: UIViewControllerInteractiveTransitioning {
     context = transitionContext
 
     initiateTransition()
-  }
-}
-
-extension Transition: MotionRuntimeDelegate {
-  public func motionAggregateStateDidChange(_ motionAggregate: MotionRuntime) {
-    if motionAggregate.aggregateState == .atRest {
-      runtimeDidComeToRest()
-    }
   }
 }
 
@@ -166,8 +158,13 @@ extension Transition {
     // TODO: Provide the director with gesture recognizers.
 
     // If no motion was registered to the runtime then we terminate immediately.
-    if runtime.aggregateState == .atRest {
-      runtimeDidComeToRest()
+    stateSubscription = self.runtime!.state.subscribe { [weak self] state in
+      guard let strongSelf = self else {
+        return
+      }
+      if state == .atRest {
+        strongSelf.runtimeDidComeToRest()
+      }
     }
   }
 
@@ -188,6 +185,7 @@ extension Transition {
 
     runtime = nil
     director = nil
+    stateSubscription = nil
 
     delegate?.transitionDidComplete(self)
   }

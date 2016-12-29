@@ -22,6 +22,14 @@ import IndefiniteObservable
  */
 public class MotionRuntime {
 
+  /**
+   The aggregate state of all registered streams.
+
+   If any stream is active, the aggregate state is active. Otherwise, the aggregate state is at
+   rest.
+   */
+  public let state = createProperty(withInitialValue: MotionState.atRest)
+
   /** Creates a motion runtime instance. */
   public init() {
   }
@@ -39,29 +47,17 @@ public class MotionRuntime {
         strongSelf.activeSubscriptions.remove(token)
       }
 
-      let oldState = strongSelf.aggregateState
+      let oldState = strongSelf.state.read()
       let newState: MotionState = strongSelf.activeSubscriptions.count > 0 ? .active : .atRest
-      strongSelf.aggregateState = newState
       if oldState != newState {
-        strongSelf.delegate?.motionAggregateStateDidChange(strongSelf)
+        strongSelf.state.write(newState)
       }
 
     }, coreAnimation: property.coreAnimation))
   }
 
-  public private(set) var aggregateState = MotionState.atRest
-
-  /** The delegate to which state change updates should be sent. */
-  public weak var delegate: MotionRuntimeDelegate?
-
   private var subscriptions: [Subscription] = []
 
   typealias Token = String
   private var activeSubscriptions = Set<Token>()
-}
-
-/** A motion runtime delegate is able to receive updates about changes of the aggregate state. */
-public protocol MotionRuntimeDelegate: NSObjectProtocol {
-  /** Invoked each time the aggregate state changes. */
-  func motionAggregateStateDidChange(_ motionAggregate: MotionRuntime)
 }
