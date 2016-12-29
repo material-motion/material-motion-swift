@@ -32,6 +32,7 @@ public class MotionRuntime {
 
   /** Creates a motion runtime instance. */
   public init() {
+    self.parent = nil
   }
 
   /** Subscribes to the stream, writes its output to the given property, and observes its state. */
@@ -62,6 +63,22 @@ public class MotionRuntime {
     }))
   }
 
+  /**
+   Creates a child runtime instance.
+
+   Streams registered to a child runtime will affect the state on that runtime and all of its
+   ancestors.
+   */
+  public func createChild() -> MotionRuntime {
+    return MotionRuntime(parent: self)
+  }
+
+  /** Creates a child motion runtime instance. */
+  private init(parent: MotionRuntime) {
+    self.parent = parent
+    parent.children.append(self)
+  }
+
   private func stateDidChange(_ state: MotionState, for token: String) {
     if state == .active {
       activeSubscriptions.insert(token)
@@ -74,8 +91,14 @@ public class MotionRuntime {
     if oldState != newState {
       self.state.write(newState)
     }
+
+    if let parent = parent {
+      parent.stateDidChange(state, for: token)
+    }
   }
 
+  private weak var parent: MotionRuntime?
+  private var children: [MotionRuntime] = []
   private var subscriptions: [Subscription] = []
 
   private typealias Token = String
