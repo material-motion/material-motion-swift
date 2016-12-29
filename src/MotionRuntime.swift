@@ -41,23 +41,43 @@ public class MotionRuntime {
       property.state(state)
 
       guard let strongSelf = self else { return }
-      if state == .active {
-        strongSelf.activeSubscriptions.insert(token)
-      } else {
-        strongSelf.activeSubscriptions.remove(token)
-      }
-
-      let oldState = strongSelf.state.read()
-      let newState: MotionState = strongSelf.activeSubscriptions.count > 0 ? .active : .atRest
-      if oldState != newState {
-        strongSelf.state.write(newState)
-      }
+      strongSelf.stateDidChange(state, for: token)
 
     }, coreAnimation: property.coreAnimation))
   }
 
+  /**
+   Subscribes to the stream, writes its output to the given writable, and observes its state.
+
+   Will not forward state/coreAnimation invocations along.
+   */
+  public func write<O: ExtendableMotionObservable, P: Writable>(_ stream: O, to writable: P) where O.T == P.T {
+    let token = NSUUID().uuidString
+    subscriptions.append(stream.subscribe(next: writable.write, state: { [weak self] state in
+      guard let strongSelf = self else { return }
+      strongSelf.stateDidChange(state, for: token)
+
+    }, coreAnimation: { _ in
+      assertionFailure("Writing to a value that does not support Core Animation.")
+    }))
+  }
+
+  private func stateDidChange(_ state: MotionState, for token: String) {
+    if state == .active {
+      activeSubscriptions.insert(token)
+    } else {
+      activeSubscriptions.remove(token)
+    }
+
+    let oldState = self.state.read()
+    let newState: MotionState = activeSubscriptions.count > 0 ? .active : .atRest
+    if oldState != newState {
+      self.state.write(newState)
+    }
+  }
+
   private var subscriptions: [Subscription] = []
 
-  typealias Token = String
+  private typealias Token = String
   private var activeSubscriptions = Set<Token>()
 }
