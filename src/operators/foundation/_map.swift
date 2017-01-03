@@ -24,8 +24,15 @@ extension ExtendableMotionObservable {
       next(transform(value))
 
     }, coreAnimation: { event, coreAnimation in
+      let transformedInitialVelocity: Any?
       switch event {
-      case .add(let animation, let key):
+      case .add(let animation, let key, let initialVelocity):
+        if let initialVelocity = initialVelocity {
+          transformedInitialVelocity = transform(initialVelocity as! T)
+        } else {
+          transformedInitialVelocity = nil
+        }
+
         let copy = animation.copy() as! CAPropertyAnimation
         switch copy {
         case let basicAnimation as CABasicAnimation:
@@ -38,11 +45,11 @@ extension ExtendableMotionObservable {
           if let byValue = basicAnimation.byValue {
             basicAnimation.byValue = transform(byValue as! T)
           }
-          coreAnimation(.add(basicAnimation, key))
+          coreAnimation(.add(basicAnimation, key, initialVelocity: transformedInitialVelocity))
 
         case let keyframeAnimation as CAKeyframeAnimation:
           keyframeAnimation.values = keyframeAnimation.values?.map { transform($0 as! T) }
-          coreAnimation(.add(keyframeAnimation, key))
+          coreAnimation(.add(keyframeAnimation, key, initialVelocity: transformedInitialVelocity))
 
         default:
           assertionFailure("Unsupported animation type: \(type(of: animation))")

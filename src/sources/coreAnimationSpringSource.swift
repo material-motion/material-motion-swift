@@ -40,6 +40,7 @@ public func coreAnimationSpringSource<T where T: Subtractable, T: Zeroable>(_ sp
       let delta = from - to
       animation.fromValue = delta
       animation.toValue = T.zero()
+
       animation.duration = animation.settlingDuration
 
       observer.state(.active)
@@ -51,7 +52,7 @@ public func coreAnimationSpringSource<T where T: Subtractable, T: Zeroable>(_ sp
 
       let key = NSUUID().uuidString
       animationKeys.append(key)
-      observer.coreAnimation(.add(animation, key))
+      observer.coreAnimation(.add(animation, key, initialVelocity: spring.initialVelocity.read()))
 
       CATransaction.commit()
     }

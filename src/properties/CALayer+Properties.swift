@@ -53,7 +53,11 @@ public class CALayerReactivePropertyBuilder {
     var lastAnimationKey: String?
     return ReactiveProperty(read: read, write: write, coreAnimation: { event in
       switch event {
-      case .add(let animation, let key):
+      case .add(let animation, let key, let initialVelocity):
+        if let initialVelocity = initialVelocity {
+          applyInitialVelocity(initialVelocity, to: animation)
+        }
+
         animation.keyPath = keyPath
         layer.add(animation, forKey: key)
 
@@ -69,5 +73,23 @@ public class CALayerReactivePropertyBuilder {
   private let layer: CALayer
   fileprivate init(_ layer: CALayer) {
     self.layer = layer
+  }
+}
+
+private func applyInitialVelocity(_ initialVelocity: Any, to animation: CAPropertyAnimation) {
+  if #available(iOS 9.0, *) {
+    if let springAnimation = animation as? CASpringAnimation, springAnimation.isAdditive {
+      // Additive animations have a toValue of 0 and a fromValue of negative delta (where the model
+      // value came from).
+      guard let initialVelocity = initialVelocity as? CGFloat, let delta = springAnimation.fromValue as? CGFloat else {
+        // Unsupported velocity type.
+        return
+      }
+      if delta != 0 {
+        // CASpringAnimation's initialVelocity is proportional to the distance to travel, i.e. our
+        // delta.
+        springAnimation.initialVelocity = initialVelocity / -delta
+      }
+    }
   }
 }
