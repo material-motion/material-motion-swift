@@ -53,12 +53,13 @@ public class CALayerReactivePropertyBuilder {
     var lastAnimationKey: String?
     return ReactiveProperty(read: read, write: write, coreAnimation: { event in
       switch event {
-      case .add(let animation, let key, let initialVelocity):
+      case .add(let animation, let key, let modelValue, let initialVelocity):
         if let initialVelocity = initialVelocity {
           applyInitialVelocity(initialVelocity, to: animation)
         }
 
         animation.keyPath = keyPath
+        layer.setValue(modelValue, forKeyPath: keyPath)
         layer.add(animation, forKey: key)
 
       case .remove(let key):

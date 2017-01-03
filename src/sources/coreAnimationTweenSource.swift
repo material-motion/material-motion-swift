@@ -45,9 +45,10 @@ public func coreAnimationTweenSource<T>(_ tween: Tween<T>) -> MotionObservable<T
       observer.state(.atRest)
     }
 
-    observer.next(values.last!)
     let key = NSUUID().uuidString
-    observer.coreAnimation(.add(animation, key, initialVelocity: nil))
+    observer.coreAnimation(.add(animation, key,
+                                modelValue: values.last!,
+                                initialVelocity: nil))
 
     CATransaction.commit()
 
