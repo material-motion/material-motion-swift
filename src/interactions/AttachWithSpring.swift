@@ -30,29 +30,23 @@ public class AttachWithSpring<T: Zeroable>: Interaction {
   /** A stream that emits values to be written to the property. */
   public var valueStream: MotionObservable<T>
 
-  /** The destination to which the spring will pull the property. */
-  public let destination: ReactiveProperty<T>
-
-  /** The initial velocity of the spring. */
-  public let initialVelocity: ReactiveProperty<T>
-
-  /** The spring configuration governing this interaction. */
-  public let springConfiguration: ReactiveProperty<SpringConfiguration>
+  /** The spring governing this interaction. */
+  public let spring: Spring<T>
 
   /**
    - parameter property: The property to be updated by the value stream.
    - parameter destination: The destination property to which the property should spring.
+   - parameter threshold: The value used when determining completion of the simulation. Smaller
+                          values mean greater required precision.
    - parameter springSource: A function capable of creating a spring source.
    */
   public init(property: ReactiveProperty<T>,
               to destination: ReactiveProperty<T>,
+              threshold: CGFloat,
               springSource: SpringSource<T>) {
-    self.destination = destination
     self.property = property
 
-    let spring = Spring(to: destination, initialValue: property, threshold: 1)
-    self.springConfiguration = spring.configuration
-    self.initialVelocity = spring.initialVelocity
+    self.spring = Spring(to: destination, initialValue: property, threshold: threshold)
 
     let springStream = springSource(spring)
     self.valueStream = springStream

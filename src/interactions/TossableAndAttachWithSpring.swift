@@ -50,13 +50,13 @@ public class TossableAndAttachWithSpring: AttachWithSpring<CGPoint> {
 
     self.initialVelocityStream = dragStream.onRecognitionState(.ended).velocity(in: containerView)
 
-    super.init(property: position, to: destination, springSource: springSource)
+    super.init(property: position, to: destination, threshold: 1, springSource: springSource)
 
     self.valueStream = self.valueStream.toggled(with: translationStream)
   }
 
   public override func connect(with runtime: MotionRuntime) {
-    runtime.write(initialVelocityStream, to: initialVelocity)
+    runtime.write(initialVelocityStream, to: spring.initialVelocity)
 
     super.connect(with: runtime)
   }
