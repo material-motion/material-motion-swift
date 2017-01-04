@@ -67,6 +67,7 @@ public final class ReactiveProperty<T>: Readable, Writable, ExtendableMotionObse
 
   /** Informs all observers of the given state. */
   public func state(_ state: MotionState) {
+    self.state = state
     for observer in observers {
       observer.state(state)
     }
@@ -96,7 +97,13 @@ public final class ReactiveProperty<T>: Readable, Writable, ExtendableMotionObse
     let observer = MotionObserver(next: next, state: state, coreAnimation: coreAnimation)
     observers.append(observer)
 
+    if self.state == .active {
+      observer.state(.active)
+    }
     observer.next(read())
+    if self.state == .atRest {
+      observer.state(.atRest)
+    }
 
     return Subscription {
       if let index = self.observers.index(where: { $0 === observer }) {
@@ -113,6 +120,7 @@ public final class ReactiveProperty<T>: Readable, Writable, ExtendableMotionObse
   private let _read: ScopedRead<T>
   private let _write: ScopedWrite<T>
   private let _coreAnimation: CoreAnimationChannel?
+  private var state = MotionState.atRest
   private var observers: [MotionObserver<T>] = []
 }
 
