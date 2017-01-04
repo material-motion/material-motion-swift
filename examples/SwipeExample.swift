@@ -18,64 +18,139 @@ import UIKit
 import IndefiniteObservable
 import MaterialMotionStreams
 
+enum TossDirection {
+  case none
+  case left
+  case right
+}
+
+class TossableStackedCard: Interaction {
+  public let view: UIView
+  public let tossDirection = createProperty(withInitialValue: TossDirection.none)
+
+  init(view: UIView, containerView: UIView, previousCard: TossableStackedCard? = nil, rotation: CGFloat) {
+    self.view = view
+    self.containerView = containerView
+    self.previousCard = previousCard
+    self.rotation = rotation
+
+    self.dragGesture = UIPanGestureRecognizer()
+
+    position = propertyOf(view).centerX
+  }
+
+  func connect(with runtime: MotionRuntime) {
+    view.addGestureRecognizer(dragGesture)
+
+    let destination = createProperty(withInitialValue: containerView.bounds.midX)
+    let attachment = AttachWithSpring(property: position,
+                                      to: destination,
+                                      threshold: 1,
+                                      springSource: popSpringSource)
+
+    let dragStream = gestureSource(dragGesture)
+
+    runtime.write(dragStream.onRecognitionState(.ended)
+      .velocity(in: containerView)
+      .x()
+      .threshold(min: -500, max: 500,
+                 whenWithin: TossDirection.none,
+                 whenBelow: TossDirection.left,
+                 whenAbove: TossDirection.right),
+                  to: tossDirection)
+
+    let destinationStream = tossDirection.map([
+      .none: containerView.bounds.midX,
+      .left: -view.bounds.width,
+      .right: containerView.bounds.width + view.bounds.width
+      ]
+    )
+    runtime.write(destinationStream, to: attachment.spring.destination)
+
+    let gestureEnabledStream = tossDirection.map([
+      .none: true,
+      .left: false,
+      .right: false
+      ]
+    )
+    runtime.write(gestureEnabledStream, to: propertyOf(dragGesture).isEnabled)
+    runtime.write(gestureEnabledStream, to: propertyOf(view).isUserInteractionEnabled)
+
+    let initialVelocityStream = dragStream.onRecognitionState(.ended).velocity(in: containerView).x()
+    runtime.write(initialVelocityStream, to: attachment.spring.initialVelocity)
+
+    let translationStream = dragStream
+      .translated(from: propertyOf(view).center, in: containerView)
+      .x()
+    runtime.write(attachment.valueStream.toggled(with: translationStream), to: position)
+
+    let radians = CGFloat(M_PI / 180.0 * 15.0)
+    let rotationStream = position
+      .offset(by: -containerView.bounds.width / 2)
+      .normalized(by: containerView.bounds.width / 2)
+      .scaled(by: radians)
+
+    // Previous card
+    if let previousCard = previousCard {
+      dragGesture.require(toFail: previousCard.dragGesture)
+      let nextRotationStream = previousCard.position
+        .distance(from: containerView.bounds.width / 2)
+        .normalized(by: containerView.bounds.width / 2)
+        .max(1)
+        .subtracted(from: 1)
+        .scaled(by: rotation)
+      runtime.write(nextRotationStream.toggled(with: rotationStream), to: propertyOf(view).rotation)
+    } else {
+      runtime.write(rotationStream, to: propertyOf(view).rotation)
+    }
+  }
+
+  private let containerView: UIView
+  private let dragGesture: UIPanGestureRecognizer
+  private let previousCard: TossableStackedCard?
+  private let position: ReactiveProperty<CGFloat>
+  private let rotation: CGFloat
+}
+
 public class SwipeExampleViewController: UIViewController {
 
   let runtime = MotionRuntime()
+  var queue: [TossableStackedCard] = []
   public override func viewDidLoad() {
     super.viewDidLoad()
 
     view.backgroundColor = .white
 
+    (0 ..< 10).forEach { _ in
+      dequeueCard().connect(with: runtime)
+    }
+  }
+
+  var lastRotation: CGFloat = CGFloat(M_PI / 180.0 * 2)
+  func dequeueCard() -> TossableStackedCard {
+    let rotation = -lastRotation
+
     let card = UIView(frame: .init(x: 16, y: 16 + 64,
-                                   width: view.bounds.size.width - 32,
-                                   height: view.bounds.size.height - 32 - 64))
-    card.backgroundColor = .red
-    view.addSubview(card)
+                                    width: view.bounds.size.width - 32,
+                                    height: view.bounds.size.height - 32 - 64))
+    card.layer.borderWidth = 0.5
+    card.layer.borderColor = UIColor(white: 0, alpha: 0.1).cgColor
+    card.layer.cornerRadius = 4
+    card.backgroundColor = UIColor(hue: CGFloat(arc4random_uniform(256)) / 256.0,
+                                   saturation: 1,
+                                   brightness: 1,
+                                   alpha: 1)
 
-    let dragGesture = UIPanGestureRecognizer()
-    view.addGestureRecognizer(dragGesture)
+    let interaction = TossableStackedCard(view: card, containerView: view, previousCard: queue.last, rotation: rotation)
 
-    let dragStream = gestureSource(dragGesture)
-    let center = propertyOf(card).centerX
+    lastRotation = rotation
 
-    let positionStream = dragStream
-      .translated(from: propertyOf(card).center, in: view)
-      .x()
-
-    var destination = createProperty(withInitialValue: card.center.x)
-
-    let spring = Spring(to: destination,
-                        initialValue: propertyOf(card).centerX,
-                        threshold: 1)
-    let springStream = popSpringSource(spring)
-
-    runtime.write(dragStream.onRecognitionState(.ended).velocity(in: view).x(),
-                  to: spring.initialVelocity)
-
-    var thisView = view!
-    let destinationStream = dragStream
-      .onRecognitionState(.ended)
-      .velocity(in: view)
-      .x()
-      .threshold(min: -10, max: 10,
-                 whenWithin: thisView.bounds.midX,
-                 whenBelow: -card.bounds.width,
-                 whenAbove: thisView.bounds.width + card.bounds.width)
-    runtime.write(destinationStream, to: spring.destination)
-
-    let tap = UITapGestureRecognizer()
-    view.addGestureRecognizer(tap)
-    runtime.write(gestureSource(tap).onRecognitionState(.recognized).constant(thisView.bounds.midX),
-                  to: spring.destination)
-
-    runtime.write(springStream.toggled(with: positionStream), to: center)
-
-    let radians = CGFloat(M_PI / 180.0 * 15.0)
-    let rotationStream =
-      center
-        .offset(by: -view.bounds.width / 2)
-        .normalized(by: view.bounds.width / 2)
-        .scaled(by: CGFloat(radians))
-    runtime.write(rotationStream, to: propertyOf(card).rotation)
+    if let last = queue.last {
+      view.insertSubview(interaction.view, belowSubview: last.view)
+    } else {
+      view.addSubview(interaction.view)
+    }
+    queue.append(interaction)
+    return interaction
   }
 }
