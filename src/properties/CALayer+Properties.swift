@@ -48,6 +48,14 @@ public class CALayerReactivePropertyBuilder {
                     keyPath: "position.y")
   }
 
+  /** A property representing the layer's .transform.rotation.z value. */
+  public func rotation() -> ReactiveProperty<CGFloat> {
+    let layer = self.layer
+    return property(read: { layer.value(forKeyPath: "transform.rotation.z") as! CGFloat },
+                    write: { layer.setValue($0, forKeyPath: "transform.rotation.z") },
+                    keyPath: "transform.rotation.z")
+  }
+
   private func property<T>(read: @escaping ScopedRead<T>, write: @escaping ScopedWrite<T>, keyPath: String) -> ReactiveProperty<T> {
     let layer = self.layer
     var lastAnimationKey: String?

@@ -99,9 +99,10 @@ class TossableStackedCard: Interaction {
         .max(1)
         .subtracted(from: 1)
         .scaled(by: rotation)
-      runtime.write(nextRotationStream.toggled(with: rotationStream), to: propertyOf(view).rotation)
+      runtime.write(nextRotationStream.toggled(with: rotationStream),
+                    to: propertyOf(view.layer).rotation())
     } else {
-      runtime.write(rotationStream, to: propertyOf(view).rotation)
+      runtime.write(rotationStream, to: propertyOf(view.layer).rotation())
     }
   }
 
