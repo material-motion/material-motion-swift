@@ -30,3 +30,14 @@ extension ExtendableMotionObservable where T == CGFloat {
   /** Subtract the incoming value from the provided value. */
   public func subtracted(from value: CGFloat) -> MotionObservable<CGFloat> { return _map { value - $0 } }
 }
+
+extension ExtendableMotionObservable where T == CGPoint {
+
+  /** Emits the incoming value / amount. */
+  public func normalized(by amount: CGSize) -> MotionObservable<CGPoint> {
+    return _map {
+      return CGPoint(x: $0.x / amount.width,
+                     y: $0.y / amount.height)
+    }
+  }
+}
