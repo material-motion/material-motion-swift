@@ -25,3 +25,19 @@ extension ExtendableMotionObservable where T: UIPanGestureRecognizer {
     }
   }
 }
+
+extension ExtendableMotionObservable where T: UIRotationGestureRecognizer {
+
+  /** Extract rotational velocity from the incoming rotation gesture recognizer. */
+  public func velocity() -> MotionObservable<CGFloat> {
+    return _map { value in value.velocity }
+  }
+}
+
+extension ExtendableMotionObservable where T: UIPinchGestureRecognizer {
+
+  /** Extract scale velocity from the incoming pinch gesture recognizer. */
+  public func velocity() -> MotionObservable<CGFloat> {
+    return _map { value in value.velocity }
+  }
+}
