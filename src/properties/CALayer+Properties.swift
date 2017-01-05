@@ -48,6 +48,14 @@ public class CALayerReactivePropertyBuilder {
                     keyPath: "position.y")
   }
 
+  /** A property representing the layer's .anchorPoint value. */
+  public func anchorPoint() -> ReactiveProperty<CGPoint> {
+    let layer = self.layer
+    return property(read: { layer.anchorPoint },
+                    write: { changeAnchorPoint(of: layer, to: $0) },
+                    keyPath: "anchorPoint")
+  }
+
   /** A property representing the layer's .transform.rotation.z value. */
   public func rotation() -> ReactiveProperty<CGFloat> {
     let layer = self.layer
@@ -91,6 +99,24 @@ public class CALayerReactivePropertyBuilder {
   fileprivate init(_ layer: CALayer) {
     self.layer = layer
   }
+}
+
+/**
+ Changes the anchor point of a given layer to the provided anchorPoint while maintaining the layer's
+ frame.
+
+ @param anchorPoint The new anchor point, expressed in the [0,1] range for each x and y value.
+ 0 corresponds to the min value of the bounds' corresponding axis.
+ 1 corresponds to the max value of the bounds' corresponding axis.
+ */
+private func changeAnchorPoint(of layer: CALayer, to anchorPoint: CGPoint) {
+  let newPosition = CGPoint(x: anchorPoint.x * layer.bounds.width,
+                            y: anchorPoint.y * layer.bounds.height)
+
+  let positionInSuperview = layer.convert(newPosition, to: layer.superlayer)
+
+  layer.anchorPoint = anchorPoint
+  layer.position = positionInSuperview
 }
 
 private func applyInitialVelocity(_ initialVelocity: Any, to animation: CAPropertyAnimation) {
