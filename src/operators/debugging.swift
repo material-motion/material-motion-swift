@@ -19,9 +19,13 @@ import Foundation
 extension ExtendableMotionObservable {
 
   /** Writes any incoming value to the console and then passes the value on. */
-  public func log() -> MotionObservable<T> {
+  public func log(_ context: String? = nil) -> MotionObservable<T> {
     return _nextOperator({ value, next in
-      dump(value)
+      if let context = context {
+        print(context, value)
+      } else {
+        print(value)
+      }
       next(value)
     })
   }
