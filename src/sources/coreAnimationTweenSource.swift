@@ -37,6 +37,7 @@ public func coreAnimationTweenSource<T>(_ tween: Tween<T>) -> MotionObservable<T
       basicAnimation.timingFunction = timingFunctions?.first
       animation = basicAnimation
     }
+
     animation.duration = tween.duration
 
     observer.state(.active)
