@@ -41,10 +41,6 @@ public final class Spring<T: Zeroable> {
 
     var threshold = threshold
     self.threshold = ReactiveProperty<CGFloat>(read: { threshold }, write: { threshold = $0 })
-
-    var configuration = SpringConfiguration.defaultConfiguration
-    self.configuration = ReactiveProperty<SpringConfiguration>(read: { configuration },
-                                                             write: { configuration = $0 })
   }
 
   /** The destination value of the spring represented as a property. */
@@ -56,49 +52,18 @@ public final class Spring<T: Zeroable> {
   /** The initial velocity of the spring represented as a property. */
   public let initialVelocity: ReactiveProperty<T>
 
-  /** The configuration of the spring represented as a property. */
-  public let configuration: ReactiveProperty<SpringConfiguration>
+  /** The tension configuration of the spring represented as a property. */
+  public let tension: ReactiveProperty<CGFloat> = createProperty(withInitialValue: defaultSpringTension)
+
+  /** The friction configuration of the spring represented as a property. */
+  public let friction: ReactiveProperty<CGFloat> = createProperty(withInitialValue: defaultSpringFriction)
 
   /** The value used when determining completion of the spring simulation. */
   public let threshold: ReactiveProperty<CGFloat>
 }
 
-/**
- Configure the spring traits for a given property.
+/** The default tension configuration. */
+public let defaultSpringTension: CGFloat = 342
 
- Affects the spring behavior of the SpringTo plan.
- */
-public final class SpringConfiguration {
-  /**
-   The tension coefficient for the property's spring.
-
-   If nil, the spring's tension will not be changed.
-   */
-  public var tension: CGFloat
-
-  /**
-   The friction coefficient for the property's spring.
-
-   If nil, the spring's friction will not be changed.
-   */
-  public var friction: CGFloat
-
-  /** Initializes the configuration with a given tension and friction. */
-  @objc(initWithTension:friction:)
-  public init(tension: CGFloat, friction: CGFloat) {
-    self.tension = tension
-    self.friction = friction
-  }
-
-  /**
-   The default spring configuration.
-
-   Default extracted from a POP spring with speed = 12 and bounciness = 4.
-   */
-  public static var defaultConfiguration: SpringConfiguration {
-    get {
-      // Always return a new instance so that the values can't be changed externally.
-      return SpringConfiguration(tension: 342, friction: 30)
-    }
-  }
-}
+/** The default friction configuration. */
+public let defaultSpringFriction: CGFloat = 30

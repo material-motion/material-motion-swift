@@ -29,9 +29,8 @@ public func coreAnimationSpringSource<T where T: Subtractable, T: Zeroable>(_ sp
     let destinationSubscription = spring.destination.subscribe {
       let animation = CASpringAnimation()
 
-      let configuration = spring.configuration.read()
-      animation.damping = configuration.friction
-      animation.stiffness = configuration.tension
+      animation.damping = spring.friction.read()
+      animation.stiffness = spring.tension.read()
 
       animation.isAdditive = true
 

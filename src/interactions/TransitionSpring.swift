@@ -34,8 +34,11 @@ public class TransitionSpring<T: Zeroable>: Interaction {
   /** The initial velocity of the spring. */
   public let initialVelocity: ReactiveProperty<T>
 
-  /** The spring configuration governing this interaction. */
-  public let springConfiguration: ReactiveProperty<SpringConfiguration>
+  /** The tension configuration of the spring. */
+  public let tension: ReactiveProperty<CGFloat>
+
+  /** The friction configuration of the spring. */
+  public let friction: ReactiveProperty<CGFloat>
 
   /**
    - parameter value: The property to be updated by the value stream.
@@ -57,7 +60,8 @@ public class TransitionSpring<T: Zeroable>: Interaction {
     self.destination = createProperty(withInitialValue: forwardDestination)
     let spring = Spring(to: destination, initialValue: property, threshold: 1)
 
-    self.springConfiguration = spring.configuration
+    self.tension = spring.tension
+    self.friction = spring.friction
     self.initialVelocity = spring.initialVelocity
     self.valueStream = springSource(spring)
     self.destinationStream = direction.destinations(back: backwardDestination,

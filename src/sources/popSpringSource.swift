@@ -62,9 +62,8 @@ public func popSpringSource(_ spring: Spring<CGPoint>) -> MotionObservable<CGPoi
 }
 
 private func configureSpringAnimation<T>(_ animation: POPSpringAnimation, spring: Spring<T>, observer: MotionObserver<T>) -> () -> Void {
-  let configuration = spring.configuration.read()
-  animation.dynamicsFriction = configuration.friction
-  animation.dynamicsTension = configuration.tension
+  animation.dynamicsFriction = spring.friction.read()
+  animation.dynamicsTension = spring.tension.read()
 
   animation.removedOnCompletion = false
   animation.velocity = spring.initialVelocity.read()
