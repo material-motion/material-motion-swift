@@ -82,7 +82,7 @@ class TossableStackedCard: Interaction {
     let translationStream = dragStream
       .translated(from: propertyOf(view).center, in: containerView)
       .x()
-    runtime.write(attachment.valueStream.toggled(with: translationStream), to: position)
+    runtime.write(attachment.spring.valueStream.toggled(with: translationStream), to: position)
 
     let radians = CGFloat(M_PI / 180.0 * 15.0)
     let rotationStream = position

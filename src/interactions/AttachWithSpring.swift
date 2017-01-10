@@ -46,10 +46,8 @@ public class AttachWithSpring<T: Zeroable>: Interaction {
               springSource: SpringSource<T>) {
     self.property = property
 
-    self.spring = Spring(to: destination, initialValue: property, threshold: threshold)
-
-    let springStream = springSource(spring)
-    self.valueStream = springStream
+    self.spring = Spring(to: destination, initialValue: property, threshold: threshold, source: springSource)
+    self.valueStream = self.spring.valueStream
   }
 
   public func connect(with runtime: MotionRuntime) {

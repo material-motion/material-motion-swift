@@ -96,16 +96,16 @@ public class DragSourceExampleViewController: UIViewController {
     view.addSubview(circle)
 
     let tossable = TossableAndAttachWithSpring(position: propertyOf(square).center,
-                            to: propertyOf(circle).center,
-                            containerView: view,
-                            springSource: popSpringSource)
+                                               to: propertyOf(circle).center,
+                                               containerView: view,
+                                               springSource: popSpringSource)
     tossable.connect(with: runtime)
 
     let spring = Spring(to: tossable.spring.destination,
                         initialValue: propertyOf(square2.layer).position(),
-                        threshold: 1)
-    let spring$ = coreAnimationSpringSource(spring)
-    runtime.write(spring$, to: propertyOf(square2.layer).position())
+                        threshold: 1,
+                        source: coreAnimationSpringSource)
+    runtime.write(spring.valueStream, to: propertyOf(square2.layer).position())
 
     Tap(sets: tossable.spring.destination, containerView: view).connect(with: runtime)
   }

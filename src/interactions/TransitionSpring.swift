@@ -22,7 +22,10 @@ public class TransitionSpring<T: Zeroable>: Interaction {
   /** The value to which the value stream is expected to write. */
   public let property: ReactiveProperty<T>
 
-  /** A stream that emits values. */
+  /** The spring governing this interaction. */
+  public var spring: Spring<T>
+
+  /** A stream that emits spring values. */
   public var valueStream: MotionObservable<T>
 
   /** The destination property that destinationStream will write to. */
@@ -58,14 +61,14 @@ public class TransitionSpring<T: Zeroable>: Interaction {
     self.property = property
 
     self.destination = createProperty(withInitialValue: forwardDestination)
-    let spring = Spring(to: destination, initialValue: property, threshold: 1)
+    self.spring = Spring(to: destination, initialValue: property, threshold: 1, source: springSource)
 
     self.tension = spring.tension
     self.friction = spring.friction
     self.initialVelocity = spring.initialVelocity
-    self.valueStream = springSource(spring)
     self.destinationStream = direction.destinations(back: backwardDestination,
                                                     fore: forwardDestination)
+    self.valueStream = self.spring.valueStream
 
     property.write(direction.read() == .forward ? backwardDestination : forwardDestination)
   }

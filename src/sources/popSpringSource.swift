@@ -17,11 +17,11 @@
 import UIKit
 import pop
 
-// In order to support POP's vector-based properties we create specialized popSpringSource methods.
+// In order to support POP's vector-based properties we create specialized connectPOPSpring methods.
 // Each specialized method is expected to read from and write to a POP vector value.
 
 /** Create a pop spring source for a CGFloat Spring plan. */
-public func popSpringSource(_ spring: Spring<CGFloat>) -> MotionObservable<CGFloat> {
+public func popSpringSource(_ spring: SpringConfiguration<CGFloat>) -> (MotionObservable<CGFloat>) {
   return MotionObservable { observer in
     let animation = POPSpringAnimation()
 
@@ -41,7 +41,7 @@ public func popSpringSource(_ spring: Spring<CGFloat>) -> MotionObservable<CGFlo
 }
 
 /** Create a pop spring source for a CGPoint Spring plan. */
-public func popSpringSource(_ spring: Spring<CGPoint>) -> MotionObservable<CGPoint> {
+public func popSpringSource(_ spring: SpringConfiguration<CGPoint>) -> (MotionObservable<CGPoint>) {
   return MotionObservable { observer in
     let animation = POPSpringAnimation()
 
@@ -61,7 +61,7 @@ public func popSpringSource(_ spring: Spring<CGPoint>) -> MotionObservable<CGPoi
   }
 }
 
-private func configureSpringAnimation<T>(_ animation: POPSpringAnimation, spring: Spring<T>, observer: MotionObserver<T>) -> () -> Void {
+private func configureSpringAnimation<T>(_ animation: POPSpringAnimation, spring: SpringConfiguration<T>, observer: MotionObserver<T>) -> () -> Void {
   animation.dynamicsFriction = spring.friction.read()
   animation.dynamicsTension = spring.tension.read()
 
