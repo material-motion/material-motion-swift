@@ -36,3 +36,9 @@ extension SwipeExampleViewController {
     return ["Swipe stack"]
   }
 }
+
+extension DirectlyManipulableExampleViewController {
+  class func catalogBreadcrumbs() -> [String] {
+    return ["Directly manipulable"]
+  }
+}
