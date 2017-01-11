@@ -21,7 +21,6 @@ import MaterialMotionStreams
 public class DirectlyManipulableExampleViewController: UIViewController, UIGestureRecognizerDelegate {
 
   let runtime = MotionRuntime()
-  var subscription: Subscription!
   public override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -31,17 +30,12 @@ public class DirectlyManipulableExampleViewController: UIViewController, UIGestu
     square.backgroundColor = .red
     view.addSubview(square)
 
-    let pan = UIPanGestureRecognizer()
-    let rotate = UIRotationGestureRecognizer()
-    let scale = UIPinchGestureRecognizer()
-    [pan, rotate, scale].forEach { $0.delegate = self }
+    let interaction = DirectlyManipulable(view: square, containerView: view)
+    interaction.connect(with: runtime)
 
-    DirectlyManipulable(view: square,
-                        containerView: view,
-                        panGestureRecognizer: pan,
-                        rotationGestureRecognizer: rotate,
-                        scaleGestureRecognizer: scale)
-      .connect(with: runtime)
+    [interaction.draggable.gestureRecognizer,
+     interaction.rotatable.gestureRecognizer,
+     interaction.scalable.gestureRecognizer].forEach { $0.delegate = self }
   }
 
   public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
