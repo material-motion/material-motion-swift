@@ -17,7 +17,7 @@
 import Foundation
 
 /** An interaction is a composable interface for implementing motion streams. */
-protocol Interaction {
+public protocol Interaction {
 
   /** Connect all streams with the provided runtime. */
   func connect(with runtime: MotionRuntime)

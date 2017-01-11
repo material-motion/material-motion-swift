@@ -35,6 +35,12 @@ public class MotionRuntime {
     self.parent = nil
   }
 
+  /** Connects the interaction's streams and stores the interaction. */
+  public func addInteraction(_ interaction: Interaction) {
+    interaction.connect(with: self)
+    interactions.append(interaction)
+  }
+
   /** Subscribes to the stream, writes its output to the given property, and observes its state. */
   public func write<O: ExtendableMotionObservable, T>(_ stream: O, to property: ReactiveProperty<T>) where O.T == T {
     let token = NSUUID().uuidString
@@ -100,6 +106,7 @@ public class MotionRuntime {
   private weak var parent: MotionRuntime?
   private var children: [MotionRuntime] = []
   private var subscriptions: [Subscription] = []
+  private var interactions: [Interaction] = []
 
   private typealias Token = String
   private var activeSubscriptions = Set<Token>()
