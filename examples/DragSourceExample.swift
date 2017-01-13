@@ -78,15 +78,19 @@ public class DragSourceExampleViewController: UIViewController {
 
     view.backgroundColor = .white
 
-    let square = UIView(frame: .init(x: 0, y: 0, width: 64, height: 64))
+    var center = view.center
+    center.x -= 32
+    center.y -= 32
+
+    let square = UIView(frame: .init(x: center.x, y: center.y, width: 64, height: 64))
     square.backgroundColor = .red
     view.addSubview(square)
 
-    let square2 = UIView(frame: .init(x: 0, y: 0, width: 64, height: 64))
+    let square2 = UIView(frame: .init(x: center.x, y: center.y, width: 64, height: 64))
     square2.backgroundColor = .orange
     view.addSubview(square2)
 
-    let circle = UIView(frame: .init(x: 0, y: 0, width: 64, height: 64))
+    let circle = UIView(frame: .init(x: center.x, y: center.y, width: 64, height: 64))
     circle.backgroundColor = .blue
     circle.layer.cornerRadius = circle.bounds.width / 2
     view.addSubview(circle)
