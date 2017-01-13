@@ -137,6 +137,8 @@ public class SwipeExampleViewController: UIViewController {
     card.layer.borderWidth = 0.5
     card.layer.borderColor = UIColor(white: 0, alpha: 0.1).cgColor
     card.layer.cornerRadius = 4
+    card.layer.shouldRasterize = true
+    card.layer.rasterizationScale = UIScreen.main.scale
     card.backgroundColor = UIColor(hue: CGFloat(arc4random_uniform(256)) / 256.0,
                                    saturation: 1,
                                    brightness: 1,
