@@ -26,7 +26,10 @@ public class DirectlyManipulableExampleViewController: UIViewController, UIGestu
 
     view.backgroundColor = .white
 
-    let square = UIView(frame: .init(x: 100, y: 300, width: 128, height: 128))
+    var center = view.center
+    center.x -= 64
+    center.y -= 64
+    let square = UIView(frame: .init(x: center.x, y: center.y, width: 128, height: 128))
     square.backgroundColor = .red
     view.addSubview(square)
 
