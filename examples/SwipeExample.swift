@@ -59,7 +59,7 @@ class TossableStackedCard: Interaction {
                  whenAbove: TossDirection.right),
                   to: tossDirection)
 
-    let destinationStream = tossDirection.map([
+    let destinationStream = tossDirection.rewrite([
       .none: containerView.bounds.midX,
       .left: -view.bounds.width,
       .right: containerView.bounds.width + view.bounds.width
@@ -67,7 +67,7 @@ class TossableStackedCard: Interaction {
     )
     runtime.write(destinationStream, to: attachment.spring.destination)
 
-    let gestureEnabledStream = tossDirection.map([
+    let gestureEnabledStream = tossDirection.rewrite([
       .none: true,
       .left: false,
       .right: false
