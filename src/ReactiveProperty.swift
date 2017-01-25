@@ -129,3 +129,14 @@ extension ReactiveProperty: MotionObservableConvertible {
     return stream
   }
 }
+
+public protocol ReactivePropertyConvertible {
+  associatedtype T
+  func asProperty() -> ReactiveProperty<T>
+}
+
+extension ReactiveProperty: ReactivePropertyConvertible {
+  public func asProperty() -> ReactiveProperty<T> {
+    return self
+  }
+}
