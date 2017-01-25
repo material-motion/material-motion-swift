@@ -19,7 +19,7 @@ import Foundation
 extension ExtendableMotionObservable {
 
   /** Emit a constant value each time this operator receives a value. */
-  public func constant<U>(_ value: U) -> MotionObservable<U> {
+  public func mapTo<U>(_ value: U) -> MotionObservable<U> {
     return _map { _ in value }
   }
 }

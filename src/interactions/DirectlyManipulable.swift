@@ -69,7 +69,7 @@ public class DirectlyManipulable: Interaction {
       gestureSource($0).onRecognitionState(.began).centroid(in: view).normalized(by: view.bounds.size)
     }
     anchorPointResetStreams = gestureStreams.map {
-      gestureSource($0).onRecognitionStates([.ended, .cancelled]).constant(CGPoint(x: 0.5, y: 0.5))
+      gestureSource($0).onRecognitionStates([.ended, .cancelled]).mapTo(CGPoint(x: 0.5, y: 0.5))
     }
   }
 
