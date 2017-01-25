@@ -123,3 +123,9 @@ public final class ReactiveProperty<T> {
 public func == <T: Equatable> (left: ReactiveProperty<T>, right: T) -> Bool {
   return left.value == right
 }
+
+extension ReactiveProperty: MotionObservableConvertible {
+  public func asStream() -> MotionObservable<T> {
+    return stream
+  }
+}
