@@ -74,7 +74,7 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
   func willBeginTransition(_ transition: Transition) {
     let size = transition.fore.preferredContentSize
 
-    if transition.direction.read() == .forward {
+    if transition.direction.value == .forward {
       transition.fore.view.bounds = CGRect(origin: .zero, size: size)
     }
 
@@ -97,14 +97,14 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
     for gestureRecognizer in transition.gestureRecognizers {
       switch gestureRecognizer {
       case let pan as UIPanGestureRecognizer:
-        let dragStream = gestureSource(pan).translated(from: propertyOf(transition.fore.view.layer).position(),
+        let dragStream = gestureSource(pan).translated(from: propertyOf(transition.fore.view.layer).position().stream,
                                                        in: transition.containerView()).y()
         spring.valueStream = spring.valueStream.toggled(with: dragStream)
         let velocityStream = gestureSource(pan).onRecognitionState(.ended).velocity(in: transition.containerView()).y()
         transition.runtime.write(velocityStream, to: spring.initialVelocity)
 
         let directionStream = velocityStream.threshold(min: -100, max: 100,
-                                                       whenWithin: transition.direction.read(),
+                                                       whenWithin: transition.direction.value,
                                                        whenBelow: .forward,
                                                        whenAbove: .backward)
         transition.runtime.write(directionStream, to: transition.direction)

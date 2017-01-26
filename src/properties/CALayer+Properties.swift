@@ -27,7 +27,7 @@ public class CALayerReactivePropertyBuilder {
   /** A property representing the layer's .opacity value. */
   public func opacity() -> ReactiveProperty<CGFloat> {
     let layer = self.layer
-    return property(read: { CGFloat(layer.opacity) },
+    return property(initialValue: CGFloat(layer.opacity),
                     write: { layer.opacity = Float($0) },
                     keyPath: "opacity")
   }
@@ -35,7 +35,7 @@ public class CALayerReactivePropertyBuilder {
   /** A property representing the layer's .position value. */
   public func position() -> ReactiveProperty<CGPoint> {
     let layer = self.layer
-    return property(read: { layer.position },
+    return property(initialValue: layer.position,
                     write: { layer.position = $0 },
                     keyPath: "position")
   }
@@ -43,7 +43,7 @@ public class CALayerReactivePropertyBuilder {
   /** A property representing the layer's .position.y value. */
   public func positionY() -> ReactiveProperty<CGFloat> {
     let layer = self.layer
-    return property(read: { layer.position.y },
+    return property(initialValue: layer.position.y,
                     write: { layer.position.y = $0 },
                     keyPath: "position.y")
   }
@@ -51,7 +51,7 @@ public class CALayerReactivePropertyBuilder {
   /** A property representing the layer's .anchorPoint value. */
   public func anchorPoint() -> ReactiveProperty<CGPoint> {
     let layer = self.layer
-    return property(read: { layer.anchorPoint },
+    return property(initialValue: layer.anchorPoint,
                     write: { changeAnchorPoint(of: layer, to: $0) },
                     keyPath: "anchorPoint")
   }
@@ -59,7 +59,7 @@ public class CALayerReactivePropertyBuilder {
   /** A property representing the layer's .transform.rotation.z value. */
   public func rotation() -> ReactiveProperty<CGFloat> {
     let layer = self.layer
-    return property(read: { layer.value(forKeyPath: "transform.rotation.z") as! CGFloat },
+    return property(initialValue: layer.value(forKeyPath: "transform.rotation.z") as! CGFloat,
                     write: { layer.setValue($0, forKeyPath: "transform.rotation.z") },
                     keyPath: "transform.rotation.z")
   }
@@ -67,15 +67,15 @@ public class CALayerReactivePropertyBuilder {
   /** A property representing the layer's .transform.scale value. */
   public func scale() -> ReactiveProperty<CGFloat> {
     let layer = self.layer
-    return property(read: { layer.value(forKeyPath: "transform.scale") as! CGFloat },
+    return property(initialValue: layer.value(forKeyPath: "transform.scale") as! CGFloat,
                     write: { layer.setValue($0, forKeyPath: "transform.scale") },
                     keyPath: "transform.scale")
   }
 
-  private func property<T>(read: @escaping ScopedRead<T>, write: @escaping ScopedWrite<T>, keyPath: String) -> ReactiveProperty<T> {
+  private func property<T>(initialValue: T, write: @escaping ScopedWrite<T>, keyPath: String) -> ReactiveProperty<T> {
     let layer = self.layer
     var lastAnimationKey: String?
-    return ReactiveProperty(read: read, write: write, coreAnimation: { event in
+    return ReactiveProperty(initialValue: initialValue, write: write, coreAnimation: { event in
       switch event {
       case .add(let animation, let key, let modelValue, let initialVelocity):
         if let initialVelocity = initialVelocity {

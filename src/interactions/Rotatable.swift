@@ -50,7 +50,7 @@ public class Rotatable: Interaction {
       containerView.addGestureRecognizer(self.gestureRecognizer)
     }
     let source = gestureSource(self.gestureRecognizer)
-    self.valueStream = source.rotated(from: property)
+    self.valueStream = source.rotated(from: property.stream)
     self.velocityStream = source.velocity()
   }
 

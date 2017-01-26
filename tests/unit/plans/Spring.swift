@@ -27,7 +27,7 @@ class SpringTests: XCTestCase {
                         initialValue: propertyOf(view).center,
                         threshold: 1,
                         source: popSpringSource)
-    XCTAssertEqual(spring.initialVelocity.read(), .zero)
+    XCTAssertEqual(spring.initialVelocity.value, .zero)
   }
 
   func testCGFloatInitialization() {
@@ -37,6 +37,6 @@ class SpringTests: XCTestCase {
                         initialValue: propertyOf(view).centerX,
                         threshold: 1,
                         source: popSpringSource)
-    XCTAssertEqual(spring.initialVelocity.read(), 0)
+    XCTAssertEqual(spring.initialVelocity.value, 0)
   }
 }

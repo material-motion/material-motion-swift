@@ -22,7 +22,7 @@ class PropertyWriterTests: XCTestCase {
 
   func testWrites() {
     var someVar = 10
-    let property = ReactiveProperty(read: { return someVar }, write: { someVar = $0 })
+    let property = ReactiveProperty(initialValue: someVar, write: { someVar = $0 })
 
     let value = 100
 

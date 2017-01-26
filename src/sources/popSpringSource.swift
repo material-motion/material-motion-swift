@@ -26,9 +26,9 @@ public func popSpringSource(_ spring: SpringConfiguration<CGFloat>) -> (MotionOb
     let animation = POPSpringAnimation()
 
     let popProperty = POPMutableAnimatableProperty()
-    popProperty.threshold = spring.threshold.read()
+    popProperty.threshold = spring.threshold.value
     popProperty.readBlock = { _, toWrite in
-      let value = spring.initialValue.read()
+      let value = spring.initialValue.value
       toWrite![0] = value
     }
     popProperty.writeBlock = { _, toRead in
@@ -46,9 +46,9 @@ public func popSpringSource(_ spring: SpringConfiguration<CGPoint>) -> (MotionOb
     let animation = POPSpringAnimation()
 
     let popProperty = POPMutableAnimatableProperty()
-    popProperty.threshold = spring.threshold.read()
+    popProperty.threshold = spring.threshold.value
     popProperty.readBlock = { _, toWrite in
-      let value = spring.initialValue.read()
+      let value = spring.initialValue.value
       toWrite![0] = value.x
       toWrite![1] = value.y
     }
@@ -62,11 +62,11 @@ public func popSpringSource(_ spring: SpringConfiguration<CGPoint>) -> (MotionOb
 }
 
 private func configureSpringAnimation<T>(_ animation: POPSpringAnimation, spring: SpringConfiguration<T>, observer: MotionObserver<T>) -> () -> Void {
-  animation.dynamicsFriction = spring.friction.read()
-  animation.dynamicsTension = spring.tension.read()
+  animation.dynamicsFriction = spring.friction.value
+  animation.dynamicsTension = spring.tension.value
 
   animation.removedOnCompletion = false
-  animation.velocity = spring.initialVelocity.read()
+  animation.velocity = spring.initialVelocity.value
 
   // animationDidStartBlock is invoked at the turn of the run loop, potentially leaving this stream
   // in an at rest state even though it's effectively active. To ensure that the stream is marked
@@ -81,10 +81,10 @@ private func configureSpringAnimation<T>(_ animation: POPSpringAnimation, spring
     observer.state(.atRest)
   }
 
-  let destinationSubscription = spring.destination.subscribe { destination in
+  let destinationSubscription = spring.destination.stream.subscribe(next: { destination in
     animation.toValue = destination
     animation.isPaused = false
-  }
+  }, state: { _ in }, coreAnimation: { _ in })
 
   let key = NSUUID().uuidString
   let someObject = NSObject()

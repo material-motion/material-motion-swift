@@ -29,7 +29,7 @@ class ExampleTransitionDirector: TransitionDirector {
 
     let from: CGFloat
     let to: CGFloat
-    switch transition.direction.read() {
+    switch transition.direction.value {
     case .forward:
       from = backPositionY
       to = forePositionY

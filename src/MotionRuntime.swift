@@ -44,29 +44,13 @@ public class MotionRuntime {
   /** Subscribes to the stream, writes its output to the given property, and observes its state. */
   public func write<O: ExtendableMotionObservable, T>(_ stream: O, to property: ReactiveProperty<T>) where O.T == T {
     let token = NSUUID().uuidString
-    subscriptions.append(stream.subscribe(next: property.write, state: { [weak self] state in
+    subscriptions.append(stream.subscribe(next: property.setValue, state: { [weak self] state in
       property.state(state)
 
       guard let strongSelf = self else { return }
       strongSelf.stateDidChange(state, for: token)
 
     }, coreAnimation: property.coreAnimation))
-  }
-
-  /**
-   Subscribes to the stream, writes its output to the given writable, and observes its state.
-
-   Will not forward state/coreAnimation invocations along.
-   */
-  public func write<O: ExtendableMotionObservable, P: Writable>(_ stream: O, to writable: P) where O.T == P.T {
-    let token = NSUUID().uuidString
-    subscriptions.append(stream.subscribe(next: writable.write, state: { [weak self] state in
-      guard let strongSelf = self else { return }
-      strongSelf.stateDidChange(state, for: token)
-
-    }, coreAnimation: { _ in
-      assertionFailure("Writing to a value that does not support Core Animation.")
-    }))
   }
 
   /**
@@ -92,10 +76,10 @@ public class MotionRuntime {
       activeSubscriptions.remove(token)
     }
 
-    let oldState = self.state.read()
+    let oldState = self.state.value
     let newState: MotionState = activeSubscriptions.count > 0 ? .active : .atRest
     if oldState != newState {
-      self.state.write(newState)
+      self.state.setValue(newState)
     }
 
     if let parent = parent {

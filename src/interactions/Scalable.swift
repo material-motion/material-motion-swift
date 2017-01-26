@@ -50,7 +50,7 @@ public class Scalable: Interaction {
       containerView.addGestureRecognizer(self.gestureRecognizer)
     }
     let source = gestureSource(self.gestureRecognizer)
-    self.valueStream = source.scaled(from: property)
+    self.valueStream = source.scaled(from: property.stream)
     self.velocityStream = source.velocity()
   }
 

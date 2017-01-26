@@ -17,16 +17,13 @@
 import Foundation
 import IndefiniteObservable
 
-/** The expected shape of a read function. */
-public typealias ScopedRead<T> = () -> T
-
 /** The expected shape of a write function. */
 public typealias ScopedWrite<T> = (T) -> Void
 
 /** Creates a property with a given initial value. */
 public func createProperty<T>(withInitialValue initialValue: T) -> ReactiveProperty<T> {
   var value = initialValue
-  return ReactiveProperty(read: { value }, write: { value = $0 })
+  return ReactiveProperty(initialValue: initialValue, write: { value = $0 })
 }
 
 /**
@@ -34,30 +31,52 @@ public func createProperty<T>(withInitialValue initialValue: T) -> ReactivePrope
 
  Subscribers will receive updates whenever write is invoked.
  */
-public final class ReactiveProperty<T>: Readable, Writable, ExtendableMotionObservable {
-  /** Initializes a new instance with the given read/write functions. */
-  public init(read: @escaping ScopedRead<T>, write: @escaping ScopedWrite<T>) {
-    self._read = read
+public final class ReactiveProperty<T> {
+  public private(set) var value: T
+
+  public lazy var stream: MotionObservable<T> = {
+    let stream = MotionObservable<T> { observer in
+      self.observers.append(observer)
+
+      if self.state == .active {
+        observer.state(.active)
+      }
+      observer.next(self.value)
+      if self.state == .atRest {
+        observer.state(.atRest)
+      }
+
+      return {
+        if let index = self.observers.index(where: { $0 === observer }) {
+          self.observers.remove(at: index)
+        }
+      }
+    }
+    return stream
+  }()
+
+  /** Initializes a new instance with the given initial value and write function. */
+  public init(initialValue: T, write: @escaping ScopedWrite<T>) {
+    self.value = initialValue
     self._write = write
     self._coreAnimation = nil
   }
 
-  /** Initializes a new instance with the given read/write functions. */
-  public init(read: @escaping ScopedRead<T>,
+  /**
+   Initializes a new instance with the given initial value, write function, and core animation channel.
+   */
+  public init(initialValue: T,
               write: @escaping ScopedWrite<T>,
               coreAnimation: @escaping CoreAnimationChannel) {
-    self._read = read
+    self.value = initialValue
     self._write = write
     self._coreAnimation = coreAnimation
   }
 
-  /** Returns the current value. */
-  public func read() -> T {
-    return _read()
-  }
-
   /** Writes the value and informs all observers of the new value. */
-  public func write(_ value: T) {
+  public func setValue(_ value: T) {
+    self.value = value
+
     _write(value)
 
     for observer in observers {
@@ -68,6 +87,7 @@ public final class ReactiveProperty<T>: Readable, Writable, ExtendableMotionObse
   /** Informs all observers of the given state. */
   public func state(_ state: MotionState) {
     self.state = state
+
     for observer in observers {
       observer.state(state)
     }
@@ -83,59 +103,23 @@ public final class ReactiveProperty<T>: Readable, Writable, ExtendableMotionObse
       return
     }
 
+    coreAnimationEvent = event
     coreAnimation(event)
-  }
 
-  /**
-   Adds a new observer to the property.
-
-   Invoke unsubscribe on the returned subscription in order to stop receiving new values.
-   */
-  public func subscribe(next: @escaping NextChannel<T>,
-                        state: @escaping StateChannel,
-                        coreAnimation: @escaping CoreAnimationChannel) -> Subscription {
-    let observer = MotionObserver(next: next, state: state, coreAnimation: coreAnimation)
-    observers.append(observer)
-
-    if self.state == .active {
-      observer.state(.active)
-    }
-    observer.next(read())
-    if self.state == .atRest {
-      observer.state(.atRest)
-    }
-
-    return Subscription {
-      if let index = self.observers.index(where: { $0 === observer }) {
-        self.observers.remove(at: index)
-      }
+    for observer in observers {
+      observer.coreAnimation(event)
     }
   }
 
-  /** A convenience function for subscribe that provides an empty state subscription. */
-  public func subscribe(_ next: @escaping (T) -> Void) -> Subscription {
-    return self.subscribe(next: next, state: { _ in }, coreAnimation: { _ in })
-  }
-
-  private let _read: ScopedRead<T>
   private let _write: ScopedWrite<T>
   private let _coreAnimation: CoreAnimationChannel?
+
   private var state = MotionState.atRest
+  private var coreAnimationEvent: CoreAnimationChannelEvent?
+
   private var observers: [MotionObserver<T>] = []
 }
 
-/** A readable is able to read from a value. */
-public protocol Readable {
-  associatedtype T
-
-  /** Returns the current value. */
-  func read() -> T
-}
-
-/** A writable is able to write to a value. */
-public protocol Writable {
-  associatedtype T
-
-  /** Stores the provided value. */
-  func write(_ value: T)
+public func == <T: Equatable> (left: ReactiveProperty<T>, right: T) -> Bool {
+  return left.value == right
 }

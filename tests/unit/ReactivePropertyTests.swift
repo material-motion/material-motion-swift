@@ -21,14 +21,14 @@ class ReactivePropertyTests: XCTestCase {
 
   func testReadsAndWrites() {
     var someVar = 10
-    let property = ReactiveProperty(read: { someVar }, write: { someVar = $0 })
+    let property = ReactiveProperty(initialValue: someVar, write: { someVar = $0 })
 
-    XCTAssertEqual(someVar, property.read())
+    XCTAssertEqual(someVar, property.value)
 
-    property.write(5)
+    property.setValue(5)
     XCTAssertEqual(someVar, 5)
 
-    property.write(10)
-    XCTAssertEqual(someVar, property.read())
+    property.setValue(10)
+    XCTAssertEqual(someVar, property.value)
   }
 }

@@ -25,27 +25,27 @@ class UIViewReactivePropertyTests: XCTestCase {
     let view = UIView()
 
     view.alpha = 0.5
-    XCTAssertEqual(propertyOf(view).alpha.read(), view.alpha)
+    XCTAssertEqual(propertyOf(view).alpha.value, view.alpha)
 
     view.center = .init(x: 100, y: 100)
-    XCTAssertEqual(propertyOf(view).centerX.read(), view.center.x)
-    XCTAssertEqual(propertyOf(view).centerY.read(), view.center.y)
-    XCTAssertEqual(propertyOf(view).center.read(), view.center)
+    XCTAssertEqual(propertyOf(view).centerX.value, view.center.x)
+    XCTAssertEqual(propertyOf(view).centerY.value, view.center.y)
+    XCTAssertEqual(propertyOf(view).center.value, view.center)
   }
 
   func testWrites() {
     let view = UIView()
 
-    propertyOf(view).alpha.write(0.5)
+    propertyOf(view).alpha.setValue(0.5)
     XCTAssertEqual(view.alpha, 0.5)
 
-    propertyOf(view).center.write(.init(x: 100, y: 100))
+    propertyOf(view).center.setValue(.init(x: 100, y: 100))
     XCTAssertEqual(view.center, .init(x: 100, y: 100))
 
-    propertyOf(view).centerX.write(50)
+    propertyOf(view).centerX.setValue(50)
     XCTAssertEqual(view.center.x, 50)
 
-    propertyOf(view).centerY.write(25)
+    propertyOf(view).centerY.setValue(25)
     XCTAssertEqual(view.center.y, 25)
   }
 
@@ -58,6 +58,6 @@ class UIViewReactivePropertyTests: XCTestCase {
     view = nil
     XCTAssertNotNil(weakView)
 
-    let _ = heldProperty.read()
+    let _ = heldProperty.value
   }
 }

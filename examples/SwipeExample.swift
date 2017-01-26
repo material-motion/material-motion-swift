@@ -59,7 +59,7 @@ class TossableStackedCard: Interaction {
                  whenAbove: TossDirection.right),
                   to: tossDirection)
 
-    let destinationStream = tossDirection.rewrite([
+    let destinationStream = tossDirection.stream.rewrite([
       .none: containerView.bounds.midX,
       .left: -view.bounds.width,
       .right: containerView.bounds.width + view.bounds.width
@@ -67,7 +67,7 @@ class TossableStackedCard: Interaction {
     )
     runtime.write(destinationStream, to: attachment.spring.destination)
 
-    let gestureEnabledStream = tossDirection.rewrite([
+    let gestureEnabledStream = tossDirection.stream.rewrite([
       .none: true,
       .left: false,
       .right: false
@@ -80,12 +80,12 @@ class TossableStackedCard: Interaction {
     runtime.write(initialVelocityStream, to: attachment.spring.initialVelocity)
 
     let translationStream = dragStream
-      .translated(from: propertyOf(view).center, in: containerView)
+      .translated(from: propertyOf(view).center.stream, in: containerView)
       .x()
     runtime.write(attachment.spring.valueStream.toggled(with: translationStream), to: position)
 
     let radians = CGFloat(M_PI / 180.0 * 15.0)
-    let rotationStream = position
+    let rotationStream = position.stream
       .offset(by: -containerView.bounds.width / 2)
       .normalized(by: containerView.bounds.width / 2)
       .scaled(by: radians)
@@ -93,7 +93,7 @@ class TossableStackedCard: Interaction {
     // Previous card
     if let previousCard = previousCard {
       dragGesture.require(toFail: previousCard.dragGesture)
-      let nextRotationStream = previousCard.position
+      let nextRotationStream = previousCard.position.stream
         .distance(from: containerView.bounds.width / 2)
         .normalized(by: containerView.bounds.width / 2)
         .max(1)

@@ -66,11 +66,11 @@ public class TransitionSpring<T: Zeroable>: Interaction {
     self.tension = spring.tension
     self.friction = spring.friction
     self.initialVelocity = spring.initialVelocity
-    self.destinationStream = direction.destinations(back: backwardDestination,
-                                                    fore: forwardDestination)
+    self.destinationStream = direction.stream.destinations(back: backwardDestination,
+                                                           fore: forwardDestination)
     self.valueStream = self.spring.valueStream
 
-    property.write(direction.read() == .forward ? backwardDestination : forwardDestination)
+    property.setValue(direction.value == .forward ? backwardDestination : forwardDestination)
   }
 
   public func connect(with runtime: MotionRuntime) {

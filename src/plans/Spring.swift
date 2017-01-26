@@ -29,8 +29,7 @@ public final class Spring<T: Zeroable> {
                           initialValue: ReactiveProperty<T>,
                           threshold: CGFloat,
                           source: SpringSource<T>) {
-    var velocity: T = T.zero() as! T
-    let initialVelocity = ReactiveProperty<T>(read: { velocity }, write: { velocity = $0 })
+    let initialVelocity = createProperty(withInitialValue: T.zero() as! T)
     self.init(to: destination,
               initialValue: initialValue,
               initialVelocity: initialVelocity,
@@ -48,8 +47,7 @@ public final class Spring<T: Zeroable> {
     self.initialValue = initialValue
     self.initialVelocity = initialVelocity
 
-    var threshold = threshold
-    self.threshold = ReactiveProperty<CGFloat>(read: { threshold }, write: { threshold = $0 })
+    self.threshold = createProperty(withInitialValue: threshold)
 
     // We must create this intermediary configuration object because we can't pass `self` to a
     // function before `self` has been completely initialized.

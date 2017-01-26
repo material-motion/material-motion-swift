@@ -27,32 +27,32 @@ public class UIViewReactivePropertyBuilder {
   /** A property representing the view's .isUserInteractionEnabled value. */
   public var isUserInteractionEnabled: ReactiveProperty<Bool> {
     let view = self.view
-    return ReactiveProperty(read: { view.isUserInteractionEnabled },
+    return ReactiveProperty(initialValue: view.isUserInteractionEnabled,
                             write: { view.isUserInteractionEnabled = $0 })
   }
 
   /** A property representing the view's .alpha value. */
   public var alpha: ReactiveProperty<CGFloat> {
     let view = self.view
-    return ReactiveProperty(read: { view.alpha }, write: { view.alpha = $0 })
+    return ReactiveProperty(initialValue: view.alpha, write: { view.alpha = $0 })
   }
 
   /** A property representing the view's .center.x value. */
   public var centerX: ReactiveProperty<CGFloat> {
     let view = self.view
-    return ReactiveProperty(read: { view.center.x }, write: { view.center.x = $0 })
+    return ReactiveProperty(initialValue: view.center.x, write: { view.center.x = $0 })
   }
 
   /** A property representing the view's .center.y value. */
   public var centerY: ReactiveProperty<CGFloat> {
     let view = self.view
-    return ReactiveProperty(read: { view.center.y }, write: { view.center.y = $0 })
+    return ReactiveProperty(initialValue: view.center.y, write: { view.center.y = $0 })
   }
 
   /** A property representing the view's .center value. */
   public var center: ReactiveProperty<CGPoint> {
     let view = self.view
-    return ReactiveProperty(read: { view.center }, write: { view.center = $0 })
+    return ReactiveProperty(initialValue: view.center, write: { view.center = $0 })
   }
 
   private let view: UIView

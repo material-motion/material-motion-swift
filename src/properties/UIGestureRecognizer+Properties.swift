@@ -27,7 +27,7 @@ public class UIGestureRecognizerReactivePropertyBuilder {
   /** A property representing the view's .isEnabled value. */
   public var isEnabled: ReactiveProperty<Bool> {
     let gestureRecognizer = self.gestureRecognizer
-    return ReactiveProperty(read: { gestureRecognizer.isEnabled },
+    return ReactiveProperty(initialValue: gestureRecognizer.isEnabled,
                             write: { gestureRecognizer.isEnabled = $0 })
   }
 

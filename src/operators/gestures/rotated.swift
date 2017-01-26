@@ -22,7 +22,7 @@ extension ExtendableMotionObservable where T: UIRotationGestureRecognizer {
    Adds the current translation to the initial position and emits the result while the gesture
    recognizer is active.
    */
-  func rotated<P: Readable>(from initialRotation: P) -> MotionObservable<CGFloat> where P.T == CGFloat {
+  func rotated(from initialRotation: MotionObservable<CGFloat>) -> MotionObservable<CGFloat> {
     var cachedInitialRotation: CGFloat?
     return _nextOperator { value, next in
       if value.state == .began || (value.state == .changed && cachedInitialRotation == nil)  {

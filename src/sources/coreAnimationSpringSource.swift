@@ -26,15 +26,15 @@ public func coreAnimationSpringSource<T where T: Subtractable, T: Zeroable>(_ sp
   return MotionObservable { observer in
     var animationKeys: [String] = []
 
-    let destinationSubscription = spring.destination.subscribe {
+    let destinationSubscription = spring.destination.stream.subscribe(next: {
       let animation = CASpringAnimation()
 
-      animation.damping = spring.friction.read()
-      animation.stiffness = spring.tension.read()
+      animation.damping = spring.friction.value
+      animation.stiffness = spring.tension.value
 
       animation.isAdditive = true
 
-      let from = spring.initialValue.read()
+      let from = spring.initialValue.value
       let to = $0
       let delta = from - to
       animation.fromValue = delta
@@ -52,10 +52,10 @@ public func coreAnimationSpringSource<T where T: Subtractable, T: Zeroable>(_ sp
       animationKeys.append(key)
       observer.coreAnimation(.add(animation, key,
                                   modelValue: $0,
-                                  initialVelocity: spring.initialVelocity.read()))
+                                  initialVelocity: spring.initialVelocity.value))
 
       CATransaction.commit()
-    }
+    }, state: { _ in }, coreAnimation: { _ in })
 
     return {
       for key in animationKeys {

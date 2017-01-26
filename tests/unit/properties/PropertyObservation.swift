@@ -26,9 +26,9 @@ class PropertyObservation: XCTestCase {
     let property = propertyOf(view).center
 
     var observedValue: CGPoint? = nil
-    let _ = property.subscribe { value in
+    let _ = property.stream.subscribe(next: { value in
       observedValue = value
-    }
+    }, state: { _ in }, coreAnimation: { _ in })
     XCTAssertEqual(observedValue!, point)
   }
 
@@ -38,13 +38,13 @@ class PropertyObservation: XCTestCase {
     let property = propertyOf(view).center
 
     var observedValue: CGPoint? = nil
-    let subscription = property.subscribe { value in
+    let subscription = property.stream.subscribe(next: { value in
       observedValue = value
-    }
+    }, state: { _ in }, coreAnimation: { _ in })
 
     XCTAssertNotEqual(observedValue!, point)
 
-    property.write(point)
+    property.setValue(point)
 
     XCTAssertEqual(observedValue!, point)
 
@@ -57,14 +57,14 @@ class PropertyObservation: XCTestCase {
     let property = propertyOf(view).center
 
     var observedValue: CGPoint? = nil
-    let subscription = property.subscribe { value in
+    let subscription = property.stream.subscribe(next: { value in
       observedValue = value
-    }
+    }, state: { _ in }, coreAnimation: { _ in })
     subscription.unsubscribe()
 
     XCTAssertNotEqual(observedValue!, point)
 
-    property.write(point)
+    property.setValue(point)
 
     XCTAssertNotEqual(observedValue!, point)
   }

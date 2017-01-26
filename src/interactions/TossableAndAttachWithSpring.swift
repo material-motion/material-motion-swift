@@ -46,7 +46,7 @@ public class TossableAndAttachWithSpring: AttachWithSpring<CGPoint> {
     }
 
     let dragStream = gestureSource(panGestureRecognizer)
-    let translationStream = dragStream.translated(from: position, in: containerView)
+    let translationStream = dragStream.translated(from: position.stream, in: containerView)
 
     self.initialVelocityStream = dragStream.onRecognitionState(.ended).velocity(in: containerView)
 

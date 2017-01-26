@@ -51,7 +51,7 @@ public class Draggable: Interaction {
       containerView.addGestureRecognizer(self.gestureRecognizer)
     }
     let source = gestureSource(self.gestureRecognizer)
-    self.valueStream = source.translated(from: property, in: containerView)
+    self.valueStream = source.translated(from: property.stream, in: containerView)
     self.velocityStream = source.velocity(in: containerView)
   }
 

@@ -22,7 +22,7 @@ extension ExtendableMotionObservable where T: UIPinchGestureRecognizer {
    Multiplies the current scale by the initial scale and emits the result while the gesture
    recognizer is active.
    */
-  func scaled<P: Readable>(from initialScale: P) -> MotionObservable<CGFloat> where P.T == CGFloat {
+  func scaled(from initialScale: MotionObservable<CGFloat>) -> MotionObservable<CGFloat> {
     var cachedInitialScale: CGFloat?
     return _nextOperator { value, next in
       if value.state == .began || (value.state == .changed && cachedInitialScale == nil)  {

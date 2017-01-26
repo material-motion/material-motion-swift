@@ -142,7 +142,7 @@ extension Transition {
         to.view.frame = finalFrame
       }
 
-      switch direction.read() {
+      switch direction.value {
       case .forward:
         context.containerView.addSubview(to.view)
 
@@ -158,18 +158,18 @@ extension Transition {
     // TODO: Provide the director with gesture recognizers.
 
     // If no motion was registered to the runtime then we terminate immediately.
-    stateSubscription = self.runtime!.state.subscribe { [weak self] state in
+    stateSubscription = self.runtime!.state.stream.subscribe(next: { [weak self] state in
       guard let strongSelf = self else {
         return
       }
       if state == .atRest {
         strongSelf.runtimeDidComeToRest()
       }
-    }
+    }, state: { _ in }, coreAnimation: { _ in })
   }
 
   fileprivate func runtimeDidComeToRest() {
-    let completedInOriginalDirection = direction.read() == initialDirection
+    let completedInOriginalDirection = direction.value == initialDirection
 
     // UIKit container view controllers will replay their transition animation if the transition
     // percentage is exactly 0 or 1, so we fake being super close to these values in order to avoid
