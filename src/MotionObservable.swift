@@ -38,7 +38,7 @@ public typealias CoreAnimationChannel = (CoreAnimationChannelEvent) -> Void
 
  Throughout this documentation we will treat the words "observable" and "stream" as synonyms.
  */
-public final class MotionObservable<T>: IndefiniteObservable<MotionObserver<T>>, ExtendableMotionObservable {
+public final class MotionObservable<T>: IndefiniteObservable<MotionObserver<T>> {
   /** Sugar for subscribing a MotionObserver. */
   public func subscribe(next: @escaping NextChannel<T>,
                         state: @escaping StateChannel,
@@ -89,21 +89,16 @@ public final class MotionObserver<T>: Observer {
   public let coreAnimation: CoreAnimationChannel
 }
 
-/**
- This type is used for extending MotionObservable using generics.
-
- This is required to be able to do extensions where T == some value, such as CGPoint. See
- https://twitter.com/dgregor79/status/646167048645554176 for discussion of what appears to be a
- bug in swift.
- */
-public protocol ExtendableMotionObservable {
+/** A MotionObservableConvertible has a canonical MotionObservable that it can return. */
+public protocol MotionObservableConvertible {
   associatedtype T
 
-  /**
-   We define this only so that T can be inferred by the compiler so that we don't have to
-   introduce a new generic type such as Value in the associatedtype here.
-   */
-  func subscribe(next: @escaping NextChannel<T>,
-                 state: @escaping StateChannel,
-                 coreAnimation: @escaping CoreAnimationChannel) -> Subscription
+  /** Returns the canonical MotionObservable for this object. */
+  func asStream() -> MotionObservable<T>
+}
+
+extension MotionObservable: MotionObservableConvertible {
+  public func asStream() -> MotionObservable<T> {
+    return self
+  }
 }

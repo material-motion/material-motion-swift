@@ -16,7 +16,7 @@
 
 import Foundation
 
-extension ExtendableMotionObservable where T: Comparable {
+extension MotionObservableConvertible where T: Comparable {
 
   /**
    Emit a value based on the incoming value's position around a threshold.
@@ -31,7 +31,7 @@ extension ExtendableMotionObservable where T: Comparable {
                         whenEqual equal: U,
                         whenBelow below: U,
                         whenAbove above: U) -> MotionObservable<U> {
-    return _map {
+    return asStream()._map {
       if $0 < threshold {
         return below
       }
@@ -56,7 +56,7 @@ extension ExtendableMotionObservable where T: Comparable {
                         whenWithin within: U,
                         whenBelow below: U,
                         whenAbove above: U) -> MotionObservable<U> {
-    return _map {
+    return asStream()._map {
       if $0 < min {
         return below
       }
@@ -69,14 +69,14 @@ extension ExtendableMotionObservable where T: Comparable {
 
   /** Emits either the incoming value or the provided maxValue, whichever is smaller. */
   public func max(_ maxValue: T) -> MotionObservable<T> {
-    return _map {
+    return asStream()._map {
       return Swift.min($0, maxValue)
     }
   }
 
   /** Emits either the incoming value or the provided minValue, whichever is larger. */
   public func min(_ minValue: T) -> MotionObservable<T> {
-    return _map {
+    return asStream()._map {
       return Swift.max($0, minValue)
     }
   }

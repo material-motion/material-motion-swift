@@ -16,10 +16,10 @@
 
 import Foundation
 
-extension ExtendableMotionObservable {
+extension MotionObservableConvertible {
 
   /** Emit a constant value each time this operator receives a value. */
   public func mapTo<U>(_ value: U) -> MotionObservable<U> {
-    return _map { _ in value }
+    return asStream()._map { _ in value }
   }
 }

@@ -16,11 +16,11 @@
 
 import Foundation
 
-extension ExtendableMotionObservable where T: Hashable {
+extension MotionObservableConvertible where T: Hashable {
 
   /** Emits the mapped value for each incoming value, if one exists, otherwise emits nothing. */
   public func rewrite<U>(_ values: [T: U]) -> MotionObservable<U> {
-    return _nextOperator { value, next in
+    return asStream()._nextOperator { value, next in
       if let mappedValue = values[value] {
         next(mappedValue)
       }

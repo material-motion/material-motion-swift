@@ -16,7 +16,7 @@
 
 import Foundation
 
-extension ExtendableMotionObservable {
+extension MotionObservableConvertible {
 
   /**
    A light-weight operator builder.
@@ -26,7 +26,7 @@ extension ExtendableMotionObservable {
    */
   func _nextOperator<U>(_ operation: @escaping (T, (U) -> Void) -> Void) -> MotionObservable<U> {
     return MotionObservable<U> { observer in
-      return self.subscribe(next: {
+      return self.asStream().subscribe(next: {
         return operation($0, observer.next)
       }, state: observer.state, coreAnimation: { _ in
         assertionFailure("Core animation is not supported by this operator.")
@@ -43,7 +43,7 @@ extension ExtendableMotionObservable {
    */
   func _nextOperator<U>(_ operation: @escaping (T, (U) -> Void) -> Void, coreAnimation: @escaping (CoreAnimationChannelEvent, CoreAnimationChannel) -> Void) -> MotionObservable<U> {
     return MotionObservable<U> { observer in
-      return self.subscribe(next: {
+      return self.asStream().subscribe(next: {
         return operation($0, observer.next)
       }, state: observer.state, coreAnimation: {
         return coreAnimation($0, observer.coreAnimation)

@@ -16,17 +16,19 @@
 
 import Foundation
 
-extension ExtendableMotionObservable where T: UIPanGestureRecognizer {
+extension MotionObservableConvertible where T: UIPanGestureRecognizer {
 
   /**
    Adds the current translation to the initial position and emits the result while the gesture
    recognizer is active.
    */
-  func translated(from initialPosition: MotionObservable<CGPoint>, in view: UIView) -> MotionObservable<CGPoint> {
+  func translated<O: MotionObservableConvertible>(from initialPosition: O, in view: UIView) -> MotionObservable<CGPoint> where O.T == CGPoint {
+    let initialPositionStream = initialPosition.asStream()
     var cachedInitialPosition: CGPoint?
-    return _nextOperator { value, next in
+    return asStream()._nextOperator { value, next in
       if value.state == .began || (value.state == .changed && cachedInitialPosition == nil)  {
-        cachedInitialPosition = initialPosition.read()
+        cachedInitialPosition = initialPositionStream.read()
+
       } else if value.state != .began && value.state != .changed {
         cachedInitialPosition = nil
       }

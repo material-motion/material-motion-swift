@@ -16,7 +16,7 @@
 
 import Foundation
 
-extension ExtendableMotionObservable where T: Subtractable, T: Lerpable {
+extension MotionObservableConvertible where T: Subtractable, T: Lerpable {
 
   /** Linearly interpolate the incoming value along the given range to the destination range. */
   public func mapRange<U>(
@@ -25,7 +25,7 @@ extension ExtendableMotionObservable where T: Subtractable, T: Lerpable {
     destinationStart: U,
     destinationEnd: U) -> MotionObservable<U>
   where U: Lerpable, U: Subtractable, U: Addable {
-    return _map {
+    return asStream()._map {
       let position = $0 - rangeStart
 
       let vector = rangeEnd - rangeStart

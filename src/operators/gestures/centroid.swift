@@ -16,11 +16,11 @@
 
 import Foundation
 
-extension ExtendableMotionObservable where T: UIGestureRecognizer {
+extension MotionObservableConvertible where T: UIGestureRecognizer {
 
   /** Extract centroid from the incoming gesture recognizer. */
   public func centroid(in view: UIView) -> MotionObservable<CGPoint> {
-    return _map { value in
+    return asStream()._map { value in
       value.location(in: view)
     }
   }

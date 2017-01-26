@@ -16,21 +16,23 @@
 
 import Foundation
 
-extension ExtendableMotionObservable where T: UIPinchGestureRecognizer {
+extension MotionObservableConvertible where T: UIPinchGestureRecognizer {
 
   /**
    Multiplies the current scale by the initial scale and emits the result while the gesture
    recognizer is active.
    */
-  func scaled(from initialScale: MotionObservable<CGFloat>) -> MotionObservable<CGFloat> {
-    var cachedInitialScale: CGFloat?
-    return _nextOperator { value, next in
-      if value.state == .began || (value.state == .changed && cachedInitialScale == nil)  {
-        cachedInitialScale = initialScale.read()
+  func scaled<O: MotionObservableConvertible>(from initialScale: O) -> MotionObservable<CGFloat> where O.T == CGFloat {
+    let initialScaleStream = initialScale.asStream()
+    var initialScale: CGFloat?
+    return asStream()._nextOperator { value, next in
+      if value.state == .began || (value.state == .changed && initialScale == nil)  {
+        initialScale = initialScaleStream.read()
+
       } else if value.state != .began && value.state != .changed {
-        cachedInitialScale = nil
+        initialScale = nil
       }
-      if let cachedInitialScale = cachedInitialScale {
+      if let cachedInitialScale = initialScale {
         let scale = value.scale
         next(cachedInitialScale * scale)
       }

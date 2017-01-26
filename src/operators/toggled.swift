@@ -16,7 +16,7 @@
 
 import IndefiniteObservable
 
-extension ExtendableMotionObservable {
+extension MotionObservableConvertible {
 
   /**
    Toggled emits values from this stream or the provided one, preferring the provided stream while
@@ -58,9 +58,9 @@ extension ExtendableMotionObservable {
         }
 
         if state == .atRest && originalStreamSubscription == nil {
-          originalStreamSubscription = self.subscribe(next: observer.next,
-                                                      state: observer.state,
-                                                      coreAnimation: observer.coreAnimation)
+          originalStreamSubscription = self.asStream().subscribe(next: observer.next,
+                                                                 state: observer.state,
+                                                                 coreAnimation: observer.coreAnimation)
         }
 
         if state == .active {

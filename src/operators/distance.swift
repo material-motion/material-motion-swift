@@ -16,21 +16,21 @@
 
 import Foundation
 
-extension ExtendableMotionObservable where T == CGFloat {
+extension MotionObservableConvertible where T == CGFloat {
 
   /** Emits the distance between the incoming value and the location. */
   public func distance(from location: CGFloat) -> MotionObservable<CGFloat> {
-    return _map {
+    return asStream()._map {
       fabs($0 - location)
     }
   }
 }
 
-extension ExtendableMotionObservable where T == CGPoint {
+extension MotionObservableConvertible where T == CGPoint {
 
   /** Emits the distance between the incoming value and the location. */
   public func distance(from location: CGPoint) -> MotionObservable<CGFloat> {
-    return _map {
+    return asStream()._map {
       let xDelta = $0.x - location.x
       let yDelta = $0.y - location.y
       return sqrt(xDelta * xDelta + yDelta * yDelta)

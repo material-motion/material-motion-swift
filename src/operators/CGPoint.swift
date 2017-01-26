@@ -14,11 +14,11 @@
  limitations under the License.
  */
 
-extension ExtendableMotionObservable where T == CGPoint {
+extension MotionObservableConvertible where T == CGPoint {
 
   /** Extract the x value from a CGPoint. */
-  public func x() -> MotionObservable<CGFloat> { return _map { $0.x } }
+  public func x() -> MotionObservable<CGFloat> { return asStream()._map { $0.x } }
 
   /** Extract the y value from a CGPoint. */
-  public func y() -> MotionObservable<CGFloat> { return _map { $0.y } }
+  public func y() -> MotionObservable<CGFloat> { return asStream()._map { $0.y } }
 }

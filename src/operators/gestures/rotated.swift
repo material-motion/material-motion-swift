@@ -16,17 +16,18 @@
 
 import Foundation
 
-extension ExtendableMotionObservable where T: UIRotationGestureRecognizer {
+extension MotionObservableConvertible where T: UIRotationGestureRecognizer {
 
   /**
    Adds the current translation to the initial position and emits the result while the gesture
    recognizer is active.
    */
-  func rotated(from initialRotation: MotionObservable<CGFloat>) -> MotionObservable<CGFloat> {
+  func rotated<O: MotionObservableConvertible>(from initialRotation: O) -> MotionObservable<CGFloat> where O.T == CGFloat {
+    let initialRotationStream = initialRotation.asStream()
     var cachedInitialRotation: CGFloat?
-    return _nextOperator { value, next in
+    return asStream()._nextOperator { value, next in
       if value.state == .began || (value.state == .changed && cachedInitialRotation == nil)  {
-        cachedInitialRotation = initialRotation.read()
+        cachedInitialRotation = initialRotationStream.read()
       } else if value.state != .began && value.state != .changed {
         cachedInitialRotation = nil
       }

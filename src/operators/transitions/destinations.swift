@@ -16,10 +16,10 @@
 
 import Foundation
 
-extension ExtendableMotionObservable where T == Transition.Direction {
+extension MotionObservableConvertible where T == Transition.Direction {
 
   /** Emits either the back or fore value when a new direction is received, . */
   public func destinations<U>(back: U, fore: U) -> MotionObservable<U> {
-    return _map { direction in direction == .forward ? fore : back }
+    return asStream()._map { direction in direction == .forward ? fore : back }
   }
 }

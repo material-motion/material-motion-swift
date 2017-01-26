@@ -16,26 +16,26 @@
 
 import Foundation
 
-extension ExtendableMotionObservable where T == CGFloat {
+extension MotionObservableConvertible where T == CGFloat {
 
   /** Emits the incoming value + amount. */
-  public func offset(by amount: CGFloat) -> MotionObservable<CGFloat> { return _map { $0 + amount } }
+  public func offset(by amount: CGFloat) -> MotionObservable<CGFloat> { return asStream()._map { $0 + amount } }
 
   /** Emits the incoming value * amount. */
-  public func scaled(by amount: CGFloat) -> MotionObservable<CGFloat> { return _map { $0 * amount } }
+  public func scaled(by amount: CGFloat) -> MotionObservable<CGFloat> { return asStream()._map { $0 * amount } }
 
   /** Emits the incoming value / amount. */
-  public func normalized(by amount: CGFloat) -> MotionObservable<CGFloat> { return _map { $0 / amount } }
+  public func normalized(by amount: CGFloat) -> MotionObservable<CGFloat> { return asStream()._map { $0 / amount } }
 
   /** Subtract the incoming value from the provided value. */
-  public func subtracted(from value: CGFloat) -> MotionObservable<CGFloat> { return _map { value - $0 } }
+  public func subtracted(from value: CGFloat) -> MotionObservable<CGFloat> { return asStream()._map { value - $0 } }
 }
 
-extension ExtendableMotionObservable where T == CGPoint {
+extension MotionObservableConvertible where T == CGPoint {
 
   /** Emits the incoming value / amount. */
   public func normalized(by amount: CGSize) -> MotionObservable<CGPoint> {
-    return _map {
+    return asStream()._map {
       return CGPoint(x: $0.x / amount.width,
                      y: $0.y / amount.height)
     }

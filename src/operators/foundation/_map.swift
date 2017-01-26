@@ -16,11 +16,11 @@
 
 import Foundation
 
-extension ExtendableMotionObservable {
+extension MotionObservableConvertible {
 
   /** Transform the items emitted by an Observable by applying a function to each item. */
   func _map<U>(_ transform: @escaping (T) -> U) -> MotionObservable<U> {
-    return _nextOperator({ value, next in
+    return asStream()._nextOperator({ value, next in
       next(transform(value))
 
     }, coreAnimation: { event, coreAnimation in

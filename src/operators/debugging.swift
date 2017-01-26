@@ -16,11 +16,11 @@
 
 import Foundation
 
-extension ExtendableMotionObservable {
+extension MotionObservableConvertible {
 
   /** Writes any incoming value to the console and then passes the value on. */
   public func log(_ context: String? = nil) -> MotionObservable<T> {
-    return _nextOperator({ value, next in
+    return asStream()._nextOperator({ value, next in
       if let context = context {
         print(context, value)
       } else {

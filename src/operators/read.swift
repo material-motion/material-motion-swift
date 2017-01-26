@@ -16,16 +16,16 @@
 
 import Foundation
 
-extension ExtendableMotionObservable {
+extension MotionObservableConvertible {
 
   /**
    Return the value emitted by the stream on subscription.
 
    Will throw an assertion if no value was emitted.
    */
-  public func read() -> T {
+  public func read() -> T? {
     var value: T?
-    subscribe(next: { value = $0 }, state: { _ in }, coreAnimation: { _ in })
-    return value!
+    asStream().subscribe(next: { value = $0 }, state: { _ in }, coreAnimation: { _ in })
+    return value
   }
 }

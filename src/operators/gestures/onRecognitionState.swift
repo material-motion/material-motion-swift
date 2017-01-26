@@ -16,18 +16,18 @@
 
 import Foundation
 
-extension ExtendableMotionObservable where T: UIGestureRecognizer {
+extension MotionObservableConvertible where T: UIGestureRecognizer {
 
   /** Only forwards the gesture recognizer if its state matches the provided value. */
   public func onRecognitionState(_ state: UIGestureRecognizerState) -> MotionObservable<T> {
-    return _filter { value in
+    return asStream()._filter { value in
       return value.state == state
     }
   }
 
   /** Only forwards the gesture recognizer if its state matches any of the provided values. */
   public func onRecognitionStates(_ states: [UIGestureRecognizerState]) -> MotionObservable<T> {
-    return _filter { value in
+    return asStream()._filter { value in
       return states.contains(value.state)
     }
   }

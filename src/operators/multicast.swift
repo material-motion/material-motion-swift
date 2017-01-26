@@ -16,7 +16,7 @@
 
 import IndefiniteObservable
 
-extension ExtendableMotionObservable {
+extension MotionObservableConvertible {
 
   /**
    Turns a stream into a multicast stream.
@@ -33,7 +33,7 @@ extension ExtendableMotionObservable {
     var lastCoreAnimationEvent: CoreAnimationChannelEvent?
 
     let subscribe = {
-      subscription = self.subscribe(next: { value in
+      subscription = self.asStream().subscribe(next: { value in
         lastValue = value
         for observer in observers {
           observer.next(value)

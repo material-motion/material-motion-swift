@@ -16,7 +16,7 @@
 
 import IndefiniteObservable
 
-extension ExtendableMotionObservable {
+extension MotionObservableConvertible {
 
   /**
    A valve creates control flow for a stream.
@@ -24,19 +24,19 @@ extension ExtendableMotionObservable {
    The upstream will be subscribed to when valveStream emits true, and the subscription terminated
    when the valveStream emits false.
    */
-  public func valve<O: ExtendableMotionObservable>(_ valveStream: O) -> MotionObservable<T> where O.T == Bool {
+  public func valve<O: MotionObservableConvertible>(_ observable: O) -> MotionObservable<T> where O.T == Bool {
     return MotionObservable<T> { observer in
       var valveSubscription: Subscription?
       var upstreamSubscription: Subscription?
 
       var connectUpstream = {
-        upstreamSubscription = self.subscribe(next: observer.next,
-                                              state: observer.state,
-                                              coreAnimation: observer.coreAnimation)
+        upstreamSubscription = self.asStream().subscribe(next: observer.next,
+                                                         state: observer.state,
+                                                         coreAnimation: observer.coreAnimation)
       }
       connectUpstream()
 
-      valveSubscription = valveStream.subscribe(next: { value in
+      valveSubscription = observable.asStream().subscribe(next: { value in
         let shouldOpen = value
 
         if shouldOpen && upstreamSubscription == nil {
