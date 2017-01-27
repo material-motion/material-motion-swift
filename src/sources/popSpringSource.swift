@@ -21,33 +21,33 @@ import pop
 // Each specialized method is expected to read from and write to a POP vector value.
 
 /** Create a pop spring source for a CGFloat Spring plan. */
-public func pop(_ spring: SpringConfiguration<CGFloat>) -> (MotionObservable<CGFloat>) {
+public func pop(_ spring: Spring<CGFloat>, initialValue: MotionObservable<CGFloat>) -> (MotionObservable<CGFloat>) {
   return MotionObservable { observer in
     let animation = POPSpringAnimation()
 
     let popProperty = POPMutableAnimatableProperty()
     popProperty.threshold = spring.threshold.value
     popProperty.readBlock = { _, toWrite in
-      toWrite![0] = spring.initialValue.read()!
+      toWrite![0] = initialValue.read()!
     }
     popProperty.writeBlock = { _, toRead in
       observer.next(toRead![0])
     }
     animation.property = popProperty
 
-    return configureSpringAnimation(animation, spring: spring, observer: observer)
+    return configureSpringAnimation(animation, spring: spring, initialValue: initialValue, observer: observer)
   }
 }
 
 /** Create a pop spring source for a CGPoint Spring plan. */
-public func pop(_ spring: SpringConfiguration<CGPoint>) -> (MotionObservable<CGPoint>) {
+public func pop(_ spring: Spring<CGPoint>, initialValue: MotionObservable<CGPoint>) -> (MotionObservable<CGPoint>) {
   return MotionObservable { observer in
     let animation = POPSpringAnimation()
 
     let popProperty = POPMutableAnimatableProperty()
     popProperty.threshold = spring.threshold.value
     popProperty.readBlock = { _, toWrite in
-      let value = spring.initialValue.read()!
+      let value = initialValue.read()!
       toWrite![0] = value.x
       toWrite![1] = value.y
     }
@@ -56,11 +56,11 @@ public func pop(_ spring: SpringConfiguration<CGPoint>) -> (MotionObservable<CGP
     }
     animation.property = popProperty
 
-    return configureSpringAnimation(animation, spring: spring, observer: observer)
+    return configureSpringAnimation(animation, spring: spring, initialValue: initialValue, observer: observer)
   }
 }
 
-private func configureSpringAnimation<T>(_ animation: POPSpringAnimation, spring: SpringConfiguration<T>, observer: MotionObserver<T>) -> () -> Void {
+private func configureSpringAnimation<T>(_ animation: POPSpringAnimation, spring: Spring<T>, initialValue: MotionObservable<T>, observer: MotionObserver<T>) -> () -> Void {
   animation.dynamicsFriction = spring.friction.value
   animation.dynamicsTension = spring.tension.value
 

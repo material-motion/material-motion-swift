@@ -17,4 +17,4 @@
 import UIKit
 
 /** A SpringSystem is a function that creates a MotionObservable from a SpringConfiguration. */
-public typealias SpringSystem<T: Zeroable> = (SpringConfiguration<T>) -> MotionObservable<T>
+public typealias SpringSystem<T: Zeroable> = (Spring<T>, MotionObservable<T>) -> MotionObservable<T>
