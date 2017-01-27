@@ -102,3 +102,15 @@ extension MotionObservable: MotionObservableConvertible {
     return self
   }
 }
+
+extension CGFloat: MotionObservableConvertible {
+  public func asStream() -> MotionObservable<CGFloat> {
+    return self.asProperty().asStream()
+  }
+}
+
+extension CGPoint: MotionObservableConvertible {
+  public func asStream() -> MotionObservable<CGPoint> {
+    return self.asProperty().asStream()
+  }
+}

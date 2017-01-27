@@ -140,3 +140,15 @@ extension ReactiveProperty: ReactivePropertyConvertible {
     return self
   }
 }
+
+extension CGFloat: ReactivePropertyConvertible {
+  public func asProperty() -> ReactiveProperty<CGFloat> {
+    return createProperty(withInitialValue: self)
+  }
+}
+
+extension CGPoint: ReactivePropertyConvertible {
+  public func asProperty() -> ReactiveProperty<CGPoint> {
+    return createProperty(withInitialValue: self)
+  }
+}
