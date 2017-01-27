@@ -26,7 +26,7 @@ public final class Spring<T: Zeroable>: ViewInteraction {
 
   /** Creates a spring with the provided properties and an initial velocity of zero. */
   public convenience init<O: MotionObservableConvertible>(to destination: O, threshold: CGFloat, system: @escaping SpringSystem<T>) where O.T == T {
-    let initialVelocity = createProperty(withInitialValue: T.zero() as! T) as! O
+    let initialVelocity = createProperty(withInitialValue: T.zero() as! T)
     self.init(to: destination, initialVelocity: initialVelocity, threshold: threshold, system: system)
   }
 
