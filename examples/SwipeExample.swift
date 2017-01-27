@@ -115,10 +115,12 @@ class TossableStackedCard: Interaction {
 
 public class SwipeExampleViewController: UIViewController {
 
-  let runtime = MotionRuntime()
+  var runtime: MotionRuntime!
   var queue: [TossableStackedCard] = []
   public override func viewDidLoad() {
     super.viewDidLoad()
+
+    runtime = MotionRuntime(containerView: view)
 
     view.backgroundColor = .white
 

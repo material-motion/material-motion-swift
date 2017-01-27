@@ -22,6 +22,9 @@ import IndefiniteObservable
  */
 public class MotionRuntime {
 
+  /** All motion in this runtime is relative to this view. */
+  public let containerView: UIView
+
   /**
    The aggregate state of all registered streams.
 
@@ -31,8 +34,9 @@ public class MotionRuntime {
   public let state = createProperty(withInitialValue: MotionState.atRest)
 
   /** Creates a motion runtime instance. */
-  public init() {
+  public init(containerView: UIView) {
     self.parent = nil
+    self.containerView = containerView
   }
 
   /** Connects the interaction's streams and stores the interaction. */
@@ -66,6 +70,7 @@ public class MotionRuntime {
   /** Creates a child motion runtime instance. */
   private init(parent: MotionRuntime) {
     self.parent = parent
+    self.containerView = parent.containerView
     parent.children.append(self)
   }
 

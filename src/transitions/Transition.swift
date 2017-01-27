@@ -88,8 +88,6 @@ public class Transition: NSObject {
 
     // TODO: Create a Timeline.
 
-    self.runtime = MotionRuntime()
-
     self.director = directorType.init()
 
     super.init()
@@ -152,6 +150,8 @@ extension Transition {
         }
       }
     }
+
+    self.runtime = MotionRuntime(containerView: containerView())
 
     director.willBeginTransition(self)
 

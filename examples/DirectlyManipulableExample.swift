@@ -20,9 +20,12 @@ import MaterialMotionStreams
 
 public class DirectlyManipulableExampleViewController: UIViewController, UIGestureRecognizerDelegate {
 
-  let runtime = MotionRuntime()
+  var runtime: MotionRuntime!
+
   public override func viewDidLoad() {
     super.viewDidLoad()
+
+    runtime = MotionRuntime(containerView: view)
 
     view.backgroundColor = .white
 

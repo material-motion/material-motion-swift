@@ -71,10 +71,12 @@ public class DragSourceExampleViewController: UIViewController {
     dismiss(animated: true)
   }
 
-  let runtime = MotionRuntime()
+  var runtime: MotionRuntime!
   var subscription: Subscription!
   public override func viewDidLoad() {
     super.viewDidLoad()
+
+    runtime = MotionRuntime(containerView: view)
 
     view.backgroundColor = .white
 
