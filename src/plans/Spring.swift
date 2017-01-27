@@ -71,10 +71,10 @@ public final class Spring<T: Zeroable> {
   public let initialVelocity: ReactiveProperty<T>
 
   /** The tension configuration of the spring represented as a property. */
-  public let tension: ReactiveProperty<CGFloat> = createProperty(withInitialValue: defaultSpringTension)
+  public let tension = createProperty(withInitialValue: defaultSpringTension)
 
   /** The friction configuration of the spring represented as a property. */
-  public let friction: ReactiveProperty<CGFloat> = createProperty(withInitialValue: defaultSpringFriction)
+  public let friction = createProperty(withInitialValue: defaultSpringFriction)
 
   /** The value used when determining completion of the spring simulation. */
   public let threshold: ReactiveProperty<CGFloat>
