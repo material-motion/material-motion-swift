@@ -45,6 +45,42 @@ public class MotionRuntime {
     interactions.append(interaction)
   }
 
+  public func get(_ view: UIView) -> ReactiveUIView {
+    if let reactiveObject = reactiveViews[view] {
+      return reactiveObject
+    }
+    let reactiveObject = ReactiveUIView(view, runtime: self)
+    reactiveViews[view] = reactiveObject
+    return reactiveObject
+  }
+  private var reactiveViews: [UIView: ReactiveUIView] = [:]
+
+  public func get(_ layer: CALayer) -> ReactiveCALayer {
+    if let reactiveObject = reactiveLayers[layer] {
+      return reactiveObject
+    }
+    let reactiveObject = ReactiveCALayer(layer)
+    reactiveLayers[layer] = reactiveObject
+    return reactiveObject
+  }
+  private var reactiveLayers: [CALayer: ReactiveCALayer] = [:]
+
+  public func get<O: UIGestureRecognizer>(_ gestureRecognizer: O) -> ReactiveUIGestureRecognizer<O> {
+    if let reactiveObject = reactiveGestureRecognizers[gestureRecognizer] {
+      return unsafeBitCast(reactiveObject, to: ReactiveUIGestureRecognizer<O>.self)
+    }
+
+    let reactiveObject = ReactiveUIGestureRecognizer<O>(gestureRecognizer)
+
+    if reactiveObject.gestureRecognizer.view == nil {
+      containerView.addGestureRecognizer(reactiveObject.gestureRecognizer)
+    }
+
+    reactiveGestureRecognizers[gestureRecognizer] = reactiveObject as! ReactiveUIGestureRecognizer<O>
+    return reactiveObject
+  }
+  private var reactiveGestureRecognizers: [UIGestureRecognizer: AnyObject] = [:]
+
   /** Subscribes to the stream, writes its output to the given property, and observes its state. */
   public func write<O: MotionObservableConvertible, T>(_ stream: O, to property: ReactiveProperty<T>) where O.T == T {
     let token = NSUUID().uuidString
