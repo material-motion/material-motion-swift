@@ -16,8 +16,12 @@
 
 import Foundation
 
-/** A GestureSystem is a function that creates a MotionObservable from a gesture recognizer. */
-public typealias GestureSystem<T: UIGestureRecognizer> = (T) -> MotionObservable<T>
+/**
+ A gesture-to-stream function creates a MotionObservable from a gesture recognizer.
+
+ The stream is expected to dispatch the gesture recognizer each time its state is updated.
+ */
+public typealias GestureToStream<T: UIGestureRecognizer> = (T) -> MotionObservable<T>
 
 /** Create a gesture source that will connect to the provided gesture recognizer. */
 public func gestureToStream<T: UIGestureRecognizer>(_ gesture: T) -> MotionObservable<T> {
