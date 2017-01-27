@@ -58,7 +58,7 @@ public class MotionRuntime {
 
   public func add<I: TransitionInteraction, P: ReactivePropertyConvertible>(_ interaction: I, to property: P) where I.ValueType == P.T, I: PropertyInteraction {
     let property = property.asProperty()
-    property.setValue(interaction.initialValue())
+    property.value = interaction.initialValue()
     interaction.add(to: property as! ReactiveProperty<I.T>, withRuntime: self)
   }
 
@@ -101,7 +101,7 @@ public class MotionRuntime {
   /** Subscribes to the stream, writes its output to the given property, and observes its state. */
   private func write<O: MotionObservableConvertible, T>(_ stream: O, to property: ReactiveProperty<T>) where O.T == T {
     let token = NSUUID().uuidString
-    subscriptions.append(stream.asStream().subscribe(next: property.setValue, state: { [weak self] state in
+    subscriptions.append(stream.asStream().subscribe(next: { property.value = $0 }, state: { [weak self] state in
       property.state(state)
 
       guard let strongSelf = self else { return }
@@ -137,7 +137,7 @@ public class MotionRuntime {
     let oldState = self.state.value
     let newState: MotionState = activeSubscriptions.count > 0 ? .active : .atRest
     if oldState != newState {
-      self.state.setValue(newState)
+      self.state.value = newState
     }
 
     if let parent = parent {

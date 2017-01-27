@@ -39,7 +39,7 @@ public class ReactiveCALayer {
   public lazy var positionY: ReactiveProperty<CGFloat> = {
     let position = self.position
     return self.property(initialValue: position.value.y,
-                         write: { var point = position.value; point.y = $0; position.setValue(point) },
+                         write: { var point = position.value; point.y = $0; position.value = point },
                          keyPath: "position.y")
   }()
 
@@ -57,7 +57,7 @@ public class ReactiveCALayer {
     let position = self.position
     let layer = self.layer
     return ReactiveProperty(initialValue: (anchorPoint.value, position.value),
-                            write: { anchorPoint.setValue($0.0); position.setValue($0.1) },
+                            write: { anchorPoint.value = $0.0; position.value = $0.1 },
                             coreAnimation: { _ in })
   }()
 

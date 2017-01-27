@@ -32,7 +32,18 @@ public func createProperty<T>(withInitialValue initialValue: T) -> ReactivePrope
  Subscribers will receive updates whenever write is invoked.
  */
 public final class ReactiveProperty<T> {
-  public private(set) var value: T
+  public var value: T {
+    get { return _value }
+    set {
+      _value = newValue
+
+      _write(newValue)
+
+      for observer in observers {
+        observer.next(newValue)
+      }
+    }
+  }
 
   public lazy var stream: MotionObservable<T> = {
     let stream = MotionObservable<T> { observer in
@@ -57,7 +68,7 @@ public final class ReactiveProperty<T> {
 
   /** Initializes a new instance with the given initial value and write function. */
   public init(initialValue: T, write: @escaping ScopedWrite<T>) {
-    self.value = initialValue
+    self._value = initialValue
     self._write = write
     self._coreAnimation = nil
   }
@@ -68,20 +79,9 @@ public final class ReactiveProperty<T> {
   public init(initialValue: T,
               write: @escaping ScopedWrite<T>,
               coreAnimation: @escaping CoreAnimationChannel) {
-    self.value = initialValue
+    self._value = initialValue
     self._write = write
     self._coreAnimation = coreAnimation
-  }
-
-  /** Writes the value and informs all observers of the new value. */
-  public func setValue(_ value: T) {
-    self.value = value
-
-    _write(value)
-
-    for observer in observers {
-      observer.next(value)
-    }
   }
 
   /** Informs all observers of the given state. */
@@ -111,6 +111,7 @@ public final class ReactiveProperty<T> {
     }
   }
 
+  private var _value: T
   private let _write: ScopedWrite<T>
   private let _coreAnimation: CoreAnimationChannel?
 

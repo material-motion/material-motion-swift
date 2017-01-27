@@ -42,14 +42,14 @@ public class ReactiveUIView {
   public lazy var centerX: ReactiveProperty<CGFloat> = {
     let center = self.center
     return ReactiveProperty(initialValue: center.value.x,
-                            write: { var point = center.value; point.x = $0; center.setValue(point) })
+                            write: { var point = center.value; point.x = $0; center.value = point })
   }()
 
   /** A property representing the view's .center.y value. */
   public lazy var centerY: ReactiveProperty<CGFloat> = {
     let center = self.center
     return ReactiveProperty(initialValue: self.center.value.y,
-                            write: { var point = center.value; point.y = $0; center.setValue(point) })
+                            write: { var point = center.value; point.y = $0; center.value = point })
   }()
 
   public lazy var reactiveLayer: ReactiveCALayer = {

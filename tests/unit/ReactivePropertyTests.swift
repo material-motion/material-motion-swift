@@ -25,10 +25,10 @@ class ReactivePropertyTests: XCTestCase {
 
     XCTAssertEqual(someVar, property.value)
 
-    property.setValue(5)
+    property.value = 5
     XCTAssertEqual(someVar, 5)
 
-    property.setValue(10)
+    property.value = 10
     XCTAssertEqual(someVar, property.value)
   }
 }
