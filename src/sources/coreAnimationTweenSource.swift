@@ -34,7 +34,7 @@ public func coreAnimation<T>(_ tween: Tween<T>) -> MotionObservable<T> {
     } else {
       let basicAnimation = CABasicAnimation()
       basicAnimation.toValue = values.last
-      basicAnimation.timingFunction = timingFunctions?.first
+      basicAnimation.timingFunction = timingFunctions.first
       animation = basicAnimation
     }
 

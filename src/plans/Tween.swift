@@ -53,7 +53,7 @@ public final class Tween<T> {
 
    See CAKeyframeAnimation documentation for more details.
    */
-  public var timingFunctions: [CAMediaTimingFunction]?
+  public var timingFunctions = [CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)]
 
   /** Initializes a tween instance with its required properties. */
   public init(duration: CFTimeInterval, values: [T]) {
