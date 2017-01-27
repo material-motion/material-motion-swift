@@ -36,9 +36,9 @@ public class Tossable: ViewInteraction {
 
   public let draggable = Draggable()
   public var destination: Destination
-  public var system: SpringSystem<CGPoint>
+  public var system: SpringToStream<CGPoint>
 
-  init(destination: Destination, system: @escaping SpringSystem<CGPoint>) {
+  init(destination: Destination, system: @escaping SpringToStream<CGPoint>) {
     self.destination = destination
     self.system = system
   }

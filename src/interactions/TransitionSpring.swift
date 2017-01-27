@@ -49,7 +49,7 @@ public class TransitionSpring<T: Zeroable>: PropertyInteraction, TransitionInter
   /** The friction configuration of the spring. */
   public let friction: ReactiveProperty<CGFloat>
 
-  public var system: SpringSystem<T>
+  public var system: SpringToStream<T>
 
   /**
    - parameter value: The property to be updated by the value stream.
@@ -64,7 +64,7 @@ public class TransitionSpring<T: Zeroable>: PropertyInteraction, TransitionInter
   public init(back backwardDestination: T,
               fore forwardDestination: T,
               direction: ReactiveProperty<Transition.Direction>,
-              system: @escaping SpringSystem<T>) {
+              system: @escaping SpringToStream<T>) {
     self.backwardDestination = backwardDestination
     self.forwardDestination = forwardDestination
     self.system = system
