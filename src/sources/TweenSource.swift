@@ -16,5 +16,5 @@
 
 import UIKit
 
-/** A TweenSource is a function that creates a MotionObservable from a Tween. */
-public typealias TweenSource<T> = (Tween<T>) -> MotionObservable<T>
+/** A TweenSystem is a function that creates a MotionObservable from a Tween. */
+public typealias TweenSystem<T> = (Tween<T>) -> MotionObservable<T>

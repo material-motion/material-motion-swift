@@ -17,8 +17,8 @@
 import Foundation
 import IndefiniteObservable
 
-/** Create a core animation tween source for a Tween plan. */
-public func coreAnimationTweenSource<T>(_ tween: Tween<T>) -> MotionObservable<T> {
+/** Create a core animation tween system for a Tween plan. */
+public func coreAnimation<T>(_ tween: Tween<T>) -> MotionObservable<T> {
   return MotionObservable { observer in
     let animation: CAPropertyAnimation
 

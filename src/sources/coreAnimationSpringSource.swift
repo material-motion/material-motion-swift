@@ -17,12 +17,12 @@
 import Foundation
 
 /**
- Create a core animation spring source for a Spring plan.
+ Create a core animation spring system for a Spring plan.
 
  Only works with Subtractable types due to use of additive animations.
  */
 @available(iOS 9.0, *)
-public func coreAnimationSpringSource<T where T: Subtractable, T: Zeroable>(_ spring: SpringConfiguration<T>) -> (MotionObservable<T>) {
+public func coreAnimation<T where T: Subtractable, T: Zeroable>(_ spring: SpringConfiguration<T>) -> (MotionObservable<T>) {
   return MotionObservable { observer in
     var animationKeys: [String] = []
 

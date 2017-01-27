@@ -51,17 +51,17 @@ public class TransitionSpring<T: Zeroable>: Interaction {
                      forward.
    - parameter direction: The spring will change its destination in reaction to this property's
                           changes.
-   - parameter springSource: A function capable of creating a spring source.
+   - parameter springSystem: A function capable of creating a spring source.
    */
   public init(property: ReactiveProperty<T>,
               back backwardDestination: T,
               fore forwardDestination: T,
               direction: ReactiveProperty<Transition.Direction>,
-              springSource: SpringSource<T>) {
+              springSystem: SpringSystem<T>) {
     self.property = property
 
     self.destination = createProperty(withInitialValue: forwardDestination)
-    self.spring = Spring(to: destination, initialValue: property, threshold: 1, source: springSource)
+    self.spring = Spring(to: destination, initialValue: property, threshold: 1, system: springSystem)
 
     self.tension = spring.tension
     self.friction = spring.friction

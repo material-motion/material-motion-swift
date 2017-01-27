@@ -16,11 +16,11 @@
 
 import Foundation
 
-/** A GestureSource is a function that creates a MotionObservable from a gesture recognizer. */
-public typealias GestureSource<T: UIGestureRecognizer> = (T) -> MotionObservable<T>
+/** A GestureSystem is a function that creates a MotionObservable from a gesture recognizer. */
+public typealias GestureSystem<T: UIGestureRecognizer> = (T) -> MotionObservable<T>
 
 /** Create a gesture source that will connect to the provided gesture recognizer. */
-public func gestureSource<T: UIGestureRecognizer>(_ gesture: T) -> MotionObservable<T> {
+public func gestureToStream<T: UIGestureRecognizer>(_ gesture: T) -> MotionObservable<T> {
   return MotionObservable { observer in
     return GestureConnection(subscribedTo: gesture, observer: observer).disconnect
   }

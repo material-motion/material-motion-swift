@@ -31,26 +31,26 @@ public class TossableAndAttachWithSpring: AttachWithSpring<CGPoint> {
    - parameter destination: The destination property to which the position should spring.
    - parameter containerView: The container view within which the pan gesture recognizer's
                               translation and velocity are calculated.
-   - parameter springSource: A function capable of creating a spring source.
+   - parameter springSystem: A function capable of creating a spring source.
    - parameter panGestureRecognizer: The pan gesture recognizer whose taps should be observed.
                                      If not provided, one will be created for you.
    */
   public init(position: ReactiveProperty<CGPoint>,
               to destination: ReactiveProperty<CGPoint>,
               containerView: UIView,
-              springSource: SpringSource<CGPoint>,
+              springSystem: SpringSystem<CGPoint>,
               panGestureRecognizer: UIPanGestureRecognizer? = nil) {
     let panGestureRecognizer = panGestureRecognizer ?? UIPanGestureRecognizer()
     if panGestureRecognizer.view == nil {
       containerView.addGestureRecognizer(panGestureRecognizer)
     }
 
-    let dragStream = gestureSource(panGestureRecognizer)
+    let dragStream = gestureToStream(panGestureRecognizer)
     let translationStream = dragStream.translated(from: position.stream, in: containerView)
 
     self.initialVelocityStream = dragStream.onRecognitionState(.ended).velocity(in: containerView)
 
-    super.init(property: position, to: destination, threshold: 1, springSource: springSource)
+    super.init(property: position, to: destination, threshold: 1, springSystem: springSystem)
 
     self.valueStream = self.valueStream.toggled(with: translationStream)
   }

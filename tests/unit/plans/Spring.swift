@@ -26,7 +26,7 @@ class SpringTests: XCTestCase {
     let spring = Spring(to: propertyOf(target).center,
                         initialValue: propertyOf(view).center,
                         threshold: 1,
-                        source: popSpringSource)
+                        system: pop)
     XCTAssertEqual(spring.initialVelocity.value, .zero)
   }
 
@@ -36,7 +36,7 @@ class SpringTests: XCTestCase {
     let spring = Spring(to: propertyOf(target).centerX,
                         initialValue: propertyOf(view).centerX,
                         threshold: 1,
-                        source: popSpringSource)
+                        system: pop)
     XCTAssertEqual(spring.initialVelocity.value, 0)
   }
 }

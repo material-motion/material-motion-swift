@@ -28,13 +28,13 @@ public final class Spring<T: Zeroable> {
   public convenience init(to destination: ReactiveProperty<T>,
                           initialValue: ReactiveProperty<T>,
                           threshold: CGFloat,
-                          source: SpringSource<T>) {
+                          system: SpringSystem<T>) {
     let initialVelocity = createProperty(withInitialValue: T.zero() as! T)
     self.init(to: destination,
               initialValue: initialValue,
               initialVelocity: initialVelocity,
               threshold: threshold,
-              source: source)
+              system: system)
   }
 
   /** Creates a spring with the provided properties and an initial velocity. */
@@ -42,7 +42,7 @@ public final class Spring<T: Zeroable> {
               initialValue: ReactiveProperty<T>,
               initialVelocity: ReactiveProperty<T>,
               threshold: CGFloat,
-              source: SpringSource<T>) {
+              system: SpringSystem<T>) {
     self.destination = destination
     self.initialValue = initialValue
     self.initialVelocity = initialVelocity
@@ -58,7 +58,7 @@ public final class Spring<T: Zeroable> {
                                             friction: self.friction,
                                             threshold: self.threshold)
     // TODO(featherless): Memoize this stream.
-    self.valueStream = source(configuration)
+    self.valueStream = system(configuration)
   }
 
   /** The destination value of the spring represented as a property. */

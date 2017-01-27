@@ -21,7 +21,7 @@ import pop
 // Each specialized method is expected to read from and write to a POP vector value.
 
 /** Create a pop spring source for a CGFloat Spring plan. */
-public func popSpringSource(_ spring: SpringConfiguration<CGFloat>) -> (MotionObservable<CGFloat>) {
+public func pop(_ spring: SpringConfiguration<CGFloat>) -> (MotionObservable<CGFloat>) {
   return MotionObservable { observer in
     let animation = POPSpringAnimation()
 
@@ -41,7 +41,7 @@ public func popSpringSource(_ spring: SpringConfiguration<CGFloat>) -> (MotionOb
 }
 
 /** Create a pop spring source for a CGPoint Spring plan. */
-public func popSpringSource(_ spring: SpringConfiguration<CGPoint>) -> (MotionObservable<CGPoint>) {
+public func pop(_ spring: SpringConfiguration<CGPoint>) -> (MotionObservable<CGPoint>) {
   return MotionObservable { observer in
     let animation = POPSpringAnimation()
 

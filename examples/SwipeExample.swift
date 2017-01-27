@@ -46,9 +46,9 @@ class TossableStackedCard: Interaction {
     let attachment = AttachWithSpring(property: position,
                                       to: destination,
                                       threshold: 1,
-                                      springSource: popSpringSource)
+                                      springSystem: pop)
 
-    let dragStream = gestureSource(dragGesture)
+    let dragStream = gestureToStream(dragGesture)
 
     runtime.write(dragStream.onRecognitionState(.ended)
       .velocity(in: containerView)

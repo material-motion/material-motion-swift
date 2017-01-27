@@ -16,5 +16,5 @@
 
 import UIKit
 
-/** A SpringSource is a function that creates a MotionObservable from a SpringConfiguration. */
-public typealias SpringSource<T: Zeroable> = (SpringConfiguration<T>) -> MotionObservable<T>
+/** A SpringSystem is a function that creates a MotionObservable from a SpringConfiguration. */
+public typealias SpringSystem<T: Zeroable> = (SpringConfiguration<T>) -> MotionObservable<T>

@@ -16,15 +16,15 @@
 
 import UIKit
 
-/** A ScrollSource is a function that creates a MotionObservable from a UIScrollView. */
-public typealias ScrollSource = (UIScrollView) -> MotionObservable<CGPoint>
+/** A ScrollSystem is a function that creates a MotionObservable from a UIScrollView. */
+public typealias ScrollSystem = (UIScrollView) -> MotionObservable<CGPoint>
 
 /**
  Creates a scroll source backed by KVO on a UIScrollView.
 
  This scroll source will not emit state updates.
  */
-public func scrollSource(_ scrollView: UIScrollView) -> MotionObservable<CGPoint> {
+public func scrollSystem(_ scrollView: UIScrollView) -> MotionObservable<CGPoint> {
   return MotionObservable { observer in
     return ScrollViewConnection(subscribedTo: scrollView, observer: observer).disconnect
   }

@@ -42,7 +42,7 @@ public class Tap: Interaction {
       containerView.addGestureRecognizer(tapGestureRecognizer)
     }
 
-    self.positionStream = gestureSource(tapGestureRecognizer)
+    self.positionStream = gestureToStream(tapGestureRecognizer)
       .onRecognitionState(.recognized)
       .centroid(in: containerView)
   }

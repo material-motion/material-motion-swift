@@ -39,7 +39,7 @@ class ExampleTransitionDirector: TransitionDirector {
     }
 
     let tween = Tween<CGFloat>(duration: 0.35, values: [from, to])
-    let fade$ = coreAnimationTweenSource(tween)
+    let fade$ = coreAnimation(tween)
     transition.runtime.write(fade$, to: propertyOf(transition.fore.view.layer).positionY())
   }
 }
@@ -98,13 +98,13 @@ public class DragSourceExampleViewController: UIViewController {
     let tossable = TossableAndAttachWithSpring(position: propertyOf(square).center,
                                                to: propertyOf(circle).center,
                                                containerView: view,
-                                               springSource: popSpringSource)
+                                               springSystem: pop)
     tossable.connect(with: runtime)
 
     let spring = Spring(to: tossable.spring.destination,
                         initialValue: propertyOf(square2.layer).position(),
                         threshold: 1,
-                        source: coreAnimationSpringSource)
+                        system: coreAnimation)
     runtime.write(spring.valueStream, to: propertyOf(square2.layer).position())
 
     Tap(sets: tossable.spring.destination, containerView: view).connect(with: runtime)

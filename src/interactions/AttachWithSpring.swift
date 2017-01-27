@@ -38,15 +38,15 @@ public class AttachWithSpring<T: Zeroable>: Interaction {
    - parameter destination: The destination property to which the property should spring.
    - parameter threshold: The value used when determining completion of the simulation. Smaller
                           values mean greater required precision.
-   - parameter springSource: A function capable of creating a spring source.
+   - parameter springSystem: A function capable of creating a spring source.
    */
   public init(property: ReactiveProperty<T>,
               to destination: ReactiveProperty<T>,
               threshold: CGFloat,
-              springSource: SpringSource<T>) {
+              springSystem: SpringSystem<T>) {
     self.property = property
 
-    self.spring = Spring(to: destination, initialValue: property, threshold: threshold, source: springSource)
+    self.spring = Spring(to: destination, initialValue: property, threshold: threshold, system: springSystem)
     self.valueStream = self.spring.valueStream
   }
 

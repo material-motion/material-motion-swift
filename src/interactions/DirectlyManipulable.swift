@@ -66,10 +66,10 @@ public class DirectlyManipulable: Interaction {
 
     let gestureStreams = [draggable.gestureRecognizer, rotatable.gestureRecognizer, scalable.gestureRecognizer]
     anchorPointStreams = gestureStreams.map {
-      gestureSource($0).onRecognitionState(.began).centroid(in: view).normalized(by: view.bounds.size)
+      gestureToStream($0).onRecognitionState(.began).centroid(in: view).normalized(by: view.bounds.size)
     }
     anchorPointResetStreams = gestureStreams.map {
-      gestureSource($0).onRecognitionStates([.ended, .cancelled]).mapTo(CGPoint(x: 0.5, y: 0.5))
+      gestureToStream($0).onRecognitionStates([.ended, .cancelled]).mapTo(CGPoint(x: 0.5, y: 0.5))
     }
   }
 
