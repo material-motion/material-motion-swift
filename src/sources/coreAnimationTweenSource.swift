@@ -41,15 +41,14 @@ public func coreAnimationTweenSource<T>(_ tween: Tween<T>) -> MotionObservable<T
     animation.duration = tween.duration
 
     observer.state(.active)
+    observer.next(values.last!)
     CATransaction.begin()
     CATransaction.setCompletionBlock {
       observer.state(.atRest)
     }
 
     let key = NSUUID().uuidString
-    observer.coreAnimation(.add(animation, key,
-                                modelValue: values.last!,
-                                initialVelocity: nil))
+    observer.coreAnimation(.add(animation, key, initialVelocity: nil))
 
     CATransaction.commit()
 

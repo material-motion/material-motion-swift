@@ -24,7 +24,7 @@ public typealias StateChannel = (MotionState) -> Void
 /** A Core Animation channel event. */
 public enum CoreAnimationChannelEvent {
   /** The provided animation is expected to be added to a layer. */
-  case add(CAPropertyAnimation, String, modelValue: Any, initialVelocity: Any?)
+  case add(CAPropertyAnimation, String, initialVelocity: Any?)
 
   /** Any animation with the given key is expected to be removed from a layer. */
   case remove(String)

@@ -43,6 +43,7 @@ public func coreAnimationSpringSource<T where T: Subtractable, T: Zeroable>(_ sp
       animation.duration = animation.settlingDuration
 
       observer.state(.active)
+      observer.next($0)
       CATransaction.begin()
       CATransaction.setCompletionBlock {
         observer.state(.atRest)
@@ -50,9 +51,7 @@ public func coreAnimationSpringSource<T where T: Subtractable, T: Zeroable>(_ sp
 
       let key = NSUUID().uuidString
       animationKeys.append(key)
-      observer.coreAnimation(.add(animation, key,
-                                  modelValue: $0,
-                                  initialVelocity: spring.initialVelocity.value))
+      observer.coreAnimation(.add(animation, key, initialVelocity: spring.initialVelocity.value))
 
       CATransaction.commit()
     }, state: { _ in }, coreAnimation: { _ in })

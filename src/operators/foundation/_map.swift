@@ -26,13 +26,12 @@ extension MotionObservableConvertible {
     }, coreAnimation: { event, coreAnimation in
       let transformedInitialVelocity: Any?
       switch event {
-      case .add(let animation, let key, let modelValue, let initialVelocity):
+      case .add(let animation, let key, let initialVelocity):
         if let initialVelocity = initialVelocity {
           transformedInitialVelocity = transform(initialVelocity as! T)
         } else {
           transformedInitialVelocity = nil
         }
-        let transformedModelValue = transform(modelValue as! T)
 
         let copy = animation.copy() as! CAPropertyAnimation
         switch copy {
@@ -46,15 +45,11 @@ extension MotionObservableConvertible {
           if let byValue = basicAnimation.byValue {
             basicAnimation.byValue = transform(byValue as! T)
           }
-          coreAnimation(.add(basicAnimation, key,
-                             modelValue: transformedModelValue,
-                             initialVelocity: transformedInitialVelocity))
+          coreAnimation(.add(basicAnimation, key, initialVelocity: transformedInitialVelocity))
 
         case let keyframeAnimation as CAKeyframeAnimation:
           keyframeAnimation.values = keyframeAnimation.values?.map { transform($0 as! T) }
-          coreAnimation(.add(keyframeAnimation, key,
-                             modelValue: transformedModelValue,
-                             initialVelocity: transformedInitialVelocity))
+          coreAnimation(.add(keyframeAnimation, key, initialVelocity: transformedInitialVelocity))
 
         default:
           assertionFailure("Unsupported animation type: \(type(of: animation))")
