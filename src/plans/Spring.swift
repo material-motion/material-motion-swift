@@ -54,6 +54,18 @@ public final class Spring<T: Zeroable>: ViewInteraction {
   /** The friction configuration of the spring represented as a property. */
   public let friction = createProperty(withInitialValue: defaultSpringFriction)
 
+  /** The mass configuration of the spring represented as a property. */
+  public let mass = createProperty(withInitialValue: defaultSpringMass)
+
+  /**
+   The suggested duration of the spring represented as a property.
+
+   This property may not be supported by all animation systems.
+
+   A value of 0 means this property will be ignored.
+   */
+  public let suggestedDuration = createProperty(withInitialValue: TimeInterval(0))
+
   /** The value used when determining completion of the spring simulation. */
   public let threshold: ReactiveProperty<CGFloat>
 
@@ -77,3 +89,6 @@ public let defaultSpringTension: CGFloat = 342
 
 /** The default friction configuration. */
 public let defaultSpringFriction: CGFloat = 30
+
+/** The default mass configuration. */
+public let defaultSpringMass: CGFloat = 1

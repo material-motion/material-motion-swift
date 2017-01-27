@@ -31,6 +31,7 @@ public func coreAnimation<T where T: Subtractable, T: Zeroable>(_ spring: Spring
 
       animation.damping = spring.friction.value
       animation.stiffness = spring.tension.value
+      animation.mass = spring.mass.value
 
       animation.isAdditive = true
 
@@ -40,7 +41,11 @@ public func coreAnimation<T where T: Subtractable, T: Zeroable>(_ spring: Spring
       animation.fromValue = delta
       animation.toValue = T.zero()
 
-      animation.duration = animation.settlingDuration
+      if spring.suggestedDuration.value != 0 {
+        animation.duration = spring.suggestedDuration.value
+      } else {
+        animation.duration = animation.settlingDuration
+      }
 
       observer.state(.active)
       observer.next(value)
