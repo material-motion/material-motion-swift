@@ -15,7 +15,6 @@
 		6627FC1A1DF7BC7D003DB567 /* _mapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6627FC171DF7BC7D003DB567 /* _mapTests.swift */; };
 		6627FC1B1DF7BC7D003DB567 /* _operatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6627FC181DF7BC7D003DB567 /* _operatorTests.swift */; };
 		6627FC1E1DF7BF59003DB567 /* ReactivePropertyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6627FC1D1DF7BF59003DB567 /* ReactivePropertyTests.swift */; };
-		6627FC211DF7C76C003DB567 /* UIViewScopedPropertyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6627FC201DF7C76C003DB567 /* UIViewScopedPropertyTests.swift */; };
 		6627FC2F1DFFAEB7003DB567 /* CGPointTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6627FC2E1DFFAEB7003DB567 /* CGPointTests.swift */; };
 		6627FC341DFFB232003DB567 /* MotionAggregatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6627FC331DFFB232003DB567 /* MotionAggregatorTests.swift */; };
 		664A5B771DD10D320082B5DF /* TableOfContents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 664A5B761DD10D320082B5DF /* TableOfContents.swift */; };
@@ -46,7 +45,6 @@
 		6627FC171DF7BC7D003DB567 /* _mapTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = _mapTests.swift; sourceTree = "<group>"; };
 		6627FC181DF7BC7D003DB567 /* _operatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = _operatorTests.swift; sourceTree = "<group>"; };
 		6627FC1D1DF7BF59003DB567 /* ReactivePropertyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReactivePropertyTests.swift; sourceTree = "<group>"; };
-		6627FC201DF7C76C003DB567 /* UIViewScopedPropertyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewScopedPropertyTests.swift; sourceTree = "<group>"; };
 		6627FC2E1DFFAEB7003DB567 /* CGPointTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGPointTests.swift; sourceTree = "<group>"; };
 		6627FC331DFFB232003DB567 /* MotionAggregatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionAggregatorTests.swift; sourceTree = "<group>"; };
 		664A5B761DD10D320082B5DF /* TableOfContents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TableOfContents.swift; path = Catalog/TableOfContents.swift; sourceTree = "<group>"; };
@@ -129,7 +127,6 @@
 		6627FC1F1DF7C76C003DB567 /* properties */ = {
 			isa = PBXGroup;
 			children = (
-				6627FC201DF7C76C003DB567 /* UIViewScopedPropertyTests.swift */,
 				66090B831E03715F00B1D598 /* PropertyObservation.swift */,
 			);
 			path = properties;
@@ -424,7 +421,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6627FC1A1DF7BC7D003DB567 /* _mapTests.swift in Sources */,
-				6627FC211DF7C76C003DB567 /* UIViewScopedPropertyTests.swift in Sources */,
 				6627FC1E1DF7BF59003DB567 /* ReactivePropertyTests.swift in Sources */,
 				6627FC2F1DFFAEB7003DB567 /* CGPointTests.swift in Sources */,
 				6627FC1B1DF7BC7D003DB567 /* _operatorTests.swift in Sources */,

@@ -26,7 +26,7 @@ public func coreAnimation<T where T: Subtractable, T: Zeroable>(_ spring: Spring
   return MotionObservable { observer in
     var animationKeys: [String] = []
 
-    let destinationSubscription = spring.destination.stream.subscribe(next: {
+    let destinationSubscription = spring.destination.subscribe(next: { value in
       let animation = CASpringAnimation()
 
       animation.damping = spring.friction.value
@@ -34,8 +34,8 @@ public func coreAnimation<T where T: Subtractable, T: Zeroable>(_ spring: Spring
 
       animation.isAdditive = true
 
-      let from = spring.initialValue.value
-      let to = $0
+      let from = spring.initialValue.read()!
+      let to = value
       let delta = from - to
       animation.fromValue = delta
       animation.toValue = T.zero()
@@ -43,7 +43,7 @@ public func coreAnimation<T where T: Subtractable, T: Zeroable>(_ spring: Spring
       animation.duration = animation.settlingDuration
 
       observer.state(.active)
-      observer.next($0)
+      observer.next(value)
       CATransaction.begin()
       CATransaction.setCompletionBlock {
         observer.state(.atRest)
@@ -51,7 +51,7 @@ public func coreAnimation<T where T: Subtractable, T: Zeroable>(_ spring: Spring
 
       let key = NSUUID().uuidString
       animationKeys.append(key)
-      observer.coreAnimation(.add(animation, key, initialVelocity: spring.initialVelocity.value))
+      observer.coreAnimation(.add(animation, key, initialVelocity: spring.initialVelocity.read()))
 
       CATransaction.commit()
     }, state: { _ in }, coreAnimation: { _ in })

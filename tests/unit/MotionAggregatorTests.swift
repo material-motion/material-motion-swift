@@ -32,7 +32,7 @@ class PropertyWriterTests: XCTestCase {
     }
 
     let writer = MotionRuntime(containerView: UIView())
-    writer.write(observable, to: property)
+    writer.add(observable, to: property)
 
     XCTAssertEqual(someVar, value)
   }

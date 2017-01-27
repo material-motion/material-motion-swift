@@ -24,48 +24,46 @@ enum TossDirection {
   case right
 }
 
-class TossableStackedCard: Interaction {
-  public let view: UIView
+class TossableStackedCard: ViewInteraction {
   public let tossDirection = createProperty(withInitialValue: TossDirection.none)
 
-  init(view: UIView, containerView: UIView, previousCard: TossableStackedCard? = nil, rotation: CGFloat) {
-    self.view = view
-    self.containerView = containerView
+  init(relativeView: UIView, previousCard: TossableStackedCard? = nil, rotation: CGFloat) {
+    self.relativeView = relativeView
     self.previousCard = previousCard
     self.rotation = rotation
 
     self.dragGesture = UIPanGestureRecognizer()
-
-    position = propertyOf(view).centerX
   }
 
-  func connect(with runtime: MotionRuntime) {
+  func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
+    let position = reactiveView.centerX
+    self.position = position
+
+    let view = reactiveView.view
     view.addGestureRecognizer(dragGesture)
 
-    let destination = createProperty(withInitialValue: containerView.bounds.midX)
-    let attachment = AttachWithSpring(property: position,
-                                      to: destination,
-                                      threshold: 1,
-                                      springSystem: pop)
+    let destination = createProperty(withInitialValue: relativeView.bounds.midX)
 
-    let dragStream = gestureToStream(dragGesture)
+    let drag = runtime.get(dragGesture)
+    runtime.add(
+      drag
+        .onRecognitionState(.ended)
+        .velocity(in: relativeView)
+        .x()
+        .threshold(min: -500, max: 500,
+                   whenWithin: TossDirection.none,
+                   whenBelow: TossDirection.left,
+                   whenAbove: TossDirection.right),
+      to: tossDirection)
 
-    runtime.write(dragStream.onRecognitionState(.ended)
-      .velocity(in: containerView)
-      .x()
-      .threshold(min: -500, max: 500,
-                 whenWithin: TossDirection.none,
-                 whenBelow: TossDirection.left,
-                 whenAbove: TossDirection.right),
-                  to: tossDirection)
-
-    let destinationStream = tossDirection.stream.rewrite([
-      .none: containerView.bounds.midX,
-      .left: -view.bounds.width,
-      .right: containerView.bounds.width + view.bounds.width
-      ]
-    )
-    runtime.write(destinationStream, to: attachment.spring.destination)
+    let destinationStream =
+      tossDirection
+        .rewrite([
+          .none: relativeView.bounds.midX,
+          .left: -view.bounds.width,
+          .right: relativeView.bounds.width + view.bounds.width
+          ])
+    runtime.add(destinationStream, to: destination)
 
     let gestureEnabledStream = tossDirection.stream.rewrite([
       .none: true,
@@ -73,49 +71,54 @@ class TossableStackedCard: Interaction {
       .right: false
       ]
     )
-    runtime.write(gestureEnabledStream, to: propertyOf(dragGesture).isEnabled)
-    runtime.write(gestureEnabledStream, to: propertyOf(view).isUserInteractionEnabled)
+    runtime.add(gestureEnabledStream, to: drag.isEnabled)
+    runtime.add(gestureEnabledStream, to: reactiveView.isUserInteractionEnabled)
 
-    let initialVelocityStream = dragStream.onRecognitionState(.ended).velocity(in: containerView).x()
-    runtime.write(initialVelocityStream, to: attachment.spring.initialVelocity)
+    let attachment = Spring(to: destination,
+                            initialVelocity: drag.velocityOnReleaseStream(in: view).x(),
+                            threshold: 1,
+                            system: pop)
 
-    let translationStream = dragStream
-      .translated(from: propertyOf(view).center.stream, in: containerView)
-      .x()
-    runtime.write(attachment.spring.valueStream.toggled(with: translationStream), to: position)
+    let draggable = drag.translated(from: reactiveView.center, in: relativeView).x()
+    runtime.add(attachment.stream(withInitialValue: reactiveView.centerX).toggled(with: draggable),
+                           to: reactiveView.centerX)
 
     let radians = CGFloat(M_PI / 180.0 * 15.0)
-    let rotationStream = position.stream
-      .offset(by: -containerView.bounds.width / 2)
-      .normalized(by: containerView.bounds.width / 2)
-      .scaled(by: radians)
+    let rotationStream =
+      reactiveView.centerX
+        .offset(by: -relativeView.bounds.width / 2)
+        .normalized(by: relativeView.bounds.width / 2)
+        .scaled(by: radians)
+
+    let reactiveLayer = reactiveView.reactiveLayer
 
     // Previous card
     if let previousCard = previousCard {
       dragGesture.require(toFail: previousCard.dragGesture)
-      let nextRotationStream = previousCard.position.stream
-        .distance(from: containerView.bounds.width / 2)
-        .normalized(by: containerView.bounds.width / 2)
-        .max(1)
-        .subtracted(from: 1)
-        .scaled(by: rotation)
-      runtime.write(nextRotationStream.toggled(with: rotationStream),
-                    to: propertyOf(view.layer).rotation())
+      let nextRotationStream =
+        previousCard.position!
+          .distance(from: relativeView.bounds.width / 2)
+          .normalized(by: relativeView.bounds.width / 2)
+          .max(1)
+          .subtracted(from: 1)
+          .scaled(by: rotation)
+      runtime.add(nextRotationStream.toggled(with: rotationStream), to: reactiveLayer.rotation)
     } else {
-      runtime.write(rotationStream, to: propertyOf(view.layer).rotation())
+      runtime.add(rotationStream, to: reactiveLayer.rotation)
     }
   }
 
-  private let containerView: UIView
+  private let relativeView: UIView
   private let dragGesture: UIPanGestureRecognizer
   private let previousCard: TossableStackedCard?
-  private let position: ReactiveProperty<CGFloat>
+  private var position: ReactiveProperty<CGFloat>?
   private let rotation: CGFloat
 }
 
 public class SwipeExampleViewController: UIViewController {
 
   var runtime: MotionRuntime!
+  var views: [UIView] = []
   var queue: [TossableStackedCard] = []
   public override func viewDidLoad() {
     super.viewDidLoad()
@@ -125,12 +128,12 @@ public class SwipeExampleViewController: UIViewController {
     view.backgroundColor = .white
 
     (0 ..< 10).forEach { _ in
-      dequeueCard().connect(with: runtime)
+      dequeueCard()
     }
   }
 
   var lastRotation: CGFloat = CGFloat(M_PI / 180.0 * 2)
-  func dequeueCard() -> TossableStackedCard {
+  func dequeueCard() {
     let rotation = -lastRotation
 
     let card = UIView(frame: .init(x: 16, y: 16 + 64,
@@ -138,24 +141,22 @@ public class SwipeExampleViewController: UIViewController {
                                     height: view.bounds.size.height - 32 - 64))
     card.layer.borderWidth = 0.5
     card.layer.borderColor = UIColor(white: 0, alpha: 0.1).cgColor
-    card.layer.cornerRadius = 4
-    card.layer.shouldRasterize = true
-    card.layer.rasterizationScale = UIScreen.main.scale
     card.backgroundColor = UIColor(hue: CGFloat(arc4random_uniform(256)) / 256.0,
                                    saturation: 1,
                                    brightness: 1,
                                    alpha: 1)
 
-    let interaction = TossableStackedCard(view: card, containerView: view, previousCard: queue.last, rotation: rotation)
+    let interaction = TossableStackedCard(relativeView: view, previousCard: queue.last, rotation: rotation)
+    runtime.add(interaction, to: runtime.get(card))
 
     lastRotation = rotation
 
-    if let last = queue.last {
-      view.insertSubview(interaction.view, belowSubview: last.view)
+    if let last = views.last {
+      view.insertSubview(card, belowSubview: last)
     } else {
-      view.addSubview(interaction.view)
+      view.addSubview(card)
     }
     queue.append(interaction)
-    return interaction
+    views.append(card)
   }
 }

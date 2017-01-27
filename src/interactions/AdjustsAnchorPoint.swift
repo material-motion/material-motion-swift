@@ -16,12 +16,28 @@
 
 import Foundation
 
-public class Rotatable: ViewInteraction {
+public class AdjustsAnchorPoint: ViewInteraction {
 
-  public lazy var gestureRecognizer = UIRotationGestureRecognizer()
+  var gestureRecognizers: [UIGestureRecognizer] = []
 
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
-    let rotation = reactiveView.reactiveLayer.rotation
-    runtime.add(runtime.get(gestureRecognizer).rotated(from: rotation), to: rotation)
+    let view = reactiveView.view
+    var anchorPointStreams = gestureRecognizers.map {
+      runtime.get($0)
+        .onRecognitionState(.began)
+        .centroid(in: view)
+        .normalized(by: view.bounds.size)
+        .anchored(in: view)
+    }
+    anchorPointStreams.append(contentsOf: gestureRecognizers.map {
+      runtime.get($0)
+        .onRecognitionStates([.ended, .cancelled])
+        .mapTo(CGPoint(x: 0.5, y: 0.5))
+        .anchored(in: view)
+    })
+
+    for stream in anchorPointStreams {
+      runtime.add(stream, to: reactiveView.reactiveLayer.anchoring)
+    }
   }
 }

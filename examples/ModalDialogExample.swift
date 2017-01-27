@@ -74,46 +74,61 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
   func willBeginTransition(_ transition: Transition) {
     let size = transition.fore.preferredContentSize
 
-    if transition.direction.value == .forward {
+    if transition.direction == .forward {
       transition.fore.view.bounds = CGRect(origin: .zero, size: size)
     }
 
     let bounds = transition.containerView().bounds
-    let backPositionY = bounds.maxY + size.height / 2
+    let backPositionY = bounds.maxY + size.height * 3 / 4
     let forePositionY = bounds.midY
 
-    var spring: TransitionSpring<CGFloat>!
-
+    let spring = TransitionSpring(back: backPositionY,
+                                  fore: forePositionY,
+                                  direction: transition.direction,
+                                  system: pop)
+    let mainThreadReactive: Bool
     if #available(iOS 9.0, *) {
-      spring = TransitionSpring(property: propertyOf(transition.fore.view.layer).positionY(),
-                                back: backPositionY,
-                                fore: forePositionY,
-                                direction: transition.direction,
-                                springSystem: coreAnimation)
+      mainThreadReactive = false
+      spring.system = coreAnimation
     } else {
-      // Fallback on earlier versions
+      mainThreadReactive = true
     }
+
+    let reactiveForeLayer = transition.runtime.get(transition.fore.view.layer)
 
     for gestureRecognizer in transition.gestureRecognizers {
       switch gestureRecognizer {
       case let pan as UIPanGestureRecognizer:
-        let dragStream = gestureToStream(pan).translated(from: propertyOf(transition.fore.view.layer).position().stream,
-                                                       in: transition.containerView()).y()
-        spring.valueStream = spring.valueStream.toggled(with: dragStream)
-        let velocityStream = gestureToStream(pan).onRecognitionState(.ended).velocity(in: transition.containerView()).y()
-        transition.runtime.write(velocityStream, to: spring.initialVelocity)
+        let gesture = transition.runtime.get(pan)
+        let dragStream = gesture.translated(from: reactiveForeLayer.position,
+                                            in: transition.containerView()).y()
+        spring.compose { $0.toggled(with: dragStream) }
 
-        let directionStream = velocityStream.threshold(min: -100, max: 100,
-                                                       whenWithin: transition.direction.value,
-                                                       whenBelow: .forward,
-                                                       whenAbove: .backward)
-        transition.runtime.write(directionStream, to: transition.direction)
+        let velocityStream = gesture.velocityOnReleaseStream(in: transition.containerView()).y()
+        spring.add(initialVelocityStream: velocityStream)
+
+        // TODO: Allow "whenWithin" to be a stream so that we can add additional logic for "have we
+        // passed the y threshold?"
+        spring.directionStream = velocityStream.threshold(min: -100, max: 100,
+                                                          whenWithin: transition.direction.value,
+                                                          whenBelow: .forward,
+                                                          whenAbove: .backward)
       default:
         ()
       }
     }
 
-    spring.connect(with: transition.runtime)
+    transition.runtime.add(spring.directionStream, to: transition.direction)
+    transition.runtime.add(spring, to: reactiveForeLayer.positionY)
+
+    if mainThreadReactive {
+      let rotation = reactiveForeLayer.positionY.stream
+        .mapRange(rangeStart: spring.backwardDestination,
+                  rangeEnd: spring.forwardDestination,
+                  destinationStart: CGFloat(M_PI / 8),
+                  destinationEnd: 0)
+      transition.runtime.add(rotation, to: reactiveForeLayer.rotation)
+    }
   }
 
   static func willPresent(fore: UIViewController, dismisser: ViewControllerDismisser) {

@@ -16,9 +16,18 @@
 
 import Foundation
 
-/** An interaction is a composable interface for implementing motion streams. */
-public protocol Interaction {
+public protocol TransitionInteraction {
+  associatedtype ValueType
 
+  func initialValue() -> ValueType
+}
+
+public protocol ViewInteraction {
   /** Connect all streams with the provided runtime. */
-  func connect(with runtime: MotionRuntime)
+  func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime)
+}
+
+public protocol PropertyInteraction {
+  associatedtype T
+  func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime)
 }

@@ -17,31 +17,39 @@
 import Foundation
 
 /** Attaches a position to a destination on either side of a transition using a spring. */
-public class TransitionSpring<T: Zeroable>: Interaction {
+public class TransitionSpring<T: Zeroable>: PropertyInteraction, TransitionInteraction {
 
-  /** The value to which the value stream is expected to write. */
-  public let property: ReactiveProperty<T>
-
-  /** The spring governing this interaction. */
-  public var spring: Spring<T>
-
-  /** A stream that emits spring values. */
-  public var valueStream: MotionObservable<T>
-
-  /** The destination property that destinationStream will write to. */
-  public let destination: ReactiveProperty<T>
+  public let backwardDestination: T
+  public let forwardDestination: T
 
   /** A stream that writes to the spring's destination when the transition's direction changes. */
-  public var destinationStream: MotionObservable<T>
+  public private(set) var destinationStream: MotionObservable<T>
 
-  /** The initial velocity of the spring. */
-  public let initialVelocity: ReactiveProperty<T>
+  public var directionStream: MotionObservable<Transition.Direction> {
+    didSet {
+      self.destinationStream = self.destinationStream.merge(with: directionStream.destinations(back: backwardDestination,
+                                                                                               fore: forwardDestination))
+    }
+  }
+
+  public var initialVelocityStream: MotionObservable<T>
+
+  public func add(initialVelocityStream stream: MotionObservable<T>) {
+    initialVelocityStream = initialVelocityStream.merge(with: stream)
+  }
+
+  private var compositions: [(MotionObservable<T>) -> MotionObservable<T>] = []
+  public func compose(stream: @escaping (MotionObservable<T>) -> MotionObservable<T>) {
+    compositions.append(stream)
+  }
 
   /** The tension configuration of the spring. */
   public let tension: ReactiveProperty<CGFloat>
 
   /** The friction configuration of the spring. */
   public let friction: ReactiveProperty<CGFloat>
+
+  public var system: SpringSystem<T>
 
   /**
    - parameter value: The property to be updated by the value stream.
@@ -51,30 +59,37 @@ public class TransitionSpring<T: Zeroable>: Interaction {
                      forward.
    - parameter direction: The spring will change its destination in reaction to this property's
                           changes.
-   - parameter springSystem: A function capable of creating a spring source.
+   - parameter system A function capable of creating a spring source.
    */
-  public init(property: ReactiveProperty<T>,
-              back backwardDestination: T,
+  public init(back backwardDestination: T,
               fore forwardDestination: T,
               direction: ReactiveProperty<Transition.Direction>,
-              springSystem: SpringSystem<T>) {
-    self.property = property
+              system: @escaping SpringSystem<T>) {
+    self.backwardDestination = backwardDestination
+    self.forwardDestination = forwardDestination
+    self.system = system
+    self.directionStream = direction.stream
+    self.destinationStream = directionStream.destinations(back: backwardDestination,
+                                                          fore: forwardDestination)
+    self.initialVelocityStream = createProperty(withInitialValue: T.zero() as! T).stream
 
-    self.destination = createProperty(withInitialValue: forwardDestination)
-    self.spring = Spring(to: destination, initialValue: property, threshold: 1, system: springSystem)
+    self.tension = createProperty(withInitialValue: defaultSpringTension)
+    self.friction = createProperty(withInitialValue: defaultSpringFriction)
 
-    self.tension = spring.tension
-    self.friction = spring.friction
-    self.initialVelocity = spring.initialVelocity
-    self.destinationStream = direction.stream.destinations(back: backwardDestination,
-                                                           fore: forwardDestination)
-    self.valueStream = self.spring.valueStream
-
-    property.setValue(direction.value == .forward ? backwardDestination : forwardDestination)
+    self._initialValue = direction == .forward ? backwardDestination : forwardDestination
   }
 
-  public func connect(with runtime: MotionRuntime) {
-    runtime.write(destinationStream, to: destination)
-    runtime.write(valueStream, to: property)
+  public func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime) {
+    var stream = Spring(to: destinationStream,
+                        initialVelocity: initialVelocityStream,
+                        threshold: 1,
+                        system: system).stream(withInitialValue: property)
+    runtime.add(compositions.reduce(stream) { $1($0) }, to: property)
   }
+
+  public func initialValue() -> T {
+    return _initialValue
+  }
+
+  private let _initialValue: T
 }

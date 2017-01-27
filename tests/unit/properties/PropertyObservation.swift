@@ -21,51 +21,12 @@ class PropertyObservation: XCTestCase {
 
   func testUpdatesObserverImmediately() {
     let point = CGPoint(x: 100, y: 100)
-    let view = UIView()
-    view.center = point
-    let property = propertyOf(view).center
+    let property = createProperty(withInitialValue: point)
 
     var observedValue: CGPoint? = nil
     let _ = property.stream.subscribe(next: { value in
       observedValue = value
     }, state: { _ in }, coreAnimation: { _ in })
     XCTAssertEqual(observedValue!, point)
-  }
-
-  func testUpdatesObserverAfterWrites() {
-    let point = CGPoint(x: 100, y: 100)
-    let view = UIView()
-    let property = propertyOf(view).center
-
-    var observedValue: CGPoint? = nil
-    let subscription = property.stream.subscribe(next: { value in
-      observedValue = value
-    }, state: { _ in }, coreAnimation: { _ in })
-
-    XCTAssertNotEqual(observedValue!, point)
-
-    property.setValue(point)
-
-    XCTAssertEqual(observedValue!, point)
-
-    subscription.unsubscribe()
-  }
-
-  func testDoesNotUpdateObserverAfterWritesWithoutSubscription() {
-    let point = CGPoint(x: 100, y: 100)
-    let view = UIView()
-    let property = propertyOf(view).center
-
-    var observedValue: CGPoint? = nil
-    let subscription = property.stream.subscribe(next: { value in
-      observedValue = value
-    }, state: { _ in }, coreAnimation: { _ in })
-    subscription.unsubscribe()
-
-    XCTAssertNotEqual(observedValue!, point)
-
-    property.setValue(point)
-
-    XCTAssertNotEqual(observedValue!, point)
   }
 }

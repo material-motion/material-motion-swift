@@ -21,22 +21,14 @@ import MaterialMotionStreams
 class SpringTests: XCTestCase {
 
   func testCGPointInitialization() {
-    let view = UIView()
-    let target = UIView()
-    let spring = Spring(to: propertyOf(target).center,
-                        initialValue: propertyOf(view).center,
-                        threshold: 1,
-                        system: pop)
-    XCTAssertEqual(spring.initialVelocity.value, .zero)
+    let position = createProperty(withInitialValue: CGPoint.zero)
+    let spring = Spring(to: position, threshold: 1, system: pop)
+    XCTAssertEqual(spring.initialVelocity.read(), .zero)
   }
 
   func testCGFloatInitialization() {
-    let view = UIView()
-    let target = UIView()
-    let spring = Spring(to: propertyOf(target).centerX,
-                        initialValue: propertyOf(view).centerX,
-                        threshold: 1,
-                        system: pop)
-    XCTAssertEqual(spring.initialVelocity.value, 0)
+    let position = createProperty(withInitialValue: CGFloat(0))
+    let spring = Spring(to: position, threshold: 1, system: pop)
+    XCTAssertEqual(spring.initialVelocity.read(), 0)
   }
 }

@@ -39,8 +39,8 @@ class ExampleTransitionDirector: TransitionDirector {
     }
 
     let tween = Tween<CGFloat>(duration: 0.35, values: [from, to])
-    let fade$ = coreAnimation(tween)
-    transition.runtime.write(fade$, to: propertyOf(transition.fore.view.layer).positionY())
+    let fadeStream = coreAnimation(tween)
+    transition.runtime.add(fadeStream, to: transition.runtime.get(transition.fore.view.layer).positionY)
   }
 }
 
@@ -72,7 +72,6 @@ public class DragSourceExampleViewController: UIViewController {
   }
 
   var runtime: MotionRuntime!
-  var subscription: Subscription!
   public override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -97,18 +96,9 @@ public class DragSourceExampleViewController: UIViewController {
     circle.layer.cornerRadius = circle.bounds.width / 2
     view.addSubview(circle)
 
-    let tossable = TossableAndAttachWithSpring(position: propertyOf(square).center,
-                                               to: propertyOf(circle).center,
-                                               containerView: view,
-                                               springSystem: pop)
-    tossable.connect(with: runtime)
-
-    let spring = Spring(to: tossable.spring.destination,
-                        initialValue: propertyOf(square2.layer).position(),
-                        threshold: 1,
-                        system: coreAnimation)
-    runtime.write(spring.valueStream, to: propertyOf(square2.layer).position())
-
-    Tap(sets: tossable.spring.destination, containerView: view).connect(with: runtime)
+    let tossable = Tossable(destination: Destination(runtime.get(circle)), system: pop)
+    runtime.add(tossable, to: square)
+    runtime.add(Tap(), to: tossable)
+    runtime.add(Spring(to: tossable.destination.asProperty(), threshold: 1, system: coreAnimation), to: square2)
   }
 }

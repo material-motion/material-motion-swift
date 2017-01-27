@@ -24,67 +24,34 @@ import Foundation
 
  The provided gesture recognizers must be configured to enable simultaneous recognition.
  */
-public class DirectlyManipulable: Interaction {
+public class DirectlyManipulable: NSObject, ViewInteraction, UIGestureRecognizerDelegate {
 
-  /** The draggable interaction. */
-  public let draggable: Draggable
+  public let draggable = Draggable()
+  public let rotatable = Rotatable()
+  public let scalable = Scalable()
 
-  /** The rotatable interaction. */
-  public let rotatable: Rotatable
+  public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
+    let panGestureRecognizer = draggable.gestureRecognizer
+    let rotationGestureRecognizer = rotatable.gestureRecognizer
+    let scaleGestureRecognizer = scalable.gestureRecognizer
 
-  /** The scalable interaction. */
-  public let scalable: Scalable
-
-  public var anchorPointStreams: [MotionObservable<CGPoint>]
-  public var anchorPointResetStreams: [MotionObservable<CGPoint>]
-
-  /**
-   - parameter view: The view that should be made directly manipulable.
-   - parameter containerView: Translation will be calculated relative to this view. If any gesture
-                              recognizer isn't associated with a view already, it will be added to
-                              this view.
-   - parameter panGestureRecognizer: The pan gesture recognizer whose events should be observed.
-   - parameter rotationGestureRecognizer: The rotation gesture recognizer whose events should be
-                                          observed.
-   - parameter scaleGestureRecognizer: The scale gesture recognizer whose events should be observed.
-   */
-  public init(view: UIView,
-              containerView: UIView,
-              panGestureRecognizer: UIPanGestureRecognizer? = nil,
-              rotationGestureRecognizer: UIRotationGestureRecognizer? = nil,
-              scaleGestureRecognizer: UIPinchGestureRecognizer? = nil) {
-    self.draggable = Draggable(view: view,
-                               containerView: containerView,
-                               gestureRecognizer: panGestureRecognizer)
-    self.rotatable = Rotatable(view: view,
-                               containerView: containerView,
-                               gestureRecognizer: rotationGestureRecognizer)
-    self.scalable = Scalable(view: view,
-                             containerView: containerView,
-                             gestureRecognizer: scaleGestureRecognizer)
-    self.anchorPoint = propertyOf(view.layer).anchorPoint()
-
-    let gestureStreams = [draggable.gestureRecognizer, rotatable.gestureRecognizer, scalable.gestureRecognizer]
-    anchorPointStreams = gestureStreams.map {
-      gestureToStream($0).onRecognitionState(.began).centroid(in: view).normalized(by: view.bounds.size)
+    let adjustsAnchorPoint = AdjustsAnchorPoint()
+    adjustsAnchorPoint.gestureRecognizers = [panGestureRecognizer,
+                                             rotationGestureRecognizer,
+                                             scaleGestureRecognizer]
+    for gestureRecognizer in adjustsAnchorPoint.gestureRecognizers {
+      if gestureRecognizer.delegate == nil {
+        gestureRecognizer.delegate = self
+      }
     }
-    anchorPointResetStreams = gestureStreams.map {
-      gestureToStream($0).onRecognitionStates([.ended, .cancelled]).mapTo(CGPoint(x: 0.5, y: 0.5))
-    }
+
+    runtime.add(adjustsAnchorPoint, to: reactiveView)
+    runtime.add(draggable, to: reactiveView)
+    runtime.add(rotatable, to: reactiveView)
+    runtime.add(scalable, to: reactiveView)
   }
 
-  public func connect(with runtime: MotionRuntime) {
-    anchorPointResetStreams.forEach {
-      runtime.write($0, to: anchorPoint)
-    }
-    anchorPointStreams.forEach {
-      runtime.write($0, to: anchorPoint)
-    }
-
-    draggable.connect(with: runtime)
-    rotatable.connect(with: runtime)
-    scalable.connect(with: runtime)
+  public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    return true
   }
-
-  private let anchorPoint: ReactiveProperty<CGPoint>
 }

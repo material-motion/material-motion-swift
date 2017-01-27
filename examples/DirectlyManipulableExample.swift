@@ -18,7 +18,7 @@ import UIKit
 import IndefiniteObservable
 import MaterialMotionStreams
 
-public class DirectlyManipulableExampleViewController: UIViewController, UIGestureRecognizerDelegate {
+public class DirectlyManipulableExampleViewController: UIViewController {
 
   var runtime: MotionRuntime!
 
@@ -36,15 +36,11 @@ public class DirectlyManipulableExampleViewController: UIViewController, UIGestu
     square.backgroundColor = .red
     view.addSubview(square)
 
-    let interaction = DirectlyManipulable(view: square, containerView: view)
-    interaction.connect(with: runtime)
+    let square2 = UIView(frame: .init(x: 200, y: 200, width: 64, height: 64))
+    square2.backgroundColor = .blue
+    view.addSubview(square2)
 
-    [interaction.draggable.gestureRecognizer,
-     interaction.rotatable.gestureRecognizer,
-     interaction.scalable.gestureRecognizer].forEach { $0.delegate = self }
-  }
-
-  public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-    return true
+    runtime.add(DirectlyManipulable(), to: square)
+    runtime.add(Draggable(), to: square2)
   }
 }

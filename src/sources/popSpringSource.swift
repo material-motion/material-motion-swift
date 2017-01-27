@@ -28,8 +28,7 @@ public func pop(_ spring: SpringConfiguration<CGFloat>) -> (MotionObservable<CGF
     let popProperty = POPMutableAnimatableProperty()
     popProperty.threshold = spring.threshold.value
     popProperty.readBlock = { _, toWrite in
-      let value = spring.initialValue.value
-      toWrite![0] = value
+      toWrite![0] = spring.initialValue.read()!
     }
     popProperty.writeBlock = { _, toRead in
       observer.next(toRead![0])
@@ -48,7 +47,7 @@ public func pop(_ spring: SpringConfiguration<CGPoint>) -> (MotionObservable<CGP
     let popProperty = POPMutableAnimatableProperty()
     popProperty.threshold = spring.threshold.value
     popProperty.readBlock = { _, toWrite in
-      let value = spring.initialValue.value
+      let value = spring.initialValue.read()!
       toWrite![0] = value.x
       toWrite![1] = value.y
     }
@@ -66,7 +65,9 @@ private func configureSpringAnimation<T>(_ animation: POPSpringAnimation, spring
   animation.dynamicsTension = spring.tension.value
 
   animation.removedOnCompletion = false
-  animation.velocity = spring.initialVelocity.value
+  if let initialVelocity = spring.initialVelocity.read() {
+    animation.velocity = initialVelocity
+  }
 
   // animationDidStartBlock is invoked at the turn of the run loop, potentially leaving this stream
   // in an at rest state even though it's effectively active. To ensure that the stream is marked
@@ -81,10 +82,12 @@ private func configureSpringAnimation<T>(_ animation: POPSpringAnimation, spring
     observer.state(.atRest)
   }
 
-  let destinationSubscription = spring.destination.stream.subscribe(next: { destination in
-    animation.toValue = destination
+  let destinationSubscription = spring.destination.subscribe(next: { value in
+    animation.toValue = value
     animation.isPaused = false
   }, state: { _ in }, coreAnimation: { _ in })
+
+  assert(animation.toValue != nil, "No destination value received from destination stream.")
 
   let key = NSUUID().uuidString
   let someObject = NSObject()

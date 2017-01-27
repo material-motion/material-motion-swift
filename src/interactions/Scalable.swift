@@ -16,59 +16,12 @@
 
 import Foundation
 
-/**
- Modifies a transform's scale in reaction to a pinch gesture recognizer's scale.
+public class Scalable: ViewInteraction {
 
- Will multiply the gesture recognizer's scale by the property's initial value.
- */
-public class Scalable: Interaction {
-  /** The property to which the value stream is expected to write. */
-  public let property: ReactiveProperty<CGFloat>
+  public lazy var gestureRecognizer = UIPinchGestureRecognizer()
 
-  /** A stream that emits values to be written to the property. */
-  public var valueStream: MotionObservable<CGFloat>
-
-  /** A stream that emits velocity when the gesture recognizer ends. */
-  public var velocityStream: MotionObservable<CGFloat>
-
-  /** The gesture recognizer that drives this interaction. */
-  public let gestureRecognizer: UIPinchGestureRecognizer
-
-  /**
-   - parameter property: The property to be updated by the value stream.
-   - parameter containerView: If the gesture recognizer isn't associated with a view already, it
-                              will be added to this view.
-   - parameter gestureRecognizer: The gesture recognizer whose events should be observed.
-   */
-  public init(property: ReactiveProperty<CGFloat>,
-              containerView: UIView,
-              gestureRecognizer: UIPinchGestureRecognizer? = nil) {
-    self.property = property
-
-    self.gestureRecognizer = gestureRecognizer ?? UIPinchGestureRecognizer()
-    if self.gestureRecognizer.view == nil {
-      containerView.addGestureRecognizer(self.gestureRecognizer)
-    }
-    let source = gestureToStream(self.gestureRecognizer)
-    self.valueStream = source.scaled(from: property.stream)
-    self.velocityStream = source.velocity()
-  }
-
-  /**
-   - parameter view: The view whose scale should be updated in reaction to the gesture recognizer.
-   - parameter containerView: If the gesture recognizer isn't associated with a view already, it
-                              will be added to this view.
-   - parameter gestureRecognizer: The gesture recognizer whose events should be observed.
-   */
-  public convenience init(view: UIView,
-                          containerView: UIView,
-                          gestureRecognizer: UIPinchGestureRecognizer? = nil) {
-    self.init(property: propertyOf(view.layer).scale(),
-              containerView: containerView,
-              gestureRecognizer: gestureRecognizer)
-  }
-
-  public func connect(with runtime: MotionRuntime) {
-    runtime.write(valueStream, to: property)
+  public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
+    let scale = reactiveView.reactiveLayer.scale
+    runtime.add(runtime.get(gestureRecognizer).scaled(from: scale), to: scale)
   }
 }

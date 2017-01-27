@@ -39,10 +39,27 @@ public class MotionRuntime {
     self.containerView = containerView
   }
 
-  /** Connects the interaction's streams and stores the interaction. */
-  public func addInteraction(_ interaction: Interaction) {
-    interaction.connect(with: self)
-    interactions.append(interaction)
+  public func add(_ interaction: ViewInteraction, to reactiveView: ReactiveUIView) {
+    interaction.add(to: reactiveView, withRuntime: self)
+    viewInteractions.append(interaction)
+  }
+
+  public func add(_ interaction: ViewInteraction, to view: UIView) {
+    add(interaction, to: get(view))
+  }
+
+  public func add<T, P: ReactivePropertyConvertible>(_ stream: MotionObservable<T>, to property: P) where P.T == T {
+    write(stream, to: property.asProperty())
+  }
+
+  public func add<I: PropertyInteraction, P: ReactivePropertyConvertible>(_ interaction: I, to property: P) where I.T == P.T {
+    interaction.add(to: property.asProperty(), withRuntime: self)
+  }
+
+  public func add<I: TransitionInteraction, P: ReactivePropertyConvertible>(_ interaction: I, to property: P) where I.ValueType == P.T, I: PropertyInteraction {
+    let property = property.asProperty()
+    property.setValue(interaction.initialValue())
+    interaction.add(to: property as! ReactiveProperty<I.T>, withRuntime: self)
   }
 
   public func get(_ view: UIView) -> ReactiveUIView {
@@ -82,7 +99,7 @@ public class MotionRuntime {
   private var reactiveGestureRecognizers: [UIGestureRecognizer: AnyObject] = [:]
 
   /** Subscribes to the stream, writes its output to the given property, and observes its state. */
-  public func write<O: MotionObservableConvertible, T>(_ stream: O, to property: ReactiveProperty<T>) where O.T == T {
+  private func write<O: MotionObservableConvertible, T>(_ stream: O, to property: ReactiveProperty<T>) where O.T == T {
     let token = NSUUID().uuidString
     subscriptions.append(stream.asStream().subscribe(next: property.setValue, state: { [weak self] state in
       property.state(state)
@@ -131,7 +148,7 @@ public class MotionRuntime {
   private weak var parent: MotionRuntime?
   private var children: [MotionRuntime] = []
   private var subscriptions: [Subscription] = []
-  private var interactions: [Interaction] = []
+  private var viewInteractions: [ViewInteraction] = []
 
   private typealias Token = String
   private var activeSubscriptions = Set<Token>()
