@@ -38,6 +38,13 @@ extension PushBackTransitionExampleViewController {
   }
 }
 
+@available(iOS 9.0, *)
+extension InteractivePushBackTransitionExampleViewController {
+  class func catalogBreadcrumbs() -> [String] {
+    return ["Push back transition (interactive)"]
+  }
+}
+
 extension SwipeExampleViewController {
   class func catalogBreadcrumbs() -> [String] {
     return ["Swipe stack"]
