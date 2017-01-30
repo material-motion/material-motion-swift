@@ -25,11 +25,13 @@ public class ReactiveUIGestureRecognizer<O: UIGestureRecognizer> {
                             write: { gestureRecognizer.isEnabled = $0 })
   }()
 
-  init(_ gestureRecognizer: O) {
+  init(_ gestureRecognizer: O, containerView: UIView) {
     self.gestureRecognizer = gestureRecognizer
+    self.containerView = containerView
     self.stream = gestureToStream(gestureRecognizer)
   }
 
+  fileprivate let containerView: UIView
   fileprivate let stream: MotionObservable<O>
 }
 
@@ -46,6 +48,9 @@ extension ReactiveUIGestureRecognizer {
 }
 
 extension ReactiveUIGestureRecognizer where O: UIPanGestureRecognizer {
+  public func velocityOnReleaseStream() -> MotionObservable<CGPoint> {
+    return gestureToStream(gestureRecognizer).onRecognitionState(.ended).velocity(in: containerView)
+  }
   public func velocityOnReleaseStream(in relativeView: UIView) -> MotionObservable<CGPoint> {
     return gestureToStream(gestureRecognizer).onRecognitionState(.ended).velocity(in: relativeView)
   }

@@ -87,7 +87,7 @@ public class MotionRuntime {
       return unsafeBitCast(reactiveObject, to: ReactiveUIGestureRecognizer<O>.self)
     }
 
-    let reactiveObject = ReactiveUIGestureRecognizer<O>(gestureRecognizer)
+    let reactiveObject = ReactiveUIGestureRecognizer<O>(gestureRecognizer, containerView: containerView)
 
     if reactiveObject.gestureRecognizer.view == nil {
       containerView.addGestureRecognizer(reactiveObject.gestureRecognizer)

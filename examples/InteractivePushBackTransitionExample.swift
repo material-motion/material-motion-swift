@@ -79,7 +79,7 @@ private class PushBackTransitionDirector: TransitionDirector {
                                             in: transition.containerView()).y()
         movement.compose { $0.toggled(with: dragStream) }
 
-        let velocityStream = gesture.velocityOnReleaseStream(in: transition.containerView()).y()
+        let velocityStream = gesture.velocityOnReleaseStream().y()
         movement.add(initialVelocityStream: velocityStream)
 
         // TODO: Allow "whenWithin" to be a stream so that we can add additional logic for "have we

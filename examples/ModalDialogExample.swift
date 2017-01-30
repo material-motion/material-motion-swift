@@ -104,7 +104,7 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
                                             in: transition.containerView()).y()
         spring.compose { $0.toggled(with: dragStream) }
 
-        let velocityStream = gesture.velocityOnReleaseStream(in: transition.containerView()).y()
+        let velocityStream = gesture.velocityOnReleaseStream().y()
         spring.add(initialVelocityStream: velocityStream)
 
         // TODO: Allow "whenWithin" to be a stream so that we can add additional logic for "have we
