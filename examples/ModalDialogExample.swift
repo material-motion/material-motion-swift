@@ -71,7 +71,7 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
 
   required init() {}
 
-  func willBeginTransition(_ transition: Transition) {
+  func willBeginTransition(_ transition: Transition, runtime: MotionRuntime) {
     let size = transition.fore.preferredContentSize
 
     if transition.direction == .forward {
@@ -94,12 +94,12 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
       mainThreadReactive = true
     }
 
-    let reactiveForeLayer = transition.runtime.get(transition.fore.view.layer)
+    let reactiveForeLayer = runtime.get(transition.fore.view.layer)
 
     for gestureRecognizer in transition.gestureRecognizers {
       switch gestureRecognizer {
       case let pan as UIPanGestureRecognizer:
-        let gesture = transition.runtime.get(pan)
+        let gesture = runtime.get(pan)
         let dragStream = gesture.translated(from: reactiveForeLayer.position,
                                             in: transition.containerView()).y()
         spring.compose { $0.toggled(with: dragStream) }
@@ -109,17 +109,17 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
 
         // TODO: Allow "whenWithin" to be a stream so that we can add additional logic for "have we
         // passed the y threshold?"
-        transition.runtime.add(velocityStream.threshold(min: -100, max: 100,
-                                                        whenWithin: transition.direction.value,
-                                                        whenBelow: .forward,
-                                                        whenAbove: .backward),
-                               to: transition.direction)
+        runtime.add(velocityStream.threshold(min: -100, max: 100,
+                                             whenWithin: transition.direction.value,
+                                             whenBelow: .forward,
+                                             whenAbove: .backward),
+                    to: transition.direction)
       default:
         ()
       }
     }
 
-    transition.runtime.add(spring, to: reactiveForeLayer.positionY)
+    runtime.add(spring, to: reactiveForeLayer.positionY)
 
     if mainThreadReactive {
       let rotation = reactiveForeLayer.positionY.stream
@@ -127,7 +127,7 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
                   rangeEnd: spring.forwardDestination,
                   destinationStart: CGFloat(M_PI / 8),
                   destinationEnd: 0)
-      transition.runtime.add(rotation, to: reactiveForeLayer.rotation)
+      runtime.add(rotation, to: reactiveForeLayer.rotation)
     }
   }
 

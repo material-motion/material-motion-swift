@@ -23,7 +23,7 @@ import MaterialMotionStreams
 class ExampleTransitionDirector: TransitionDirector {
   required init() {}
 
-  func willBeginTransition(_ transition: Transition) {
+  func willBeginTransition(_ transition: Transition, runtime: MotionRuntime) {
     let backPositionY = transition.containerView().bounds.height * 1.5
     let forePositionY = transition.containerView().bounds.midY
 
@@ -39,7 +39,7 @@ class ExampleTransitionDirector: TransitionDirector {
     }
 
     let tween = Tween(duration: 0.35, values: [from, to], system: coreAnimation)
-    transition.runtime.add(tween, to: transition.runtime.get(transition.fore.view.layer).positionY)
+    runtime.add(tween, to: runtime.get(transition.fore.view.layer).positionY)
   }
 }
 

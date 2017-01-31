@@ -70,7 +70,7 @@ public class Transition: NSObject {
   }
 
   /** The runtime to which motion should be registered. */
-  public fileprivate(set) var runtime: MotionRuntime!
+  fileprivate var runtime: MotionRuntime!
 
   weak var delegate: TransitionDelegate?
 
@@ -153,7 +153,7 @@ extension Transition {
 
     self.runtime = MotionRuntime(containerView: containerView())
 
-    director.willBeginTransition(self)
+    director.willBeginTransition(self, runtime: self.runtime)
 
     // TODO: Provide the director with gesture recognizers.
 

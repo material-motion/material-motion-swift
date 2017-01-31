@@ -25,7 +25,7 @@ public protocol TransitionDirector {
   init()
 
   /** Invoked on initiation of a view controller transition. */
-  func willBeginTransition(_ transition: Transition)
+  func willBeginTransition(_ transition: Transition, runtime: MotionRuntime)
 }
 
 /**

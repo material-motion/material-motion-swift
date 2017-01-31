@@ -64,8 +64,8 @@ private class PushBackTransitionDirector: TransitionDirector {
 
   required init() {}
 
-  func willBeginTransition(_ transition: Transition) {
-    let foreLayer = transition.runtime.get(transition.fore.view.layer)
+  func willBeginTransition(_ transition: Transition, runtime: MotionRuntime) {
+    let foreLayer = runtime.get(transition.fore.view.layer)
 
     let movement = spring(back: transition.containerView().bounds.height + transition.fore.view.layer.bounds.height / 2,
                           fore: transition.containerView().bounds.midY,
@@ -74,7 +74,7 @@ private class PushBackTransitionDirector: TransitionDirector {
     for gestureRecognizer in transition.gestureRecognizers {
       switch gestureRecognizer {
       case let pan as UIPanGestureRecognizer:
-        let gesture = transition.runtime.get(pan)
+        let gesture = runtime.get(pan)
         let dragStream = gesture.translated(from: foreLayer.position,
                                             in: transition.containerView()).y()
         movement.compose { $0.toggled(with: dragStream) }
@@ -84,20 +84,20 @@ private class PushBackTransitionDirector: TransitionDirector {
 
         // TODO: Allow "whenWithin" to be a stream so that we can add additional logic for "have we
         // passed the y threshold?"
-        transition.runtime.add(velocityStream.threshold(min: -100, max: 100,
-                                                        whenWithin: transition.direction.value,
-                                                        whenBelow: .forward,
-                                                        whenAbove: .backward),
-                               to: transition.direction)
+        runtime.add(velocityStream.threshold(min: -100, max: 100,
+                                             whenWithin: transition.direction.value,
+                                             whenBelow: .forward,
+                                             whenAbove: .backward),
+                    to: transition.direction)
       default:
         ()
       }
     }
 
-    transition.runtime.add(movement, to: foreLayer.positionY)
+    runtime.add(movement, to: foreLayer.positionY)
 
     let scale = spring(back: 1, fore: 0.95, transition: transition)
-    transition.runtime.add(scale, to: transition.runtime.get(transition.back.view.layer).scale)
+    runtime.add(scale, to: runtime.get(transition.back.view.layer).scale)
   }
 
   private func spring(back: CGFloat, fore: CGFloat, transition: Transition) -> TransitionSpring<CGFloat> {
