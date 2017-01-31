@@ -22,7 +22,7 @@ import IndefiniteObservable
 
  This class defines the expected shape of a Spring for use in creating a Spring source.
  */
-public final class Spring<T: Zeroable>: ViewInteraction {
+public final class Spring<T: Zeroable>: ViewInteraction, PropertyInteraction {
 
   /** Creates a spring with the provided properties and an initial velocity of zero. */
   public convenience init<O: MotionObservableConvertible>(to destination: O, threshold: CGFloat, system: @escaping SpringToStream<T>) where O.T == T {
@@ -81,6 +81,10 @@ public final class Spring<T: Zeroable>: ViewInteraction {
       let position = reactiveView.reactiveLayer.position
       runtime.add(castedSelf.stream(withInitialValue: position), to: position)
     }
+  }
+
+  public func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime) {
+    runtime.add(stream(withInitialValue: property), to: property)
   }
 }
 
