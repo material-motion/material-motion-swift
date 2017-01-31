@@ -75,8 +75,7 @@ private class PushBackTransitionDirector: TransitionDirector {
       switch gestureRecognizer {
       case let pan as UIPanGestureRecognizer:
         let gesture = runtime.get(pan)
-        let dragStream = gesture.translated(from: foreLayer.position,
-                                            in: transition.containerView()).y()
+        let dragStream = gesture.translated(from: foreLayer.position).y()
         movement.compose { $0.toggled(with: dragStream) }
 
         let velocityStream = gesture.velocityOnReleaseStream().y()

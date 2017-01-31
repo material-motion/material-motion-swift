@@ -48,6 +48,11 @@ extension ReactiveUIGestureRecognizer {
 }
 
 extension ReactiveUIGestureRecognizer where O: UIPanGestureRecognizer {
+
+  func translated<O: MotionObservableConvertible>(from initialPosition: O) -> MotionObservable<CGPoint> where O.T == CGPoint {
+    return asStream().translated(from: initialPosition, in: containerView)
+  }
+
   public func velocityOnReleaseStream() -> MotionObservable<CGPoint> {
     return gestureToStream(gestureRecognizer).onRecognitionState(.ended).velocity(in: containerView)
   }

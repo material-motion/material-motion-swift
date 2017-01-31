@@ -100,8 +100,7 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
       switch gestureRecognizer {
       case let pan as UIPanGestureRecognizer:
         let gesture = runtime.get(pan)
-        let dragStream = gesture.translated(from: reactiveForeLayer.position,
-                                            in: transition.containerView()).y()
+        let dragStream = gesture.translated(from: reactiveForeLayer.position).y()
         spring.compose { $0.toggled(with: dragStream) }
 
         let velocityStream = gesture.velocityOnReleaseStream().y()
