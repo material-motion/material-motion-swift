@@ -17,7 +17,7 @@
 import Foundation
 
 /** A tween describes a potential interpolation from one value to another. */
-public final class Tween<T> {
+public final class Tween<T>: PropertyInteraction {
 
   /** The duration of the animation in seconds. */
   public var duration: CFTimeInterval
@@ -55,9 +55,22 @@ public final class Tween<T> {
    */
   public var timingFunctions = [CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)]
 
+  public var system: TweenToStream<T>
+
   /** Initializes a tween instance with its required properties. */
-  public init(duration: CFTimeInterval, values: [T]) {
+  public init(duration: CFTimeInterval, values: [T], system: @escaping TweenToStream<T>) {
     self.duration = duration
     self.values = values
+    self.system = system
+  }
+
+  public func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime) {
+    runtime.add(asStream(), to: property)
+  }
+}
+
+extension Tween: MotionObservableConvertible {
+  public func asStream() -> MotionObservable<T> {
+    return system(self)
   }
 }

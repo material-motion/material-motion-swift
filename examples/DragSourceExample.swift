@@ -38,9 +38,8 @@ class ExampleTransitionDirector: TransitionDirector {
       to = backPositionY
     }
 
-    let tween = Tween<CGFloat>(duration: 0.35, values: [from, to])
-    let fadeStream = coreAnimation(tween)
-    transition.runtime.add(fadeStream, to: transition.runtime.get(transition.fore.view.layer).positionY)
+    let tween = Tween<CGFloat>(duration: 0.35, values: [from, to], system: coreAnimation)
+    transition.runtime.add(tween, to: transition.runtime.get(transition.fore.view.layer).positionY)
   }
 }
 
