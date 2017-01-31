@@ -16,5 +16,5 @@
 
 import UIKit
 
-/** A TweenSystem is a function that creates a MotionObservable from a Tween. */
-public typealias TweenSystem<T> = (Tween<T>) -> MotionObservable<T>
+/** A tween-to-stream function creates a MotionObservable from a Tween. */
+public typealias TweenToStream<T> = (Tween<T>) -> MotionObservable<T>
