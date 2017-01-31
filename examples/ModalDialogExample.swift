@@ -109,16 +109,16 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
 
         // TODO: Allow "whenWithin" to be a stream so that we can add additional logic for "have we
         // passed the y threshold?"
-        spring.directionStream = velocityStream.threshold(min: -100, max: 100,
-                                                          whenWithin: transition.direction.value,
-                                                          whenBelow: .forward,
-                                                          whenAbove: .backward)
+        transition.runtime.add(velocityStream.threshold(min: -100, max: 100,
+                                                        whenWithin: transition.direction.value,
+                                                        whenBelow: .forward,
+                                                        whenAbove: .backward),
+                               to: transition.direction)
       default:
         ()
       }
     }
 
-    transition.runtime.add(spring.directionStream, to: transition.direction)
     transition.runtime.add(spring, to: reactiveForeLayer.positionY)
 
     if mainThreadReactive {
