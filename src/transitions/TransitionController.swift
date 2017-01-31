@@ -64,6 +64,8 @@ public class TransitionController: NSObject {
    */
   public var directorType: TransitionDirector.Type?
 
+  public let dismisser: ViewControllerDismisser
+
   init(viewController: UIViewController) {
     self.associatedViewController = viewController
     self.dismisser = ViewControllerDismisser()
@@ -74,7 +76,6 @@ public class TransitionController: NSObject {
   }
 
   fileprivate var transition: Transition?
-  fileprivate let dismisser: ViewControllerDismisser
 
   fileprivate weak var associatedViewController: UIViewController?
 }
