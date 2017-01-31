@@ -38,7 +38,7 @@ class ExampleTransitionDirector: TransitionDirector {
       to = backPositionY
     }
 
-    let tween = Tween<CGFloat>(duration: 0.35, values: [from, to], system: coreAnimation)
+    let tween = Tween(duration: 0.35, values: [from, to], system: coreAnimation)
     transition.runtime.add(tween, to: transition.runtime.get(transition.fore.view.layer).positionY)
   }
 }
