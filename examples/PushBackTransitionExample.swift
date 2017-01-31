@@ -78,25 +78,12 @@ private class PushBackTransitionDirector: TransitionDirector {
            transition: transition)
   }
 
-  // TODO(featherless): We should be using TransitionSpring, but it doesn't currently support mass
-  // and suggested duration.
   private func spring(back: CGFloat, fore: CGFloat, property: ReactiveProperty<CGFloat>, transition: Transition) {
-    let from: CGFloat
-    let to: CGFloat
-    switch transition.direction.value {
-    case .forward:
-      from = back
-      to = fore
-    case .backward:
-      from = fore
-      to = back
-    }
-
-    let movement = Spring(to: to, threshold: 1, system: coreAnimation)
-    movement.friction.value = 500
-    movement.tension.value = 1000
-    movement.mass.value = 3
-    movement.suggestedDuration.value = 0.5
-    transition.runtime.add(movement.stream(withInitialValue: from), to: property)
+    let spring = TransitionSpring(back: back, fore: fore, direction: transition.direction, system: coreAnimation)
+    spring.friction.value = 500
+    spring.tension.value = 1000
+    spring.mass.value = 3
+    spring.suggestedDuration.value = 0.5
+    transition.runtime.add(spring, to: property)
   }
 }
