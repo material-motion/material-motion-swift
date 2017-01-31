@@ -71,12 +71,20 @@ private class PushBackTransitionDirector: TransitionDirector {
                           fore: transition.containerView().bounds.midY,
                           transition: transition)
 
+    let scale = spring(back: 1, fore: 0.95, transition: transition)
+
     for gestureRecognizer in transition.gestureRecognizers {
       switch gestureRecognizer {
       case let pan as UIPanGestureRecognizer:
         let gesture = runtime.get(pan)
-        let dragStream = gesture.translated(from: foreLayer.position).y()
+        let dragStream = gesture.translated(from: foreLayer.position).y().min(foreLayer.layer.bounds.height / 2)
         movement.compose { $0.toggled(with: dragStream) }
+
+        let scaleStream = dragStream.mapRange(rangeStart:movement.backwardDestination,
+                                              rangeEnd:movement.forwardDestination,
+                                              destinationStart:scale.backwardDestination,
+                                              destinationEnd:scale.forwardDestination)
+        scale.compose { $0.toggled(with: scaleStream) }
 
         let velocityStream = gesture.velocityOnReleaseStream().y()
         movement.add(initialVelocityStream: velocityStream)
@@ -94,8 +102,6 @@ private class PushBackTransitionDirector: TransitionDirector {
     }
 
     runtime.add(movement, to: foreLayer.positionY)
-
-    let scale = spring(back: 1, fore: 0.95, transition: transition)
     runtime.add(scale, to: runtime.get(transition.back.view.layer).scale)
   }
 
