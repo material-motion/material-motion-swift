@@ -149,6 +149,7 @@ extension Transition {
           context.containerView.insertSubview(to.view, at: 0)
         }
       }
+      to.view.layoutIfNeeded()
     }
 
     self.runtime = MotionRuntime(containerView: containerView())
