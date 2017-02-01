@@ -38,6 +38,8 @@ public class Transition: NSObject {
   /** The transition window for this transition. */
   public let window: TransitionTimeWindow
 
+  public let replicator = ViewReplicator()
+
   /** The context view for this transition. */
   public func contextView() -> UIView? {
     if contextViewRetriever == nil {
@@ -164,6 +166,7 @@ extension Transition {
     }
 
     self.runtime = MotionRuntime(containerView: containerView())
+    self.replicator.containerView = containerView()
 
     director.willBeginTransition(self, runtime: self.runtime)
 
