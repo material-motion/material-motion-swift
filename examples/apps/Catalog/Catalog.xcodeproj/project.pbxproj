@@ -22,6 +22,7 @@
 		666FAA8B1D384A6B000363DA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 666FAA8A1D384A6B000363DA /* Assets.xcassets */; };
 		666FAA8E1D384A6B000363DA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 666FAA8C1D384A6B000363DA /* LaunchScreen.storyboard */; };
 		66AA65AC1E00C37F000052A8 /* toggleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AA65AB1E00C37F000052A8 /* toggleTests.swift */; };
+		66E6F2371E3FC791003158D3 /* PhotoAlbum.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6F2361E3FC791003158D3 /* PhotoAlbum.xcassets */; };
 		C1F5E1D37D0DA71224EFC15E /* Pods_Catalog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E95CBDC1BABF9E6E385A124B /* Pods_Catalog.framework */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +57,7 @@
 		666FAA941D384A6B000363DA /* UnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		666FAA9A1D384A6B000363DA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../UnitTests/Info.plist; sourceTree = "<group>"; };
 		66AA65AB1E00C37F000052A8 /* toggleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = toggleTests.swift; sourceTree = "<group>"; };
+		66E6F2361E3FC791003158D3 /* PhotoAlbum.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = PhotoAlbum.xcassets; sourceTree = SOURCE_ROOT; };
 		B05E63B8F92D94A8819B0ABB /* Pods_UnitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UnitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC5B661FDF1C5375A0D3B88E /* Pods-UnitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UnitTests.release.xcconfig"; path = "../../../Pods/Target Support Files/Pods-UnitTests/Pods-UnitTests.release.xcconfig"; sourceTree = "<group>"; };
 		CDC06A5F25259A3DF6FB850C /* Pods-UnitTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UnitTests.debug.xcconfig"; path = "../../../Pods/Target Support Files/Pods-UnitTests/Pods-UnitTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -157,6 +159,7 @@
 		666FAA821D384A6B000363DA /* resources */ = {
 			isa = PBXGroup;
 			children = (
+				66E6F2361E3FC791003158D3 /* PhotoAlbum.xcassets */,
 				666FAAA51D384B5B000363DA /* catalog */,
 				666FAAA41D384B52000363DA /* tests */,
 			);
@@ -299,6 +302,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66E6F2371E3FC791003158D3 /* PhotoAlbum.xcassets in Resources */,
 				666FAA8E1D384A6B000363DA /* LaunchScreen.storyboard in Resources */,
 				666FAA8B1D384A6B000363DA /* Assets.xcassets in Resources */,
 			);

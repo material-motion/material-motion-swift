@@ -32,6 +32,13 @@ extension ModalDialogExampleViewController {
 }
 
 @available(iOS 9.0, *)
+extension ContextualTransitionExampleViewController {
+  class func catalogBreadcrumbs() -> [String] {
+    return ["Contextual transition"]
+  }
+}
+
+@available(iOS 9.0, *)
 extension PushBackTransitionExampleViewController {
   class func catalogBreadcrumbs() -> [String] {
     return ["Push back transition"]
