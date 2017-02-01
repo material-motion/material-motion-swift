@@ -22,11 +22,6 @@ public class TransitionSpring<T: Zeroable>: Spring<T>, TransitionInteraction {
   public let backwardDestination: T
   public let forwardDestination: T
 
-  private var compositions: [(MotionObservable<T>) -> MotionObservable<T>] = []
-  public func compose(stream: @escaping (MotionObservable<T>) -> MotionObservable<T>) {
-    compositions.append(stream)
-  }
-
   /**
    - parameter value: The property to be updated by the value stream.
    - parameter back: The destination to which the spring will pull the view when transitioning
@@ -52,7 +47,7 @@ public class TransitionSpring<T: Zeroable>: Spring<T>, TransitionInteraction {
   }
 
   public override func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime) {
-    runtime.add(compositions.reduce(stream(withInitialValue: property)) { $1($0) }, to: property)
+    runtime.add(stream(withInitialValue: property), to: property)
   }
 
   public func initialValue() -> T {
