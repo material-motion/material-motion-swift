@@ -39,9 +39,22 @@ public class Transition: NSObject {
   public let window: TransitionTimeWindow
 
   /** The context view for this transition. */
-  public func contextView() -> UIView {
-    return UIView() // TODO: Lazily fetch this
+  public func contextView() -> UIView? {
+    if contextViewRetriever == nil {
+      // transitionContextViewRetriever can be a relatively complex lookup if it can't
+      // immediately find the context view retriever, thus the lazy lookup here.
+      contextViewRetriever = transitionContextViewRetriever(for: back)
+    }
+    if hasFetchedContextView {
+      return _contextView
+    }
+    hasFetchedContextView = true
+    _contextView = contextViewRetriever!.contextViewForTransition(foreViewController: fore)
+    return _contextView
   }
+  private var contextViewRetriever: TransitionContextViewRetriever?
+  private var hasFetchedContextView = false
+  private var _contextView: UIView?
 
   /** The container view for the transition as reported by UIKit's transition context. */
   public func containerView() -> UIView {
@@ -98,8 +111,6 @@ public class Transition: NSObject {
   fileprivate var context: UIViewControllerContextTransitioning!
   fileprivate let dismisser: ViewControllerDismisser
   fileprivate var stateSubscription: Subscription!
-
-  private var _contextView: UIView?
 }
 
 extension Transition: UIViewControllerAnimatedTransitioning {
