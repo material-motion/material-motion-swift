@@ -26,9 +26,25 @@ import Foundation
  */
 public class DirectlyManipulable: NSObject, ViewInteraction, UIGestureRecognizerDelegate {
 
+  public var targetView: UIView? {
+    didSet {
+      draggable.targetView = targetView
+      rotatable.targetView = targetView
+      scalable.targetView = targetView
+    }
+  }
   public let draggable = Draggable()
   public let rotatable = Rotatable()
   public let scalable = Scalable()
+
+  convenience init(targetView: UIView) {
+    self.init()
+
+    self.targetView = targetView
+    draggable.targetView = targetView
+    rotatable.targetView = targetView
+    scalable.targetView = targetView
+  }
 
   convenience init<S: Sequence>(gestureRecognizers: S) where S.Iterator.Element: UIGestureRecognizer {
     self.init()

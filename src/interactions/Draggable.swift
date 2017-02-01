@@ -18,6 +18,7 @@ import Foundation
 
 public class Draggable: ViewInteraction {
 
+  public var targetView: UIView?
   public var relativeView: UIView?
   public lazy var gestureRecognizer = UIPanGestureRecognizer()
 
@@ -39,7 +40,14 @@ public class Draggable: ViewInteraction {
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
     let position = reactiveView.reactiveLayer.position
     let relativeView = self.relativeView ?? runtime.containerView
-    runtime.add(runtime.get(gestureRecognizer).translated(from: position, in: relativeView),
+
+    targetView?.isUserInteractionEnabled = true
+
+    var stream = runtime.get(gestureRecognizer).asStream()
+    if let targetView = targetView {
+      stream = stream.filter(whenStartsWithin: targetView)
+    }
+    runtime.add(stream.translated(from: position, in: relativeView),
                 to: position)
   }
 }
