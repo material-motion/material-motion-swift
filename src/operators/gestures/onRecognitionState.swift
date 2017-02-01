@@ -31,4 +31,16 @@ extension MotionObservableConvertible where T: UIGestureRecognizer {
       return states.contains(value.state)
     }
   }
+
+  public func active() -> MotionObservable<Bool> {
+    return asStream()._map { value in
+      return value.state == .began || value.state == .changed
+    }
+  }
+
+  public func atRest() -> MotionObservable<Bool> {
+    return asStream()._map { value in
+      return value.state != .began && value.state != .changed
+    }
+  }
 }
