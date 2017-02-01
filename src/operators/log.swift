@@ -27,6 +27,8 @@ extension MotionObservableConvertible {
         print(value)
       }
       next(value)
+    }, coreAnimation: { event, coreAnimation in
+      coreAnimation(event)
     })
   }
 }
