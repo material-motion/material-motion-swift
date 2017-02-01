@@ -91,25 +91,75 @@ public class ReactiveCALayer {
     return ReactiveProperty(initialValue: initialValue, write: write, coreAnimation: { event in
       switch event {
       case .add(let animation, let key, let initialVelocity):
+        animation.keyPath = keyPath
+
+        if #available(iOS 9.0, *) {
+          // Core Animation springs do not support multi-dimensional velocity, so we bear the burden
+          // of decomposing multi-dimensional springs here.
+          if let springAnimation = animation as? CASpringAnimation
+            , springAnimation.isAdditive
+            , let initialVelocity = initialVelocity as? CGPoint
+            , let delta = springAnimation.fromValue as? CGPoint {
+            let decomposed = decompose(springAnimation: springAnimation,
+                                       delta: delta,
+                                       initialVelocity: initialVelocity)
+
+            layer.add(decomposed.0, forKey: key + ".x")
+            layer.add(decomposed.1, forKey: key + ".y")
+
+            self.decomposedKeys.insert(key)
+            return
+          }
+        }
+
         if let initialVelocity = initialVelocity {
           applyInitialVelocity(initialVelocity, to: animation)
         }
 
-        animation.keyPath = keyPath
         layer.add(animation, forKey: key)
 
       case .remove(let key):
         if let presentationLayer = layer.presentation() {
           layer.setValue(presentationLayer.value(forKeyPath: keyPath), forKeyPath: keyPath)
         }
-        layer.removeAnimation(forKey: key)
+        if self.decomposedKeys.contains(key) {
+          layer.removeAnimation(forKey: key + ".x")
+          layer.removeAnimation(forKey: key + ".y")
+          self.decomposedKeys.remove(key)
+
+        } else {
+          layer.removeAnimation(forKey: key)
+        }
       }
     })
   }
+  private var decomposedKeys = Set<String>()
 
   init(_ layer: CALayer) {
     self.layer = layer
   }
+}
+
+@available(iOS 9.0, *)
+private func decompose(springAnimation: CASpringAnimation, delta: CGPoint, initialVelocity: CGPoint) -> (CASpringAnimation, CASpringAnimation) {
+  let xAnimation = springAnimation.copy() as! CASpringAnimation
+  let yAnimation = springAnimation.copy() as! CASpringAnimation
+  xAnimation.fromValue = delta.x
+  yAnimation.fromValue = delta.y
+  xAnimation.toValue = 0
+  yAnimation.toValue = 0
+
+  if delta.x != 0 {
+    xAnimation.initialVelocity = initialVelocity.x / -delta.x
+  }
+  if delta.y != 0 {
+    yAnimation.initialVelocity = initialVelocity.y / -delta.y
+  }
+
+  xAnimation.keyPath = springAnimation.keyPath! + ".x"
+  yAnimation.keyPath = springAnimation.keyPath! + ".y"
+
+  return (xAnimation, yAnimation)
 }
 
 private func applyInitialVelocity(_ initialVelocity: Any, to animation: CAPropertyAnimation) {
