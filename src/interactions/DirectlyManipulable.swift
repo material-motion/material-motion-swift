@@ -36,10 +36,8 @@ public class DirectlyManipulable: NSObject, ViewInteraction, UIGestureRecognizer
     let scaleGestureRecognizer = scalable.gestureRecognizer
 
     let adjustsAnchorPoint = AdjustsAnchorPoint()
-    adjustsAnchorPoint.gestureRecognizers = [panGestureRecognizer,
-                                             rotationGestureRecognizer,
-                                             scaleGestureRecognizer]
-    for gestureRecognizer in adjustsAnchorPoint.gestureRecognizers {
+    adjustsAnchorPoint.gestureRecognizers = [rotationGestureRecognizer, scaleGestureRecognizer]
+    for gestureRecognizer in [panGestureRecognizer, rotationGestureRecognizer, scaleGestureRecognizer] {
       if gestureRecognizer.delegate == nil {
         gestureRecognizer.delegate = self
       }
