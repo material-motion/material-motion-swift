@@ -21,6 +21,21 @@ public class Draggable: ViewInteraction {
   public var relativeView: UIView?
   public lazy var gestureRecognizer = UIPanGestureRecognizer()
 
+  convenience init<S: Sequence>(gestureRecognizers: S) where S.Iterator.Element: UIGestureRecognizer {
+    self.init()
+
+    for gestureRecognizer in gestureRecognizers {
+      switch gestureRecognizer {
+      case let pan as UIPanGestureRecognizer:
+        self.gestureRecognizer = pan
+        break
+
+      default:
+        ()
+      }
+    }
+  }
+
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
     let position = reactiveView.reactiveLayer.position
     let relativeView = self.relativeView ?? runtime.containerView

@@ -20,6 +20,21 @@ public class Rotatable: ViewInteraction {
 
   public lazy var gestureRecognizer = UIRotationGestureRecognizer()
 
+  convenience init<S: Sequence>(gestureRecognizers: S) where S.Iterator.Element: UIGestureRecognizer {
+    self.init()
+
+    for gestureRecognizer in gestureRecognizers {
+      switch gestureRecognizer {
+      case let rotate as UIRotationGestureRecognizer:
+        self.gestureRecognizer = rotate
+        break
+
+      default:
+        ()
+      }
+    }
+  }
+
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
     let rotation = reactiveView.reactiveLayer.rotation
     runtime.add(runtime.get(gestureRecognizer).rotated(from: rotation), to: rotation)

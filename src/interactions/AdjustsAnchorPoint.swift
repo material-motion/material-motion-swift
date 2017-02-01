@@ -20,6 +20,11 @@ public class AdjustsAnchorPoint: ViewInteraction {
 
   var gestureRecognizers: [UIGestureRecognizer] = []
 
+  convenience init<S: Sequence>(gestureRecognizers: S) where S.Iterator.Element: UIGestureRecognizer {
+    self.init()
+    self.gestureRecognizers = Array(gestureRecognizers)
+  }
+
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
     let view = reactiveView.view
     var anchorPointStreams = gestureRecognizers.map {

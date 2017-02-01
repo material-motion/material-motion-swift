@@ -30,6 +30,29 @@ public class DirectlyManipulable: NSObject, ViewInteraction, UIGestureRecognizer
   public let rotatable = Rotatable()
   public let scalable = Scalable()
 
+  convenience init<S: Sequence>(gestureRecognizers: S) where S.Iterator.Element: UIGestureRecognizer {
+    self.init()
+
+    for gestureRecognizer in gestureRecognizers {
+      switch gestureRecognizer {
+      case let pan as UIPanGestureRecognizer:
+        draggable.gestureRecognizer = pan
+        break
+
+      case let rotate as UIRotationGestureRecognizer:
+        rotatable.gestureRecognizer = rotate
+        break
+
+      case let pinch as UIPinchGestureRecognizer:
+        scalable.gestureRecognizer = pinch
+        break
+
+      default:
+        ()
+      }
+    }
+  }
+
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
     let panGestureRecognizer = draggable.gestureRecognizer
     let rotationGestureRecognizer = rotatable.gestureRecognizer

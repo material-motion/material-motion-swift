@@ -20,6 +20,21 @@ public class Scalable: ViewInteraction {
 
   public lazy var gestureRecognizer = UIPinchGestureRecognizer()
 
+  convenience init<S: Sequence>(gestureRecognizers: S) where S.Iterator.Element: UIGestureRecognizer {
+    self.init()
+
+    for gestureRecognizer in gestureRecognizers {
+      switch gestureRecognizer {
+      case let pinch as UIPinchGestureRecognizer:
+        self.gestureRecognizer = pinch
+        break
+
+      default:
+        ()
+      }
+    }
+  }
+
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
     let scale = reactiveView.reactiveLayer.scale
     runtime.add(runtime.get(gestureRecognizer).scaled(from: scale), to: scale)
