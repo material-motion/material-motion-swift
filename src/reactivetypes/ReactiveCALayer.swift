@@ -74,7 +74,7 @@ public class ReactiveCALayer {
     let layer = self.layer
     return self.property(initialValue: layer.value(forKeyPath: "transform.scale") as! CGFloat,
                          write: { layer.setValue($0, forKeyPath: "transform.scale") },
-                         keyPath: "transform.scale")
+                         keyPath: "transform.scale.xy")
   }()
 
   private func property<T>(initialValue: T, write: @escaping ScopedWrite<T>, keyPath: String) -> ReactiveProperty<T> {
