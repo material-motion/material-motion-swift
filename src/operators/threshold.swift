@@ -53,17 +53,19 @@ extension MotionObservableConvertible where T: Comparable {
    */
   public func threshold<U>(min: T,
                         max: T,
-                        whenWithin within: U,
-                        whenBelow below: U,
-                        whenAbove above: U) -> MotionObservable<U> {
-    return asStream()._map {
-      if $0 < min {
-        return below
+                        whenWithin within: U?,
+                        whenBelow below: U?,
+                        whenAbove above: U?) -> MotionObservable<U> {
+    return asStream()._nextOperator { value, next in
+      if let below = below, value < min {
+        next(below)
       }
-      if $0 > max {
-        return above
+      if let above = above, value > max {
+        next(above)
       }
-      return within
+      if let within = within, value <= max, value >= min {
+        next(within)
+      }
     }
   }
 
