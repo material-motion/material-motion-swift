@@ -21,6 +21,7 @@
 		666FAA841D384A6B000363DA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666FAA831D384A6B000363DA /* AppDelegate.swift */; };
 		666FAA8B1D384A6B000363DA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 666FAA8A1D384A6B000363DA /* Assets.xcassets */; };
 		666FAA8E1D384A6B000363DA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 666FAA8C1D384A6B000363DA /* LaunchScreen.storyboard */; };
+		669F80CA1E41A20E00E46B38 /* Stickers.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 669F80C91E41A20E00E46B38 /* Stickers.xcassets */; };
 		66AA65AC1E00C37F000052A8 /* toggleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AA65AB1E00C37F000052A8 /* toggleTests.swift */; };
 		66E6F2371E3FC791003158D3 /* PhotoAlbum.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6F2361E3FC791003158D3 /* PhotoAlbum.xcassets */; };
 		C1F5E1D37D0DA71224EFC15E /* Pods_Catalog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E95CBDC1BABF9E6E385A124B /* Pods_Catalog.framework */; };
@@ -56,6 +57,7 @@
 		666FAA8F1D384A6B000363DA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		666FAA941D384A6B000363DA /* UnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		666FAA9A1D384A6B000363DA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../UnitTests/Info.plist; sourceTree = "<group>"; };
+		669F80C91E41A20E00E46B38 /* Stickers.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Stickers.xcassets; sourceTree = SOURCE_ROOT; };
 		66AA65AB1E00C37F000052A8 /* toggleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = toggleTests.swift; sourceTree = "<group>"; };
 		66E6F2361E3FC791003158D3 /* PhotoAlbum.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = PhotoAlbum.xcassets; sourceTree = SOURCE_ROOT; };
 		B05E63B8F92D94A8819B0ABB /* Pods_UnitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UnitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -159,6 +161,7 @@
 		666FAA821D384A6B000363DA /* resources */ = {
 			isa = PBXGroup;
 			children = (
+				669F80C91E41A20E00E46B38 /* Stickers.xcassets */,
 				66E6F2361E3FC791003158D3 /* PhotoAlbum.xcassets */,
 				666FAAA51D384B5B000363DA /* catalog */,
 				666FAAA41D384B52000363DA /* tests */,
@@ -303,6 +306,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				66E6F2371E3FC791003158D3 /* PhotoAlbum.xcassets in Resources */,
+				669F80CA1E41A20E00E46B38 /* Stickers.xcassets in Resources */,
 				666FAA8E1D384A6B000363DA /* LaunchScreen.storyboard in Resources */,
 				666FAA8B1D384A6B000363DA /* Assets.xcassets in Resources */,
 			);

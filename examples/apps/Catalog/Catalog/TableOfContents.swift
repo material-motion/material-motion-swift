@@ -58,6 +58,13 @@ extension SwipeExampleViewController {
   }
 }
 
+@available(iOS 9.0, *)
+extension StickerPickerExampleViewController {
+  class func catalogBreadcrumbs() -> [String] {
+    return ["Sticker picker"]
+  }
+}
+
 extension DirectlyManipulableExampleViewController {
   class func catalogBreadcrumbs() -> [String] {
     return ["Directly manipulable"]
