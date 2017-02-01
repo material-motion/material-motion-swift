@@ -23,6 +23,7 @@ import Foundation
  */
 @available(iOS 9.0, *)
 public func coreAnimation<T where T: Subtractable, T: Zeroable>(_ spring: Spring<T>, initialValue: MotionObservable<T>) -> (MotionObservable<T>) {
+  let initialVelocity = spring.initialVelocity
   return MotionObservable { observer in
     var animationKeys: [String] = []
 
@@ -56,7 +57,7 @@ public func coreAnimation<T where T: Subtractable, T: Zeroable>(_ spring: Spring
 
       let key = NSUUID().uuidString
       animationKeys.append(key)
-      observer.coreAnimation(.add(animation, key, initialVelocity: spring.initialVelocity.read()))
+      observer.coreAnimation(.add(animation, key, initialVelocity: initialVelocity.read()))
 
       CATransaction.commit()
     }, state: { _ in }, coreAnimation: { _ in })

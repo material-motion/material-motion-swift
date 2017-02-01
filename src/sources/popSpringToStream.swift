@@ -22,6 +22,7 @@ import pop
 
 /** Create a pop spring source for a CGFloat Spring plan. */
 public func pop(_ spring: Spring<CGFloat>, initialValue: MotionObservable<CGFloat>) -> (MotionObservable<CGFloat>) {
+  let initialVelocity = spring.initialVelocity
   return MotionObservable { observer in
     let animation = POPSpringAnimation()
 
@@ -35,12 +36,13 @@ public func pop(_ spring: Spring<CGFloat>, initialValue: MotionObservable<CGFloa
     }
     animation.property = popProperty
 
-    return configureSpringAnimation(animation, spring: spring, initialValue: initialValue, observer: observer)
+    return configureSpringAnimation(animation, spring: spring, initialValue: initialValue, initialVelocity: initialVelocity, observer: observer)
   }
 }
 
 /** Create a pop spring source for a CGPoint Spring plan. */
 public func pop(_ spring: Spring<CGPoint>, initialValue: MotionObservable<CGPoint>) -> (MotionObservable<CGPoint>) {
+  let initialVelocity = spring.initialVelocity
   return MotionObservable { observer in
     let animation = POPSpringAnimation()
 
@@ -56,16 +58,16 @@ public func pop(_ spring: Spring<CGPoint>, initialValue: MotionObservable<CGPoin
     }
     animation.property = popProperty
 
-    return configureSpringAnimation(animation, spring: spring, initialValue: initialValue, observer: observer)
+    return configureSpringAnimation(animation, spring: spring, initialValue: initialValue, initialVelocity: initialVelocity, observer: observer)
   }
 }
 
-private func configureSpringAnimation<T>(_ animation: POPSpringAnimation, spring: Spring<T>, initialValue: MotionObservable<T>, observer: MotionObserver<T>) -> () -> Void {
+private func configureSpringAnimation<T>(_ animation: POPSpringAnimation, spring: Spring<T>, initialValue: MotionObservable<T>, initialVelocity: MotionObservable<T>, observer: MotionObserver<T>) -> () -> Void {
   animation.dynamicsFriction = spring.friction.value
   animation.dynamicsTension = spring.tension.value
 
   animation.removedOnCompletion = false
-  if let initialVelocity = spring.initialVelocity.read() {
+  if let initialVelocity = initialVelocity.read() {
     animation.velocity = initialVelocity
   }
 
