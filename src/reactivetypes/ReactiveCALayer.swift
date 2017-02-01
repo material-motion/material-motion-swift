@@ -43,6 +43,14 @@ public class ReactiveCALayer {
                          keyPath: "position.y")
   }()
 
+  /** A property representing the layer's .bounds.size value. */
+  public lazy var size: ReactiveProperty<CGSize> = {
+    let layer = self.layer
+    return self.property(initialValue: layer.bounds.size,
+                         write: { layer.bounds.size = $0 },
+                         keyPath: "bounds.size")
+  }()
+
   /** A property representing the layer's .anchorPoint value. */
   public lazy var anchorPoint: ReactiveProperty<CGPoint> = {
     let layer = self.layer
