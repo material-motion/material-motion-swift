@@ -27,4 +27,10 @@ extension CGPoint: Subtractable {
   }
 }
 
+extension CGSize: Subtractable {
+  public static func -(left: CGSize, right: CGSize) -> CGSize {
+    return .init(width: left.width - right.width, height: left.height - right.height)
+  }
+}
+
 extension CGFloat: Subtractable {}

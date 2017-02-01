@@ -28,6 +28,12 @@ extension CGPoint: Zeroable {
   }
 }
 
+extension CGSize: Zeroable {
+  public static func zero() -> CGSize {
+    return .zero
+  }
+}
+
 extension CGFloat: Zeroable {
   public static func zero() -> CGFloat {
     return 0
