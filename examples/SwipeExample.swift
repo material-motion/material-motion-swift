@@ -51,8 +51,8 @@ class TossableStackedCard: ViewInteraction {
         .velocity(in: relativeView)
         .x()
         .threshold(min: -500, max: 500,
-                   whenWithin: TossDirection.none,
                    whenBelow: TossDirection.left,
+                   whenWithin: TossDirection.none,
                    whenAbove: TossDirection.right),
       to: tossDirection)
 

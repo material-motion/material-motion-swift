@@ -108,12 +108,12 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
 
         let centerY = reactiveForeLayer.layer.bounds.height / 2.0
         let withinStream = reactiveForeLayer.positionY.threshold(centerY,
-                                                                 whenEqual: nil,
                                                                  whenBelow: Transition.Direction.backward,
+                                                                 whenEqual: nil,
                                                                  whenAbove: .forward)
         runtime.add(velocityStream.threshold(min: -100, max: 100,
-                                             whenWithin: withinStream,
                                              whenBelow: .forward,
+                                             whenWithin: withinStream,
                                              whenAbove: .backward),
                     to: transition.direction)
       default:

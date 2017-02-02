@@ -92,8 +92,8 @@ private class PushBackTransitionDirector: TransitionDirector {
         // TODO: Allow "whenWithin" to be a stream so that we can add additional logic for "have we
         // passed the y threshold?"
         runtime.add(velocityStream.threshold(min: -100, max: 100,
-                                             whenWithin: transition.direction.value,
                                              whenBelow: .forward,
+                                             whenWithin: transition.direction.value,
                                              whenAbove: .backward),
                     to: transition.direction)
       default:
