@@ -31,12 +31,12 @@ extension MotionObservableConvertible where T == CGFloat {
     return MotionObservable { observer in
       let upstreamSubscription = self
         .threshold(min: -size, max: size,
-                   whenBelow: true, whenWithin: nil, whenAbove: true)
+                   whenBelow: true, whenWithin: nil as Bool?, whenAbove: true)
         .dedupe()
         .subscribe(next: { didLeaveSlopRegion.value = $0 }, state: { _ in }, coreAnimation: { _ in })
 
       let downstreamSubscription = self
-        .valve(openWhenTrue: didLeaveSlopRegion)
+        .valve(didLeaveSlopRegion)
         .threshold(min: -size, max: size,
                    whenBelow: onExit, whenWithin: onReturn, whenAbove: onExit)
         .dedupe()
