@@ -1,0 +1,55 @@
+/*
+ Copyright 2016-present The Material Motion Authors. All Rights Reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
+
+import UIKit
+import IndefiniteObservable
+import MaterialMotionStreams
+
+public class ArcMoveExampleViewController: UIViewController {
+
+  var runtime: MotionRuntime!
+  public override func viewDidLoad() {
+    super.viewDidLoad()
+
+    runtime = MotionRuntime(containerView: view)
+
+    view.backgroundColor = .white
+
+    var center = view.center
+    center.x -= 32
+    center.y -= 32
+
+    let square = UIView(frame: .init(x: center.x, y: center.y, width: 64, height: 64))
+    square.backgroundColor = .red
+    view.addSubview(square)
+
+    let square2 = UIView(frame: .init(x: center.x, y: center.y, width: 64, height: 64))
+    square2.backgroundColor = .green
+    view.addSubview(square2)
+
+    let circle = UIView(frame: .init(x: center.x, y: center.y, width: 64, height: 64))
+    circle.backgroundColor = .blue
+    circle.layer.cornerRadius = circle.bounds.width / 2
+    view.addSubview(circle)
+
+    runtime.add(Tap(), to: runtime.get(square.layer).position)
+
+    let path = arcMove(from: runtime.get(square.layer).position,
+                       to: runtime.get(circle.layer).position)
+    let tween = Tween<CGPoint>(duration: 0.4, path: path, system: coreAnimation)
+    runtime.add(tween, to: runtime.get(square2.layer).position)
+  }
+}

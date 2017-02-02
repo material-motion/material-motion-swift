@@ -25,6 +25,12 @@ extension DragSourceExampleViewController {
   }
 }
 
+extension ArcMoveExampleViewController {
+  class func catalogBreadcrumbs() -> [String] {
+    return ["Arc move"]
+  }
+}
+
 extension ModalDialogExampleViewController {
   class func catalogBreadcrumbs() -> [String] {
     return ["Modal dialog"]
