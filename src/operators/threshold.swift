@@ -28,17 +28,46 @@ extension MotionObservableConvertible where T: Comparable {
    - paramater delta: An optional delta on either side of the threshold.
    */
   public func threshold<U>(_ threshold: T,
-                        whenEqual equal: U,
-                        whenBelow below: U,
-                        whenAbove above: U) -> MotionObservable<U> {
-    return asStream()._map {
-      if $0 < threshold {
-        return below
+                        whenEqual equal: U?,
+                        whenBelow below: U?,
+                        whenAbove above: U?) -> MotionObservable<U> {
+    return asStream()._nextOperator { value, next in
+      if let below = below, value < threshold {
+        next(below)
       }
-      if $0 > threshold {
-        return above
+      if let above = above, value > threshold {
+        next(above)
       }
-      return equal
+      if let equal = equal {
+        next(equal)
+      }
+    }
+  }
+
+  /**
+   Emit a value based on the incoming value's position around a threshold.
+
+   - paramater min: The minimum threshold.
+   - paramater max: The maximum threshold.
+   - paramater whenWithin: The value to emit when the incoming value is within [min, max].
+   - paramater whenBelow: The value to emit when the incoming value is below min.
+   - paramater whenAbove: The value to emit when the incoming value is above max.
+   */
+  public func threshold<U>(min: T,
+                        max: T,
+                        whenWithin within: MotionObservable<U>?,
+                        whenBelow below: U?,
+                        whenAbove above: U?) -> MotionObservable<U> {
+    return asStream()._nextOperator { value, next in
+      if let below = below, value < min {
+        next(below)
+      }
+      if let above = above, value > max {
+        next(above)
+      }
+      if let within = within, let withinValue = within.asStream().read(), value <= max, value >= min {
+        next(withinValue)
+      }
     }
   }
 
@@ -56,17 +85,11 @@ extension MotionObservableConvertible where T: Comparable {
                         whenWithin within: U?,
                         whenBelow below: U?,
                         whenAbove above: U?) -> MotionObservable<U> {
-    return asStream()._nextOperator { value, next in
-      if let below = below, value < min {
-        next(below)
-      }
-      if let above = above, value > max {
-        next(above)
-      }
-      if let within = within, value <= max, value >= min {
-        next(within)
-      }
+    var observable: MotionObservable<U>? = nil
+    if let within = within {
+      observable = createProperty(withInitialValue: within).asStream()
     }
+    return threshold(min:min, max:max, whenWithin:observable, whenBelow:below, whenAbove:above)
   }
 
   /** Emits either the incoming value or the provided maxValue, whichever is smaller. */

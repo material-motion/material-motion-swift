@@ -106,10 +106,13 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
         let velocityStream = gesture.velocityOnReleaseStream().y()
         spring.add(initialVelocityStream: velocityStream)
 
-        // TODO: Allow "whenWithin" to be a stream so that we can add additional logic for "have we
-        // passed the y threshold?"
+        let centerY = reactiveForeLayer.layer.bounds.height / 2.0
+        let withinStream = reactiveForeLayer.positionY.threshold(centerY,
+                                                                 whenEqual: nil,
+                                                                 whenBelow: Transition.Direction.backward,
+                                                                 whenAbove: .forward)
         runtime.add(velocityStream.threshold(min: -100, max: 100,
-                                             whenWithin: transition.direction.value,
+                                             whenWithin: withinStream,
                                              whenBelow: .forward,
                                              whenAbove: .backward),
                     to: transition.direction)
