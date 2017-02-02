@@ -36,7 +36,7 @@ extension MotionObservableConvertible where T == CGFloat {
         .subscribe(next: { didLeaveSlopRegion.value = $0 }, state: { _ in }, coreAnimation: { _ in })
 
       let downstreamSubscription = self
-        .valve(didLeaveSlopRegion)
+        .valve(openWhenTrue: didLeaveSlopRegion)
         .threshold(min: -size, max: size,
                    whenBelow: onExit, whenWithin: onReturn, whenAbove: onExit)
         .dedupe()

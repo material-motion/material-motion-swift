@@ -24,7 +24,7 @@ extension MotionObservableConvertible {
    The upstream will be subscribed to when valveStream emits true, and the subscription terminated
    when the valveStream emits false.
    */
-  public func valve<O: MotionObservableConvertible>(_ observable: O) -> MotionObservable<T> where O.T == Bool {
+  public func valve<O: MotionObservableConvertible>(openWhenTrue observable: O) -> MotionObservable<T> where O.T == Bool {
     return MotionObservable<T> { observer in
       var valveSubscription: Subscription?
       var upstreamSubscription: Subscription?
@@ -34,7 +34,6 @@ extension MotionObservableConvertible {
                                                          state: observer.state,
                                                          coreAnimation: observer.coreAnimation)
       }
-      connectUpstream()
 
       valveSubscription = observable.asStream().subscribe(next: { value in
         let shouldOpen = value
