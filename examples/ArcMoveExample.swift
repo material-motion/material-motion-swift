@@ -21,6 +21,7 @@ import MaterialMotionStreams
 public class ArcMoveExampleViewController: UIViewController {
 
   var runtime: MotionRuntime!
+  let timeline = Timeline()
   public override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -45,11 +46,33 @@ public class ArcMoveExampleViewController: UIViewController {
     circle.layer.cornerRadius = circle.bounds.width / 2
     view.addSubview(circle)
 
-    runtime.add(Tap(), to: runtime.get(square.layer).position)
+    let slider = UISlider(frame: .init(x: 0, y: view.bounds.height - 60, width: view.bounds.width, height: 60))
+    slider.addTarget(self, action: #selector(didSlide), for: .valueChanged)
+    slider.value = 0.5
+    view.addSubview(slider)
+
+    let toggle = UIButton(type: .contactAdd)
+    toggle.addTarget(self, action: #selector(didToggle), for: .touchUpInside)
+    toggle.frame = .init(x: 0, y: 200, width: 64, height: 64)
+    view.addSubview(toggle)
+
+    runtime.add(Draggable(), to: square)
+
+    timeline.timeOffset.value = Double(slider.value) * 0.4
+    timeline.paused.value = true
 
     let path = arcMove(from: runtime.get(square.layer).position,
                        to: runtime.get(circle.layer).position)
     let tween = Tween<CGPoint>(duration: 0.4, path: path, system: coreAnimation)
+    tween.timeline = timeline
     runtime.add(tween, to: runtime.get(square2.layer).position)
+  }
+
+  func didSlide(_ slider: UISlider) {
+    timeline.timeOffset.value = TimeInterval(slider.value * 0.4)
+  }
+
+  func didToggle() {
+    timeline.paused.value = !timeline.paused.value
   }
 }

@@ -67,6 +67,13 @@ public final class Tween<T>: PropertyInteraction {
    */
   public var timingFunctions = [CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)]
 
+  /**
+   An optional timeline that may scrub this tween animation.
+
+   If provided, this tween is expected to be timed in relation to the timeline's beginTime.
+   */
+  public var timeline: Timeline?
+
   public var system: TweenToStream<T>
 
   /** Initializes a tween instance with its required properties. */
