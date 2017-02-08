@@ -28,6 +28,8 @@ public enum CoreAnimationChannelEvent {
 
   /** Any animation with the given key is expected to be removed from a layer. */
   case remove(String)
+
+  case timeline(Timeline)
 }
 public typealias CoreAnimationChannel = (CoreAnimationChannelEvent) -> Void
 

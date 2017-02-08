@@ -36,6 +36,9 @@ public func coreAnimation<T>(_ tween: Tween<T>) -> MotionObservable<T> {
       }
 
       let key = NSUUID().uuidString
+      if let timeline = tween.timeline {
+        observer.coreAnimation(.timeline(timeline))
+      }
       observer.coreAnimation(.add(animation, key, initialVelocity: nil))
       keys.append(key)
 

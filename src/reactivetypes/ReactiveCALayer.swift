@@ -92,7 +92,12 @@ public class ReactiveCALayer {
       switch event {
       case .add(let upstreamAnimation, let key, let initialVelocity):
         let animation = upstreamAnimation.copy() as! CAPropertyAnimation
-        animation.beginTime = layer.convertTime(CACurrentMediaTime(), from: nil) + animation.beginTime
+
+        if let timeline = self.timeline {
+          animation.beginTime = timeline.animationBeginTime(for: layer) + animation.beginTime
+        } else {
+          animation.beginTime = layer.convertTime(CACurrentMediaTime(), from: nil) + animation.beginTime
+        }
 
         animation.keyPath = keyPath
 
@@ -133,10 +138,15 @@ public class ReactiveCALayer {
         } else {
           layer.removeAnimation(forKey: key)
         }
+
+      case .timeline(let timeline):
+        self.timeline = timeline
+        timeline.addLayer(layer)
       }
     })
   }
   private var decomposedKeys = Set<String>()
+  private var timeline: Timeline?
 
   init(_ layer: CALayer) {
     self.layer = layer
