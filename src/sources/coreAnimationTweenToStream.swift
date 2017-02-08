@@ -20,40 +20,104 @@ import IndefiniteObservable
 /** Create a core animation tween system for a Tween plan. */
 public func coreAnimation<T>(_ tween: Tween<T>) -> MotionObservable<T> {
   return MotionObservable { observer in
-    let animation: CAPropertyAnimation
 
-    let values = tween.values
-    let timingFunctions = tween.timingFunctions
+    var keys: [String] = []
+    var subscriptions: [Subscription] = []
 
-    if values.count > 1 {
-      let keyframeAnimation = CAKeyframeAnimation()
-      keyframeAnimation.values = values
-      keyframeAnimation.keyTimes = tween.keyPositions?.map { NSNumber(value: $0) }
-      keyframeAnimation.timingFunctions = timingFunctions
-      animation = keyframeAnimation
-    } else {
-      let basicAnimation = CABasicAnimation()
-      basicAnimation.toValue = values.last
-      basicAnimation.timingFunction = timingFunctions.first
-      animation = basicAnimation
+    var emit = { (animation: CAPropertyAnimation) in
+      animation.duration = tween.duration
+
+      observer.state(.active)
+
+      CATransaction.begin()
+      CATransaction.setCompletionBlock {
+        observer.state(.atRest)
+      }
+
+      let key = NSUUID().uuidString
+      observer.coreAnimation(.add(animation, key, initialVelocity: nil))
+      keys.append(key)
+
+      CATransaction.commit()
     }
 
-    animation.duration = tween.duration
+    switch tween.mode {
+    case .values(let values):
+      let animation: CAPropertyAnimation
+      let timingFunctions = tween.timingFunctions
+      if values.count > 1 {
+        let keyframeAnimation = CAKeyframeAnimation()
+        keyframeAnimation.values = values
+        keyframeAnimation.keyTimes = tween.keyPositions?.map { NSNumber(value: $0) }
+        keyframeAnimation.timingFunctions = timingFunctions
+        animation = keyframeAnimation
+      } else {
+        let basicAnimation = CABasicAnimation()
+        basicAnimation.toValue = values.last
+        basicAnimation.timingFunction = timingFunctions.first
+        animation = basicAnimation
+      }
+      observer.next(values.last!)
 
-    observer.state(.active)
-    observer.next(values.last!)
-    CATransaction.begin()
-    CATransaction.setCompletionBlock {
-      observer.state(.atRest)
+      emit(animation)
+
+    case .path(let path):
+      subscriptions.append(path.subscribe(next: { pathValue in
+        let keyframeAnimation = CAKeyframeAnimation()
+        keyframeAnimation.path = pathValue
+        keyframeAnimation.timingFunctions = tween.timingFunctions
+
+        if let mode = tween.mode as? TweenMode<CGPoint> {
+          observer.next(pathValue.getAllPoints().last! as! T)
+        } else {
+          assertionFailure("Unsupported type \(type(of: T.self))")
+        }
+
+        emit(keyframeAnimation)
+
+      }, state: { _ in }, coreAnimation: { _ in }))
     }
-
-    let key = NSUUID().uuidString
-    observer.coreAnimation(.add(animation, key, initialVelocity: nil))
-
-    CATransaction.commit()
 
     return {
-      observer.coreAnimation(.remove(key))
+      keys.forEach { observer.coreAnimation(.remove($0)) }
+      subscriptions.forEach { $0.unsubscribe() }
     }
+  }
+}
+
+extension CGPath {
+
+  // Iterates over each registered point in the CGPath. We must use @convention notation to bridge
+  // between the swift and objective-c block APIs.
+  // Source: http://stackoverflow.com/questions/12992462/how-to-get-the-cgpoints-of-a-cgpath#36374209
+  private func forEach(body: @convention(block) (CGPathElement) -> Void) {
+    typealias Body = @convention(block) (CGPathElement) -> Void
+    let callback: @convention(c) (UnsafeMutableRawPointer, UnsafePointer<CGPathElement>) -> Void = { (info, element) in
+      let body = unsafeBitCast(info, to: Body.self)
+      body(element.pointee)
+    }
+    let unsafeBody = unsafeBitCast(body, to: UnsafeMutableRawPointer.self)
+    self.apply(info: unsafeBody, function: unsafeBitCast(callback, to: CGPathApplierFunction.self))
+  }
+
+  fileprivate func getAllPoints() -> [CGPoint] {
+    var arrayPoints: [CGPoint] = []
+    self.forEach { element in
+      switch (element.type) {
+      case .moveToPoint:
+        arrayPoints.append(element.points[0])
+      case .addLineToPoint:
+        arrayPoints.append(element.points[0])
+      case .addQuadCurveToPoint:
+        arrayPoints.append(element.points[0])
+        arrayPoints.append(element.points[1])
+      case .addCurveToPoint:
+        arrayPoints.append(element.points[0])
+        arrayPoints.append(element.points[1])
+        arrayPoints.append(element.points[2])
+      default: break
+      }
+    }
+    return arrayPoints
   }
 }

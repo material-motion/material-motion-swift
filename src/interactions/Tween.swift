@@ -16,6 +16,24 @@
 
 import Foundation
 
+public enum TweenMode<T> {
+  /**
+   An array of objects providing the value of the animation for each keyframe.
+
+   If values.count == 1 then the sole value will be treated as the toValue in a basic animation.
+
+   See CAKeyframeAnimation documentation for more details.
+   */
+  case values([T])
+
+  /**
+   A path the tween should follow.
+
+   See CAKeyframeAnimation documentation for more details.
+   */
+  case path(MotionObservable<CGPath>)
+}
+
 /** A tween describes a potential interpolation from one value to another. */
 public final class Tween<T>: PropertyInteraction {
 
@@ -25,14 +43,8 @@ public final class Tween<T>: PropertyInteraction {
   /** The delay of the animation in seconds. */
   public var delay: CFTimeInterval = 0
 
-  /**
-   An array of objects providing the value of the animation for each keyframe.
-
-   If values.count == 1 then the sole value will be treated as the toValue in a basic animation.
-
-   See CAKeyframeAnimation documentation for more details.
-   */
-  public var values: [T]
+  /** The mode defining this tween's values over time. */
+  public var mode: TweenMode<T>
 
   /**
    An optional array of double values defining the pacing of the animation. Each position
@@ -60,7 +72,14 @@ public final class Tween<T>: PropertyInteraction {
   /** Initializes a tween instance with its required properties. */
   public init(duration: CFTimeInterval, values: [T], system: @escaping TweenToStream<T>) {
     self.duration = duration
-    self.values = values
+    self.mode = .values(values)
+    self.system = system
+  }
+
+  /** Initializes a tween instance with its required properties. */
+  public init(duration: CFTimeInterval, path: MotionObservable<CGPath>, system: @escaping TweenToStream<T>) {
+    self.duration = duration
+    self.mode = .path(path)
     self.system = system
   }
 
