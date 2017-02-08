@@ -25,6 +25,7 @@ public func coreAnimation<T>(_ tween: Tween<T>) -> MotionObservable<T> {
     var subscriptions: [Subscription] = []
 
     var emit = { (animation: CAPropertyAnimation) in
+      animation.beginTime = tween.delay
       animation.duration = tween.duration
 
       observer.state(.active)
