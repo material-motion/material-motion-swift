@@ -52,9 +52,9 @@ public class Tossable: ViewInteraction {
                         initialVelocity: gesture.velocityOnReleaseStream(in: relativeView),
                         threshold: 1,
                         system: system)
-    let dragStream = gesture.translated(from: reactiveView.center, in: relativeView)
-    let tossStream = spring.stream(withInitialValue: reactiveView.center).toggled(with: dragStream)
-    runtime.add(tossStream, to: reactiveView.center)
+    let dragStream = gesture.translated(from: position, in: relativeView)
+    let tossStream = spring.stream(withInitialValue: position).toggled(with: dragStream)
+    runtime.add(tossStream, to: position)
   }
 }
 

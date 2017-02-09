@@ -25,6 +25,13 @@ extension DragSourceExampleViewController {
   }
 }
 
+@available(iOS 9.0, *)
+extension ChatHeadsExampleViewController {
+  class func catalogBreadcrumbs() -> [String] {
+    return ["Chat heads"]
+  }
+}
+
 extension ArcMoveExampleViewController {
   class func catalogBreadcrumbs() -> [String] {
     return ["Arc move"]
