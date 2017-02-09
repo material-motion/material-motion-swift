@@ -20,6 +20,7 @@ import IndefiniteObservable
 // Channels are functions that pass values down the stream.
 public typealias NextChannel<T> = (T) -> Void
 public typealias StateChannel = (MotionState) -> Void
+public typealias VisualizationChannel = (UIView) -> Void
 
 /** A Core Animation channel event. */
 public enum CoreAnimationChannelEvent {
@@ -47,7 +48,18 @@ public final class MotionObservable<T>: IndefiniteObservable<MotionObserver<T>> 
                         coreAnimation: @escaping CoreAnimationChannel) -> Subscription {
     return super.subscribe(observer: MotionObserver<T>(next: next,
                                                        state: state,
-                                                       coreAnimation: coreAnimation))
+                                                       coreAnimation: coreAnimation,
+                                                       visualization: { _ in }))
+  }
+
+  public func subscribe(next: @escaping NextChannel<T>,
+                        state: @escaping StateChannel,
+                        coreAnimation: @escaping CoreAnimationChannel,
+                        visualization: @escaping VisualizationChannel) -> Subscription {
+    return super.subscribe(observer: MotionObserver<T>(next: next,
+                                                       state: state,
+                                                       coreAnimation: coreAnimation,
+                                                       visualization: visualization))
   }
 }
 
@@ -80,15 +92,18 @@ public final class MotionObserver<T>: Observer {
 
   public init(next: @escaping NextChannel<T>,
               state: @escaping StateChannel,
-              coreAnimation: @escaping CoreAnimationChannel) {
+              coreAnimation: @escaping CoreAnimationChannel,
+              visualization: @escaping VisualizationChannel) {
     self.next = next
     self.state = state
     self.coreAnimation = coreAnimation
+    self.visualization = visualization
   }
 
   public let next: NextChannel<T>
   public let state: StateChannel
   public let coreAnimation: CoreAnimationChannel
+  public let visualization: VisualizationChannel
 }
 
 /** A MotionObservableConvertible has a canonical MotionObservable that it can return. */

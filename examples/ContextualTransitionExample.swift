@@ -112,6 +112,18 @@ public class ContextualTransitionExampleViewController: UICollectionViewControll
     updateLayout()
   }
 
+  public override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+
+    collectionView?.isScrollEnabled = false
+  }
+
+  public override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+
+    collectionView?.isScrollEnabled = true
+  }
+
   func updateLayout() {
     let layout = collectionView!.collectionViewLayout as! UICollectionViewFlowLayout
     layout.sectionInset = .init(top: 4, left: 4, bottom: 4, right: 4)
@@ -293,6 +305,14 @@ private class PushBackTransitionDirector: TransitionDirector {
         .translation(in: runtime.containerView)
         .y()
         .slop(size: 50, onExit: .backward, onReturn: .forward),
+                  to: transition.direction)
+
+      runtime.add(velocityStream
+        .y()
+        .threshold(min: -50, max: 50,
+                   whenBelow: .backward,
+                   whenWithin: nil as Transition.Direction?,
+                   whenAbove: .backward),
                   to: transition.direction)
     }
 

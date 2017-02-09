@@ -30,7 +30,7 @@ extension MotionObservableConvertible {
         return operation($0, observer.next)
       }, state: observer.state, coreAnimation: { _ in
         assertionFailure("Core animation is not supported by this operator.")
-      }).unsubscribe
+      }, visualization: observer.visualization).unsubscribe
     }
   }
 
@@ -47,7 +47,7 @@ extension MotionObservableConvertible {
         return operation($0, observer.next)
       }, state: observer.state, coreAnimation: {
         return coreAnimation($0, observer.coreAnimation)
-      }).unsubscribe
+      }, visualization: observer.visualization).unsubscribe
     }
   }
 }

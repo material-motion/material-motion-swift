@@ -88,7 +88,7 @@ public class ReactiveCALayer {
   private func property<T>(initialValue: T, write: @escaping ScopedWrite<T>, keyPath: String) -> ReactiveProperty<T> {
     let layer = self.layer
     var lastAnimationKey: String?
-    return ReactiveProperty(initialValue: initialValue, write: write, coreAnimation: { event in
+    let property = ReactiveProperty(initialValue: initialValue, write: write, coreAnimation: { event in
       switch event {
       case .add(let upstreamAnimation, let key, let initialVelocity):
         let animation = upstreamAnimation.copy() as! CAPropertyAnimation
@@ -144,6 +144,19 @@ public class ReactiveCALayer {
         timeline.addLayer(layer)
       }
     })
+
+    var lastView: UIView?
+    property.visualizer = { view, containerView in
+      if lastView != view, let lastView = lastView {
+        lastView.removeFromSuperview()
+      }
+      view.isUserInteractionEnabled = false
+      view.frame = layer.superlayer!.convert(layer.superlayer!.bounds, to: containerView.layer)
+      containerView.addSubview(view)
+      lastView = view
+    }
+
+    return property
   }
   private var decomposedKeys = Set<String>()
   private var timeline: Timeline?

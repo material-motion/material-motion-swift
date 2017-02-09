@@ -107,7 +107,10 @@ public class MotionRuntime {
       guard let strongSelf = self else { return }
       strongSelf.stateDidChange(state, for: token)
 
-    }, coreAnimation: property.coreAnimation))
+    }, coreAnimation: property.coreAnimation, visualization: { [weak self] view in
+      guard let strongSelf = self else { return }
+      property.visualize(view, in: strongSelf.containerView)
+    }))
   }
 
   /**

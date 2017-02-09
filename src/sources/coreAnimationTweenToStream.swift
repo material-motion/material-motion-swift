@@ -77,6 +77,15 @@ public func coreAnimation<T>(_ tween: Tween<T>) -> MotionObservable<T> {
           assertionFailure("Unsupported type \(type(of: T.self))")
         }
 
+        let view = UIView()
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.path = pathValue
+        shapeLayer.fillColor = nil
+        shapeLayer.strokeColor = UIColor.darkGray.cgColor
+        shapeLayer.lineDashPattern = [2, 3]
+        view.layer.addSublayer(shapeLayer)
+        observer.visualization(view)
+
         emit(keyframeAnimation)
 
       }, state: { _ in }, coreAnimation: { _ in }))
