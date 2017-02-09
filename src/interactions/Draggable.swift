@@ -16,7 +16,8 @@
 
 import Foundation
 
-public class Draggable: ViewInteraction {
+@objc(MDMDraggable)
+public class Draggable: NSObject, ViewInteraction, MDMViewInteraction {
 
   public var targetView: UIView?
   public var relativeView: UIView?
@@ -49,5 +50,9 @@ public class Draggable: ViewInteraction {
     }
     runtime.add(stream.translated(from: position, in: relativeView),
                 to: position)
+  }
+
+  public func add(to view: UIView, withRuntime runtime: MDMMotionRuntime) {
+    add(to: runtime.runtime.get(view), withRuntime: runtime.runtime)
   }
 }

@@ -35,3 +35,12 @@ public protocol TransitionDirector {
 public protocol SelfDismissingTransitionDirector: TransitionDirector {
   static func willPresent(fore: UIViewController, dismisser: ViewControllerDismisser)
 }
+
+public class SimpleTransitionDirector: NSObject, TransitionDirector {
+  required public override init() {
+    super.init()
+  }
+  public func willBeginTransition(_ transition: Transition, runtime: MotionRuntime) {
+
+  }
+}

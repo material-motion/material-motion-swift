@@ -14,25 +14,8 @@
  limitations under the License.
  */
 
-import Foundation
+#import <UIKit/UIKit.h>
 
-public protocol TransitionInteraction {
-  associatedtype ValueType
+@interface ObjectiveCExampleViewController : UIViewController
 
-  func initialValue() -> ValueType
-}
-
-public protocol ViewInteraction {
-  /** Connect all streams with the provided runtime. */
-  func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime)
-}
-
-public protocol PropertyInteraction {
-  associatedtype T
-  func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime)
-}
-
-@objc
-public protocol MDMViewInteraction: class {
-  func add(to view: UIView, withRuntime runtime: MDMMotionRuntime)
-}
+@end

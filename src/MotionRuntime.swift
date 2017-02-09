@@ -17,6 +17,19 @@
 import Foundation
 import IndefiniteObservable
 
+public class MDMMotionRuntime: NSObject {
+  let runtime: MotionRuntime
+
+  public init(containerView: UIView) {
+    self.runtime = MotionRuntime(containerView: containerView)
+  }
+
+  @objc
+  public func add(_ interaction: MDMViewInteraction, to view: UIView) {
+    interaction.add(to: view, withRuntime: self)
+  }
+}
+
 /**
  A MotionRuntime writes the output of streams to properties and observes their overall state.
  */

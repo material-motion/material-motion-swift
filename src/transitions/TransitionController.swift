@@ -64,6 +64,8 @@ public class TransitionController: NSObject {
    */
   public var directorType: TransitionDirector.Type?
 
+  @objc public var directorClass: AnyClass?
+
   public let dismisser: ViewControllerDismisser
 
   init(viewController: UIViewController) {
