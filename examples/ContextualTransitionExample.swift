@@ -22,20 +22,21 @@ let numberOfImageAssets = 10
 let numberOfPhotosInAlbum = 30
 
 struct Photo {
-  let name: String
   let image: UIImage
   let uuid: String
 
   fileprivate init(name: String) {
-    self.uuid = NSUUID().uuidString
-    self.name = name
-
     // NOTE: In a real app you should never load images from disk on the UI thread like this.
     // Instead, you should find some way to cache the thumbnails in memory and then asynchronously
     // load the full-size photos from disk/network when needed. The photo library APIs provide
     // exactly this sort of behavior (square thumbnails are accessible immediately on the UI thread
     // while the full-sized photos need to be loaded asynchronously).
-    self.image = UIImage(named: "\(self.name).jpg")!
+    self.init(image: UIImage(named: "\(name).jpg")!)
+  }
+
+  fileprivate init(image: UIImage) {
+    self.uuid = NSUUID().uuidString
+    self.image = image
   }
 }
 
@@ -46,10 +47,13 @@ class PhotoAlbum {
   init() {
     var photos: [Photo] = []
     var identifierToIndex: [String: Int] = [:]
+    let lumi = Photo(image: UIImage.animatedImageNamed("lumi-", duration: 2)!)
+    photos.append(lumi)
+    identifierToIndex[lumi.uuid] = 0
     for index in 0..<numberOfPhotosInAlbum {
       let photo = Photo(name: "image\(index % numberOfImageAssets)")
       photos.append(photo)
-      identifierToIndex[photo.uuid] = index
+      identifierToIndex[photo.uuid] = photos.count - 1
     }
     self.photos = photos
     self.identifierToIndex = identifierToIndex

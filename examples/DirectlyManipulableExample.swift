@@ -15,7 +15,6 @@
  */
 
 import UIKit
-import IndefiniteObservable
 import MaterialMotionStreams
 
 public class DirectlyManipulableExampleViewController: UIViewController {
@@ -32,15 +31,10 @@ public class DirectlyManipulableExampleViewController: UIViewController {
     var center = view.center
     center.x -= 64
     center.y -= 64
-    let square = UIView(frame: .init(x: center.x, y: center.y, width: 128, height: 128))
-    square.backgroundColor = .red
+    let square = UIImageView(frame: .init(x: center.x, y: center.y, width: 128, height: 128))
+    square.image = UIImage.animatedImageNamed("lumi-", duration: 2)!
     view.addSubview(square)
 
-    let square2 = UIView(frame: .init(x: 200, y: 200, width: 64, height: 64))
-    square2.backgroundColor = .blue
-    view.addSubview(square2)
-
     runtime.add(DirectlyManipulable(), to: square)
-    runtime.add(Draggable(), to: square2)
   }
 }

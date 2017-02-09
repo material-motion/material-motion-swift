@@ -82,8 +82,8 @@ public class DragSourceExampleViewController: UIViewController {
     center.x -= 32
     center.y -= 32
 
-    let square = UIView(frame: .init(x: center.x, y: center.y, width: 64, height: 64))
-    square.backgroundColor = .red
+    let square = UIImageView(frame: .init(x: center.x, y: center.y, width: 64, height: 64))
+    square.image = UIImage.animatedImageNamed("lumi-", duration: 2)!
     view.addSubview(square)
 
     let square2 = UIView(frame: .init(x: center.x, y: center.y, width: 64, height: 64))

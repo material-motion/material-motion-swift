@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		237F8136357F3FA9B6DFA82F /* Pods_UnitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B05E63B8F92D94A8819B0ABB /* Pods_UnitTests.framework */; };
+		6604E8C91E4CD1EF001A2FFF /* Lumi.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6604E8C81E4CD1EF001A2FFF /* Lumi.xcassets */; };
+		6604E8CD1E4CDE38001A2FFF /* lumi.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6604E8CC1E4CDE38001A2FFF /* lumi.mp4 */; };
 		66090B841E03715F00B1D598 /* PropertyObservation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66090B831E03715F00B1D598 /* PropertyObservation.swift */; };
 		66090B8A1E046CE600B1D598 /* Spring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66090B891E046CE600B1D598 /* Spring.swift */; };
 		6627FC0E1DF7B1A2003DB567 /* MotionObservableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6627FC0D1DF7B1A2003DB567 /* MotionObservableTests.swift */; };
@@ -40,6 +42,8 @@
 /* Begin PBXFileReference section */
 		151ACFA24257B9AC82434343 /* Pods-Catalog.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Catalog.debug.xcconfig"; path = "../../../Pods/Target Support Files/Pods-Catalog/Pods-Catalog.debug.xcconfig"; sourceTree = "<group>"; };
 		1ED93D5A76FA3E96C6C84FF6 /* Pods-Catalog.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Catalog.release.xcconfig"; path = "../../../Pods/Target Support Files/Pods-Catalog/Pods-Catalog.release.xcconfig"; sourceTree = "<group>"; };
+		6604E8C81E4CD1EF001A2FFF /* Lumi.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Lumi.xcassets; sourceTree = SOURCE_ROOT; };
+		6604E8CC1E4CDE38001A2FFF /* lumi.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = lumi.mp4; sourceTree = SOURCE_ROOT; };
 		66090B831E03715F00B1D598 /* PropertyObservation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyObservation.swift; sourceTree = "<group>"; };
 		66090B891E046CE600B1D598 /* Spring.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spring.swift; sourceTree = "<group>"; };
 		6627FC0D1DF7B1A2003DB567 /* MotionObservableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionObservableTests.swift; sourceTree = "<group>"; };
@@ -161,6 +165,8 @@
 		666FAA821D384A6B000363DA /* resources */ = {
 			isa = PBXGroup;
 			children = (
+				6604E8CC1E4CDE38001A2FFF /* lumi.mp4 */,
+				6604E8C81E4CD1EF001A2FFF /* Lumi.xcassets */,
 				669F80C91E41A20E00E46B38 /* Stickers.xcassets */,
 				66E6F2361E3FC791003158D3 /* PhotoAlbum.xcassets */,
 				666FAAA51D384B5B000363DA /* catalog */,
@@ -272,6 +278,7 @@
 				TargetAttributes = {
 					666FAA7F1D384A6B000363DA = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = ZGWD8QJUPK;
 						LastSwiftMigration = 0800;
 					};
 					666FAA931D384A6B000363DA = {
@@ -305,9 +312,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6604E8C91E4CD1EF001A2FFF /* Lumi.xcassets in Resources */,
 				66E6F2371E3FC791003158D3 /* PhotoAlbum.xcassets in Resources */,
 				669F80CA1E41A20E00E46B38 /* Stickers.xcassets in Resources */,
 				666FAA8E1D384A6B000363DA /* LaunchScreen.storyboard in Resources */,
+				6604E8CD1E4CDE38001A2FFF /* lumi.mp4 in Resources */,
 				666FAA8B1D384A6B000363DA /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -553,6 +562,7 @@
 			baseConfigurationReference = 151ACFA24257B9AC82434343 /* Pods-Catalog.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = ZGWD8QJUPK;
 				INFOPLIST_FILE = Catalog/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.google.Catalog;
@@ -566,6 +576,7 @@
 			baseConfigurationReference = 1ED93D5A76FA3E96C6C84FF6 /* Pods-Catalog.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = ZGWD8QJUPK;
 				INFOPLIST_FILE = Catalog/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.google.Catalog;

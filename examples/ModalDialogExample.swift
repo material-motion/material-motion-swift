@@ -17,6 +17,7 @@
 import UIKit
 import IndefiniteObservable
 import MaterialMotionStreams
+import MediaPlayer
 
 public class ModalDialogExampleViewController: UIViewController {
 
@@ -52,10 +53,22 @@ class ModalDialogViewController: UIViewController {
     fatalError("init(coder:) has not been implemented")
   }
 
+  var moviePlayer: MPMoviePlayerController!
+
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    view.backgroundColor = .blue
+    let lumiVideoPath = Bundle.main.path(forResource: "lumi", ofType: "mp4")!
+    let url = URL(fileURLWithPath: lumiVideoPath)
+    moviePlayer = MPMoviePlayerController(contentURL: url)!
+    moviePlayer.view.frame = view.bounds
+    moviePlayer.view.layer.cornerRadius = 5
+    moviePlayer.view.clipsToBounds = true
+    moviePlayer.repeatMode = .one
+    moviePlayer.controlStyle = .none
+    moviePlayer.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    view.addSubview(moviePlayer.view)
+    moviePlayer.play()
 
     view.layer.cornerRadius = 5
     view.layer.shadowColor = UIColor(white: 0, alpha: 0.4).cgColor
