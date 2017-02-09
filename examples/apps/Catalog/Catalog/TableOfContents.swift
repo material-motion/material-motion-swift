@@ -31,6 +31,12 @@ extension ArcMoveExampleViewController {
   }
 }
 
+extension CarouselExampleViewController {
+  class func catalogBreadcrumbs() -> [String] {
+    return ["Carousel"]
+  }
+}
+
 extension ModalDialogExampleViewController {
   class func catalogBreadcrumbs() -> [String] {
     return ["Modal dialog"]
