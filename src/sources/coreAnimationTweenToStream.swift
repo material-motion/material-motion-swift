@@ -25,7 +25,10 @@ public func coreAnimation<T>(_ tween: Tween<T>) -> MotionObservable<T> {
     var subscriptions: [Subscription] = []
 
     var emit = { (animation: CAPropertyAnimation) in
-      animation.duration = tween.duration
+      guard let duration = tween.duration.read() else {
+        return
+      }
+      animation.duration = CFTimeInterval(duration)
 
       observer.state(.active)
 

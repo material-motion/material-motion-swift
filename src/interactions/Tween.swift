@@ -38,7 +38,7 @@ public enum TweenMode<T> {
 public final class Tween<T>: PropertyInteraction {
 
   /** The duration of the animation in seconds. */
-  public var duration: CFTimeInterval
+  public var duration: MotionObservable<CGFloat>
 
   /** The delay of the animation in seconds. */
   public var delay: CFTimeInterval = 0
@@ -70,17 +70,25 @@ public final class Tween<T>: PropertyInteraction {
   public var system: TweenToStream<T>
 
   /** Initializes a tween instance with its required properties. */
-  public init(duration: CFTimeInterval, values: [T], system: @escaping TweenToStream<T>) {
-    self.duration = duration
+  public init<O: MotionObservableConvertible>(duration: O, values: [T], system: @escaping TweenToStream<T>) where O.T == CGFloat {
+    self.duration = duration.asStream()
     self.mode = .values(values)
     self.system = system
   }
 
+  public convenience init(duration: CFTimeInterval, values: [T], system: @escaping TweenToStream<T>) {
+    self.init(duration: createProperty(withInitialValue: CGFloat(duration)), values: values, system: system)
+  }
+
   /** Initializes a tween instance with its required properties. */
-  public init(duration: CFTimeInterval, path: MotionObservable<CGPath>, system: @escaping TweenToStream<T>) {
-    self.duration = duration
+  public init<O: MotionObservableConvertible>(duration: O, path: MotionObservable<CGPath>, system: @escaping TweenToStream<T>) where O.T == CGFloat {
+    self.duration = duration.asStream()
     self.mode = .path(path)
     self.system = system
+  }
+
+  public convenience init(duration: CFTimeInterval, path: MotionObservable<CGPath>, system: @escaping TweenToStream<T>) {
+    self.init(duration: createProperty(withInitialValue: CGFloat(duration)), path: path, system: system)
   }
 
   public func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime) {
