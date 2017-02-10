@@ -26,6 +26,10 @@ public func createProperty<T>(withInitialValue initialValue: T) -> ReactivePrope
   return ReactiveProperty(initialValue: initialValue, write: { value = $0 })
 }
 
+public func createCallback<T>(_ callback: @escaping ScopedWrite<T>) -> ReactiveProperty<T> {
+  return ReactiveProperty(write: callback)
+}
+
 /**
  A reactive property represents a subscribable, readable/writable value.
 
@@ -33,7 +37,7 @@ public func createProperty<T>(withInitialValue initialValue: T) -> ReactivePrope
  */
 public final class ReactiveProperty<T> {
   public var value: T {
-    get { return _value }
+    get { return _value! }
     set {
       _value = newValue
 
@@ -69,6 +73,12 @@ public final class ReactiveProperty<T> {
   /** Initializes a new instance with the given initial value and write function. */
   public init(initialValue: T, write: @escaping ScopedWrite<T>) {
     self._value = initialValue
+    self._write = write
+    self._coreAnimation = nil
+  }
+
+  /** Initializes a new instance with the given initial value and write function. */
+  public init(write: @escaping ScopedWrite<T>) {
     self._write = write
     self._coreAnimation = nil
   }
@@ -116,7 +126,7 @@ public final class ReactiveProperty<T> {
     }
   }
 
-  private var _value: T
+  private var _value: T?
   private let _write: ScopedWrite<T>
   private let _coreAnimation: CoreAnimationChannel?
 

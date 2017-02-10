@@ -25,6 +25,9 @@ public class StickerPickerExampleViewController: UIViewController, StickerListVi
   init() {
     super.init(nibName: nil, bundle: nil)
 
+    title = "Pick some stickers"
+
+    navigationItem.leftBarButtonItem = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
     navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTapAdd))
   }
 
@@ -43,7 +46,7 @@ public class StickerPickerExampleViewController: UIViewController, StickerListVi
 
     runtime = MotionRuntime(containerView: view)
 
-    view.backgroundColor = .white
+    view.backgroundColor = UIColor(colorLiteralRed: 0.98039215686275, green: 0.98039215686275, blue: 0.98039215686275, alpha: 1)
   }
 
   fileprivate func didPickSticker(_ sticker: Sticker) {

@@ -26,7 +26,7 @@ public class DirectlyManipulableExampleViewController: UIViewController {
 
     runtime = MotionRuntime(containerView: view)
 
-    view.backgroundColor = .white
+    view.backgroundColor = UIColor(colorLiteralRed: 0.98039215686275, green: 0.98039215686275, blue: 0.98039215686275, alpha: 1)
 
     var center = view.center
     center.x -= 64

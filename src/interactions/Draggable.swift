@@ -23,6 +23,8 @@ public class Draggable: NSObject, ViewInteraction, MDMViewInteraction {
   public var relativeView: UIView?
   public lazy var gestureRecognizer = UIPanGestureRecognizer()
 
+  public var onCompletion: ((UIPanGestureRecognizer) -> Void)?
+
   convenience init<S: Sequence>(gestureRecognizers: S) where S.Iterator.Element: UIGestureRecognizer {
     self.init()
 
@@ -50,6 +52,10 @@ public class Draggable: NSObject, ViewInteraction, MDMViewInteraction {
     }
     runtime.add(stream.translated(from: position, in: relativeView),
                 to: position)
+
+    if let onCompletion = onCompletion {
+      runtime.add(stream.onRecognitionState(.ended), to: createCallback(onCompletion))
+    }
   }
 
   public func add(to view: UIView, withRuntime runtime: MDMMotionRuntime) {

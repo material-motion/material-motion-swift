@@ -61,11 +61,12 @@ public class ArcMoveExampleViewController: UIViewController {
     timeline.timeOffset.value = Double(slider.value) * 0.4
     timeline.paused.value = true
 
-    let path = arcMove(from: runtime.get(square.layer).position,
-                       to: runtime.get(circle.layer).position)
-    let tween = Tween<CGPoint>(duration: 0.4, path: path, system: coreAnimation)
-    tween.timeline = timeline
-    runtime.add(tween, to: runtime.get(square2.layer).position)
+    let arcMove = ArcMove(duration: 0.4,
+                          from: runtime.get(square.layer).position,
+                          to: runtime.get(circle.layer).position,
+                          system: coreAnimation)
+    arcMove.timeline = timeline
+    runtime.add(arcMove, to: square2)
   }
 
   func didSlide(_ slider: UISlider) {

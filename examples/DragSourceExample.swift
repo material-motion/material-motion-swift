@@ -76,28 +76,27 @@ public class DragSourceExampleViewController: UIViewController {
 
     runtime = MotionRuntime(containerView: view)
 
-    view.backgroundColor = .white
+    view.backgroundColor = UIColor(colorLiteralRed: 0.98039215686275, green: 0.98039215686275, blue: 0.98039215686275, alpha: 1)
 
     var center = view.center
-    center.x -= 32
-    center.y -= 32
+    center.x -= 64
+    center.y -= 64
 
-    let square = UIImageView(frame: .init(x: center.x, y: center.y, width: 64, height: 64))
-    square.image = UIImage.animatedImageNamed("lumi-", duration: 2)!
-    view.addSubview(square)
+    let circle1 = UIView(frame: .init(x: center.x + 100, y: center.y - 100, width: 64, height: 64))
+    circle1.backgroundColor = .white
+    circle1.layer.cornerRadius = 32
 
-    let square2 = UIView(frame: .init(x: center.x, y: center.y, width: 64, height: 64))
-    square2.backgroundColor = .orange
-    view.addSubview(square2)
+    let circle2 = UIView(frame: .init(x: center.x + 100 + 22.62741699796952, y: center.y - 100 - 22.62741699796952, width: 64, height: 64))
+    circle2.backgroundColor = UIColor(colorLiteralRed: 1.0, green: 0.41960784313725, blue: 0.66274509803922, alpha: 1)
+    circle2.layer.cornerRadius = 32
 
-    let circle = UIView(frame: .init(x: center.x, y: center.y, width: 64, height: 64))
-    circle.backgroundColor = .blue
-    circle.layer.cornerRadius = circle.bounds.width / 2
-    view.addSubview(circle)
+    let circle3 = UIView(frame: .init(x: center.x + 100 + 22.62741699796952 * 2, y: center.y - 100 - 22.62741699796952 * 2, width: 64, height: 64))
+    circle3.backgroundColor = UIColor(colorLiteralRed: 0.84705882352941, green: 0, blue: 0.37254901960784, alpha: 0.7)
+    circle3.layer.cornerRadius = 32
 
-    let tossable = Tossable(destination: Destination(runtime.get(circle)), system: pop)
-    runtime.add(tossable, to: square)
-    runtime.add(Tap(), to: tossable)
-    runtime.add(Spring(to: tossable.destination.asProperty(), threshold: 1, system: coreAnimation), to: square2)
+    view.addSubview(circle1)
+    view.addSubview(circle2)
+    view.addSubview(circle3)
+
   }
 }
