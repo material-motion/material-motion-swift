@@ -91,6 +91,9 @@ public class ReactiveCALayer {
     return ReactiveProperty(initialValue: initialValue, write: write, coreAnimation: { event in
       switch event {
       case .add(let animation, let key, let initialVelocity):
+        let animation = animation.copy() as! CAPropertyAnimation
+        animation.beginTime = layer.convertTime(CACurrentMediaTime(), from: nil) + animation.beginTime
+
         animation.keyPath = keyPath
 
         if #available(iOS 9.0, *) {

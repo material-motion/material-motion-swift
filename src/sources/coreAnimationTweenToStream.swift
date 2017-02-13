@@ -28,6 +28,7 @@ public func coreAnimation<T>(_ tween: Tween<T>) -> MotionObservable<T> {
       guard let duration = tween.duration.read() else {
         return
       }
+      animation.beginTime = tween.delay
       animation.duration = CFTimeInterval(duration)
 
       observer.state(.active)
