@@ -41,14 +41,14 @@ public class TransitionSpring<T: Zeroable>: Spring<T>, TransitionInteraction {
     self.forwardDestination = forwardDestination
     self._initialValue = direction == .forward ? backwardDestination : forwardDestination
 
-    let destinationStream = direction.stream.destinations(back: backwardDestination,
-                                                         fore: forwardDestination)
-    let initialVelocity = createProperty(withInitialValue: T.zero() as! T)
-    super.init(to: destinationStream, initialVelocity: initialVelocity, threshold: threshold, system: system)
+    self.toggledDestination = direction.stream.destinations(back: backwardDestination,
+                                                            fore: forwardDestination)
+    super.init(threshold: threshold, system: system)
   }
 
   public override func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime) {
-    runtime.add(stream(withInitialValue: property), to: property)
+    runtime.add(toggledDestination, to: destination)
+    super.add(to: property, withRuntime: runtime)
   }
 
   public func initialValue() -> T {
@@ -56,4 +56,5 @@ public class TransitionSpring<T: Zeroable>: Spring<T>, TransitionInteraction {
   }
 
   private let _initialValue: T
+  private let toggledDestination: MotionObservable<T>
 }

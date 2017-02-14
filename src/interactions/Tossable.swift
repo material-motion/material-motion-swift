@@ -46,15 +46,17 @@ public class Tossable: ViewInteraction {
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
     let position = reactiveView.reactiveLayer.position
     let relativeView = draggable.relativeView ?? runtime.containerView
-
     let gesture = runtime.get(draggable.gestureRecognizer)
-    let spring = Spring(to: destination,
-                        initialVelocity: gesture.velocityOnReleaseStream(in: relativeView),
-                        threshold: 1,
-                        system: system)
-    let dragStream = gesture.translated(from: reactiveView.center, in: relativeView)
-    let tossStream = spring.stream(withInitialValue: reactiveView.center).toggled(with: dragStream)
-    runtime.add(tossStream, to: reactiveView.center)
+
+    runtime.add(gesture.translated(from: position, in: relativeView), to: position)
+
+    let spring = Spring(threshold: 1, system: system)
+    runtime.add(destination.asStream(), to: spring.destination)
+    runtime.add(position.asStream(), to: spring.initialValue)
+    runtime.add(gesture.velocityOnReleaseStream(in: relativeView), to: spring.initialVelocity)
+    runtime.add(spring, to: position)
+
+    runtime.add(gesture.atRest(), to: spring.enabled)
   }
 }
 

@@ -22,12 +22,23 @@ import Foundation
  Only works with Subtractable types due to use of additive animations.
  */
 @available(iOS 9.0, *)
-public func coreAnimation<T where T: Subtractable, T: Zeroable>(_ spring: Spring<T>, initialValue: MotionObservable<T>) -> (MotionObservable<T>) {
-  let initialVelocity = spring.initialVelocity
+public func coreAnimation<T where T: Subtractable, T: Zeroable, T: Equatable>(_ spring: Spring<T>) -> (MotionObservable<T>) {
+  let initialVelocityStream = spring.initialVelocity.asStream()
   return MotionObservable { observer in
     var animationKeys: [String] = []
 
-    let destinationSubscription = spring.destination.subscribe(next: { value in
+    var to: T?
+    var activeAnimations = Set<String>()
+
+    var initialVelocity: T?
+
+    let initialVelocitySubscription = initialVelocityStream.subscribe(next: {
+      initialVelocity = $0
+    }, state: { _ in }, coreAnimation: { _ in })
+
+    let checkAndEmit = {
+      guard let to = to, spring.enabled.value else { return }
+
       let animation = CASpringAnimation()
 
       animation.damping = spring.friction.value
@@ -36,8 +47,7 @@ public func coreAnimation<T where T: Subtractable, T: Zeroable>(_ spring: Spring
 
       animation.isAdditive = true
 
-      let from = initialValue.read()!
-      let to = value
+      let from = spring.initialValue.value
       let delta = from - to
       animation.fromValue = delta
       animation.toValue = T.zero()
@@ -48,15 +58,47 @@ public func coreAnimation<T where T: Subtractable, T: Zeroable>(_ spring: Spring
         animation.duration = animation.settlingDuration
       }
 
-      observer.state(.active)
-      observer.next(value)
+      if delta != T.zero() as! T {
+        observer.next(to)
 
-      let key = NSUUID().uuidString
-      animationKeys.append(key)
-      observer.coreAnimation(.add(animation, key, initialVelocity: initialVelocity.read(), completionBlock: {
-        observer.state(.atRest)
-      }))
+        let key = NSUUID().uuidString
+        activeAnimations.insert(key)
+        animationKeys.append(key)
 
+        spring.state.value = .active
+
+        observer.coreAnimation(.add(animation, key, initialVelocity: initialVelocity, completionBlock: {
+          activeAnimations.remove(key)
+          if activeAnimations.count == 0 {
+            spring.state.value = .atRest
+          }
+        }))
+
+        initialVelocity = nil
+      }
+    }
+
+    let destinationSubscription = spring.destination.asStream().subscribe(next: { value in
+      to = value
+      checkAndEmit()
+    }, state: { _ in }, coreAnimation: { _ in })
+
+    var wasDisabled = false
+    let activeSubscription = spring.enabled.asStream().dedupe().subscribe(next: { enabled in
+      if enabled {
+        if wasDisabled {
+          wasDisabled = false
+          checkAndEmit()
+        }
+      } else {
+        wasDisabled = true
+        for key in animationKeys {
+          observer.coreAnimation(.remove(key))
+        }
+        activeAnimations.removeAll()
+        animationKeys.removeAll()
+        spring.state.value = .atRest
+      }
     }, state: { _ in }, coreAnimation: { _ in })
 
     return {
@@ -64,6 +106,8 @@ public func coreAnimation<T where T: Subtractable, T: Zeroable>(_ spring: Spring
         observer.coreAnimation(.remove(key))
       }
       destinationSubscription.unsubscribe()
+      activeSubscription.unsubscribe()
+      initialVelocitySubscription.unsubscribe()
     }
   }
 }

@@ -73,14 +73,15 @@ class TossableStackedCard: ViewInteraction {
     runtime.add(gestureEnabledStream, to: drag.isEnabled)
     runtime.add(gestureEnabledStream, to: reactiveView.isUserInteractionEnabled)
 
-    let attachment = Spring(to: destination,
-                            initialVelocity: drag.velocityOnReleaseStream(in: view).x(),
-                            threshold: 1,
-                            system: pop)
+    let attachment = Spring<CGFloat>(threshold: 1, system: pop)
+    runtime.add(drag.velocityOnReleaseStream(in: view).x(), to: attachment.initialVelocity)
+    runtime.add(destination.asStream(), to: attachment.destination)
+    runtime.add(reactiveView.centerX.asStream(), to: attachment.initialValue)
 
     let draggable = drag.translated(from: reactiveView.center, in: relativeView).x()
-    runtime.add(attachment.stream(withInitialValue: reactiveView.centerX).toggled(with: draggable),
-                           to: reactiveView.centerX)
+    runtime.add(draggable, to: reactiveView.centerX)
+    runtime.add(drag.atRest(), to: attachment.enabled)
+    runtime.add(attachment, to: reactiveView.centerX)
 
     let radians = CGFloat(M_PI / 180.0 * 15.0)
     let rotationStream =
@@ -101,7 +102,8 @@ class TossableStackedCard: ViewInteraction {
           .max(1)
           .subtracted(from: 1)
           .scaled(by: rotation)
-      runtime.add(nextRotationStream.toggled(with: rotationStream), to: reactiveLayer.rotation)
+      runtime.add(nextRotationStream.valve(openWhenTrue: drag.atRest()), to: reactiveLayer.rotation)
+      runtime.add(rotationStream.valve(openWhenTrue: drag.active()), to: reactiveLayer.rotation)
     } else {
       runtime.add(rotationStream, to: reactiveLayer.rotation)
     }

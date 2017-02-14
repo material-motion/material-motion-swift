@@ -77,17 +77,18 @@ private class PushBackTransitionDirector: TransitionDirector {
       switch gestureRecognizer {
       case let pan as UIPanGestureRecognizer:
         let gesture = runtime.get(pan)
+
         let dragStream = gesture.translated(from: foreLayer.position).y().min(foreLayer.layer.bounds.height / 2)
-        movement.compose { $0.toggled(with: dragStream) }
+        runtime.add(dragStream, to: foreLayer.positionY)
 
         let scaleStream = dragStream.mapRange(rangeStart:movement.backwardDestination,
                                               rangeEnd:movement.forwardDestination,
                                               destinationStart:scale.backwardDestination,
                                               destinationEnd:scale.forwardDestination)
-        scale.compose { $0.toggled(with: scaleStream) }
+        runtime.add(scaleStream, to: runtime.get(transition.back.view.layer).scale)
 
         let velocityStream = gesture.velocityOnReleaseStream().y()
-        movement.add(initialVelocityStream: velocityStream)
+        runtime.add(velocityStream, to: movement.initialVelocity)
 
         // TODO: Allow "whenWithin" to be a stream so that we can add additional logic for "have we
         // passed the y threshold?"
@@ -96,6 +97,10 @@ private class PushBackTransitionDirector: TransitionDirector {
                                              whenWithin: transition.direction.value,
                                              whenAbove: .backward),
                     to: transition.direction)
+
+        runtime.add(gesture.atRest(), to: movement.enabled)
+        runtime.add(gesture.atRest(), to: scale.enabled)
+
       default:
         ()
       }
@@ -103,6 +108,8 @@ private class PushBackTransitionDirector: TransitionDirector {
 
     runtime.add(movement, to: foreLayer.positionY)
     runtime.add(scale, to: runtime.get(transition.back.view.layer).scale)
+
+    transition.terminateWhenAllAtRest([movement.state.asStream(), scale.state.asStream()])
   }
 
   private func spring(back: CGFloat, fore: CGFloat, threshold: CGFloat, transition: Transition) -> TransitionSpring<CGFloat> {

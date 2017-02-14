@@ -53,7 +53,8 @@ public class StickerPickerExampleViewController: UIViewController, StickerListVi
     view.addSubview(imageView)
 
     imageView.layer.transform = CATransform3DMakeScale(1.5, 1.5, 1)
-    let spring = Spring(to: CGFloat(1), threshold: 1, system: coreAnimation)
+    let spring = Spring<CGFloat>(threshold: 1, system: coreAnimation)
+    spring.destination.value = 1
     runtime.add(spring, to: runtime.get(imageView.layer).scale)
 
     runtime.add(DirectlyManipulable(targetView: imageView), to: imageView)
@@ -206,5 +207,7 @@ private class ModalTransitionDirector: TransitionDirector {
                                   threshold: 0.01,
                                   system: coreAnimation)
     runtime.add(spring, to: runtime.get(transition.fore.view.layer).opacity)
+
+    transition.terminateWhenAllAtRest([spring.state.asStream()])
   }
 }

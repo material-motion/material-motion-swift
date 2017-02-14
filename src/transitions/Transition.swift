@@ -112,7 +112,7 @@ public class Transition: NSObject {
   fileprivate var director: TransitionDirector!
   fileprivate var context: UIViewControllerContextTransitioning!
   fileprivate let dismisser: ViewControllerDismisser
-  fileprivate var stateSubscription: Subscription!
+  fileprivate var didRegisterTerminator = false
 }
 
 extension Transition: UIViewControllerAnimatedTransitioning {
@@ -170,20 +170,18 @@ extension Transition {
 
     director.willBeginTransition(self, runtime: self.runtime)
 
-    // TODO: Provide the director with gesture recognizers.
-
-    // If no motion was registered to the runtime then we terminate immediately.
-    stateSubscription = self.runtime!.state.stream.subscribe(next: { [weak self] state in
-      guard let strongSelf = self else {
-        return
-      }
-      if state == .atRest {
-        strongSelf.runtimeDidComeToRest()
-      }
-    }, state: { _ in }, coreAnimation: { _ in })
+    assert(didRegisterTerminator, "Must register terminators or transition will run forever.")
   }
 
-  fileprivate func runtimeDidComeToRest() {
+  public func terminateWhenAllAtRest(_ streams: [MotionObservable<MotionState>]) {
+    didRegisterTerminator = true
+    runtime.whenAllAtRest(streams) { [weak self] in
+      self?.terminate()
+    }
+  }
+
+  private func terminate() {
+    guard runtime != nil else { return }
     let completedInOriginalDirection = direction.value == initialDirection
 
     // UIKit container view controllers will replay their transition animation if the transition
@@ -200,7 +198,6 @@ extension Transition {
 
     runtime = nil
     director = nil
-    stateSubscription = nil
 
     delegate?.transitionDidComplete(self)
   }

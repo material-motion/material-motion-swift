@@ -97,6 +97,9 @@ public class DragSourceExampleViewController: UIViewController {
     let tossable = Tossable(destination: Destination(runtime.get(circle)), system: pop)
     runtime.add(tossable, to: square)
     runtime.add(Tap(), to: tossable)
-    runtime.add(Spring(to: tossable.destination.asProperty(), threshold: 1, system: coreAnimation), to: square2)
+
+    let spring = Spring<CGPoint>(threshold: 1, system: coreAnimation)
+    runtime.add(tossable.destination.asStream(), to: spring.destination)
+    runtime.add(spring, to: square2)
   }
 }

@@ -275,14 +275,18 @@ private class PushBackTransitionDirector: TransitionDirector {
     let movement = spring(back: contextView, fore: foreImageView, transition: transition)
     let size = spring(back: contextView.bounds.size, fore: fitSize, threshold: 1, transition: transition)
 
+    var terminalStates = [movement.state.asStream(), size.state.asStream()]
+
     let pans = transition.gestureRecognizers.filter { $0 is UIPanGestureRecognizer }.map { $0 as! UIPanGestureRecognizer }
     for pan in pans {
       let atRestStream = runtime.get(pan).atRest()
-      movement.compose { $0.valve(openWhenTrue: atRestStream) }
-      size.compose { $0.valve(openWhenTrue: atRestStream) }
+      terminalStates.append(runtime.get(pan).asMotionState())
 
       let velocityStream = runtime.get(pan).velocityOnReleaseStream()
-      movement.add(initialVelocityStream: velocityStream)
+      runtime.add(velocityStream, to: movement.initialVelocity)
+
+      runtime.add(atRestStream, to: movement.enabled)
+      runtime.add(atRestStream, to: size.enabled)
 
       runtime.add(runtime.get(pan)
         .translation(in: runtime.containerView)
@@ -298,11 +302,15 @@ private class PushBackTransitionDirector: TransitionDirector {
 
     runtime.add(Hidden(), to: foreImageView)
 
-    runtime.add(spring(back: 0, fore: 1, threshold: 0.01, transition: transition),
-                to: runtime.get(transition.fore.view.layer).opacity)
+    let opacity: TransitionSpring<CGFloat> = spring(back: 0, fore: 1, threshold: 0.01, transition: transition)
+    runtime.add(opacity, to: runtime.get(transition.fore.view.layer).opacity)
+
+    terminalStates.append(opacity.state.asStream())
+
+    transition.terminateWhenAllAtRest(terminalStates)
   }
 
-  private func spring<T where T: Subtractable, T: Zeroable>(back: T, fore: T, threshold: CGFloat, transition: Transition) -> TransitionSpring<T> {
+  private func spring<T where T: Subtractable, T: Zeroable, T: Equatable>(back: T, fore: T, threshold: CGFloat, transition: Transition) -> TransitionSpring<T> {
     let spring = TransitionSpring(back: back, fore: fore, direction: transition.direction, threshold: threshold, system: coreAnimation)
     spring.friction.value = 500
     spring.tension.value = 1000

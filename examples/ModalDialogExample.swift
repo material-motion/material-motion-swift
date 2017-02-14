@@ -81,18 +81,20 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
     let backPositionY = bounds.maxY + size.height * 3 / 4
     let forePositionY = bounds.midY
 
+    let mainThreadReactive: Bool
+    let system: SpringToStream<CGFloat>
+    if #available(iOS 9.0, *) {
+      mainThreadReactive = false
+      system = coreAnimation
+    } else {
+      mainThreadReactive = true
+      system = pop
+    }
     let spring = TransitionSpring(back: backPositionY,
                                   fore: forePositionY,
                                   direction: transition.direction,
                                   threshold: 1,
-                                  system: pop)
-    let mainThreadReactive: Bool
-    if #available(iOS 9.0, *) {
-      mainThreadReactive = false
-      spring.system = coreAnimation
-    } else {
-      mainThreadReactive = true
-    }
+                                  system: system)
 
     let reactiveForeLayer = runtime.get(transition.fore.view.layer)
 
@@ -100,11 +102,12 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
       switch gestureRecognizer {
       case let pan as UIPanGestureRecognizer:
         let gesture = runtime.get(pan)
+
         let dragStream = gesture.translated(from: reactiveForeLayer.position).y()
-        spring.compose { $0.toggled(with: dragStream) }
+        runtime.add(dragStream, to: reactiveForeLayer.positionY)
 
         let velocityStream = gesture.velocityOnReleaseStream().y()
-        spring.add(initialVelocityStream: velocityStream)
+        runtime.add(velocityStream, to: spring.initialVelocity)
 
         let centerY = reactiveForeLayer.layer.bounds.height / 2.0
         let withinStream = reactiveForeLayer.positionY.threshold(centerY,
@@ -116,6 +119,9 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
                                              whenWithin: withinStream,
                                              whenAbove: .backward),
                     to: transition.direction)
+
+        runtime.add(gesture.atRest(), to: spring.enabled)
+
       default:
         ()
       }
@@ -131,6 +137,8 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
                   destinationEnd: 0)
       runtime.add(rotation, to: reactiveForeLayer.rotation)
     }
+
+    transition.terminateWhenAllAtRest([spring.state.asStream()])
   }
 
   static func willPresent(fore: UIViewController, dismisser: ViewControllerDismisser) {

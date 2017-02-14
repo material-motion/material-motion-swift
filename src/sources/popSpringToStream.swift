@@ -21,82 +21,98 @@ import pop
 // Each specialized method is expected to read from and write to a POP vector value.
 
 /** Create a pop spring source for a CGFloat Spring plan. */
-public func pop(_ spring: Spring<CGFloat>, initialValue: MotionObservable<CGFloat>) -> (MotionObservable<CGFloat>) {
+public func pop(_ spring: Spring<CGFloat>) -> (MotionObservable<CGFloat>) {
   let initialVelocity = spring.initialVelocity
   return MotionObservable { observer in
-    let animation = POPSpringAnimation()
-
     let popProperty = POPMutableAnimatableProperty()
     popProperty.threshold = spring.threshold.value
     popProperty.readBlock = { _, toWrite in
-      toWrite![0] = initialValue.read()!
+      toWrite![0] = spring.initialValue.value
     }
     popProperty.writeBlock = { _, toRead in
       observer.next(toRead![0])
     }
-    animation.property = popProperty
-
-    return configureSpringAnimation(animation, spring: spring, initialValue: initialValue, initialVelocity: initialVelocity, observer: observer)
+    return configureSpringAnimation(popProperty, spring: spring)
   }
 }
 
 /** Create a pop spring source for a CGPoint Spring plan. */
-public func pop(_ spring: Spring<CGPoint>, initialValue: MotionObservable<CGPoint>) -> (MotionObservable<CGPoint>) {
+public func pop(_ spring: Spring<CGPoint>) -> (MotionObservable<CGPoint>) {
   let initialVelocity = spring.initialVelocity
   return MotionObservable { observer in
-    let animation = POPSpringAnimation()
-
     let popProperty = POPMutableAnimatableProperty()
     popProperty.threshold = spring.threshold.value
     popProperty.readBlock = { _, toWrite in
-      let value = initialValue.read()!
+      let value = spring.initialValue.value
       toWrite![0] = value.x
       toWrite![1] = value.y
     }
     popProperty.writeBlock = { _, toRead in
       observer.next(CGPoint(x: toRead![0], y: toRead![1]))
     }
-    animation.property = popProperty
-
-    return configureSpringAnimation(animation, spring: spring, initialValue: initialValue, initialVelocity: initialVelocity, observer: observer)
+    return configureSpringAnimation(popProperty, spring: spring)
   }
 }
 
-private func configureSpringAnimation<T>(_ animation: POPSpringAnimation, spring: Spring<T>, initialValue: MotionObservable<T>, initialVelocity: MotionObservable<T>, observer: MotionObserver<T>) -> () -> Void {
-  animation.dynamicsFriction = spring.friction.value
-  animation.dynamicsTension = spring.tension.value
+private func configureSpringAnimation<T>(_ property: POPAnimatableProperty, spring: Spring<T>) -> () -> Void {
+  var destination: T?
 
-  animation.removedOnCompletion = false
-  if let initialVelocity = initialVelocity.read() {
-    animation.velocity = initialVelocity
+  var createAnimation: () -> POPSpringAnimation = {
+    let animation = POPSpringAnimation()
+
+    animation.property = property
+    animation.dynamicsFriction = spring.friction.value
+    animation.dynamicsTension = spring.tension.value
+    animation.velocity = spring.initialVelocity.value
+
+    animation.toValue = destination
+    animation.removedOnCompletion = false
+
+    animation.animationDidStartBlock = { anim in
+      spring.state.value = .active
+    }
+    animation.completionBlock = { anim, finished in
+      spring.state.value = .atRest
+    }
+    return animation
   }
 
-  // animationDidStartBlock is invoked at the turn of the run loop, potentially leaving this stream
-  // in an at rest state even though it's effectively active. To ensure that the stream is marked
-  // active until the run loop turns we immediately send an .active state to the observer.
+  var animation: POPSpringAnimation?
 
-  observer.state(.active)
-
-  animation.animationDidStartBlock = { anim in
-    observer.state(.active)
-  }
-  animation.completionBlock = { anim, finished in
-    observer.state(.atRest)
-  }
-
-  let destinationSubscription = spring.destination.subscribe(next: { value in
-    animation.toValue = value
-    animation.isPaused = false
+  let destinationSubscription = spring.destination.asStream().subscribe(next: { value in
+    destination = value
+    animation?.toValue = destination
+    animation?.isPaused = false
   }, state: { _ in }, coreAnimation: { _ in })
-
-  assert(animation.toValue != nil, "No destination value received from destination stream.")
 
   let key = NSUUID().uuidString
   let someObject = NSObject()
-  someObject.pop_add(animation, forKey: key)
+
+  let activeSubscription = spring.enabled.asStream().dedupe().subscribe(next: { enabled in
+    if enabled {
+      if animation == nil {
+        animation = createAnimation()
+
+        // animationDidStartBlock is invoked at the turn of the run loop, potentially leaving this stream
+        // in an at rest state even though it's effectively active. To ensure that the stream is marked
+        // active until the run loop turns we immediately send an .active state to the observer.
+
+        spring.state.value = .active
+
+        someObject.pop_add(animation, forKey: key)
+      }
+
+    } else {
+      if animation != nil {
+        animation = nil
+        someObject.pop_removeAnimation(forKey: key)
+      }
+    }
+  }, state: { _ in }, coreAnimation: { _ in })
 
   return {
     someObject.pop_removeAnimation(forKey: key)
     destinationSubscription.unsubscribe()
+    activeSubscription.unsubscribe()
   }
 }
