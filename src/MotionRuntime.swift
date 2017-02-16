@@ -127,6 +127,26 @@ public class MotionRuntime {
     parent.children.append(self)
   }
 
+  public func whenAllAtRest(_ streams: [MotionObservable<MotionState>], body: @escaping () -> Void) {
+    var subscriptions: [Subscription] = []
+    var activeIndices = Set<Int>()
+    for (index, stream) in streams.enumerated() {
+      subscriptions.append(stream.dedupe().subscribe(next: { state in
+        if state == .active {
+          activeIndices.insert(index)
+
+        } else if activeIndices.contains(index) {
+          activeIndices.remove(index)
+
+          if activeIndices.count == 0 {
+            body()
+          }
+        }
+      }, state: { _ in }, coreAnimation: { _ in }))
+    }
+    self.subscriptions.append(contentsOf: subscriptions)
+  }
+
   private func stateDidChange(_ state: MotionState, for token: String) {
     if state == .active {
       activeSubscriptions.insert(token)
