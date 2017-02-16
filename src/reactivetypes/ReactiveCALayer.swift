@@ -89,12 +89,13 @@ public class ReactiveCALayer {
   private func property<T>(initialValue: T, write: @escaping ScopedWrite<T>, keyPath: String) -> ReactiveProperty<T> {
     let layer = self.layer
     var lastAnimationKey: String?
-    return ReactiveProperty(initialValue: initialValue, write: write, coreAnimation: { event in
+    return ReactiveProperty(initialValue: initialValue, write: write, coreAnimation: { [weak self] event in
+      guard let strongSelf = self else { return }
       switch event {
       case .add(let animation, let key, let initialVelocity, let completionBlock):
         let animation = animation.copy() as! CAPropertyAnimation
 
-        if layer.speed == 0, let lastTimelineState = self.lastTimelineState {
+        if layer.speed == 0, let lastTimelineState = strongSelf.lastTimelineState {
           animation.beginTime = TimeInterval(lastTimelineState.beginTime) + animation.beginTime
         } else {
           animation.beginTime = layer.convertTime(CACurrentMediaTime(), from: nil) + animation.beginTime
@@ -119,7 +120,7 @@ public class ReactiveCALayer {
             layer.add(decomposed.1, forKey: key + ".y")
             CATransaction.commit()
 
-            self.decomposedKeys.insert(key)
+            strongSelf.decomposedKeys.insert(key)
             return
           }
         }
@@ -137,18 +138,19 @@ public class ReactiveCALayer {
         if let presentationLayer = layer.presentation() {
           layer.setValue(presentationLayer.value(forKeyPath: keyPath), forKeyPath: keyPath)
         }
-        if self.decomposedKeys.contains(key) {
+        if strongSelf.decomposedKeys.contains(key) {
           layer.removeAnimation(forKey: key + ".x")
           layer.removeAnimation(forKey: key + ".y")
-          self.decomposedKeys.remove(key)
+          strongSelf.decomposedKeys.remove(key)
 
         } else {
           layer.removeAnimation(forKey: key)
         }
 
       case .timeline(let timeline):
-        self.timelineSubscription = timeline.asStream().subscribe(next: { state in
-          self.lastTimelineState = state
+        strongSelf.timelineSubscription = timeline.asStream().subscribe(next: { [weak self] state in
+          guard let strongSelf = self else { return }
+          strongSelf.lastTimelineState = state
 
           if state.paused {
             layer.speed = 0
