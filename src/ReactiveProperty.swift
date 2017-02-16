@@ -105,7 +105,6 @@ public final class ReactiveProperty<T> {
    */
   public func coreAnimation(_ event: CoreAnimationChannelEvent) {
     guard let coreAnimation = _coreAnimation else {
-      assertionFailure("This property does not support core animation.")
       return
     }
 
