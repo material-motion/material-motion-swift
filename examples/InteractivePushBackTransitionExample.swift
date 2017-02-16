@@ -15,7 +15,6 @@
  */
 
 import UIKit
-import IndefiniteObservable
 import MaterialMotionStreams
 
 @available(iOS 9.0, *)

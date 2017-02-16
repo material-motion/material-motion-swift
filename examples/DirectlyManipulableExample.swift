@@ -15,7 +15,6 @@
  */
 
 import UIKit
-import IndefiniteObservable
 import MaterialMotionStreams
 
 public class DirectlyManipulableExampleViewController: UIViewController {

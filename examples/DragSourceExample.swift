@@ -15,7 +15,6 @@
  */
 
 import UIKit
-import IndefiniteObservable
 import MaterialMotionStreams
 
 // This example demonstrates how to connect a drag source to a property on a view.
