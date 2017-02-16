@@ -30,7 +30,9 @@ public class Spring<T: Zeroable>: PropertyInteraction, ViewInteraction {
 
   public let enabled = createProperty(withInitialValue: true)
 
-  public let state = createProperty(withInitialValue: MotionState.atRest)
+  public var state: MotionObservable<MotionState> {
+    return _state.asStream()
+  }
 
   public let initialValue: ReactiveProperty<T> = createProperty()
 
@@ -63,6 +65,7 @@ public class Spring<T: Zeroable>: PropertyInteraction, ViewInteraction {
 
   fileprivate var stream: MotionObservable<T>?
   fileprivate let system: SpringToStream<T>
+  fileprivate let _state = createProperty(withInitialValue: MotionState.atRest)
 
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
     if let castedSelf = self as? Spring<CGPoint> {
@@ -78,10 +81,36 @@ public class Spring<T: Zeroable>: PropertyInteraction, ViewInteraction {
   }
 }
 
+public struct SpringShadow<T: Zeroable> {
+  public let enabled: ReactiveProperty<Bool>
+  public let state: ReactiveProperty<MotionState>
+  public let initialValue: ReactiveProperty<T>
+  public let initialVelocity: ReactiveProperty<T>
+  public let destination: ReactiveProperty<T>
+  public let tension: ReactiveProperty<CGFloat>
+  public let friction: ReactiveProperty<CGFloat>
+  public let mass: ReactiveProperty<CGFloat>
+  public let suggestedDuration: ReactiveProperty<TimeInterval>
+  public let threshold: ReactiveProperty<CGFloat>
+
+  init(of spring: Spring<T>) {
+    self.enabled = spring.enabled
+    self.state = spring._state
+    self.initialValue = spring.initialValue
+    self.initialVelocity = spring.initialVelocity
+    self.destination = spring.destination
+    self.tension = spring.tension
+    self.friction = spring.friction
+    self.mass = spring.mass
+    self.suggestedDuration = spring.suggestedDuration
+    self.threshold = spring.threshold
+  }
+}
+
 extension Spring: MotionObservableConvertible {
   public func asStream() -> MotionObservable<T> {
     if stream == nil {
-      stream = system(self).multicast()
+      stream = system(SpringShadow(of: self)).multicast()
     }
     return stream!
   }

@@ -19,4 +19,4 @@ import UIKit
 /**
  A spring-to-stream function creates a MotionObservable from a Spring and initial value stream.
  */
-public typealias SpringToStream<T: Zeroable> = (Spring<T>) -> MotionObservable<T>
+public typealias SpringToStream<T: Zeroable> = (SpringShadow<T>) -> MotionObservable<T>
