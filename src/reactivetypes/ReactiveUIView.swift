@@ -26,6 +26,11 @@ public class ReactiveUIView {
                             write: { view.isUserInteractionEnabled = $0 })
   }()
 
+  public lazy var backgroundColor: ReactiveProperty<UIColor> = {
+    let view = self.view
+    return ReactiveProperty(initialValue: view.backgroundColor!, write: { view.backgroundColor = $0 })
+  }()
+
   /** A property representing the view's .alpha value. */
   public lazy var alpha: ReactiveProperty<CGFloat> = {
     let view = self.view
