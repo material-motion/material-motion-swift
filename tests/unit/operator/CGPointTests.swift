@@ -26,19 +26,13 @@ class CGPointTests: XCTestCase {
 
     let observable = MotionObservable<CGPoint> { observer in
       observer.next(.init(x: value, y: value * 2))
-      observer.state(.active)
       return noopDisconnect
     }
 
     let valueReceived = expectation(description: "Value was received")
-    let stateReceived = expectation(description: "State was received")
     let _ = observable.x().subscribe(next: {
       if $0 == value {
         valueReceived.fulfill()
-      }
-    }, state: { state in
-      if state == .active {
-        stateReceived.fulfill()
       }
     }, coreAnimation: { _ in })
 
@@ -50,19 +44,13 @@ class CGPointTests: XCTestCase {
 
     let observable = MotionObservable<CGPoint> { observer in
       observer.next(.init(x: value, y: value * 2))
-      observer.state(.active)
       return noopDisconnect
     }
 
     let valueReceived = expectation(description: "Value was received")
-    let stateReceived = expectation(description: "State was received")
     let _ = observable.y().subscribe(next: {
       if $0 == value * 2 {
         valueReceived.fulfill()
-      }
-    }, state: { state in
-      if state == .active {
-        stateReceived.fulfill()
       }
     }, coreAnimation: { _ in })
 

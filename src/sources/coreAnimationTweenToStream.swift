@@ -85,7 +85,7 @@ public func coreAnimation<T>(_ tween: Tween<T>) -> MotionObservable<T> {
 
           emit(keyframeAnimation)
 
-        }, state: { _ in }, coreAnimation: { _ in }))
+        }, coreAnimation: { _ in }))
       }
     }
 
@@ -98,7 +98,7 @@ public func coreAnimation<T>(_ tween: Tween<T>) -> MotionObservable<T> {
         animationKeys.removeAll()
         tween.state.value = .atRest
       }
-    }, state: { _ in }, coreAnimation: { _ in })
+    }, coreAnimation: { _ in })
 
     return {
       animationKeys.forEach { observer.coreAnimation(.remove($0)) }

@@ -38,11 +38,6 @@ extension MotionObservableConvertible {
         for observer in observers {
           observer.next(value)
         }
-      }, state: { state in
-        lastState = state
-        for observer in observers {
-          observer.state(state)
-        }
       }, coreAnimation: { event in
         lastCoreAnimationEvent = event
         for observer in observers {
@@ -59,17 +54,11 @@ extension MotionObservableConvertible {
       // Add the observer to the list after subscribing so that we don't double-send.
       observers.append(observer)
 
-      if let lastState = lastState, lastState == .active {
-        observer.state(.active)
-      }
       if let lastValue = lastValue {
         observer.next(lastValue)
       }
       if let lastCoreAnimationEvent = lastCoreAnimationEvent {
         observer.coreAnimation(lastCoreAnimationEvent)
-      }
-      if let lastState = lastState, lastState == .atRest {
-        observer.state(.atRest)
       }
 
       return {

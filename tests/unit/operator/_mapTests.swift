@@ -26,22 +26,16 @@ class _mapTests: XCTestCase {
 
     let observable = MotionObservable<Int> { observer in
       observer.next(value)
-      observer.state(.active)
       return noopDisconnect
     }
 
     let valueReceived = expectation(description: "Value was received")
-    let stateReceived = expectation(description: "State was received")
     let _ = observable._map { value in
       return value * 10
 
     }.subscribe(next: {
       if $0 == value * 10 {
         valueReceived.fulfill()
-      }
-    }, state: { state in
-      if state == .active {
-        stateReceived.fulfill()
       }
     }, coreAnimation: { _ in })
 

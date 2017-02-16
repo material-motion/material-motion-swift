@@ -101,13 +101,7 @@ public class MotionRuntime {
   /** Subscribes to the stream, writes its output to the given property, and observes its state. */
   private func write<O: MotionObservableConvertible, T>(_ stream: O, to property: ReactiveProperty<T>) where O.T == T {
     let token = NSUUID().uuidString
-    subscriptions.append(stream.asStream().subscribe(next: { property.value = $0 }, state: { [weak self] state in
-      property.state(state)
-
-      guard let strongSelf = self else { return }
-      strongSelf.stateDidChange(state, for: token)
-
-    }, coreAnimation: property.coreAnimation))
+    subscriptions.append(stream.asStream().subscribe(next: { property.value = $0 }, coreAnimation: property.coreAnimation))
   }
 
   /**
@@ -142,34 +136,13 @@ public class MotionRuntime {
             body()
           }
         }
-      }, state: { _ in }, coreAnimation: { _ in }))
+      }, coreAnimation: { _ in }))
     }
     self.subscriptions.append(contentsOf: subscriptions)
-  }
-
-  private func stateDidChange(_ state: MotionState, for token: String) {
-    if state == .active {
-      activeSubscriptions.insert(token)
-    } else {
-      activeSubscriptions.remove(token)
-    }
-
-    let oldState = self.state.value
-    let newState: MotionState = activeSubscriptions.count > 0 ? .active : .atRest
-    if oldState != newState {
-      self.state.value = newState
-    }
-
-    if let parent = parent {
-      parent.stateDidChange(state, for: token)
-    }
   }
 
   private weak var parent: MotionRuntime?
   private var children: [MotionRuntime] = []
   private var subscriptions: [Subscription] = []
   private var viewInteractions: [ViewInteraction] = []
-
-  private typealias Token = String
-  private var activeSubscriptions = Set<Token>()
 }

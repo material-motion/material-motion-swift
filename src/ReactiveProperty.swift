@@ -55,13 +55,7 @@ public final class ReactiveProperty<T> {
     let stream = MotionObservable<T> { observer in
       self.observers.append(observer)
 
-      if self.state == .active {
-        observer.state(.active)
-      }
       observer.next(self.value)
-      if self.state == .atRest {
-        observer.state(.atRest)
-      }
 
       return {
         if let index = self.observers.index(where: { $0 === observer }) {
@@ -88,15 +82,6 @@ public final class ReactiveProperty<T> {
     self._value = initialValue
     self._write = write
     self._coreAnimation = coreAnimation
-  }
-
-  /** Informs all observers of the given state. */
-  public func state(_ state: MotionState) {
-    self.state = state
-
-    for observer in observers {
-      observer.state(state)
-    }
   }
 
   /**

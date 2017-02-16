@@ -29,7 +29,7 @@ public class Timeline {
       for layer in strongSelf.layers {
         strongSelf.updateTiming(for: layer)
       }
-    }, state: { _ in }, coreAnimation: { _ in }))
+    }, coreAnimation: { _ in }))
 
     subscriptions.append(timeOffset.asStream().dedupe().subscribe(next: { [weak self] offset in
       guard let strongSelf = self else { return }
@@ -37,7 +37,7 @@ public class Timeline {
       for layer in strongSelf.layers {
         strongSelf.updateTimeOffset(for: layer, timeOffset: offset)
       }
-    }, state: { _ in }, coreAnimation: { _ in }))
+    }, coreAnimation: { _ in }))
   }
   private var subscriptions: [Subscription] = []
 

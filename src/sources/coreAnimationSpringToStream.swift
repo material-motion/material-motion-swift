@@ -34,7 +34,7 @@ public func coreAnimation<T where T: Subtractable, T: Zeroable, T: Equatable>(_ 
 
     let initialVelocitySubscription = initialVelocityStream.subscribe(next: {
       initialVelocity = $0
-    }, state: { _ in }, coreAnimation: { _ in })
+    }, coreAnimation: { _ in })
 
     let checkAndEmit = {
       guard let to = to, spring.enabled.value else { return }
@@ -81,7 +81,7 @@ public func coreAnimation<T where T: Subtractable, T: Zeroable, T: Equatable>(_ 
     let destinationSubscription = spring.destination.asStream().subscribe(next: { value in
       to = value
       checkAndEmit()
-    }, state: { _ in }, coreAnimation: { _ in })
+    }, coreAnimation: { _ in })
 
     var wasDisabled = false
     let activeSubscription = spring.enabled.asStream().dedupe().subscribe(next: { enabled in
@@ -99,7 +99,7 @@ public func coreAnimation<T where T: Subtractable, T: Zeroable, T: Equatable>(_ 
         animationKeys.removeAll()
         spring.state.value = .atRest
       }
-    }, state: { _ in }, coreAnimation: { _ in })
+    }, coreAnimation: { _ in })
 
     return {
       for key in animationKeys {

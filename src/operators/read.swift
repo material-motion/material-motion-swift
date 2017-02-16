@@ -25,7 +25,7 @@ extension MotionObservableConvertible {
    */
   public func read() -> T? {
     var value: T?
-    asStream().subscribe(next: { value = $0 }, state: { _ in }, coreAnimation: { _ in })
+    asStream().subscribe(next: { value = $0 }, coreAnimation: { _ in })
     return value
   }
 }

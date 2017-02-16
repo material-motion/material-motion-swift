@@ -19,7 +19,6 @@ import IndefiniteObservable
 
 // Channels are functions that pass values down the stream.
 public typealias NextChannel<T> = (T) -> Void
-public typealias StateChannel = (MotionState) -> Void
 
 /** A Core Animation channel event. */
 public enum CoreAnimationChannelEvent {
@@ -43,11 +42,8 @@ public typealias CoreAnimationChannel = (CoreAnimationChannelEvent) -> Void
 public final class MotionObservable<T>: IndefiniteObservable<MotionObserver<T>> {
   /** Sugar for subscribing a MotionObserver. */
   public func subscribe(next: @escaping NextChannel<T>,
-                        state: @escaping StateChannel,
                         coreAnimation: @escaping CoreAnimationChannel) -> Subscription {
-    return super.subscribe(observer: MotionObserver<T>(next: next,
-                                                       state: state,
-                                                       coreAnimation: coreAnimation))
+    return super.subscribe(observer: MotionObserver<T>(next: next, coreAnimation: coreAnimation))
   }
 }
 
@@ -78,16 +74,12 @@ public enum MotionState {
 public final class MotionObserver<T>: Observer {
   public typealias Value = T
 
-  public init(next: @escaping NextChannel<T>,
-              state: @escaping StateChannel,
-              coreAnimation: @escaping CoreAnimationChannel) {
+  public init(next: @escaping NextChannel<T>, coreAnimation: @escaping CoreAnimationChannel) {
     self.next = next
-    self.state = state
     self.coreAnimation = coreAnimation
   }
 
   public let next: NextChannel<T>
-  public let state: StateChannel
   public let coreAnimation: CoreAnimationChannel
 }
 

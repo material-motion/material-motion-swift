@@ -28,7 +28,7 @@ extension MotionObservableConvertible {
     return MotionObservable<U> { observer in
       return self.asStream().subscribe(next: {
         return operation($0, observer.next)
-      }, state: observer.state, coreAnimation: { _ in
+      }, coreAnimation: { _ in
         assertionFailure("Core animation is not supported by this operator.")
       }).unsubscribe
     }
@@ -45,7 +45,7 @@ extension MotionObservableConvertible {
     return MotionObservable<U> { observer in
       return self.asStream().subscribe(next: {
         return operation($0, observer.next)
-      }, state: observer.state, coreAnimation: {
+      }, coreAnimation: {
         return coreAnimation($0, observer.coreAnimation)
       }).unsubscribe
     }

@@ -26,7 +26,7 @@ class PropertyObservation: XCTestCase {
     var observedValue: CGPoint? = nil
     let _ = property.stream.subscribe(next: { value in
       observedValue = value
-    }, state: { _ in }, coreAnimation: { _ in })
+    }, coreAnimation: { _ in })
     XCTAssertEqual(observedValue!, point)
   }
 }

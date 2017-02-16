@@ -26,19 +26,13 @@ class MotionObservableTests: XCTestCase {
 
     let observable = MotionObservable<Int> { observer in
       observer.next(value)
-      observer.state(.active)
       return noopDisconnect
     }
 
     let valueReceived = expectation(description: "Value was received")
-    let stateReceived = expectation(description: "State was received")
     let _ = observable.subscribe(next: {
       if $0 == value {
         valueReceived.fulfill()
-      }
-    }, state: { state in
-      if state == .active {
-        stateReceived.fulfill()
       }
     }, coreAnimation: { _ in })
 

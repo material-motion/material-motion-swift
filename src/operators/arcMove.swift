@@ -45,13 +45,13 @@ public func arcMove<O1: MotionObservableConvertible, O2: MotionObservableConvert
       latestFrom = fromValue
       checkAndEmit()
 
-    }, state: { _ in }, coreAnimation: { _ in })
+    }, coreAnimation: { _ in })
 
     let toSubscription = to.asStream().subscribe(next: { toValue in
       latestTo = toValue
       checkAndEmit()
 
-    }, state: { _ in }, coreAnimation: { _ in })
+    }, coreAnimation: { _ in })
 
     return {
       fromSubscription.unsubscribe()

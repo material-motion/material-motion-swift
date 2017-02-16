@@ -31,7 +31,6 @@ extension MotionObservableConvertible {
 
       var connectUpstream = {
         upstreamSubscription = self.asStream().subscribe(next: observer.next,
-                                                         state: observer.state,
                                                          coreAnimation: observer.coreAnimation)
       }
 
@@ -47,7 +46,7 @@ extension MotionObservableConvertible {
           upstreamSubscription = nil
         }
 
-      }, state: { _ in }, coreAnimation: { _ in })
+      }, coreAnimation: { _ in })
 
       return {
         valveSubscription?.unsubscribe()

@@ -83,7 +83,7 @@ private func configureSpringAnimation<T>(_ property: POPAnimatableProperty, spri
     destination = value
     animation?.toValue = destination
     animation?.isPaused = false
-  }, state: { _ in }, coreAnimation: { _ in })
+  }, coreAnimation: { _ in })
 
   let key = NSUUID().uuidString
   let someObject = NSObject()
@@ -108,7 +108,7 @@ private func configureSpringAnimation<T>(_ property: POPAnimatableProperty, spri
         someObject.pop_removeAnimation(forKey: key)
       }
     }
-  }, state: { _ in }, coreAnimation: { _ in })
+  }, coreAnimation: { _ in })
 
   return {
     someObject.pop_removeAnimation(forKey: key)
