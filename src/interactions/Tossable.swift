@@ -35,12 +35,11 @@ public class Destination: MotionObservableConvertible {
 public class Tossable: ViewInteraction {
 
   public let draggable = Draggable()
-  public var destination: Destination
-  public var system: SpringToStream<CGPoint>
+  public let spring: Spring<CGPoint>
 
   init(destination: Destination, system: @escaping SpringToStream<CGPoint>) {
     self.destination = destination
-    self.system = system
+    self.spring = Spring(threshold: 1, system: system)
   }
 
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
@@ -50,7 +49,6 @@ public class Tossable: ViewInteraction {
 
     runtime.add(gesture.translated(from: position, in: relativeView), to: position)
 
-    let spring = Spring(threshold: 1, system: system)
     runtime.add(destination.asStream(), to: spring.destination)
     runtime.add(position.asStream(), to: spring.initialValue)
     runtime.add(gesture.velocityOnReleaseStream(in: relativeView), to: spring.initialVelocity)
@@ -58,6 +56,8 @@ public class Tossable: ViewInteraction {
 
     runtime.add(gesture.atRest(), to: spring.enabled)
   }
+
+  fileprivate let destination: Destination
 }
 
 extension Destination: ReactivePropertyConvertible {
