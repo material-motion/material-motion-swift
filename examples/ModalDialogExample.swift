@@ -84,6 +84,7 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
     let spring = TransitionSpring(back: backPositionY,
                                   fore: forePositionY,
                                   direction: transition.direction,
+                                  threshold: 1,
                                   system: pop)
     let mainThreadReactive: Bool
     if #available(iOS 9.0, *) {

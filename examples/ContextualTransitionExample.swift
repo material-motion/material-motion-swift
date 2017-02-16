@@ -273,7 +273,7 @@ private class PushBackTransitionDirector: TransitionDirector {
     let fitSize = CGSize(width: fitScale * imageSize.width, height: fitScale * imageSize.height)
 
     let movement = spring(back: contextView, fore: foreImageView, transition: transition)
-    let size = spring(back: contextView.bounds.size, fore: fitSize, transition: transition)
+    let size = spring(back: contextView.bounds.size, fore: fitSize, threshold: 1, transition: transition)
 
     let pans = transition.gestureRecognizers.filter { $0 is UIPanGestureRecognizer }.map { $0 as! UIPanGestureRecognizer }
     for pan in pans {
@@ -298,12 +298,12 @@ private class PushBackTransitionDirector: TransitionDirector {
 
     runtime.add(Hidden(), to: foreImageView)
 
-    runtime.add(spring(back: 0, fore: 1, transition: transition),
+    runtime.add(spring(back: 0, fore: 1, threshold: 0.01, transition: transition),
                 to: runtime.get(transition.fore.view.layer).opacity)
   }
 
-  private func spring<T where T: Subtractable, T: Zeroable>(back: T, fore: T, transition: Transition) -> TransitionSpring<T> {
-    let spring = TransitionSpring(back: back, fore: fore, direction: transition.direction, system: coreAnimation)
+  private func spring<T where T: Subtractable, T: Zeroable>(back: T, fore: T, threshold: CGFloat, transition: Transition) -> TransitionSpring<T> {
+    let spring = TransitionSpring(back: back, fore: fore, direction: transition.direction, threshold: threshold, system: coreAnimation)
     spring.friction.value = 500
     spring.tension.value = 1000
     spring.mass.value = 3
@@ -314,7 +314,7 @@ private class PushBackTransitionDirector: TransitionDirector {
   private func spring(back: UIView, fore: UIView, transition: Transition) -> TransitionSpring<CGPoint> {
     let backPosition = back.superview!.convert(back.layer.position, to: transition.containerView())
     let forePosition = fore.superview!.convert(fore.layer.position, to: transition.containerView())
-    let spring = TransitionSpring(back: backPosition, fore: forePosition, direction: transition.direction, system: coreAnimation)
+    let spring = TransitionSpring(back: backPosition, fore: forePosition, direction: transition.direction, threshold: 1, system: coreAnimation)
     spring.friction.value = 500
     spring.tension.value = 1000
     spring.mass.value = 3

@@ -68,15 +68,16 @@ private class PushBackTransitionDirector: TransitionDirector {
   func willBeginTransition(_ transition: Transition, runtime: MotionRuntime) {
     runtime.add(spring(back: transition.containerView().bounds.height + transition.fore.view.layer.bounds.height / 2,
                        fore: transition.containerView().bounds.midY,
+                       threshold: 1,
                        transition: transition),
                 to: runtime.get(transition.fore.view.layer).positionY)
 
-    runtime.add(spring(back: 1, fore: 0.95, transition: transition),
+    runtime.add(spring(back: 1, fore: 0.95, threshold: 0.005, transition: transition),
                 to: runtime.get(transition.back.view.layer).scale)
   }
 
-  private func spring(back: CGFloat, fore: CGFloat, transition: Transition) -> TransitionSpring<CGFloat> {
-    let spring = TransitionSpring(back: back, fore: fore, direction: transition.direction, system: coreAnimation)
+  private func spring(back: CGFloat, fore: CGFloat, threshold: CGFloat, transition: Transition) -> TransitionSpring<CGFloat> {
+    let spring = TransitionSpring(back: back, fore: fore, direction: transition.direction, threshold: threshold, system: coreAnimation)
     spring.friction.value = 500
     spring.tension.value = 1000
     spring.mass.value = 3

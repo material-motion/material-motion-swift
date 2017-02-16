@@ -203,6 +203,8 @@ private class ModalTransitionDirector: TransitionDirector {
     let spring = TransitionSpring(back: CGFloat(0),
                                   fore: CGFloat(1),
                                   direction: transition.direction,
+                                  threshold: 0.01,
                                   system: coreAnimation)
-    runtime.add(spring, to: runtime.get(transition.fore.view.layer).opacity)  }
+    runtime.add(spring, to: runtime.get(transition.fore.view.layer).opacity)
+  }
 }

@@ -35,6 +35,7 @@ public class TransitionSpring<T: Zeroable>: Spring<T>, TransitionInteraction {
   public init(back backwardDestination: T,
               fore forwardDestination: T,
               direction: ReactiveProperty<Transition.Direction>,
+              threshold: CGFloat,
               system: @escaping SpringToStream<T>) {
     self.backwardDestination = backwardDestination
     self.forwardDestination = forwardDestination
@@ -43,7 +44,7 @@ public class TransitionSpring<T: Zeroable>: Spring<T>, TransitionInteraction {
     let destinationStream = direction.stream.destinations(back: backwardDestination,
                                                          fore: forwardDestination)
     let initialVelocity = createProperty(withInitialValue: T.zero() as! T)
-    super.init(to: destinationStream, initialVelocity: initialVelocity, threshold: 1, system: system)
+    super.init(to: destinationStream, initialVelocity: initialVelocity, threshold: threshold, system: system)
   }
 
   public override func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime) {
