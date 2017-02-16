@@ -90,7 +90,7 @@ public class ReactiveCALayer {
     var lastAnimationKey: String?
     return ReactiveProperty(initialValue: initialValue, write: write, coreAnimation: { event in
       switch event {
-      case .add(let animation, let key, let initialVelocity):
+      case .add(let animation, let key, let initialVelocity, let completionBlock):
         let animation = animation.copy() as! CAPropertyAnimation
 
         if let timeline = self.timeline {
@@ -112,8 +112,11 @@ public class ReactiveCALayer {
                                        delta: delta,
                                        initialVelocity: initialVelocity)
 
+            CATransaction.begin()
+            CATransaction.setCompletionBlock(completionBlock)
             layer.add(decomposed.0, forKey: key + ".x")
             layer.add(decomposed.1, forKey: key + ".y")
+            CATransaction.commit()
 
             self.decomposedKeys.insert(key)
             return
@@ -124,7 +127,10 @@ public class ReactiveCALayer {
           applyInitialVelocity(initialVelocity, to: animation)
         }
 
+        CATransaction.begin()
+        CATransaction.setCompletionBlock(completionBlock)
         layer.add(animation, forKey: key)
+        CATransaction.commit()
 
       case .remove(let key):
         if let presentationLayer = layer.presentation() {

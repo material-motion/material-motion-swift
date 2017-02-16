@@ -33,19 +33,14 @@ public func coreAnimation<T>(_ tween: Tween<T>) -> MotionObservable<T> {
 
       observer.state(.active)
 
-      CATransaction.begin()
-      CATransaction.setCompletionBlock {
-        observer.state(.atRest)
-      }
-
       let key = NSUUID().uuidString
       if let timeline = tween.timeline {
         observer.coreAnimation(.timeline(timeline))
       }
-      observer.coreAnimation(.add(animation, key, initialVelocity: nil))
+      observer.coreAnimation(.add(animation, key, initialVelocity: nil, completionBlock: {
+        observer.state(.atRest)
+      }))
       keys.append(key)
-
-      CATransaction.commit()
     }
 
     switch tween.mode {

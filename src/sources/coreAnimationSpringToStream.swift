@@ -50,16 +50,13 @@ public func coreAnimation<T where T: Subtractable, T: Zeroable>(_ spring: Spring
 
       observer.state(.active)
       observer.next(value)
-      CATransaction.begin()
-      CATransaction.setCompletionBlock {
-        observer.state(.atRest)
-      }
 
       let key = NSUUID().uuidString
       animationKeys.append(key)
-      observer.coreAnimation(.add(animation, key, initialVelocity: initialVelocity.read()))
+      observer.coreAnimation(.add(animation, key, initialVelocity: initialVelocity.read(), completionBlock: {
+        observer.state(.atRest)
+      }))
 
-      CATransaction.commit()
     }, state: { _ in }, coreAnimation: { _ in })
 
     return {
