@@ -21,6 +21,12 @@ import IndefiniteObservable
 public typealias ScopedWrite<T> = (T) -> Void
 
 /** Creates a property with a given initial value. */
+public func createProperty<T: Zeroable>() -> ReactiveProperty<T> {
+  var value = T.zero() as! T
+  return ReactiveProperty(initialValue: value, write: { value = $0 })
+}
+
+/** Creates a property with a given initial value. */
 public func createProperty<T>(withInitialValue initialValue: T) -> ReactiveProperty<T> {
   var value = initialValue
   return ReactiveProperty(initialValue: initialValue, write: { value = $0 })
