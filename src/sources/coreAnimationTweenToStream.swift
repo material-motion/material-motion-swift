@@ -21,8 +21,9 @@ import IndefiniteObservable
 public func coreAnimation<T>(_ tween: Tween<T>) -> MotionObservable<T> {
   return MotionObservable { observer in
 
-    var keys: [String] = []
+    var animationKeys: [String] = []
     var subscriptions: [Subscription] = []
+    var activeAnimations = Set<String>()
 
     var emit = { (animation: CAPropertyAnimation) in
       guard let duration = tween.duration.read() else {
@@ -31,58 +32,78 @@ public func coreAnimation<T>(_ tween: Tween<T>) -> MotionObservable<T> {
       animation.beginTime = tween.delay
       animation.duration = CFTimeInterval(duration)
 
-      observer.state(.active)
-
       let key = NSUUID().uuidString
+      activeAnimations.insert(key)
+      animationKeys.append(key)
+
+      tween.state.value = .active
+
       if let timeline = tween.timeline {
         observer.coreAnimation(.timeline(timeline))
       }
       observer.coreAnimation(.add(animation, key, initialVelocity: nil, completionBlock: {
-        observer.state(.atRest)
-      }))
-      keys.append(key)
-    }
-
-    switch tween.mode {
-    case .values(let values):
-      let animation: CAPropertyAnimation
-      let timingFunctions = tween.timingFunctions
-      if values.count > 1 {
-        let keyframeAnimation = CAKeyframeAnimation()
-        keyframeAnimation.values = values
-        keyframeAnimation.keyTimes = tween.keyPositions?.map { NSNumber(value: $0) }
-        keyframeAnimation.timingFunctions = timingFunctions
-        animation = keyframeAnimation
-      } else {
-        let basicAnimation = CABasicAnimation()
-        basicAnimation.toValue = values.last
-        basicAnimation.timingFunction = timingFunctions.first
-        animation = basicAnimation
-      }
-      observer.next(values.last!)
-
-      emit(animation)
-
-    case .path(let path):
-      subscriptions.append(path.subscribe(next: { pathValue in
-        let keyframeAnimation = CAKeyframeAnimation()
-        keyframeAnimation.path = pathValue
-        keyframeAnimation.timingFunctions = tween.timingFunctions
-
-        if let mode = tween.mode as? TweenMode<CGPoint> {
-          observer.next(pathValue.getAllPoints().last! as! T)
-        } else {
-          assertionFailure("Unsupported type \(type(of: T.self))")
+        activeAnimations.remove(key)
+        if activeAnimations.count == 0 {
+          tween.state.value = .atRest
         }
-
-        emit(keyframeAnimation)
-
-      }, state: { _ in }, coreAnimation: { _ in }))
+      }))
+      animationKeys.append(key)
     }
+
+    var checkAndEmit = {
+      switch tween.mode {
+      case .values(let values):
+        let animation: CAPropertyAnimation
+        let timingFunctions = tween.timingFunctions
+        if values.count > 1 {
+          let keyframeAnimation = CAKeyframeAnimation()
+          keyframeAnimation.values = values
+          keyframeAnimation.keyTimes = tween.keyPositions?.map { NSNumber(value: $0) }
+          keyframeAnimation.timingFunctions = timingFunctions
+          animation = keyframeAnimation
+        } else {
+          let basicAnimation = CABasicAnimation()
+          basicAnimation.toValue = values.last
+          basicAnimation.timingFunction = timingFunctions.first
+          animation = basicAnimation
+        }
+        observer.next(values.last!)
+
+        emit(animation)
+
+      case .path(let path):
+        subscriptions.append(path.subscribe(next: { pathValue in
+          let keyframeAnimation = CAKeyframeAnimation()
+          keyframeAnimation.path = pathValue
+          keyframeAnimation.timingFunctions = tween.timingFunctions
+
+          if let mode = tween.mode as? TweenMode<CGPoint> {
+            observer.next(pathValue.getAllPoints().last! as! T)
+          } else {
+            assertionFailure("Unsupported type \(type(of: T.self))")
+          }
+
+          emit(keyframeAnimation)
+
+        }, state: { _ in }, coreAnimation: { _ in }))
+      }
+    }
+
+    let activeSubscription = tween.enabled.dedupe().subscribe(next: { enabled in
+      if enabled {
+        checkAndEmit()
+      } else {
+        animationKeys.forEach { observer.coreAnimation(.remove($0)) }
+        activeAnimations.removeAll()
+        animationKeys.removeAll()
+        tween.state.value = .atRest
+      }
+    }, state: { _ in }, coreAnimation: { _ in })
 
     return {
-      keys.forEach { observer.coreAnimation(.remove($0)) }
+      animationKeys.forEach { observer.coreAnimation(.remove($0)) }
       subscriptions.forEach { $0.unsubscribe() }
+      activeSubscription.unsubscribe()
     }
   }
 }

@@ -44,7 +44,7 @@ public final class Tween<T>: PropertyInteraction {
   public var delay: CFTimeInterval = 0
 
   /** The mode defining this tween's values over time. */
-  public var mode: TweenMode<T>
+  public let mode: TweenMode<T>
 
   /**
    An optional array of double values defining the pacing of the animation. Each position
@@ -73,6 +73,10 @@ public final class Tween<T>: PropertyInteraction {
    If provided, this tween is expected to be timed in relation to the timeline's beginTime.
    */
   public var timeline: Timeline?
+
+  public let enabled = createProperty(withInitialValue: true)
+
+  public let state = createProperty(withInitialValue: MotionState.atRest)
 
   public var system: TweenToStream<T>
 
