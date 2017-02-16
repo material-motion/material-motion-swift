@@ -9,6 +9,7 @@
   ],
   "arcanist_configuration": "HookConphig",
   "phabricator.uri": "http://codereview.cc/",
+  "repository.callsign": "REACTIVEMOTIONSWIFT",
   "arc.land.onto.default": "develop",
   "arc.feature.start.default": "origin/develop",
   "unit.xcode": {
