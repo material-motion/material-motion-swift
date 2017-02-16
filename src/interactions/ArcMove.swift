@@ -21,11 +21,11 @@ public class ArcMove: ViewInteraction {
   public var duration: TimeInterval
   public var from: MotionObservable<CGPoint>
   public var to: MotionObservable<CGPoint>
-  public var system: TweenToStream<CGPoint>
+  public var system: PathTweenToStream<CGPoint>
 
   public var timeline: Timeline?
 
-  init<O1: MotionObservableConvertible, O2: MotionObservableConvertible>(duration: TimeInterval, from: O1, to: O2, system: @escaping TweenToStream<CGPoint>) where O1.T == CGPoint, O2.T == CGPoint {
+  init<O1: MotionObservableConvertible, O2: MotionObservableConvertible>(duration: TimeInterval, from: O1, to: O2, system: @escaping PathTweenToStream<CGPoint>) where O1.T == CGPoint, O2.T == CGPoint {
     self.duration = duration
     self.from = from.asStream()
     self.to = to.asStream()
@@ -34,7 +34,7 @@ public class ArcMove: ViewInteraction {
 
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
     let path = arcMove(from: from, to: to)
-    let tween = Tween<CGPoint>(duration: duration, path: path, system: system)
+    let tween = PathTween(duration: duration, path: path, system: system)
     tween.timeline = timeline
     runtime.add(tween, to: reactiveView.reactiveLayer.position)
   }

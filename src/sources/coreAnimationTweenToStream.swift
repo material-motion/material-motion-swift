@@ -25,7 +25,23 @@ public func coreAnimation<T>(_ tween: Tween<T>) -> MotionObservable<T> {
     var subscriptions: [Subscription] = []
     var activeAnimations = Set<String>()
 
-    var emit = { (animation: CAPropertyAnimation) in
+    var checkAndEmit = {
+      let animation: CAPropertyAnimation
+      let timingFunctions = tween.timingFunctions
+      if tween.values.count > 1 {
+        let keyframeAnimation = CAKeyframeAnimation()
+        keyframeAnimation.values = tween.values
+        keyframeAnimation.keyTimes = tween.keyPositions?.map { NSNumber(value: $0) }
+        keyframeAnimation.timingFunctions = timingFunctions
+        animation = keyframeAnimation
+      } else {
+        let basicAnimation = CABasicAnimation()
+        basicAnimation.toValue = tween.values.last
+        basicAnimation.timingFunction = timingFunctions.first
+        animation = basicAnimation
+      }
+      observer.next(tween.values.last!)
+
       guard let duration = tween.duration.read() else {
         return
       }
@@ -50,45 +66,6 @@ public func coreAnimation<T>(_ tween: Tween<T>) -> MotionObservable<T> {
       animationKeys.append(key)
     }
 
-    var checkAndEmit = {
-      switch tween.mode {
-      case .values(let values):
-        let animation: CAPropertyAnimation
-        let timingFunctions = tween.timingFunctions
-        if values.count > 1 {
-          let keyframeAnimation = CAKeyframeAnimation()
-          keyframeAnimation.values = values
-          keyframeAnimation.keyTimes = tween.keyPositions?.map { NSNumber(value: $0) }
-          keyframeAnimation.timingFunctions = timingFunctions
-          animation = keyframeAnimation
-        } else {
-          let basicAnimation = CABasicAnimation()
-          basicAnimation.toValue = values.last
-          basicAnimation.timingFunction = timingFunctions.first
-          animation = basicAnimation
-        }
-        observer.next(values.last!)
-
-        emit(animation)
-
-      case .path(let path):
-        subscriptions.append(path.subscribe(next: { pathValue in
-          let keyframeAnimation = CAKeyframeAnimation()
-          keyframeAnimation.path = pathValue
-          keyframeAnimation.timingFunctions = tween.timingFunctions
-
-          if let mode = tween.mode as? TweenMode<CGPoint> {
-            observer.next(pathValue.getAllPoints().last! as! T)
-          } else {
-            assertionFailure("Unsupported type \(type(of: T.self))")
-          }
-
-          emit(keyframeAnimation)
-
-        }, coreAnimation: { _ in }))
-      }
-    }
-
     let activeSubscription = tween.enabled.dedupe().subscribe(next: { enabled in
       if enabled {
         checkAndEmit()
@@ -105,42 +82,5 @@ public func coreAnimation<T>(_ tween: Tween<T>) -> MotionObservable<T> {
       subscriptions.forEach { $0.unsubscribe() }
       activeSubscription.unsubscribe()
     }
-  }
-}
-
-extension CGPath {
-
-  // Iterates over each registered point in the CGPath. We must use @convention notation to bridge
-  // between the swift and objective-c block APIs.
-  // Source: http://stackoverflow.com/questions/12992462/how-to-get-the-cgpoints-of-a-cgpath#36374209
-  private func forEach(body: @convention(block) (CGPathElement) -> Void) {
-    typealias Body = @convention(block) (CGPathElement) -> Void
-    let callback: @convention(c) (UnsafeMutableRawPointer, UnsafePointer<CGPathElement>) -> Void = { (info, element) in
-      let body = unsafeBitCast(info, to: Body.self)
-      body(element.pointee)
-    }
-    let unsafeBody = unsafeBitCast(body, to: UnsafeMutableRawPointer.self)
-    self.apply(info: unsafeBody, function: unsafeBitCast(callback, to: CGPathApplierFunction.self))
-  }
-
-  fileprivate func getAllPoints() -> [CGPoint] {
-    var arrayPoints: [CGPoint] = []
-    self.forEach { element in
-      switch (element.type) {
-      case .moveToPoint:
-        arrayPoints.append(element.points[0])
-      case .addLineToPoint:
-        arrayPoints.append(element.points[0])
-      case .addQuadCurveToPoint:
-        arrayPoints.append(element.points[0])
-        arrayPoints.append(element.points[1])
-      case .addCurveToPoint:
-        arrayPoints.append(element.points[0])
-        arrayPoints.append(element.points[1])
-        arrayPoints.append(element.points[2])
-      default: break
-      }
-    }
-    return arrayPoints
   }
 }

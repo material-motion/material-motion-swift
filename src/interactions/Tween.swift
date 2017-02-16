@@ -16,24 +16,6 @@
 
 import Foundation
 
-public enum TweenMode<T> {
-  /**
-   An array of objects providing the value of the animation for each keyframe.
-
-   If values.count == 1 then the sole value will be treated as the toValue in a basic animation.
-
-   See CAKeyframeAnimation documentation for more details.
-   */
-  case values([T])
-
-  /**
-   A path the tween should follow.
-
-   See CAKeyframeAnimation documentation for more details.
-   */
-  case path(MotionObservable<CGPath>)
-}
-
 /** A tween describes a potential interpolation from one value to another. */
 public final class Tween<T>: PropertyInteraction {
 
@@ -43,8 +25,14 @@ public final class Tween<T>: PropertyInteraction {
   /** The delay of the animation in seconds. */
   public var delay: CFTimeInterval = 0
 
-  /** The mode defining this tween's values over time. */
-  public let mode: TweenMode<T>
+  /**
+   An array of objects providing the value of the animation for each keyframe.
+
+   If values.count == 1 then the sole value will be treated as the toValue in a basic animation.
+
+   See CAKeyframeAnimation documentation for more details.
+   */
+  public let values: [T]
 
   /**
    An optional array of double values defining the pacing of the animation. Each position
@@ -83,23 +71,12 @@ public final class Tween<T>: PropertyInteraction {
   /** Initializes a tween instance with its required properties. */
   public init<O: MotionObservableConvertible>(duration: O, values: [T], system: @escaping TweenToStream<T>) where O.T == CGFloat {
     self.duration = duration.asStream()
-    self.mode = .values(values)
+    self.values = values
     self.system = system
   }
 
   public convenience init(duration: CFTimeInterval, values: [T], system: @escaping TweenToStream<T>) {
     self.init(duration: createProperty(withInitialValue: CGFloat(duration)), values: values, system: system)
-  }
-
-  /** Initializes a tween instance with its required properties. */
-  public init<O: MotionObservableConvertible>(duration: O, path: MotionObservable<CGPath>, system: @escaping TweenToStream<T>) where O.T == CGFloat {
-    self.duration = duration.asStream()
-    self.mode = .path(path)
-    self.system = system
-  }
-
-  public convenience init(duration: CFTimeInterval, path: MotionObservable<CGPath>, system: @escaping TweenToStream<T>) {
-    self.init(duration: createProperty(withInitialValue: CGFloat(duration)), path: path, system: system)
   }
 
   public func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime) {

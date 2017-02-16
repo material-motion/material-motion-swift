@@ -18,3 +18,5 @@ import UIKit
 
 /** A tween-to-stream function creates a MotionObservable from a Tween. */
 public typealias TweenToStream<T> = (Tween<T>) -> MotionObservable<T>
+
+public typealias PathTweenToStream<T> = (PathTween) -> MotionObservable<CGPoint>
