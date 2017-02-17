@@ -18,72 +18,69 @@ import Foundation
 import IndefiniteObservable
 import UIKit
 
-/** A timeline makes it possible to pause and scrub animations. */
-public class Timeline {
-  public var paused = createProperty(withInitialValue: false)
-  public let timeOffset = createProperty(withInitialValue: TimeInterval(0))
+/** A timeline makes it possible to pause and scrub interactions. */
+public final class Timeline {
 
-  public init() {
-    subscriptions.append(paused.asStream().dedupe().subscribe(next: { [weak self] offset in
-      guard let strongSelf = self else { return }
-      for layer in strongSelf.layers {
-        strongSelf.updateTiming(for: layer)
+  /**
+   When a timeline is paused, the timeOffset value should be used to interpolate an interaction to
+   that specific time offset in relation to the timeline's beginTime.
+
+   Unpausing a timeline should allow all associated interactions to continue progressing in time on
+   their own, starting from timeOffset.
+   */
+  public let paused = createProperty(withInitialValue: false)
+
+  /**
+   The starting time for all interactions associated with this timeline.
+   */
+  public let beginTime = CGFloat(CACurrentMediaTime())
+
+  /**
+   The time offset that all paused interactions are expected to be locked to.
+
+   Only affects associated interactions if the timeline is paused.
+   */
+  public let timeOffset = createProperty(withInitialValue: CGFloat(0))
+}
+
+extension Timeline: MotionObservableConvertible {
+  /** A momentary snapshot of a timeline's state to be emitted down the timeline's stream. */
+  public struct Snapshot {
+
+    /** Whether or not the timeline is paused. */
+    public let paused: Bool
+
+    /**
+     The timeline's beginTime.
+
+     All interactions are expected to be timed relative to this time.
+     */
+    public let beginTime: CGFloat
+
+    /** The timeline's offset in relation to its beginTime. */
+    public let timeOffset: CGFloat
+  }
+
+  /** Returns a stream representation of the Timeline. */
+  public func asStream() -> MotionObservable<Snapshot> {
+    return MotionObservable { observer in
+      var paused = self.paused.value
+      var timeOffset = self.timeOffset.value
+
+      let pauseSubscription = self.paused.dedupe().subscribe(next: {
+        paused = $0
+        observer.next(Snapshot(paused: paused, beginTime: self.beginTime, timeOffset: timeOffset))
+      }, coreAnimation: { _ in })
+
+      let timeOffsetSubscription = self.timeOffset.dedupe().subscribe(next: {
+        timeOffset = $0
+        observer.next(Snapshot(paused: paused, beginTime: self.beginTime, timeOffset: timeOffset))
+      }, coreAnimation: { _ in })
+
+      return {
+        pauseSubscription.unsubscribe()
+        timeOffsetSubscription.unsubscribe()
       }
-    }, coreAnimation: { _ in }))
-
-    subscriptions.append(timeOffset.asStream().dedupe().subscribe(next: { [weak self] offset in
-      guard let strongSelf = self else { return }
-      guard strongSelf.paused.value else { return }
-      for layer in strongSelf.layers {
-        strongSelf.updateTimeOffset(for: layer, timeOffset: offset)
-      }
-    }, coreAnimation: { _ in }))
-  }
-  private var subscriptions: [Subscription] = []
-
-  let beginTime = CACurrentMediaTime()
-
-  func addLayer(_ layer: CALayer) {
-    if layers.contains(layer) { return } // No need to reconfigure
-
-    layers.insert(layer)
-    updateTiming(for: layer)
-  }
-  private var layers = Set<CALayer>()
-
-  func animationBeginTime(for layer: CALayer) -> TimeInterval {
-    let beginTime: TimeInterval
-    if layer.speed == 0 {
-      beginTime = self.beginTime
-    } else {
-      beginTime = layer.convertTime(CACurrentMediaTime(), from: nil)
     }
-    return beginTime
-  }
-
-  private func updateTiming(for layer: CALayer) {
-    if paused.value {
-      pause(layer)
-    } else {
-      unpause(layer)
-    }
-  }
-
-  private func pause(_ layer: CALayer) {
-    layer.speed = 0
-    layer.timeOffset = beginTime + timeOffset.value
-  }
-
-  private func unpause(_ layer: CALayer) {
-    let pausedTime = layer.timeOffset
-    layer.speed = 1
-    layer.timeOffset = 0
-    layer.beginTime = 0
-    let timeSincePause = layer.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
-    layer.beginTime = timeSincePause
-  }
-
-  private func updateTimeOffset(for layer: CALayer, timeOffset: TimeInterval) {
-    layer.timeOffset = beginTime + timeOffset
   }
 }

@@ -57,7 +57,7 @@ public class ArcMoveExampleViewController: UIViewController {
 
     runtime.add(Draggable(), to: square)
 
-    timeline.timeOffset.value = Double(slider.value) * 0.4
+    timeline.timeOffset.value = CGFloat(slider.value * 0.4)
     timeline.paused.value = true
 
     let arcMove = ArcMove(duration: 0.4,
@@ -69,7 +69,7 @@ public class ArcMoveExampleViewController: UIViewController {
   }
 
   func didSlide(_ slider: UISlider) {
-    timeline.timeOffset.value = TimeInterval(slider.value * 0.4)
+    timeline.timeOffset.value = CGFloat(slider.value * 0.4)
   }
 
   func didToggle() {

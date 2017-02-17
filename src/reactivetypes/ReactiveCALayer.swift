@@ -14,6 +14,7 @@
  limitations under the License.
  */
 
+import IndefiniteObservable
 import UIKit
 
 public class ReactiveCALayer {
@@ -93,8 +94,8 @@ public class ReactiveCALayer {
       case .add(let animation, let key, let initialVelocity, let completionBlock):
         let animation = animation.copy() as! CAPropertyAnimation
 
-        if let timeline = self.timeline {
-          animation.beginTime = timeline.animationBeginTime(for: layer) + animation.beginTime
+        if layer.speed == 0, let lastTimelineState = self.lastTimelineState {
+          animation.beginTime = TimeInterval(lastTimelineState.beginTime) + animation.beginTime
         } else {
           animation.beginTime = layer.convertTime(CACurrentMediaTime(), from: nil) + animation.beginTime
         }
@@ -146,13 +147,30 @@ public class ReactiveCALayer {
         }
 
       case .timeline(let timeline):
-        self.timeline = timeline
-        timeline.addLayer(layer)
+        self.timelineSubscription = timeline.asStream().subscribe(next: { state in
+          self.lastTimelineState = state
+
+          if state.paused {
+            layer.speed = 0
+            layer.timeOffset = TimeInterval(state.beginTime + state.timeOffset)
+
+          } else if layer.speed == 0 { // Unpause the layer.
+            // The following logic is the magic sauce required to reconnect a CALayer with the
+            // render server's clock.
+            let pausedTime = layer.timeOffset
+            layer.speed = 1
+            layer.timeOffset = 0
+            layer.beginTime = 0
+            let timeSincePause = layer.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
+            layer.beginTime = timeSincePause
+          }
+        }, coreAnimation: { _ in })
       }
     })
   }
   private var decomposedKeys = Set<String>()
-  private var timeline: Timeline?
+  private var lastTimelineState: Timeline.Snapshot?
+  private var timelineSubscription: Subscription?
 
   init(_ layer: CALayer) {
     self.layer = layer
