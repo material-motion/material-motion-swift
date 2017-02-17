@@ -28,7 +28,7 @@ public class Destination: MotionObservableConvertible {
   public let property: ReactiveProperty<CGPoint>
 
   public func asStream() -> MotionObservable<CGPoint> {
-    return property.stream
+    return property.asStream()
   }
 }
 

@@ -64,7 +64,7 @@ class TossableStackedCard: ViewInteraction {
           ])
     runtime.add(destinationStream, to: destination)
 
-    let gestureEnabledStream = tossDirection.stream.rewrite([
+    let gestureEnabledStream = tossDirection.rewrite([
       .none: true,
       .left: false,
       .right: false

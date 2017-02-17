@@ -51,21 +51,6 @@ public final class ReactiveProperty<T> {
     }
   }
 
-  public lazy var stream: MotionObservable<T> = {
-    let stream = MotionObservable<T> { observer in
-      self.observers.append(observer)
-
-      observer.next(self.value)
-
-      return {
-        if let index = self.observers.index(where: { $0 === observer }) {
-          self.observers.remove(at: index)
-        }
-      }
-    }
-    return stream
-  }()
-
   /** Initializes a new instance with the given initial value and write function. */
   public init(initialValue: T, write: @escaping ScopedWrite<T>) {
     self._value = initialValue
@@ -108,7 +93,7 @@ public final class ReactiveProperty<T> {
   private var state = MotionState.atRest
   private var coreAnimationEvent: CoreAnimationChannelEvent?
 
-  private var observers: [MotionObserver<T>] = []
+  fileprivate var observers: [MotionObserver<T>] = []
 }
 
 public func == <T: Equatable> (left: ReactiveProperty<T>, right: T) -> Bool {
@@ -117,7 +102,17 @@ public func == <T: Equatable> (left: ReactiveProperty<T>, right: T) -> Bool {
 
 extension ReactiveProperty: MotionObservableConvertible {
   public func asStream() -> MotionObservable<T> {
-    return stream
+    return MotionObservable<T> { observer in
+      self.observers.append(observer)
+
+      observer.next(self.value)
+
+      return {
+        if let index = self.observers.index(where: { $0 === observer }) {
+          self.observers.remove(at: index)
+        }
+      }
+    }
   }
 }
 

@@ -130,7 +130,7 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
     runtime.add(spring, to: reactiveForeLayer.positionY)
 
     if mainThreadReactive {
-      let rotation = reactiveForeLayer.positionY.stream
+      let rotation = reactiveForeLayer.positionY
         .mapRange(rangeStart: spring.backwardDestination,
                   rangeEnd: spring.forwardDestination,
                   destinationStart: CGFloat(M_PI / 8),
