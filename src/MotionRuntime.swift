@@ -25,14 +25,6 @@ public class MotionRuntime {
   /** All motion in this runtime is relative to this view. */
   public let containerView: UIView
 
-  /**
-   The aggregate state of all registered streams.
-
-   If any stream is active, the aggregate state is active. Otherwise, the aggregate state is at
-   rest.
-   */
-  public let state = createProperty(withInitialValue: MotionState.atRest)
-
   /** Creates a motion runtime instance. */
   public init(containerView: UIView) {
     self.parent = nil
