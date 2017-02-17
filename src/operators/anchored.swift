@@ -30,6 +30,6 @@ extension MotionObservableConvertible where T == CGPoint {
       let newPosition = CGPoint(x: $0.x * view.layer.bounds.width, y: $0.y * view.layer.bounds.height)
       let positionInSuperview = view.layer.convert(newPosition, to: view.layer.superlayer)
       return ($0, positionInSuperview)
-    }.multicast()
+    }
   }
 }
