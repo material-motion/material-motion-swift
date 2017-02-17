@@ -18,7 +18,9 @@ import Foundation
 import IndefiniteObservable
 import UIKit
 
-/** A timeline makes it possible to pause and scrub interactions. */
+/**
+ A timeline makes it possible to pause and scrub interactions.
+ */
 public final class Timeline {
 
   /**
@@ -44,10 +46,14 @@ public final class Timeline {
 }
 
 extension Timeline: MotionObservableConvertible {
-  /** A momentary snapshot of a timeline's state to be emitted down the timeline's stream. */
+  /**
+   A momentary snapshot of a timeline's state to be emitted down the timeline's stream.
+   */
   public struct Snapshot {
 
-    /** Whether or not the timeline is paused. */
+    /**
+     Whether or not the timeline is paused.
+     */
     public let paused: Bool
 
     /**
@@ -57,11 +63,15 @@ extension Timeline: MotionObservableConvertible {
      */
     public let beginTime: CGFloat
 
-    /** The timeline's offset in relation to its beginTime. */
+    /**
+     The timeline's offset in relation to its beginTime.
+     */
     public let timeOffset: CGFloat
   }
 
-  /** Returns a stream representation of the Timeline. */
+  /**
+   Returns a stream representation of the Timeline.
+   */
   public func asStream() -> MotionObservable<Snapshot> {
     return MotionObservable { observer in
       var paused = self.paused.value
