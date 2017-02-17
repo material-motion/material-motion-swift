@@ -66,7 +66,7 @@ public func coreAnimation<T>(_ tween: Tween<T>) -> MotionObservable<T> {
       animationKeys.append(key)
     }
 
-    let activeSubscription = tween.enabled.dedupe().subscribe(next: { enabled in
+    let activeSubscription = tween.enabled.dedupe().subscribe { enabled in
       if enabled {
         checkAndEmit()
       } else {
@@ -75,7 +75,7 @@ public func coreAnimation<T>(_ tween: Tween<T>) -> MotionObservable<T> {
         animationKeys.removeAll()
         tween.state.value = .atRest
       }
-    }, coreAnimation: { _ in })
+    }
 
     return {
       animationKeys.forEach { observer.coreAnimation(.remove($0)) }

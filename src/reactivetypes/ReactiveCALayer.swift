@@ -148,7 +148,7 @@ public class ReactiveCALayer {
         }
 
       case .timeline(let timeline):
-        strongSelf.timelineSubscription = timeline.asStream().subscribe(next: { [weak self] state in
+        strongSelf.timelineSubscription = timeline.asStream().subscribe { [weak self] state in
           guard let strongSelf = self else { return }
           strongSelf.lastTimelineState = state
 
@@ -166,7 +166,7 @@ public class ReactiveCALayer {
             let timeSincePause = layer.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
             layer.beginTime = timeSincePause
           }
-        }, coreAnimation: { _ in })
+        }
       }
     })
   }

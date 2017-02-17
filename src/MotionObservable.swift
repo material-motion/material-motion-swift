@@ -45,6 +45,11 @@ public final class MotionObservable<T>: IndefiniteObservable<MotionObserver<T>> 
                         coreAnimation: @escaping CoreAnimationChannel) -> Subscription {
     return super.subscribe(observer: MotionObserver<T>(next: next, coreAnimation: coreAnimation))
   }
+
+  /** Sugar for subscribing a MotionObserver. */
+  public func subscribe(_ next: @escaping NextChannel<T>) -> Subscription {
+    return super.subscribe(observer: MotionObserver<T>(next: next, coreAnimation: { _ in }))
+  }
 }
 
 /**

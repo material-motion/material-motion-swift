@@ -30,11 +30,11 @@ class MotionObservableTests: XCTestCase {
     }
 
     let valueReceived = expectation(description: "Value was received")
-    let _ = observable.subscribe(next: {
+    let _ = observable.subscribe {
       if $0 == value {
         valueReceived.fulfill()
       }
-    }, coreAnimation: { _ in })
+    }
 
     waitForExpectations(timeout: 0)
   }

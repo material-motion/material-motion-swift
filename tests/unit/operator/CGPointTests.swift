@@ -30,11 +30,11 @@ class CGPointTests: XCTestCase {
     }
 
     let valueReceived = expectation(description: "Value was received")
-    let _ = observable.x().subscribe(next: {
+    let _ = observable.x().subscribe {
       if $0 == value {
         valueReceived.fulfill()
       }
-    }, coreAnimation: { _ in })
+    }
 
     waitForExpectations(timeout: 0)
   }
@@ -48,11 +48,11 @@ class CGPointTests: XCTestCase {
     }
 
     let valueReceived = expectation(description: "Value was received")
-    let _ = observable.y().subscribe(next: {
+    let _ = observable.y().subscribe {
       if $0 == value * 2 {
         valueReceived.fulfill()
       }
-    }, coreAnimation: { _ in })
+    }
 
     waitForExpectations(timeout: 0)
   }

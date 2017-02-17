@@ -79,16 +79,16 @@ private func configureSpringAnimation<T>(_ property: POPAnimatableProperty, spri
 
   var animation: POPSpringAnimation?
 
-  let destinationSubscription = spring.destination.asStream().subscribe(next: { value in
+  let destinationSubscription = spring.destination.asStream().subscribe { value in
     destination = value
     animation?.toValue = destination
     animation?.isPaused = false
-  }, coreAnimation: { _ in })
+  }
 
   let key = NSUUID().uuidString
   let someObject = NSObject()
 
-  let activeSubscription = spring.enabled.asStream().dedupe().subscribe(next: { enabled in
+  let activeSubscription = spring.enabled.asStream().dedupe().subscribe { enabled in
     if enabled {
       if animation == nil {
         animation = createAnimation()
@@ -108,7 +108,7 @@ private func configureSpringAnimation<T>(_ property: POPAnimatableProperty, spri
         someObject.pop_removeAnimation(forKey: key)
       }
     }
-  }, coreAnimation: { _ in })
+  }
 
   return {
     someObject.pop_removeAnimation(forKey: key)

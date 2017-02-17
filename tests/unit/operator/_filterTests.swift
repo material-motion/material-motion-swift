@@ -35,11 +35,11 @@ class _filterTests: XCTestCase {
     let _ = observable._filter { value in
       return value == 10
 
-    }.subscribe(next: {
+    }.subscribe {
       if $0 == value {
         valueReceived.fulfill()
       }
-    }, coreAnimation: { _ in })
+    }
 
     waitForExpectations(timeout: 0)
   }

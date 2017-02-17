@@ -41,17 +41,16 @@ public func arcMove<O1: MotionObservableConvertible, O2: MotionObservableConvert
       observer.next(path.cgPath)
     }
 
-    let fromSubscription = from.asStream().subscribe(next: { fromValue in
+    let fromSubscription = from.asStream().subscribe { fromValue in
       latestFrom = fromValue
       checkAndEmit()
 
-    }, coreAnimation: { _ in })
+    }
 
-    let toSubscription = to.asStream().subscribe(next: { toValue in
+    let toSubscription = to.asStream().subscribe { toValue in
       latestTo = toValue
       checkAndEmit()
-
-    }, coreAnimation: { _ in })
+    }
 
     return {
       fromSubscription.unsubscribe()

@@ -34,7 +34,7 @@ extension MotionObservableConvertible {
                                                          coreAnimation: observer.coreAnimation)
       }
 
-      valveSubscription = observable.asStream().subscribe(next: { value in
+      valveSubscription = observable.asStream().subscribe { value in
         let shouldOpen = value
 
         if shouldOpen && upstreamSubscription == nil {
@@ -45,8 +45,7 @@ extension MotionObservableConvertible {
           upstreamSubscription?.unsubscribe()
           upstreamSubscription = nil
         }
-
-      }, coreAnimation: { _ in })
+      }
 
       return {
         valveSubscription?.unsubscribe()

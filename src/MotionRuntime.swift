@@ -125,7 +125,7 @@ public class MotionRuntime {
     var subscriptions: [Subscription] = []
     var activeIndices = Set<Int>()
     for (index, stream) in streams.enumerated() {
-      subscriptions.append(stream.dedupe().subscribe(next: { state in
+      subscriptions.append(stream.dedupe().subscribe { state in
         if state == .active {
           activeIndices.insert(index)
 
@@ -136,7 +136,7 @@ public class MotionRuntime {
             body()
           }
         }
-      }, coreAnimation: { _ in }))
+      })
     }
     self.subscriptions.append(contentsOf: subscriptions)
   }

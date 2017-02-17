@@ -26,7 +26,7 @@ public func coreAnimation(_ tween: PathTween) -> MotionObservable<CGPoint> {
     var activeAnimations = Set<String>()
 
     var checkAndEmit = {
-      subscriptions.append(tween.path.subscribe(next: { pathValue in
+      subscriptions.append(tween.path.subscribe { pathValue in
         let animation = CAKeyframeAnimation()
         animation.path = pathValue
 
@@ -55,10 +55,10 @@ public func coreAnimation(_ tween: PathTween) -> MotionObservable<CGPoint> {
         }))
         animationKeys.append(key)
 
-      }, coreAnimation: { _ in }))
+      })
     }
 
-    let activeSubscription = tween.enabled.dedupe().subscribe(next: { enabled in
+    let activeSubscription = tween.enabled.dedupe().subscribe { enabled in
       if enabled {
         checkAndEmit()
       } else {
@@ -67,7 +67,7 @@ public func coreAnimation(_ tween: PathTween) -> MotionObservable<CGPoint> {
         animationKeys.removeAll()
         tween.state.value = .atRest
       }
-    }, coreAnimation: { _ in })
+    }
 
     return {
       animationKeys.forEach { observer.coreAnimation(.remove($0)) }

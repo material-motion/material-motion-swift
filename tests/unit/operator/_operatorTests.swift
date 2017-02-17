@@ -33,11 +33,11 @@ class _nextOperatorTests: XCTestCase {
     let _ = observable._nextOperator { value, next in
       next(value * 10)
 
-    }.subscribe(next: {
+    }.subscribe {
       if $0 == value * 10 {
         valueReceived.fulfill()
       }
-    }, coreAnimation: { _ in })
+    }
 
     waitForExpectations(timeout: 0)
   }
