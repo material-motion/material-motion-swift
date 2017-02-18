@@ -95,8 +95,8 @@ public class MotionRuntime {
     let token = NSUUID().uuidString
 
     //
-     let metadata = stream.metadata.createChild(property.metadata)
-     print(metadata)
+    // let metadata = stream.metadata.createChild(property.metadata)
+    // print(metadata)
     //
     // ^ dumps the connected stream to the console so that it can be visualized in graphviz.
     //
