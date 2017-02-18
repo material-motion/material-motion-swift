@@ -19,8 +19,8 @@ import Foundation
 extension MotionObservableConvertible {
 
   /** Only emit those items from an Observable that pass a test. */
-  public func _filter(_ predicate: @escaping (T) -> Bool) -> MotionObservable<T> {
-    return asStream()._nextOperator { value, next in
+  public func _filter(_ metadata: Metadata, predicate: @escaping (T) -> Bool) -> MotionObservable<T> {
+    return asStream()._nextOperator(metadata) { value, next in
       if predicate(value) {
         next(value)
       }

@@ -26,7 +26,7 @@ class PropertyWriterTests: XCTestCase {
 
     let value = 100
 
-    let observable = MotionObservable<Int> { observer in
+    let observable = MotionObservable<Int>(Metadata("")) { observer in
       observer.next(value)
       return noopDisconnect
     }

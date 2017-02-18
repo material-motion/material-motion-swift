@@ -24,7 +24,7 @@ enum TossDirection {
 }
 
 class TossableStackedCard: ViewInteraction {
-  public let tossDirection = createProperty(withInitialValue: TossDirection.none)
+  public let tossDirection = createProperty("tossDirection", withInitialValue: TossDirection.none)
 
   init(relativeView: UIView, previousCard: TossableStackedCard? = nil, rotation: CGFloat) {
     self.relativeView = relativeView
@@ -41,7 +41,7 @@ class TossableStackedCard: ViewInteraction {
     let view = reactiveView.view
     view.addGestureRecognizer(dragGesture)
 
-    let destination = createProperty(withInitialValue: relativeView.bounds.midX)
+    let destination = createProperty("destination", withInitialValue: relativeView.bounds.midX)
 
     let drag = runtime.get(dragGesture)
     runtime.add(

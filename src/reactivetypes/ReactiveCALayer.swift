@@ -23,7 +23,8 @@ public class ReactiveCALayer {
   /** A property representing the layer's .opacity value. */
   public lazy var opacity: ReactiveProperty<CGFloat> = {
     let layer = self.layer
-    return self.property(initialValue: CGFloat(layer.opacity),
+    return self.property("\(pretty(layer)).\(#function)",
+                         initialValue: CGFloat(layer.opacity),
                          write: { layer.opacity = Float($0) },
                          keyPath: "opacity")
   }()
@@ -31,7 +32,8 @@ public class ReactiveCALayer {
   /** A property representing the layer's .position value. */
   public lazy var position: ReactiveProperty<CGPoint> = {
     let layer = self.layer
-    return self.property(initialValue: layer.position,
+    return self.property("\(pretty(layer)).\(#function)",
+                         initialValue: layer.position,
                          write: { layer.position = $0 },
                          keyPath: "position")
   }()
@@ -39,7 +41,8 @@ public class ReactiveCALayer {
   /** A property representing the layer's .position.y value. */
   public lazy var positionY: ReactiveProperty<CGFloat> = {
     let position = self.position
-    return self.property(initialValue: position.value.y,
+    return self.property("\(pretty(self.layer)).\(#function)",
+                         initialValue: position.value.y,
                          write: { var point = position.value; point.y = $0; position.value = point },
                          keyPath: "position.y")
   }()
@@ -47,7 +50,8 @@ public class ReactiveCALayer {
   /** A property representing the layer's .bounds.size value. */
   public lazy var size: ReactiveProperty<CGSize> = {
     let layer = self.layer
-    return self.property(initialValue: layer.bounds.size,
+    return self.property("\(pretty(layer)).\(#function)",
+                         initialValue: layer.bounds.size,
                          write: { layer.bounds.size = $0 },
                          keyPath: "bounds.size")
   }()
@@ -55,7 +59,8 @@ public class ReactiveCALayer {
   /** A property representing the layer's .anchorPoint value. */
   public lazy var anchorPoint: ReactiveProperty<CGPoint> = {
     let layer = self.layer
-    return self.property(initialValue: layer.anchorPoint,
+    return self.property("\(pretty(layer)).\(#function)",
+                         initialValue: layer.anchorPoint,
                          write: { layer.anchorPoint = $0 },
                          keyPath: "anchorPoint")
   }()
@@ -65,7 +70,8 @@ public class ReactiveCALayer {
     let anchorPoint = self.anchorPoint
     let position = self.position
     let layer = self.layer
-    return ReactiveProperty(initialValue: (anchorPoint.value, position.value),
+    return ReactiveProperty("\(pretty(layer)).\(#function)",
+                            initialValue: (anchorPoint.value, position.value),
                             write: { anchorPoint.value = $0.0; position.value = $0.1 },
                             coreAnimation: { _ in })
   }()
@@ -73,7 +79,8 @@ public class ReactiveCALayer {
   /** A property representing the layer's .transform.rotation.z value. */
   public lazy var rotation: ReactiveProperty<CGFloat> = {
     let layer = self.layer
-    return self.property(initialValue: layer.value(forKeyPath: "transform.rotation.z") as! CGFloat,
+    return self.property("\(pretty(layer)).\(#function)",
+                         initialValue: layer.value(forKeyPath: "transform.rotation.z") as! CGFloat,
                          write: { layer.setValue($0, forKeyPath: "transform.rotation.z") },
                          keyPath: "transform.rotation.z")
   }()
@@ -81,15 +88,16 @@ public class ReactiveCALayer {
   /** A property representing the layer's .transform.scale value. */
   public lazy var scale: ReactiveProperty<CGFloat> = {
     let layer = self.layer
-    return self.property(initialValue: layer.value(forKeyPath: "transform.scale") as! CGFloat,
+    return self.property("\(pretty(layer)).\(#function)",
+                         initialValue: layer.value(forKeyPath: "transform.scale") as! CGFloat,
                          write: { layer.setValue($0, forKeyPath: "transform.scale") },
                          keyPath: "transform.scale.xy")
   }()
 
-  private func property<T>(initialValue: T, write: @escaping ScopedWrite<T>, keyPath: String) -> ReactiveProperty<T> {
+  private func property<T>(_ name: String, initialValue: T, write: @escaping ScopedWrite<T>, keyPath: String) -> ReactiveProperty<T> {
     let layer = self.layer
     var lastAnimationKey: String?
-    return ReactiveProperty(initialValue: initialValue, write: write, coreAnimation: { [weak self] event in
+    return ReactiveProperty(name, initialValue: initialValue, write: write, coreAnimation: { [weak self] event in
       guard let strongSelf = self else { return }
       switch event {
       case .add(let animation, let key, let initialVelocity, let completionBlock):

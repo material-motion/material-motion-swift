@@ -26,9 +26,9 @@ extension MotionObservableConvertible where T == CGFloat {
    emitted. If the upstream returns to the slop region then onReturn will be emitted.
    */
   public func slop<U: Equatable>(size: CGFloat, onExit: U?, onReturn: U?) -> MotionObservable<U> {
-    let didLeaveSlopRegion = createProperty(withInitialValue: false)
+    let didLeaveSlopRegion = createProperty("slop.didLeaveSlopRegion", withInitialValue: false)
 
-    return MotionObservable { observer in
+    return MotionObservable(self.metadata.createChild(Metadata("\(#function)", type: .constraint, args: [size, onExit, onReturn]))) { observer in
       let upstreamSubscription = self
         .threshold(min: -size, max: size,
                    whenBelow: true, whenWithin: nil as Bool?, whenAbove: true)

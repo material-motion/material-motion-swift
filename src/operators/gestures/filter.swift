@@ -26,7 +26,7 @@ extension MotionObservableConvertible where T: UIGestureRecognizer {
    */
   public func filter(whenStartsWithin view: UIView) -> MotionObservable<T> {
     var isHit = false
-    return asStream()._filter { gesture in
+    return asStream()._filter(Metadata("\(#function)", args: [view])) { gesture in
       if gesture.state == .began {
         let location = gesture.location(in: gesture.view!)
         let hitView = gesture.view!.hitTest(location, with: nil)

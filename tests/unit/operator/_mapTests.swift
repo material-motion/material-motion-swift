@@ -24,13 +24,13 @@ class _mapTests: XCTestCase {
   func testSubscription() {
     let value = 10
 
-    let observable = MotionObservable<Int> { observer in
+    let observable = MotionObservable<Int>(Metadata("")) { observer in
       observer.next(value)
       return noopDisconnect
     }
 
     let valueReceived = expectation(description: "Value was received")
-    let _ = observable._map { value in
+    let _ = observable._map(Metadata("")) { value in
       return value * 10
 
     }.subscribe {

@@ -93,6 +93,21 @@ public class MotionRuntime {
   /** Subscribes to the stream, writes its output to the given property, and observes its state. */
   private func write<O: MotionObservableConvertible, T>(_ stream: O, to property: ReactiveProperty<T>) where O.T == T {
     let token = NSUUID().uuidString
+
+    //
+     let metadata = stream.metadata.createChild(property.metadata)
+     print(metadata)
+    //
+    // ^ dumps the connected stream to the console so that it can be visualized in graphviz.
+    //
+    // Place the output in the following graphviz structure:
+    // digraph G {
+    //   node [shape=rect]
+    //   <place output here>
+    // }
+    //
+    // For quick previewing, use an online graphviz visualizer like http://www.webgraphviz.com/
+
     subscriptions.append(stream.asStream().subscribe(next: { property.value = $0 }, coreAnimation: property.coreAnimation))
   }
 

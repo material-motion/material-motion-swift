@@ -20,32 +20,32 @@ extension MotionObservableConvertible where T: UIGestureRecognizer {
 
   /** Only forwards the gesture recognizer if its state matches the provided value. */
   public func onRecognitionState(_ state: UIGestureRecognizerState) -> MotionObservable<T> {
-    return asStream()._filter { value in
+    return asStream()._filter(Metadata("\(#function)", args: [state])) { value in
       return value.state == state
     }
   }
 
   /** Only forwards the gesture recognizer if its state matches any of the provided values. */
   public func onRecognitionStates(_ states: [UIGestureRecognizerState]) -> MotionObservable<T> {
-    return asStream()._filter { value in
+    return asStream()._filter(Metadata("\(#function)", args: [states])) { value in
       return states.contains(value.state)
     }
   }
 
   public func asMotionState() -> MotionObservable<MotionState> {
-    return asStream()._map { value in
+    return asStream()._map(Metadata("\(#function)")) { value in
       return (value.state == .began || value.state == .changed) ? .active : .atRest
     }
   }
 
   public func active() -> MotionObservable<Bool> {
-    return asStream()._map { value in
+    return asStream()._map(Metadata("\(#function)")) { value in
       return value.state == .began || value.state == .changed
     }
   }
 
   public func atRest() -> MotionObservable<Bool> {
-    return asStream()._map { value in
+    return asStream()._map(Metadata("\(#function)")) { value in
       return value.state != .began && value.state != .changed
     }
   }

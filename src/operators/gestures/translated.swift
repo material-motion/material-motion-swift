@@ -25,7 +25,7 @@ extension MotionObservableConvertible where T: UIPanGestureRecognizer {
   func translated<O: MotionObservableConvertible>(from initialPosition: O, in view: UIView) -> MotionObservable<CGPoint> where O.T == CGPoint {
     let initialPositionStream = initialPosition.asStream()
     var cachedInitialPosition: CGPoint?
-    return asStream()._nextOperator { value, next in
+    return asStream()._nextOperator(Metadata("\(#function)", args: [initialPosition, view])) { value, next in
       if value.state == .began || (value.state == .changed && cachedInitialPosition == nil)  {
         cachedInitialPosition = initialPositionStream.read()
 

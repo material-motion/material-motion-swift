@@ -20,7 +20,7 @@ extension MotionObservableConvertible where T == CGFloat {
 
   /** Emits the distance between the incoming value and the location. */
   public func distance(from location: CGFloat) -> MotionObservable<CGFloat> {
-    return asStream()._map {
+    return asStream()._map(Metadata("\(#function)", args: [location])) {
       fabs($0 - location)
     }
   }
@@ -30,7 +30,7 @@ extension MotionObservableConvertible where T == CGPoint {
 
   /** Emits the distance between the incoming value and the location. */
   public func distance(from location: CGPoint) -> MotionObservable<CGFloat> {
-    return asStream()._map {
+    return asStream()._map(Metadata("\(#function)", args: [location])) {
       let xDelta = $0.x - location.x
       let yDelta = $0.y - location.y
       return sqrt(xDelta * xDelta + yDelta * yDelta)

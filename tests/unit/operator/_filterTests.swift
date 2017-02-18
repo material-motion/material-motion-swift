@@ -24,7 +24,7 @@ class _filterTests: XCTestCase {
   func testSubscription() {
     let value = 10
 
-    let observable = MotionObservable<Int> { observer in
+    let observable = MotionObservable<Int>(Metadata("")) { observer in
       observer.next(value - 1)
       observer.next(value)
       observer.next(value + 1)
@@ -32,7 +32,7 @@ class _filterTests: XCTestCase {
     }
 
     let valueReceived = expectation(description: "Value was received")
-    let _ = observable._filter { value in
+    let _ = observable._filter(Metadata("")) { value in
       return value == 10
 
     }.subscribe {

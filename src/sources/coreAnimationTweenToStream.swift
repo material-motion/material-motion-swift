@@ -19,7 +19,7 @@ import IndefiniteObservable
 
 /** Create a core animation tween system for a Tween plan. */
 public func coreAnimation<T>(_ tween: Tween<T>) -> MotionObservable<T> {
-  return MotionObservable { observer in
+  return MotionObservable(Metadata("Core Animation Tween", args: [tween])) { observer in
 
     var animationKeys: [String] = []
     var subscriptions: [Subscription] = []

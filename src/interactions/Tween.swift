@@ -62,11 +62,13 @@ public final class Tween<T>: PropertyInteraction {
    */
   public var timeline: Timeline?
 
-  public let enabled = createProperty(withInitialValue: true)
+  public let enabled = createProperty("Tween.enabled", withInitialValue: true)
 
-  public let state = createProperty(withInitialValue: MotionState.atRest)
+  public let state = createProperty("Tween.state", withInitialValue: MotionState.atRest)
 
   public var system: TweenToStream<T>
+
+  public let metadata = Metadata("Tween")
 
   /** Initializes a tween instance with its required properties. */
   public init<O: MotionObservableConvertible>(duration: O, values: [T], system: @escaping TweenToStream<T>) where O.T == CGFloat {
@@ -76,7 +78,7 @@ public final class Tween<T>: PropertyInteraction {
   }
 
   public convenience init(duration: CFTimeInterval, values: [T], system: @escaping TweenToStream<T>) {
-    self.init(duration: createProperty(withInitialValue: CGFloat(duration)), values: values, system: system)
+    self.init(duration: createProperty("Tween.duration", withInitialValue: CGFloat(duration)), values: values, system: system)
   }
 
   public func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime) {

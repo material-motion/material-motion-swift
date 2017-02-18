@@ -35,9 +35,9 @@ public final class PathTween: PropertyInteraction {
    */
   public var timeline: Timeline?
 
-  public let enabled = createProperty(withInitialValue: true)
+  public let enabled = createProperty("PathTween.enabled", withInitialValue: true)
 
-  public let state = createProperty(withInitialValue: MotionState.atRest)
+  public let state = createProperty("PathTween.state", withInitialValue: MotionState.atRest)
 
   public var system: PathTweenToStream<CGPoint>
 
@@ -49,12 +49,16 @@ public final class PathTween: PropertyInteraction {
   }
 
   public convenience init(duration: CFTimeInterval, path: MotionObservable<CGPath>, system: @escaping PathTweenToStream<CGPoint>) {
-    self.init(duration: createProperty(withInitialValue: CGFloat(duration)), path: path, system: system)
+    self.init(duration: createProperty("PathTween.duration", withInitialValue: CGFloat(duration)),
+              path: path,
+              system: system)
   }
 
   public func add(to property: ReactiveProperty<CGPoint>, withRuntime runtime: MotionRuntime) {
     runtime.add(asStream(), to: property)
   }
+
+  public let metadata = Metadata("Path Tween")
 }
 
 extension PathTween: MotionObservableConvertible {

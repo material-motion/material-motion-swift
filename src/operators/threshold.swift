@@ -31,7 +31,7 @@ extension MotionObservableConvertible where T: Comparable {
                         whenBelow below: U?,
                         whenEqual equal: U?,
                         whenAbove above: U?) -> MotionObservable<U> {
-    return asStream()._nextOperator { value, next in
+    return asStream()._nextOperator(Metadata("\(#function)", args: [threshold, below, equal, above])) { value, next in
       if let below = below, value < threshold {
         next(below)
       }
@@ -58,7 +58,7 @@ extension MotionObservableConvertible where T: Comparable {
                         whenBelow below: U?,
                         whenWithin within: MotionObservable<U>?,
                         whenAbove above: U?) -> MotionObservable<U> {
-    return asStream()._nextOperator { value, next in
+    return asStream()._nextOperator(Metadata("\(#function)", args: [min, max, below, within, above])) { value, next in
       if let below = below, value < min {
         next(below)
       }
@@ -87,21 +87,21 @@ extension MotionObservableConvertible where T: Comparable {
                         whenAbove above: U?) -> MotionObservable<U> {
     var observable: MotionObservable<U>?
     if let within = within {
-      observable = createProperty(withInitialValue: within).asStream()
+      observable = createProperty("within", withInitialValue: within).asStream()
     }
     return threshold(min: min, max: max, whenBelow: below, whenWithin: observable, whenAbove: above)
   }
 
   /** Emits either the incoming value or the provided maxValue, whichever is smaller. */
   public func max(_ maxValue: T) -> MotionObservable<T> {
-    return asStream()._map {
+    return asStream()._map(Metadata("\(#function)", args: [maxValue])) {
       return Swift.min($0, maxValue)
     }
   }
 
   /** Emits either the incoming value or the provided minValue, whichever is larger. */
   public func min(_ minValue: T) -> MotionObservable<T> {
-    return asStream()._map {
+    return asStream()._map(Metadata("\(#function)", args: [minValue])) {
       return Swift.max($0, minValue)
     }
   }

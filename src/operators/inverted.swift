@@ -19,7 +19,7 @@ import Foundation
 extension MotionObservableConvertible where T == Bool {
 
   public func inverted() -> MotionObservable<Bool> {
-    return asStream()._map { value in
+    return asStream()._map(Metadata("\(#function)")) { value in
       return !value
     }
   }

@@ -24,7 +24,7 @@ import Foundation
 @available(iOS 9.0, *)
 public func coreAnimation<T where T: Subtractable, T: Zeroable, T: Equatable>(_ spring: SpringShadow<T>) -> (MotionObservable<T>) {
   let initialVelocityStream = spring.initialVelocity.asStream()
-  return MotionObservable { observer in
+  return MotionObservable(Metadata("Core Animation Spring", args: [spring.enabled, spring.state, spring.initialValue, spring.initialVelocity, spring.destination, spring.tension, spring.friction, spring.mass, spring.suggestedDuration, spring.threshold])) { observer in
     var animationKeys: [String] = []
 
     var to: T?

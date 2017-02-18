@@ -40,6 +40,15 @@ public typealias CoreAnimationChannel = (CoreAnimationChannelEvent) -> Void
  Throughout this documentation we will treat the words "observable" and "stream" as synonyms.
  */
 public final class MotionObservable<T>: IndefiniteObservable<MotionObserver<T>> {
+
+  /** Connect is only invoked when subscribe is invoked. */
+  public init(_ metadata: Metadata, connect: @escaping Connect<MotionObserver<T>>) {
+    self.metadata = metadata
+    super.init(connect)
+  }
+
+  public let metadata: Metadata
+
   /** Sugar for subscribing a MotionObserver. */
   public func subscribe(next: @escaping NextChannel<T>,
                         coreAnimation: @escaping CoreAnimationChannel) -> Subscription {
@@ -89,7 +98,7 @@ public final class MotionObserver<T>: Observer {
 }
 
 /** A MotionObservableConvertible has a canonical MotionObservable that it can return. */
-public protocol MotionObservableConvertible {
+public protocol MotionObservableConvertible: Inspectable {
   associatedtype T
 
   /** Returns the canonical MotionObservable for this object. */
@@ -103,12 +112,16 @@ extension MotionObservable: MotionObservableConvertible {
 }
 
 extension CGFloat: MotionObservableConvertible {
+  public var metadata: Metadata { return Metadata("\(self)") }
+
   public func asStream() -> MotionObservable<CGFloat> {
     return self.asProperty().asStream()
   }
 }
 
 extension CGPoint: MotionObservableConvertible {
+  public var metadata: Metadata { return Metadata("\(self)") }
+
   public func asStream() -> MotionObservable<CGPoint> {
     return self.asProperty().asStream()
   }

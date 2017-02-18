@@ -46,7 +46,7 @@ extension MotionObservableConvertible {
       })
     }
 
-    return MotionObservable<T> { observer in
+    return MotionObservable<T>(self.metadata.createChild(Metadata("\(#function)", type: .constraint))) { observer in
       if observers.count == 0 {
         subscribe()
       }

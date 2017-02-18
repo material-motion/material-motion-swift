@@ -29,7 +29,7 @@ public typealias ScrollViewToStream = (UIScrollView) -> MotionObservable<CGPoint
  This scroll source will not emit state updates.
  */
 public func scrollViewToStream(_ scrollView: UIScrollView) -> MotionObservable<CGPoint> {
-  return MotionObservable { observer in
+  return MotionObservable(Metadata("Scroll View", args: [scrollView])) { observer in
     return ScrollViewConnection(subscribedTo: scrollView, observer: observer).disconnect
   }
 }

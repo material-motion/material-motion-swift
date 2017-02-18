@@ -24,7 +24,7 @@ class CGPointTests: XCTestCase {
   func testXSubscription() {
     let value: CGFloat = 10
 
-    let observable = MotionObservable<CGPoint> { observer in
+    let observable = MotionObservable<CGPoint>(Metadata("")) { observer in
       observer.next(.init(x: value, y: value * 2))
       return noopDisconnect
     }
@@ -42,7 +42,7 @@ class CGPointTests: XCTestCase {
   func testYSubscription() {
     let value: CGFloat = 10
 
-    let observable = MotionObservable<CGPoint> { observer in
+    let observable = MotionObservable<CGPoint>(Metadata("")) { observer in
       observer.next(.init(x: value, y: value * 2))
       return noopDisconnect
     }

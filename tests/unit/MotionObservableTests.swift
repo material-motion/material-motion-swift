@@ -24,7 +24,7 @@ class MotionObservableTests: XCTestCase {
   func testSubscription() {
     let value = 10
 
-    let observable = MotionObservable<Int> { observer in
+    let observable = MotionObservable<Int>(Metadata("")) { observer in
       observer.next(value)
       return noopDisconnect
     }

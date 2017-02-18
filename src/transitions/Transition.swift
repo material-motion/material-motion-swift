@@ -94,7 +94,7 @@ public class Transition: NSObject {
        back: UIViewController,
        fore: UIViewController,
        dismisser: ViewControllerDismisser) {
-    self.direction = createProperty(withInitialValue: direction)
+    self.direction = createProperty("Transition.direction", withInitialValue: direction)
     self.initialDirection = direction
     self.back = back
     self.fore = fore

@@ -24,32 +24,32 @@ import Foundation
 public class Spring<T: Zeroable>: PropertyInteraction, ViewInteraction {
   /** Creates a spring with the provided properties and an initial velocity. */
   public init(threshold: CGFloat, system: @escaping SpringToStream<T>) {
-    self.threshold = createProperty(withInitialValue: threshold)
+    self.threshold = createProperty("Spring.threshold", withInitialValue: threshold)
     self.system = system
   }
 
-  public let enabled = createProperty(withInitialValue: true)
+  public let enabled = createProperty("Spring.enabled", withInitialValue: true)
 
   public var state: MotionObservable<MotionState> {
     return _state.asStream()
   }
 
-  public let initialValue: ReactiveProperty<T> = createProperty()
+  public let initialValue: ReactiveProperty<T> = createProperty("Spring.initialValue")
 
   /** The initial velocity of the spring represented as a stream. */
-  public let initialVelocity: ReactiveProperty<T> = createProperty()
+  public let initialVelocity: ReactiveProperty<T> = createProperty("Spring.initialVelocity")
 
   /** The destination value of the spring represented as a property. */
-  public let destination: ReactiveProperty<T> = createProperty()
+  public let destination: ReactiveProperty<T> = createProperty("Spring.destination")
 
   /** The tension configuration of the spring represented as a property. */
-  public let tension = createProperty(withInitialValue: defaultSpringTension)
+  public let tension = createProperty("Spring.tension", withInitialValue: defaultSpringTension)
 
   /** The friction configuration of the spring represented as a property. */
-  public let friction = createProperty(withInitialValue: defaultSpringFriction)
+  public let friction = createProperty("Spring.friction", withInitialValue: defaultSpringFriction)
 
   /** The mass configuration of the spring represented as a property. */
-  public let mass = createProperty(withInitialValue: defaultSpringMass)
+  public let mass = createProperty("Spring.mass", withInitialValue: defaultSpringMass)
 
   /**
    The suggested duration of the spring represented as a property.
@@ -58,14 +58,16 @@ public class Spring<T: Zeroable>: PropertyInteraction, ViewInteraction {
 
    A value of 0 means this property will be ignored.
    */
-  public let suggestedDuration = createProperty(withInitialValue: TimeInterval(0))
+  public let suggestedDuration = createProperty("Spring.suggestedDuration", withInitialValue: TimeInterval(0))
 
   /** The value used when determining completion of the spring simulation. */
   public let threshold: ReactiveProperty<CGFloat>
 
+  public let metadata = Metadata("Spring")
+
   fileprivate var stream: MotionObservable<T>?
   fileprivate let system: SpringToStream<T>
-  fileprivate let _state = createProperty(withInitialValue: MotionState.atRest)
+  fileprivate let _state = createProperty("Spring._state", withInitialValue: MotionState.atRest)
 
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
     if let castedSelf = self as? Spring<CGPoint> {

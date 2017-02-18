@@ -22,10 +22,12 @@ public class Destination: MotionObservableConvertible {
   }
 
   init(_ position: CGPoint) {
-    property = createProperty(withInitialValue: position)
+    property = createProperty("Destination.position", withInitialValue: position)
   }
 
   public let property: ReactiveProperty<CGPoint>
+
+  public let metadata = Metadata("Destination")
 
   public func asStream() -> MotionObservable<CGPoint> {
     return property.asStream()

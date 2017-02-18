@@ -24,13 +24,13 @@ class _nextOperatorTests: XCTestCase {
   func testSubscription() {
     let value = 10
 
-    let observable = MotionObservable<Int> { observer in
+    let observable = MotionObservable<Int>(Metadata("")) { observer in
       observer.next(value)
       return noopDisconnect
     }
 
     let valueReceived = expectation(description: "Value was received")
-    let _ = observable._nextOperator { value, next in
+    let _ = observable._nextOperator(Metadata("")) { value, next in
       next(value * 10)
 
     }.subscribe {

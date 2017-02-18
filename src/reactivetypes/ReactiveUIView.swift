@@ -22,38 +22,44 @@ public class ReactiveUIView {
   /** A property representing the view's .isUserInteractionEnabled value. */
   public lazy var isUserInteractionEnabled: ReactiveProperty<Bool> = {
     let view = self.view
-    return ReactiveProperty(initialValue: view.isUserInteractionEnabled,
+    return ReactiveProperty("\(pretty(view)).\(#function)",
+                            initialValue: view.isUserInteractionEnabled,
                             write: { view.isUserInteractionEnabled = $0 })
   }()
 
   public lazy var backgroundColor: ReactiveProperty<UIColor> = {
     let view = self.view
-    return ReactiveProperty(initialValue: view.backgroundColor!, write: { view.backgroundColor = $0 })
+    return ReactiveProperty("\(pretty(view)).\(#function)",
+                            initialValue: view.backgroundColor!, write: { view.backgroundColor = $0 })
   }()
 
   /** A property representing the view's .alpha value. */
   public lazy var alpha: ReactiveProperty<CGFloat> = {
     let view = self.view
-    return ReactiveProperty(initialValue: view.alpha, write: { view.alpha = $0 })
+    return ReactiveProperty("\(pretty(view)).\(#function)",
+                            initialValue: view.alpha, write: { view.alpha = $0 })
   }()
 
   /** A property representing the view's .center value. */
   public lazy var center: ReactiveProperty<CGPoint> = {
     let view = self.view
-    return ReactiveProperty(initialValue: view.center, write: { view.center = $0 })
+    return ReactiveProperty("\(pretty(view)).\(#function)",
+                            initialValue: view.center, write: { view.center = $0 })
   }()
 
   /** A property representing the view's .center.x value. */
   public lazy var centerX: ReactiveProperty<CGFloat> = {
     let center = self.center
-    return ReactiveProperty(initialValue: center.value.x,
+    return ReactiveProperty("\(pretty(self.view)).\(#function)",
+                            initialValue: center.value.x,
                             write: { var point = center.value; point.x = $0; center.value = point })
   }()
 
   /** A property representing the view's .center.y value. */
   public lazy var centerY: ReactiveProperty<CGFloat> = {
     let center = self.center
-    return ReactiveProperty(initialValue: self.center.value.y,
+    return ReactiveProperty("\(pretty(self.view)).\(#function)",
+                            initialValue: self.center.value.y,
                             write: { var point = center.value; point.y = $0; center.value = point })
   }()
 

@@ -21,15 +21,15 @@ import IndefiniteObservable
 public typealias ScopedWrite<T> = (T) -> Void
 
 /** Creates a property with a given initial value. */
-public func createProperty<T: Zeroable>() -> ReactiveProperty<T> {
+public func createProperty<T: Zeroable>(_ name: String? = nil) -> ReactiveProperty<T> {
   var value = T.zero() as! T
-  return ReactiveProperty(initialValue: value, write: { value = $0 })
+  return ReactiveProperty(name, initialValue: value, write: { value = $0 })
 }
 
 /** Creates a property with a given initial value. */
-public func createProperty<T>(withInitialValue initialValue: T) -> ReactiveProperty<T> {
+public func createProperty<T>(_ name: String? = nil, withInitialValue initialValue: T) -> ReactiveProperty<T> {
   var value = initialValue
-  return ReactiveProperty(initialValue: initialValue, write: { value = $0 })
+  return ReactiveProperty(name, initialValue: initialValue, write: { value = $0 })
 }
 
 /**
@@ -52,7 +52,8 @@ public final class ReactiveProperty<T> {
   }
 
   /** Initializes a new instance with the given initial value and write function. */
-  public init(initialValue: T, write: @escaping ScopedWrite<T>) {
+  public init(_ name: String? = nil, initialValue: T, write: @escaping ScopedWrite<T>) {
+    self.metadata = Metadata(name, type: .property)
     self._value = initialValue
     self._write = write
     self._coreAnimation = nil
@@ -61,9 +62,11 @@ public final class ReactiveProperty<T> {
   /**
    Initializes a new instance with the given initial value, write function, and core animation channel.
    */
-  public init(initialValue: T,
+  public init(_ name: String? = nil,
+              initialValue: T,
               write: @escaping ScopedWrite<T>,
               coreAnimation: @escaping CoreAnimationChannel) {
+    self.metadata = Metadata(name, type: .property)
     self._value = initialValue
     self._write = write
     self._coreAnimation = coreAnimation
@@ -86,6 +89,8 @@ public final class ReactiveProperty<T> {
     }
   }
 
+  public let metadata: Metadata
+
   private var _value: T
   private let _write: ScopedWrite<T>
   private let _coreAnimation: CoreAnimationChannel?
@@ -102,7 +107,7 @@ public func == <T: Equatable> (left: ReactiveProperty<T>, right: T) -> Bool {
 
 extension ReactiveProperty: MotionObservableConvertible {
   public func asStream() -> MotionObservable<T> {
-    return MotionObservable<T> { observer in
+    return MotionObservable<T>(metadata) { observer in
       self.observers.append(observer)
 
       observer.next(self.value)
@@ -129,12 +134,12 @@ extension ReactiveProperty: ReactivePropertyConvertible {
 
 extension CGFloat: ReactivePropertyConvertible {
   public func asProperty() -> ReactiveProperty<CGFloat> {
-    return createProperty(withInitialValue: self)
+    return createProperty("\(type(of: self)) constant = \(self)", withInitialValue: self)
   }
 }
 
 extension CGPoint: ReactivePropertyConvertible {
   public func asProperty() -> ReactiveProperty<CGPoint> {
-    return createProperty(withInitialValue: self)
+    return createProperty("\(type(of: self)) constant = \(self)", withInitialValue: self)
   }
 }

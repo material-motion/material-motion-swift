@@ -19,8 +19,8 @@ import Foundation
 extension MotionObservableConvertible {
 
   /** Transform the items emitted by an Observable by applying a function to each item. */
-  func _map<U>(_ transform: @escaping (T) -> U) -> MotionObservable<U> {
-    return asStream()._nextOperator({ value, next in
+  func _map<U>(_ metadata: Metadata, transform: @escaping (T) -> U) -> MotionObservable<U> {
+    return asStream()._nextOperator(metadata, operation: { value, next in
       next(transform(value))
 
     }, coreAnimation: { event, coreAnimation in

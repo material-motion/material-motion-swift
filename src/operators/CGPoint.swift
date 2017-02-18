@@ -17,8 +17,16 @@
 extension MotionObservableConvertible where T == CGPoint {
 
   /** Extract the x value from a CGPoint. */
-  public func x() -> MotionObservable<CGFloat> { return asStream()._map { $0.x } }
+  public func x() -> MotionObservable<CGFloat> {
+    return asStream()._map(Metadata("\(#function)")) {
+      $0.x
+    }
+  }
 
   /** Extract the y value from a CGPoint. */
-  public func y() -> MotionObservable<CGFloat> { return asStream()._map { $0.y } }
+  public func y() -> MotionObservable<CGFloat> {
+    return asStream()._map(Metadata("\(#function)")) {
+      $0.y
+    }
+  }
 }
