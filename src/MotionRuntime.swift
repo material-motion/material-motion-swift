@@ -18,16 +18,15 @@ import Foundation
 import IndefiniteObservable
 
 /**
- A MotionRuntime writes the output of streams to properties and observes their overall state.
+ A MotionRuntime manages the connections from streams to reactive properties.
  */
-public class MotionRuntime {
+public final class MotionRuntime {
 
   /** All motion in this runtime is relative to this view. */
   public let containerView: UIView
 
   /** Creates a motion runtime instance. */
   public init(containerView: UIView) {
-    self.parent = nil
     self.containerView = containerView
   }
 
@@ -111,23 +110,6 @@ public class MotionRuntime {
     subscriptions.append(stream.subscribe(next: { property.value = $0 }, coreAnimation: property.coreAnimation))
   }
 
-  /**
-   Creates a child runtime instance.
-
-   Streams registered to a child runtime will affect the state on that runtime and all of its
-   ancestors.
-   */
-  public func createChild() -> MotionRuntime {
-    return MotionRuntime(parent: self)
-  }
-
-  /** Creates a child motion runtime instance. */
-  private init(parent: MotionRuntime) {
-    self.parent = parent
-    self.containerView = parent.containerView
-    parent.children.append(self)
-  }
-
   public func whenAllAtRest(_ streams: [MotionObservable<MotionState>], body: @escaping () -> Void) {
     var subscriptions: [Subscription] = []
     var activeIndices = Set<Int>()
@@ -148,8 +130,6 @@ public class MotionRuntime {
     self.subscriptions.append(contentsOf: subscriptions)
   }
 
-  private weak var parent: MotionRuntime?
-  private var children: [MotionRuntime] = []
   private var subscriptions: [Subscription] = []
   private var viewInteractions: [ViewInteraction] = []
 }
