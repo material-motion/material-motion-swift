@@ -19,7 +19,7 @@ import Foundation
 extension MotionObservableConvertible where T: UIPanGestureRecognizer {
 
   func translation(in view: UIView) -> MotionObservable<CGPoint> {
-    return asStream()._map(Metadata("\(#function)", args: [view])) {
+    return _map(Metadata("\(#function)", args: [view])) {
       return $0.translation(in: view)
     }
   }

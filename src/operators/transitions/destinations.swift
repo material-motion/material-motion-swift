@@ -20,6 +20,6 @@ extension MotionObservableConvertible where T == Transition.Direction {
 
   /** Emits either the back or fore value when a new direction is received, . */
   public func destinations<U>(back: U, fore: U) -> MotionObservable<U> {
-    return asStream()._map(Metadata("\(#function)", args: [back, fore])) { direction in direction == .forward ? fore : back }
+    return _map(Metadata("\(#function)", args: [back, fore])) { direction in direction == .forward ? fore : back }
   }
 }

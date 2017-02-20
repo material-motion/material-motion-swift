@@ -20,7 +20,7 @@ extension MotionObservableConvertible where T: UIPanGestureRecognizer {
 
   /** Extract translational velocity from the incoming pan gesture recognizer. */
   public func velocity(in view: UIView) -> MotionObservable<CGPoint> {
-    return asStream()._map(Metadata("\(#function)", args: [view])) { value in
+    return _map(Metadata("\(#function)", args: [view])) { value in
       value.velocity(in: view)
     }
   }
@@ -30,7 +30,7 @@ extension MotionObservableConvertible where T: UIRotationGestureRecognizer {
 
   /** Extract rotational velocity from the incoming rotation gesture recognizer. */
   public func velocity() -> MotionObservable<CGFloat> {
-    return asStream()._map(Metadata("\(#function)")) { value in value.velocity }
+    return _map(Metadata("\(#function)")) { value in value.velocity }
   }
 }
 
@@ -38,6 +38,6 @@ extension MotionObservableConvertible where T: UIPinchGestureRecognizer {
 
   /** Extract scale velocity from the incoming pinch gesture recognizer. */
   public func velocity() -> MotionObservable<CGFloat> {
-    return asStream()._map(Metadata("\(#function)")) { value in value.velocity }
+    return _map(Metadata("\(#function)")) { value in value.velocity }
   }
 }

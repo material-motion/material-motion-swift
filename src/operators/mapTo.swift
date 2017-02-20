@@ -20,6 +20,6 @@ extension MotionObservableConvertible {
 
   /** Emit a constant value each time this operator receives a value. */
   public func mapTo<U>(_ value: U) -> MotionObservable<U> {
-    return asStream()._map(Metadata("\(#function)", args: [value])) { _ in value }
+    return _map(Metadata("\(#function)", args: [value])) { _ in value }
   }
 }

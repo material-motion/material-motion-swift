@@ -20,7 +20,7 @@ extension MotionObservableConvertible {
 
   /** Only emit those items from an Observable that pass a test. */
   public func _filter(_ metadata: Metadata, predicate: @escaping (T) -> Bool) -> MotionObservable<T> {
-    return asStream()._nextOperator(metadata) { value, next in
+    return _nextOperator(metadata) { value, next in
       if predicate(value) {
         next(value)
       }

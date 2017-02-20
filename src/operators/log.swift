@@ -20,7 +20,7 @@ extension MotionObservableConvertible {
 
   /** Writes any incoming value to the console and then passes the value on. */
   public func log(_ context: String? = nil) -> MotionObservable<T> {
-    return asStream()._nextOperator((Metadata("\(#function)", args: [context])), operation: { value, next in
+    return _nextOperator((Metadata("\(#function)", args: [context])), operation: { value, next in
       if let context = context {
         print(context, value)
       } else {

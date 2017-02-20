@@ -26,7 +26,7 @@ extension MotionObservableConvertible where T == CGPoint {
    anchorPoint and position properties, respectively.
    */
   public func anchored(in view: UIView) -> MotionObservable<(CGPoint, CGPoint)> {
-    return asStream()._map(Metadata("\(#function)", args: [view])) {
+    return _map(Metadata("\(#function)", args: [view])) {
       let newPosition = CGPoint(x: $0.x * view.layer.bounds.width, y: $0.y * view.layer.bounds.height)
       let positionInSuperview = view.layer.convert(newPosition, to: view.layer.superlayer)
       return ($0, positionInSuperview)

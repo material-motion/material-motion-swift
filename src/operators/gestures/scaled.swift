@@ -25,7 +25,7 @@ extension MotionObservableConvertible where T: UIPinchGestureRecognizer {
   func scaled<O: MotionObservableConvertible>(from initialScale: O) -> MotionObservable<CGFloat> where O.T == CGFloat {
     let initialScaleStream = initialScale.asStream()
     var initialScale: CGFloat?
-    return asStream()._nextOperator(Metadata("\(#function)", args: [initialScale])) { value, next in
+    return _nextOperator(Metadata("\(#function)", args: [initialScale])) { value, next in
       if value.state == .began || (value.state == .changed && initialScale == nil)  {
         initialScale = initialScaleStream.read()
 

@@ -25,7 +25,7 @@ extension MotionObservableConvertible where T: Subtractable, T: Lerpable {
     destinationStart: U,
     destinationEnd: U) -> MotionObservable<U>
   where U: Lerpable, U: Subtractable, U: Addable {
-    return asStream()._map(Metadata("\(#function)", args: [rangeStart, rangeEnd, destinationStart, destinationEnd])) {
+    return _map(Metadata("\(#function)", args: [rangeStart, rangeEnd, destinationStart, destinationEnd])) {
       let position = $0 - rangeStart
 
       let vector = rangeEnd - rangeStart
