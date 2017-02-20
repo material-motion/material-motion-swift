@@ -78,7 +78,7 @@ private class PushBackTransitionDirector: TransitionDirector {
       case let pan as UIPanGestureRecognizer:
         let gesture = runtime.get(pan)
 
-        let dragStream = gesture.translated(from: foreLayer.position).y().min(foreLayer.layer.bounds.height / 2)
+        let dragStream = gesture.translated(from: foreLayer.position).y().lowerBound(foreLayer.layer.bounds.height / 2)
         runtime.add(dragStream, to: foreLayer.positionY)
 
         let scaleStream = dragStream.mapRange(rangeStart:movement.backwardDestination,

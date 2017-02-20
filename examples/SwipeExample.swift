@@ -99,7 +99,7 @@ class TossableStackedCard: ViewInteraction {
         previousCard.position!
           .distance(from: relativeView.bounds.width / 2)
           .normalized(by: relativeView.bounds.width / 2)
-          .max(1)
+          .upperBound(1)
           .subtracted(from: 1)
           .scaled(by: rotation)
       runtime.add(nextRotationStream.valve(openWhenTrue: drag.atRest()), to: reactiveLayer.rotation)
