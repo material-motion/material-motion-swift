@@ -19,12 +19,14 @@ import IndefiniteObservable
 extension MotionObservableConvertible {
 
   /**
-   Turns a stream into a multicast stream.
+   Caches the most recent upstream value and broadcasts it to all subscribers.
 
-   A multicasted stream will only subscribe to its upstream the first time a subscription is made.
+   A memoized stream will only subscribe to its upstream the first time a subscription is made.
    Subsequent subscriptions will receive channel events from the existing upstream subscription.
+
+   When an observer subscribes it will synchronously receive the most recent value, if any.
    */
-  public func multicast() -> MotionObservable<T> {
+  public func _memoize() -> MotionObservable<T> {
     var observers: [MotionObserver<T>] = []
     var subscription: Subscription?
 
