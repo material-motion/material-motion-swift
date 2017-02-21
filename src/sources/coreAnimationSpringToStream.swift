@@ -78,7 +78,7 @@ public func coreAnimation<T where T: Subtractable, T: Zeroable, T: Equatable>(_ 
       }
     }
 
-    let destinationSubscription = spring.destination.asStream().subscribe { value in
+    let destinationSubscription = spring.destination.subscribe { value in
       to = value
       checkAndEmit()
     }

@@ -33,7 +33,7 @@ extension MotionObservableConvertible {
         upstreamSubscription = self.asStream().subscribe(observer: observer)
       }
 
-      valveSubscription = observable.asStream().subscribe { value in
+      valveSubscription = observable.subscribe { value in
         let shouldOpen = value
 
         if shouldOpen && upstreamSubscription == nil {

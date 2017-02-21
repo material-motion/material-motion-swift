@@ -26,7 +26,7 @@ extension MotionObservableConvertible {
    */
   func _nextOperator<U>(_ metadata: Metadata, operation: @escaping (T, (U) -> Void) -> Void) -> MotionObservable<U> {
     return MotionObservable<U>(self.metadata.createChild(metadata, type: .constraint)) { observer in
-      return self.asStream().subscribe(next: {
+      return self.subscribe(next: {
         return operation($0, observer.next)
       }, coreAnimation: { _ in
         assertionFailure("Core animation is not supported by this operator.")
@@ -43,7 +43,7 @@ extension MotionObservableConvertible {
    */
   func _nextOperator<U>(_ metadata: Metadata, operation: @escaping (T, (U) -> Void) -> Void, coreAnimation: @escaping (CoreAnimationChannelEvent, CoreAnimationChannel?) -> Void) -> MotionObservable<U> {
     return MotionObservable<U>(self.metadata.createChild(metadata, type: .constraint)) { observer in
-      return self.asStream().subscribe(next: {
+      return self.subscribe(next: {
         return operation($0, observer.next)
       }, coreAnimation: {
         return coreAnimation($0, observer.coreAnimation)

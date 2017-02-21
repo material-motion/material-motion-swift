@@ -35,7 +35,7 @@ extension MotionObservableConvertible {
     var lastCoreAnimationEvent: CoreAnimationChannelEvent?
 
     let subscribe = {
-      subscription = self.asStream().subscribe(next: { value in
+      subscription = self.subscribe(next: { value in
         lastValue = value
         for observer in observers {
           observer.next(value)

@@ -79,7 +79,7 @@ private func configureSpringAnimation<T>(_ property: POPAnimatableProperty, spri
 
   var animation: POPSpringAnimation?
 
-  let destinationSubscription = spring.destination.asStream().subscribe { value in
+  let destinationSubscription = spring.destination.subscribe { value in
     destination = value
     animation?.toValue = destination
     animation?.isPaused = false

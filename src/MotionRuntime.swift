@@ -108,7 +108,7 @@ public class MotionRuntime {
     //
     // For quick previewing, use an online graphviz visualizer like http://www.webgraphviz.com/
 
-    subscriptions.append(stream.asStream().subscribe(next: { property.value = $0 }, coreAnimation: property.coreAnimation))
+    subscriptions.append(stream.subscribe(next: { property.value = $0 }, coreAnimation: property.coreAnimation))
   }
 
   /**

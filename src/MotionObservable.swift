@@ -78,20 +78,6 @@ public final class MotionObservable<T>: IndefiniteObservable<MotionObserver<T>> 
    The metadata describing this stream.
    */
   public let metadata: Metadata
-
-  /**
-   Sugar for subscribing a MotionObserver.
-   */
-  public func subscribe(next: @escaping NextChannel<T>, coreAnimation: @escaping CoreAnimationChannel) -> Subscription {
-    return super.subscribe(observer: MotionObserver<T>(next: next, coreAnimation: coreAnimation))
-  }
-
-  /**
-   Sugar for subscribing a MotionObserver.
-   */
-  public func subscribe(_ next: @escaping NextChannel<T>) -> Subscription {
-    return super.subscribe(observer: MotionObserver<T>(next: next))
-  }
 }
 
 /**
@@ -129,5 +115,21 @@ public protocol MotionObservableConvertible: Inspectable {
 extension MotionObservable: MotionObservableConvertible {
   public func asStream() -> MotionObservable<T> {
     return self
+  }
+}
+
+extension MotionObservableConvertible {
+  /**
+   Sugar for subscribing a MotionObserver.
+   */
+  public func subscribe(next: @escaping NextChannel<T>, coreAnimation: @escaping CoreAnimationChannel) -> Subscription {
+    return asStream().subscribe(observer: MotionObserver<T>(next: next, coreAnimation: coreAnimation))
+  }
+
+  /**
+   Sugar for subscribing a MotionObserver.
+   */
+  public func subscribe(_ next: @escaping NextChannel<T>) -> Subscription {
+    return asStream().subscribe(observer: MotionObserver<T>(next: next))
   }
 }
