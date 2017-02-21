@@ -25,7 +25,7 @@ public class ReactiveCALayer {
     let layer = self.layer
     return self.property("\(pretty(layer)).\(#function)",
                          initialValue: CGFloat(layer.opacity),
-                         write: { layer.opacity = Float($0) },
+                         externalWrite: { layer.opacity = Float($0) },
                          keyPath: "opacity")
   }()
 
@@ -34,7 +34,7 @@ public class ReactiveCALayer {
     let layer = self.layer
     return self.property("\(pretty(layer)).\(#function)",
                          initialValue: layer.position,
-                         write: { layer.position = $0 },
+                         externalWrite: { layer.position = $0 },
                          keyPath: "position")
   }()
 
@@ -43,7 +43,7 @@ public class ReactiveCALayer {
     let position = self.position
     return self.property("\(pretty(self.layer)).\(#function)",
                          initialValue: position.value.y,
-                         write: { var point = position.value; point.y = $0; position.value = point },
+                         externalWrite: { var point = position.value; point.y = $0; position.value = point },
                          keyPath: "position.y")
   }()
 
@@ -52,7 +52,7 @@ public class ReactiveCALayer {
     let layer = self.layer
     return self.property("\(pretty(layer)).\(#function)",
                          initialValue: layer.bounds.size,
-                         write: { layer.bounds.size = $0 },
+                         externalWrite: { layer.bounds.size = $0 },
                          keyPath: "bounds.size")
   }()
 
@@ -61,7 +61,7 @@ public class ReactiveCALayer {
     let layer = self.layer
     return self.property("\(pretty(layer)).\(#function)",
                          initialValue: layer.anchorPoint,
-                         write: { layer.anchorPoint = $0 },
+                         externalWrite: { layer.anchorPoint = $0 },
                          keyPath: "anchorPoint")
   }()
 
@@ -72,7 +72,7 @@ public class ReactiveCALayer {
     let layer = self.layer
     return ReactiveProperty("\(pretty(layer)).\(#function)",
                             initialValue: (anchorPoint.value, position.value),
-                            write: { anchorPoint.value = $0.0; position.value = $0.1 },
+                            externalWrite: { anchorPoint.value = $0.0; position.value = $0.1 },
                             coreAnimation: { _ in })
   }()
 
@@ -81,7 +81,7 @@ public class ReactiveCALayer {
     let layer = self.layer
     return self.property("\(pretty(layer)).\(#function)",
                          initialValue: layer.value(forKeyPath: "transform.rotation.z") as! CGFloat,
-                         write: { layer.setValue($0, forKeyPath: "transform.rotation.z") },
+                         externalWrite: { layer.setValue($0, forKeyPath: "transform.rotation.z") },
                          keyPath: "transform.rotation.z")
   }()
 
@@ -90,14 +90,14 @@ public class ReactiveCALayer {
     let layer = self.layer
     return self.property("\(pretty(layer)).\(#function)",
                          initialValue: layer.value(forKeyPath: "transform.scale") as! CGFloat,
-                         write: { layer.setValue($0, forKeyPath: "transform.scale") },
+                         externalWrite: { layer.setValue($0, forKeyPath: "transform.scale") },
                          keyPath: "transform.scale.xy")
   }()
 
-  private func property<T>(_ name: String, initialValue: T, write: @escaping ScopedWrite<T>, keyPath: String) -> ReactiveProperty<T> {
+  private func property<T>(_ name: String, initialValue: T, externalWrite: @escaping NextChannel<T>, keyPath: String) -> ReactiveProperty<T> {
     let layer = self.layer
     var lastAnimationKey: String?
-    return ReactiveProperty(name, initialValue: initialValue, write: write, coreAnimation: { [weak self] event in
+    return ReactiveProperty(name, initialValue: initialValue, externalWrite: externalWrite, coreAnimation: { [weak self] event in
       guard let strongSelf = self else { return }
       switch event {
       case .add(let animation, let key, let initialVelocity, let completionBlock):

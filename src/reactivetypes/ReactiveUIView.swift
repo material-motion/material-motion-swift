@@ -24,27 +24,30 @@ public class ReactiveUIView {
     let view = self.view
     return ReactiveProperty("\(pretty(view)).\(#function)",
                             initialValue: view.isUserInteractionEnabled,
-                            write: { view.isUserInteractionEnabled = $0 })
+                            externalWrite: { view.isUserInteractionEnabled = $0 })
   }()
 
   public lazy var backgroundColor: ReactiveProperty<UIColor> = {
     let view = self.view
     return ReactiveProperty("\(pretty(view)).\(#function)",
-                            initialValue: view.backgroundColor!, write: { view.backgroundColor = $0 })
+                            initialValue: view.backgroundColor!,
+                            externalWrite: { view.backgroundColor = $0 })
   }()
 
   /** A property representing the view's .alpha value. */
   public lazy var alpha: ReactiveProperty<CGFloat> = {
     let view = self.view
     return ReactiveProperty("\(pretty(view)).\(#function)",
-                            initialValue: view.alpha, write: { view.alpha = $0 })
+                            initialValue: view.alpha,
+                            externalWrite: { view.alpha = $0 })
   }()
 
   /** A property representing the view's .center value. */
   public lazy var center: ReactiveProperty<CGPoint> = {
     let view = self.view
     return ReactiveProperty("\(pretty(view)).\(#function)",
-                            initialValue: view.center, write: { view.center = $0 })
+                            initialValue: view.center,
+                            externalWrite: { view.center = $0 })
   }()
 
   /** A property representing the view's .center.x value. */
@@ -52,7 +55,7 @@ public class ReactiveUIView {
     let center = self.center
     return ReactiveProperty("\(pretty(self.view)).\(#function)",
                             initialValue: center.value.x,
-                            write: { var point = center.value; point.x = $0; center.value = point })
+                            externalWrite: { var point = center.value; point.x = $0; center.value = point })
   }()
 
   /** A property representing the view's .center.y value. */
@@ -60,7 +63,7 @@ public class ReactiveUIView {
     let center = self.center
     return ReactiveProperty("\(pretty(self.view)).\(#function)",
                             initialValue: self.center.value.y,
-                            write: { var point = center.value; point.y = $0; center.value = point })
+                            externalWrite: { var point = center.value; point.y = $0; center.value = point })
   }()
 
   public lazy var reactiveLayer: ReactiveCALayer = {

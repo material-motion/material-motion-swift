@@ -23,7 +23,7 @@ public class ReactiveUIGestureRecognizer<O: UIGestureRecognizer> {
     let gestureRecognizer = self.gestureRecognizer
     return ReactiveProperty("\(#function)",
                             initialValue: gestureRecognizer.isEnabled,
-                            write: { gestureRecognizer.isEnabled = $0 })
+                            externalWrite: { gestureRecognizer.isEnabled = $0 })
   }()
 
   init(_ gestureRecognizer: O, containerView: UIView) {

@@ -14,26 +14,16 @@
  limitations under the License.
  */
 
-import XCTest
-import IndefiniteObservable
-import MaterialMotionStreams
+import Foundation
 
-class PropertyWriterTests: XCTestCase {
+extension CGFloat: ReactivePropertyConvertible {
+  public func asProperty() -> ReactiveProperty<CGFloat> {
+    return createProperty("\(type(of: self)) constant = \(self)", withInitialValue: self)
+  }
+}
 
-  func testWrites() {
-    var someVar = 10
-    let property = ReactiveProperty(initialValue: someVar, write: { someVar = $0 })
-
-    let value = 100
-
-    let observable = MotionObservable<Int>(Metadata("")) { observer in
-      observer.next(value)
-      return noopDisconnect
-    }
-
-    let writer = MotionRuntime(containerView: UIView())
-    writer.add(observable, to: property)
-
-    XCTAssertEqual(someVar, value)
+extension CGPoint: ReactivePropertyConvertible {
+  public func asProperty() -> ReactiveProperty<CGPoint> {
+    return createProperty("\(type(of: self)) constant = \(self)", withInitialValue: self)
   }
 }

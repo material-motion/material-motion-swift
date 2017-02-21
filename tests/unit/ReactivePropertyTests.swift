@@ -21,7 +21,7 @@ class ReactivePropertyTests: XCTestCase {
 
   func testReadsAndWrites() {
     var someVar = 10
-    let property = ReactiveProperty(initialValue: someVar, write: { someVar = $0 })
+    let property = ReactiveProperty(initialValue: someVar, externalWrite: { someVar = $0 })
 
     XCTAssertEqual(someVar, property.value)
 
@@ -30,5 +30,16 @@ class ReactivePropertyTests: XCTestCase {
 
     property.value = 10
     XCTAssertEqual(someVar, property.value)
+  }
+
+  func testComparison() {
+    let property1 = createProperty(withInitialValue: 10)
+    let property2 = createProperty(withInitialValue: 100)
+    let property3 = createProperty(withInitialValue: 100)
+
+    XCTAssertTrue(property1 != property2)
+    XCTAssertTrue(property2 == property3)
+    XCTAssertTrue(property1 == 10)
+    XCTAssertTrue(property1 != 100)
   }
 }
