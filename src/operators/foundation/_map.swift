@@ -45,18 +45,18 @@ extension MotionObservableConvertible {
           if let byValue = basicAnimation.byValue {
             basicAnimation.byValue = transform(byValue as! T)
           }
-          coreAnimation(.add(basicAnimation, key, initialVelocity: transformedInitialVelocity, completionBlock: completionBlock))
+          coreAnimation?(.add(basicAnimation, key, initialVelocity: transformedInitialVelocity, completionBlock: completionBlock))
 
         case let keyframeAnimation as CAKeyframeAnimation:
           keyframeAnimation.values = keyframeAnimation.values?.map { transform($0 as! T) }
-          coreAnimation(.add(keyframeAnimation, key, initialVelocity: transformedInitialVelocity, completionBlock: completionBlock))
+          coreAnimation?(.add(keyframeAnimation, key, initialVelocity: transformedInitialVelocity, completionBlock: completionBlock))
 
         default:
           assertionFailure("Unsupported animation type: \(type(of: animation))")
         }
 
       default:
-        coreAnimation(event)
+        coreAnimation?(event)
       }
     })
   }

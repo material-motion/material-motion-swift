@@ -67,7 +67,7 @@ public func coreAnimation<T where T: Subtractable, T: Zeroable, T: Equatable>(_ 
 
         spring.state.value = .active
 
-        observer.coreAnimation(.add(animation, key, initialVelocity: initialVelocity, completionBlock: {
+        observer.coreAnimation?(.add(animation, key, initialVelocity: initialVelocity, completionBlock: {
           activeAnimations.remove(key)
           if activeAnimations.count == 0 {
             spring.state.value = .atRest
@@ -93,7 +93,7 @@ public func coreAnimation<T where T: Subtractable, T: Zeroable, T: Equatable>(_ 
       } else {
         wasDisabled = true
         for key in animationKeys {
-          observer.coreAnimation(.remove(key))
+          observer.coreAnimation?(.remove(key))
         }
         activeAnimations.removeAll()
         animationKeys.removeAll()
@@ -103,7 +103,7 @@ public func coreAnimation<T where T: Subtractable, T: Zeroable, T: Equatable>(_ 
 
     return {
       for key in animationKeys {
-        observer.coreAnimation(.remove(key))
+        observer.coreAnimation?(.remove(key))
       }
       destinationSubscription.unsubscribe()
       activeSubscription.unsubscribe()

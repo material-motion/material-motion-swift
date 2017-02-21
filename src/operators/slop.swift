@@ -40,7 +40,7 @@ extension MotionObservableConvertible where T == CGFloat {
         .threshold(min: -size, max: size,
                    whenBelow: onExit, whenWithin: onReturn, whenAbove: onExit)
         .dedupe()
-        .subscribe(next: observer.next, coreAnimation: observer.coreAnimation)
+        .subscribe(observer: observer)
 
       return {
         upstreamSubscription.unsubscribe()

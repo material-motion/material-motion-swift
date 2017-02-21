@@ -24,7 +24,7 @@ class MotionObservableTests: XCTestCase {
   func testSubscription() {
     let value = 10
 
-    let observable = MotionObservable<Int>(Metadata("")) { observer in
+    let observable = MotionObservable<Int> { observer in
       observer.next(value)
       return noopDisconnect
     }
@@ -35,6 +35,25 @@ class MotionObservableTests: XCTestCase {
         valueReceived.fulfill()
       }
     }
+
+    waitForExpectations(timeout: 0)
+  }
+
+  func testSubscriptionWithCoreAnimationChannel() {
+    let value = 10
+
+    let observable = MotionObservable<Int> { observer in
+      observer.next(value)
+      return noopDisconnect
+    }
+
+    let valueReceived = expectation(description: "Value was received")
+    let _ = observable.subscribe(next: {
+      if $0 == value {
+        valueReceived.fulfill()
+      }
+    }, coreAnimation: { event in
+    })
 
     waitForExpectations(timeout: 0)
   }

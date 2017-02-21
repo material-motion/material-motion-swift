@@ -30,8 +30,7 @@ extension MotionObservableConvertible {
       var upstreamSubscription: Subscription?
 
       var connectUpstream = {
-        upstreamSubscription = self.asStream().subscribe(next: observer.next,
-                                                         coreAnimation: observer.coreAnimation)
+        upstreamSubscription = self.asStream().subscribe(observer: observer)
       }
 
       valveSubscription = observable.asStream().subscribe { value in

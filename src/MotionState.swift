@@ -14,21 +14,13 @@
  limitations under the License.
  */
 
-import IndefiniteObservable
+import Foundation
 
-extension MotionObservableConvertible {
+/** The possible states that an interaction may be in. */
+public enum MotionState {
+  /** The interaction is at rest. */
+  case atRest
 
-  /**
-   Emits values as it receives them, both from upstream and from the provided stream.
-   */
-  public func merge(with stream: MotionObservable<T>) -> MotionObservable<T> {
-    return MotionObservable<T>(Metadata("\(#function)", args: [stream])) { observer in
-      let upstreamSubscription = self.asStream().subscribe(observer: observer)
-      let subscription = stream.subscribe(observer: observer)
-      return {
-        subscription.unsubscribe()
-        upstreamSubscription.unsubscribe()
-      }
-    }
-  }
+  /** The interaction is currently taking effect. */
+  case active
 }

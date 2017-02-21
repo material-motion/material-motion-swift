@@ -41,7 +41,7 @@ extension MotionObservableConvertible {
    can be used to create any operator that only needs to modify values. All state events are
    forwarded along.
    */
-  func _nextOperator<U>(_ metadata: Metadata, operation: @escaping (T, (U) -> Void) -> Void, coreAnimation: @escaping (CoreAnimationChannelEvent, CoreAnimationChannel) -> Void) -> MotionObservable<U> {
+  func _nextOperator<U>(_ metadata: Metadata, operation: @escaping (T, (U) -> Void) -> Void, coreAnimation: @escaping (CoreAnimationChannelEvent, CoreAnimationChannel?) -> Void) -> MotionObservable<U> {
     return MotionObservable<U>(self.metadata.createChild(metadata, type: .constraint)) { observer in
       return self.asStream().subscribe(next: {
         return operation($0, observer.next)

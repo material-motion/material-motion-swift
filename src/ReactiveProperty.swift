@@ -85,7 +85,7 @@ public final class ReactiveProperty<T> {
     coreAnimation(event)
 
     for observer in observers {
-      observer.coreAnimation(event)
+      observer.coreAnimation?(event)
     }
   }
 

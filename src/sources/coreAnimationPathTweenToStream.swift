@@ -45,9 +45,9 @@ public func coreAnimation(_ tween: PathTween) -> MotionObservable<CGPoint> {
         tween.state.value = .active
 
         if let timeline = tween.timeline {
-          observer.coreAnimation(.timeline(timeline))
+          observer.coreAnimation?(.timeline(timeline))
         }
-        observer.coreAnimation(.add(animation, key, initialVelocity: nil, completionBlock: {
+        observer.coreAnimation?(.add(animation, key, initialVelocity: nil, completionBlock: {
           activeAnimations.remove(key)
           if activeAnimations.count == 0 {
             tween.state.value = .atRest
@@ -62,7 +62,7 @@ public func coreAnimation(_ tween: PathTween) -> MotionObservable<CGPoint> {
       if enabled {
         checkAndEmit()
       } else {
-        animationKeys.forEach { observer.coreAnimation(.remove($0)) }
+        animationKeys.forEach { observer.coreAnimation?(.remove($0)) }
         activeAnimations.removeAll()
         animationKeys.removeAll()
         tween.state.value = .atRest
@@ -70,7 +70,7 @@ public func coreAnimation(_ tween: PathTween) -> MotionObservable<CGPoint> {
     }
 
     return {
-      animationKeys.forEach { observer.coreAnimation(.remove($0)) }
+      animationKeys.forEach { observer.coreAnimation?(.remove($0)) }
       subscriptions.forEach { $0.unsubscribe() }
       activeSubscription.unsubscribe()
     }

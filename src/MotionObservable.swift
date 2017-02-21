@@ -17,73 +17,85 @@
 import Foundation
 import IndefiniteObservable
 
-// Channels are functions that pass values down the stream.
+// Channels are functions that pass values down a stream.
+
+/**
+ The canonical value channel on any stream.
+ */
 public typealias NextChannel<T> = (T) -> Void
 
-/** A Core Animation channel event. */
-public enum CoreAnimationChannelEvent {
-  /** The provided animation is expected to be added to a layer. */
-  case add(CAPropertyAnimation, String, initialVelocity: Any?, completionBlock: () -> Void)
-
-  /** Any animation with the given key is expected to be removed from a layer. */
-  case remove(String)
-
-  case timeline(Timeline)
-}
+/**
+ The Core Animation channel shape.
+ */
 public typealias CoreAnimationChannel = (CoreAnimationChannelEvent) -> Void
 
 /**
+ A Core Animation channel event.
+ */
+public enum CoreAnimationChannelEvent {
+  /**
+   The provided animation is expected to be added to a layer.
+   */
+  case add(CAPropertyAnimation, String, initialVelocity: Any?, completionBlock: () -> Void)
+
+  /**
+   Any animation with the given key is expected to be removed from a layer.
+   */
+  case remove(String)
+
+  /**
+   The timeline should be observed, and changes in its state should be used to scrub an interaction.
+   */
+  case timeline(Timeline)
+}
+
+/**
  A MotionObservable is a type of [Observable](http://reactivex.io/documentation/observable.html)
- that specializes in motion systems that can be either active or at rest and potentially emit core
- animation objects.
+ that also supports render server-based Core Animation events.
 
  Throughout this documentation we will treat the words "observable" and "stream" as synonyms.
  */
 public final class MotionObservable<T>: IndefiniteObservable<MotionObserver<T>> {
 
-  /** Connect is only invoked when subscribe is invoked. */
+  /**
+   Creates a new motion observable with the provided metadata and connect function.
+
+   The connect function will be invoked each time this observable is subscribed to.
+   */
   public init(_ metadata: Metadata, connect: @escaping Connect<MotionObserver<T>>) {
     self.metadata = metadata
     super.init(connect)
   }
 
+  /**
+   The provided name is used to create this observable's Metadata information.
+   */
+  public convenience init(_ name: String? = nil, connect: @escaping Connect<MotionObserver<T>>) {
+    self.init(Metadata(name), connect: connect)
+  }
+
+  /**
+   The metadata describing this stream.
+   */
   public let metadata: Metadata
 
-  /** Sugar for subscribing a MotionObserver. */
-  public func subscribe(next: @escaping NextChannel<T>,
-                        coreAnimation: @escaping CoreAnimationChannel) -> Subscription {
+  /**
+   Sugar for subscribing a MotionObserver.
+   */
+  public func subscribe(next: @escaping NextChannel<T>, coreAnimation: @escaping CoreAnimationChannel) -> Subscription {
     return super.subscribe(observer: MotionObserver<T>(next: next, coreAnimation: coreAnimation))
   }
 
-  /** Sugar for subscribing a MotionObserver. */
+  /**
+   Sugar for subscribing a MotionObserver.
+   */
   public func subscribe(_ next: @escaping NextChannel<T>) -> Subscription {
-    return super.subscribe(observer: MotionObserver<T>(next: next, coreAnimation: { _ in }))
+    return super.subscribe(observer: MotionObserver<T>(next: next))
   }
 }
 
 /**
- The possible states that a stream can be in.
-
- What "active" means is stream-dependant. The stream is active if you can answer yes to any of the
- following questions:
-
- - Is my animation currently animating?
- - Is my physical simulation still moving?
- - Is my gesture recognizer in the .began or .changed state?
-
- Momentary events such as taps may emit .active immediately followed by .atRest.
- */
-public enum MotionState {
-  /** The stream is at rest. */
-  case atRest
-
-  /** The stream is currently in motion. */
-  case active
-}
-
-/**
- A MotionObserver receives values, state updates, and core animation objects from a MotionObservable
- subscription.
+ A MotionObserver receives values and core animation events from a MotionObservable subscription.
  */
 public final class MotionObserver<T>: Observer {
   public typealias Value = T
@@ -93,36 +105,29 @@ public final class MotionObserver<T>: Observer {
     self.coreAnimation = coreAnimation
   }
 
+  public init(next: @escaping NextChannel<T>) {
+    self.next = next
+    self.coreAnimation = nil
+  }
+
   public let next: NextChannel<T>
-  public let coreAnimation: CoreAnimationChannel
+  public let coreAnimation: CoreAnimationChannel?
 }
 
-/** A MotionObservableConvertible has a canonical MotionObservable that it can return. */
+/**
+ A MotionObservableConvertible has a canonical MotionObservable that it can return.
+ */
 public protocol MotionObservableConvertible: Inspectable {
   associatedtype T
 
-  /** Returns the canonical MotionObservable for this object. */
+  /**
+   Returns the canonical MotionObservable for this object.
+   */
   func asStream() -> MotionObservable<T>
 }
 
 extension MotionObservable: MotionObservableConvertible {
   public func asStream() -> MotionObservable<T> {
     return self
-  }
-}
-
-extension CGFloat: MotionObservableConvertible {
-  public var metadata: Metadata { return Metadata("\(self)") }
-
-  public func asStream() -> MotionObservable<CGFloat> {
-    return self.asProperty().asStream()
-  }
-}
-
-extension CGPoint: MotionObservableConvertible {
-  public var metadata: Metadata { return Metadata("\(self)") }
-
-  public func asStream() -> MotionObservable<CGPoint> {
-    return self.asProperty().asStream()
   }
 }

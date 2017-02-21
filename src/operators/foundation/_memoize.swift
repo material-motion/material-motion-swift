@@ -43,7 +43,7 @@ extension MotionObservableConvertible {
       }, coreAnimation: { event in
         lastCoreAnimationEvent = event
         for observer in observers {
-          observer.coreAnimation(event)
+          observer.coreAnimation?(event)
         }
       })
     }
@@ -60,7 +60,7 @@ extension MotionObservableConvertible {
         observer.next(lastValue)
       }
       if let lastCoreAnimationEvent = lastCoreAnimationEvent {
-        observer.coreAnimation(lastCoreAnimationEvent)
+        observer.coreAnimation?(lastCoreAnimationEvent)
       }
 
       return {

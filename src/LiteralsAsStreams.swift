@@ -14,21 +14,20 @@
  limitations under the License.
  */
 
-import IndefiniteObservable
+import Foundation
 
-extension MotionObservableConvertible {
+extension CGFloat: MotionObservableConvertible {
+  public var metadata: Metadata { return Metadata("\(self)") }
 
-  /**
-   Emits values as it receives them, both from upstream and from the provided stream.
-   */
-  public func merge(with stream: MotionObservable<T>) -> MotionObservable<T> {
-    return MotionObservable<T>(Metadata("\(#function)", args: [stream])) { observer in
-      let upstreamSubscription = self.asStream().subscribe(observer: observer)
-      let subscription = stream.subscribe(observer: observer)
-      return {
-        subscription.unsubscribe()
-        upstreamSubscription.unsubscribe()
-      }
-    }
+  public func asStream() -> MotionObservable<CGFloat> {
+    return self.asProperty().asStream()
+  }
+}
+
+extension CGPoint: MotionObservableConvertible {
+  public var metadata: Metadata { return Metadata("\(self)") }
+
+  public func asStream() -> MotionObservable<CGPoint> {
+    return self.asProperty().asStream()
   }
 }
