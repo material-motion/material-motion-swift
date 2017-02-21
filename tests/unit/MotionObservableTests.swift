@@ -21,7 +21,7 @@ import MaterialMotionStreams
 
 class MotionObservableTests: XCTestCase {
 
-  func testSubscription() {
+  func testReceivesValue() {
     let value = 10
 
     let observable = MotionObservable<Int> { observer in
@@ -39,7 +39,7 @@ class MotionObservableTests: XCTestCase {
     waitForExpectations(timeout: 0)
   }
 
-  func testSubscriptionWithCoreAnimationChannel() {
+  func testReceivesValueWithCoreAnimationChannel() {
     let value = 10
 
     let observable = MotionObservable<Int> { observer in
@@ -53,6 +53,29 @@ class MotionObservableTests: XCTestCase {
         valueReceived.fulfill()
       }
     }, coreAnimation: { event in
+    })
+
+    waitForExpectations(timeout: 0)
+  }
+
+  func testReceivesCoreAnimationEventWithCoreAnimationChannel() {
+    let observable = MotionObservable<Int> { observer in
+      guard let coreAnimation = observer.coreAnimation else {
+        XCTAssert(false, "No Core Animation channel available")
+        return noopDisconnect
+      }
+      coreAnimation(.add(CABasicAnimation(), "key", initialVelocity: nil, completionBlock: { }))
+      return noopDisconnect
+    }
+
+    let eventReceived = expectation(description: "Event was received")
+    let _ = observable.subscribe(next: { value in }, coreAnimation: { event in
+      switch event {
+      case .add:
+        eventReceived.fulfill()
+      default:
+        XCTAssert(false)
+      }
     })
 
     waitForExpectations(timeout: 0)
