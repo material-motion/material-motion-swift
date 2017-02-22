@@ -291,8 +291,14 @@ private class PushBackTransition: Transition {
       runtime.add(runtime.get(pan)
         .translation(in: runtime.containerView)
         .y()
-        .slop(size: 50)
+        .slop(size: 100)
         .rewrite([.onExit: .backward, .onReturn: .forward]),
+                  to: ctx.direction)
+
+      runtime.add(velocityStream
+        .y()
+        .thresholdRange(min: -100, max: 100)
+        .rewrite([.whenBelow: .backward, .whenAbove: .backward]),
                   to: ctx.direction)
     }
 
