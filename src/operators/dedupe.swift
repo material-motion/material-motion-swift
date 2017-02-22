@@ -18,16 +18,19 @@ import Foundation
 
 extension MotionObservableConvertible where T: Equatable {
 
+  /**
+   Emits values from upstream as long as they're different from the previously-emitted value.
+   */
   public func dedupe() -> MotionObservable<T> {
-    var dispatched = false
+    var emitted = false
     var lastValue: T?
     return _nextOperator(Metadata("\(#function)")) { value, next in
-      if dispatched && lastValue == value {
+      if emitted && lastValue == value {
         return
       }
 
       lastValue = value
-      dispatched = true
+      emitted = true
 
       next(value)
     }
