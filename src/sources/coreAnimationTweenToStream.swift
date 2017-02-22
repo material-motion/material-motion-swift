@@ -42,7 +42,7 @@ public func coreAnimation<T>(_ tween: Tween<T>) -> MotionObservable<T> {
       }
       observer.next(tween.values.last!)
 
-      guard let duration = tween.duration.read() else {
+      guard let duration = tween.duration._read() else {
         return
       }
       animation.beginTime = tween.delay

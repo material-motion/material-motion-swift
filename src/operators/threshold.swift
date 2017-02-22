@@ -65,7 +65,7 @@ extension MotionObservableConvertible where T: Comparable {
       if let above = above, value > max {
         next(above)
       }
-      if let within = within, let withinValue = within.asStream().read(), value <= max, value >= min {
+      if let within = within, let withinValue = within._read(), value <= max, value >= min {
         next(withinValue)
       }
     }

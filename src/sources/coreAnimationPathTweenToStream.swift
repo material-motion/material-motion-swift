@@ -32,7 +32,7 @@ public func coreAnimation(_ tween: PathTween) -> MotionObservable<CGPoint> {
 
         observer.next(pathValue.getAllPoints().last!)
 
-        guard let duration = tween.duration.read() else {
+        guard let duration = tween.duration._read() else {
           return
         }
         animation.beginTime = tween.delay

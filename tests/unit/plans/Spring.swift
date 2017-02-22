@@ -22,11 +22,11 @@ class SpringTests: XCTestCase {
 
   func testCGPointInitialization() {
     let spring = Spring<CGPoint>(threshold: 1, system: pop)
-    XCTAssertEqual(spring.initialVelocity.read(), .zero)
+    XCTAssertEqual(spring.initialVelocity._read(), .zero)
   }
 
   func testCGFloatInitialization() {
     let spring = Spring<CGFloat>(threshold: 1, system: pop)
-    XCTAssertEqual(spring.initialVelocity.read(), 0)
+    XCTAssertEqual(spring.initialVelocity._read(), 0)
   }
 }

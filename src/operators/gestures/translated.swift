@@ -27,7 +27,7 @@ extension MotionObservableConvertible where T: UIPanGestureRecognizer {
     var cachedInitialPosition: CGPoint?
     return _nextOperator(Metadata("\(#function)", args: [initialPosition, view])) { value, next in
       if value.state == .began || (value.state == .changed && cachedInitialPosition == nil)  {
-        cachedInitialPosition = initialPositionStream.read()
+        cachedInitialPosition = initialPositionStream._read()
 
       } else if value.state != .began && value.state != .changed {
         cachedInitialPosition = nil

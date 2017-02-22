@@ -19,11 +19,9 @@ import Foundation
 extension MotionObservableConvertible {
 
   /**
-   Return the value emitted by the stream on subscription.
-
-   Will throw an assertion if no value was emitted.
+   Return the value emitted by the stream on subscription, if any.
    */
-  public func read() -> T? {
+  public func _read() -> T? {
     var value: T?
     subscribe { value = $0 }
     return value

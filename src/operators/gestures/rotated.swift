@@ -27,7 +27,7 @@ extension MotionObservableConvertible where T: UIRotationGestureRecognizer {
     var cachedInitialRotation: CGFloat?
     return _nextOperator(Metadata("\(#function)", args: [initialRotation])) { value, next in
       if value.state == .began || (value.state == .changed && cachedInitialRotation == nil)  {
-        cachedInitialRotation = initialRotationStream.read()
+        cachedInitialRotation = initialRotationStream._read()
       } else if value.state != .began && value.state != .changed {
         cachedInitialRotation = nil
       }
