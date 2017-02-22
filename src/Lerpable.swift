@@ -27,6 +27,9 @@ public protocol Lerpable {
 
 extension CGFloat: Lerpable {
   public func progress(along vector: CGFloat) -> CGFloat {
+    if vector == 0 {
+      return 0
+    }
     return self / vector
   }
 

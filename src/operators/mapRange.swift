@@ -18,17 +18,20 @@ import Foundation
 
 extension MotionObservableConvertible where T: Subtractable, T: Lerpable {
 
-  /** Linearly interpolate the incoming value along the given range to the destination range. */
-  public func mapRange<U>(
-    rangeStart: T,
-    rangeEnd: T,
-    destinationStart: U,
-    destinationEnd: U) -> MotionObservable<U>
+  /**
+   Linearly interpolate the incoming value along the given range to the destination range.
+   */
+  public func mapRange<U>
+    ( start: T,
+      end: T,
+      destinationStart: U,
+      destinationEnd: U
+    ) -> MotionObservable<U>
   where U: Lerpable, U: Subtractable, U: Addable {
-    return _map(Metadata("\(#function)", args: [rangeStart, rangeEnd, destinationStart, destinationEnd])) {
-      let position = $0 - rangeStart
+    return _map(Metadata("\(#function)", args: [start, end, destinationStart, destinationEnd])) {
+      let position = $0 - start
 
-      let vector = rangeEnd - rangeStart
+      let vector = end - start
       let progress = position.progress(along: vector)
 
       let destinationVector = destinationEnd - destinationStart
