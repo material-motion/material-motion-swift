@@ -40,6 +40,8 @@ public class TransitionContext: NSObject {
 
   public let replicator = ViewReplicator()
 
+  public let timeline = Timeline()
+
   /** The context view for this transition. */
   public func contextView() -> UIView? {
     if contextViewRetriever == nil {

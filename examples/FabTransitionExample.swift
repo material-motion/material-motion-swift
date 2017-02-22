@@ -100,6 +100,8 @@ private class PushBackTransition: Transition {
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) {
     foreViewLayer = ctx.fore.view.layer
 
+    ctx.timeline.paused.value = true
+
     let contextView = ctx.contextView()!
 
     floodFillView = UIView()
@@ -151,11 +153,11 @@ private class PushBackTransition: Transition {
 
     runtime.add(Hidden(), to: contextView)
 
-    ctx.terminateWhenAllAtRest([expansion.state.asStream(),
-                                fadeOut.state.asStream(),
-                                radius.state.asStream(),
-                                shadowPath.state.asStream(),
-                                shiftIn.state.asStream()])
+    let spring = Spring<CGFloat>(threshold: 0.05, system: pop)
+    spring.destination.value = 0.4
+    runtime.add(spring, to: ctx.timeline.timeOffset)
+
+    ctx.terminateWhenAllAtRest([spring.state.asStream()])
   }
 
   private func tween<T>(back: T, fore: T, ctx: TransitionContext) -> Tween<T> {
@@ -165,7 +167,9 @@ private class PushBackTransition: Transition {
     } else {
       values = [fore, back]
     }
-    return Tween(duration: 0.4 * simulatorDragCoefficient(), values: values, system: coreAnimation)
+    let tween = Tween(duration: 0.4, values: values, system: coreAnimation)
+    tween.timeline = ctx.timeline
+    return tween
   }
 }
 
