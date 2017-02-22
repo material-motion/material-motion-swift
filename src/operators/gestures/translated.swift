@@ -23,19 +23,29 @@ extension MotionObservableConvertible where T: UIPanGestureRecognizer {
    recognizer is active.
    */
   func translated<O: MotionObservableConvertible>(from initialPosition: O, in view: UIView) -> MotionObservable<CGPoint> where O.T == CGPoint {
-    let initialPositionStream = initialPosition.asStream()
     var cachedInitialPosition: CGPoint?
-    return _nextOperator(Metadata("\(#function)", args: [initialPosition, view])) { value, next in
-      if value.state == .began || (value.state == .changed && cachedInitialPosition == nil)  {
-        cachedInitialPosition = initialPositionStream._read()
+    var lastInitialPosition: CGPoint?
 
-      } else if value.state != .began && value.state != .changed {
-        cachedInitialPosition = nil
+    return MotionObservable(metadata.createChild(Metadata("\(#function)", type: .constraint, args: [initialPosition, view]))) { observer in
+      let initialPositionSubscription = initialPosition.subscribe { lastInitialPosition = $0 }
+
+      let upstreamSubscription = self.subscribe { value in
+        if value.state == .began || (value.state == .changed && cachedInitialPosition == nil)  {
+          cachedInitialPosition = lastInitialPosition
+
+        } else if value.state != .began && value.state != .changed {
+          cachedInitialPosition = nil
+        }
+        if let cachedInitialPosition = cachedInitialPosition {
+          let translation = value.translation(in: view)
+          observer.next(CGPoint(x: cachedInitialPosition.x + translation.x,
+                                y: cachedInitialPosition.y + translation.y))
+        }
       }
-      if let cachedInitialPosition = cachedInitialPosition {
-        let translation = value.translation(in: view)
-        next(CGPoint(x: cachedInitialPosition.x + translation.x,
-                     y: cachedInitialPosition.y + translation.y))
+
+      return {
+        upstreamSubscription.unsubscribe()
+        initialPositionSubscription.unsubscribe()
       }
     }
   }

@@ -23,17 +23,28 @@ extension MotionObservableConvertible where T: UIRotationGestureRecognizer {
    recognizer is active.
    */
   func rotated<O: MotionObservableConvertible>(from initialRotation: O) -> MotionObservable<CGFloat> where O.T == CGFloat {
-    let initialRotationStream = initialRotation.asStream()
     var cachedInitialRotation: CGFloat?
-    return _nextOperator(Metadata("\(#function)", args: [initialRotation])) { value, next in
-      if value.state == .began || (value.state == .changed && cachedInitialRotation == nil)  {
-        cachedInitialRotation = initialRotationStream._read()
-      } else if value.state != .began && value.state != .changed {
-        cachedInitialRotation = nil
+    var lastInitialRotation: CGFloat?
+
+    return MotionObservable(metadata.createChild(Metadata("\(#function)", type: .constraint, args: [initialRotation]))) { observer in
+      let initialRotationSubscription = initialRotation.subscribe { lastInitialRotation = $0 }
+
+      let upstreamSubscription = self.subscribe { value in
+        if value.state == .began || (value.state == .changed && cachedInitialRotation == nil)  {
+          cachedInitialRotation = lastInitialRotation
+
+        } else if value.state != .began && value.state != .changed {
+          cachedInitialRotation = nil
+        }
+        if let cachedInitialRotation = cachedInitialRotation {
+          let rotation = value.rotation
+          observer.next(cachedInitialRotation + rotation)
+        }
       }
-      if let cachedInitialRotation = cachedInitialRotation {
-        let rotation = value.rotation
-        next(cachedInitialRotation + rotation)
+
+      return {
+        upstreamSubscription.unsubscribe()
+        initialRotationSubscription.unsubscribe()
       }
     }
   }

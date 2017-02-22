@@ -23,18 +23,28 @@ extension MotionObservableConvertible where T: UIPinchGestureRecognizer {
    recognizer is active.
    */
   func scaled<O: MotionObservableConvertible>(from initialScale: O) -> MotionObservable<CGFloat> where O.T == CGFloat {
-    let initialScaleStream = initialScale.asStream()
-    var initialScale: CGFloat?
-    return _nextOperator(Metadata("\(#function)", args: [initialScale])) { value, next in
-      if value.state == .began || (value.state == .changed && initialScale == nil)  {
-        initialScale = initialScaleStream._read()
+    var cachedInitialScale: CGFloat?
+    var lastInitialScale: CGFloat?
 
-      } else if value.state != .began && value.state != .changed {
-        initialScale = nil
+    return MotionObservable(metadata.createChild(Metadata("\(#function)", type: .constraint, args: [initialScale]))) { observer in
+      let initialScaleSubscription = initialScale.subscribe { lastInitialScale = $0 }
+
+      let upstreamSubscription = self.subscribe { value in
+        if value.state == .began || (value.state == .changed && cachedInitialScale == nil)  {
+          cachedInitialScale = lastInitialScale
+
+        } else if value.state != .began && value.state != .changed {
+          cachedInitialScale = nil
+        }
+        if let cachedInitialScale = cachedInitialScale {
+          let scale = value.scale
+          observer.next(cachedInitialScale * scale)
+        }
       }
-      if let cachedInitialScale = initialScale {
-        let scale = value.scale
-        next(cachedInitialScale * scale)
+
+      return {
+        upstreamSubscription.unsubscribe()
+        initialScaleSubscription.unsubscribe()
       }
     }
   }
