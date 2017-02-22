@@ -41,8 +41,7 @@ public class TransitionSpring<T: Zeroable>: Spring<T>, TransitionInteraction {
     self.forwardDestination = forwardDestination
     self._initialValue = direction == .forward ? backwardDestination : forwardDestination
 
-    self.toggledDestination = direction.destinations(back: backwardDestination,
-                                                     fore: forwardDestination)
+    self.toggledDestination = direction.rewrite([.backward: backwardDestination, .forward: forwardDestination])
     super.init(threshold: threshold, system: system)
   }
 
