@@ -66,13 +66,13 @@ public class ReactiveCALayer {
   }()
 
   /** A property representing the layer's .anchorPoint value. */
-  public lazy var anchoring: ReactiveProperty<(CGPoint, CGPoint)> = {
+  public lazy var anchorPointAdjustment: ReactiveProperty<AnchorPointAdjustment> = {
     let anchorPoint = self.anchorPoint
     let position = self.position
     let layer = self.layer
     return ReactiveProperty("\(pretty(layer)).\(#function)",
-                            initialValue: (anchorPoint.value, position.value),
-                            externalWrite: { anchorPoint.value = $0.0; position.value = $0.1 },
+                            initialValue: .init(anchorPoint: anchorPoint.value, position: position.value),
+                            externalWrite: { anchorPoint.value = $0.anchorPoint; position.value = $0.position },
                             coreAnimation: { _ in })
   }()
 

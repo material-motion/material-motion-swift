@@ -32,17 +32,17 @@ public class AdjustsAnchorPoint: ViewInteraction {
         .onRecognitionState(.began)
         .centroid(in: view)
         .normalized(by: view.bounds.size)
-        .anchored(in: view)
+        .anchorPointAdjustment(in: view)
     }
     anchorPointStreams.append(contentsOf: gestureRecognizers.map {
       runtime.get($0)
         .onRecognitionStates([.ended, .cancelled])
         .mapTo(CGPoint(x: 0.5, y: 0.5))
-        .anchored(in: view)
+        .anchorPointAdjustment(in: view)
     })
 
     for stream in anchorPointStreams {
-      runtime.add(stream, to: reactiveView.reactiveLayer.anchoring)
+      runtime.add(stream, to: reactiveView.reactiveLayer.anchorPointAdjustment)
     }
   }
 }

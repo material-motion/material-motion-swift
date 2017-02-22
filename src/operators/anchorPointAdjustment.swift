@@ -19,17 +19,24 @@ import Foundation
 extension MotionObservableConvertible where T == CGPoint {
 
   /**
-   Emits the incoming anchor point and the position of that anchor point in relation to the given
-   view as a pair.
+   Emits an anchor point adjustment upon receipt of an anchor point.
 
-   The resulting stream is multicast so that it's possible to write both values to a layer's
-   anchorPoint and position properties, respectively.
+   The upstream anchor point should be expressed in normalized units from 0..1, where 0 means the
+   top/left-most edge of the view's bounds and 1 means the right/bottom-most edge of the bounds.
    */
-  public func anchored(in view: UIView) -> MotionObservable<(CGPoint, CGPoint)> {
+  public func anchorPointAdjustment(in view: UIView) -> MotionObservable<AnchorPointAdjustment> {
     return _map(Metadata("\(#function)", args: [view])) {
       let newPosition = CGPoint(x: $0.x * view.layer.bounds.width, y: $0.y * view.layer.bounds.height)
       let positionInSuperview = view.layer.convert(newPosition, to: view.layer.superlayer)
-      return ($0, positionInSuperview)
+      return .init(anchorPoint: $0, position: positionInSuperview)
     }
   }
+}
+
+/**
+ A representation of an anchor point and position adjustment for a CALayer.
+ */
+public struct AnchorPointAdjustment {
+  let anchorPoint: CGPoint
+  let position: CGPoint
 }
