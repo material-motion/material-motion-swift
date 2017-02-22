@@ -33,23 +33,19 @@ extension MotionObservableConvertible {
     var lastValue: T?
     var lastCoreAnimationEvent: CoreAnimationChannelEvent?
 
-    let subscribe = {
-      subscription = self.subscribe(next: { value in
-        lastValue = value
-        for observer in observers {
-          observer.next(value)
-        }
-      }, coreAnimation: { event in
-        lastCoreAnimationEvent = event
-        for observer in observers {
-          observer.coreAnimation?(event)
-        }
-      })
-    }
-
     return MotionObservable<T>(self.metadata.createChild(Metadata("\(#function)", type: .constraint))) { observer in
       if observers.count == 0 {
-        subscribe()
+        subscription = self.subscribe(next: { value in
+          lastValue = value
+          for observer in observers {
+            observer.next(value)
+          }
+        }, coreAnimation: { event in
+          lastCoreAnimationEvent = event
+          for observer in observers {
+            observer.coreAnimation?(event)
+          }
+        })
       }
 
       // Add the observer to the list after subscribing so that we don't double-send.
