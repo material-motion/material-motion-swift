@@ -31,7 +31,6 @@ extension MotionObservableConvertible {
     var subscription: Subscription?
 
     var lastValue: T?
-    var lastState: MotionState?
     var lastCoreAnimationEvent: CoreAnimationChannelEvent?
 
     let subscribe = {
