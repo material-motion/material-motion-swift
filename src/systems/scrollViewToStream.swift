@@ -14,21 +14,14 @@
  limitations under the License.
  */
 
-import UIKit
-
-/**
- A scrollview-to-stream function creates a MotionObservable from a UIScrollView.
-
- The stream is expected to dispatch changes of the scroll view's content offset.
- */
-public typealias ScrollViewToStream = (UIScrollView) -> MotionObservable<CGPoint>
+import Foundation
 
 /**
  Creates a scroll source backed by KVO on a UIScrollView.
 
  This scroll source will not emit state updates.
  */
-public func scrollViewToStream(_ scrollView: UIScrollView) -> MotionObservable<CGPoint> {
+func scrollViewToStream(_ scrollView: UIScrollView) -> MotionObservable<CGPoint> {
   return MotionObservable(Metadata("Scroll View", args: [scrollView])) { observer in
     return ScrollViewConnection(subscribedTo: scrollView, observer: observer).disconnect
   }

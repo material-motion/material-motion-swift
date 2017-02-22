@@ -89,6 +89,17 @@ public final class MotionRuntime {
   }
   private var reactiveGestureRecognizers: [UIGestureRecognizer: AnyObject] = [:]
 
+  public func get(_ scrollView: UIScrollView) -> MotionObservable<CGPoint> {
+    if let reactiveObject = reactiveScrollViews[scrollView] {
+      return reactiveObject
+    }
+
+    let reactiveObject = scrollViewToStream(scrollView)
+    reactiveScrollViews[scrollView] = reactiveObject
+    return reactiveObject
+  }
+  private var reactiveScrollViews: [UIScrollView: MotionObservable<CGPoint>] = [:]
+
   public func whenAllAtRest(_ streams: [MotionObservable<MotionState>], body: @escaping () -> Void) {
     var subscriptions: [Subscription] = []
     var activeIndices = Set<Int>()

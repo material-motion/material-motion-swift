@@ -49,7 +49,7 @@ public class CarouselExampleViewController: UIViewController, UIScrollViewDelega
       (title: "Purr purr", description: "Meow", image: UIImage(named: "sticker2")!),
     ]
 
-    let stream = scrollViewToStream(scrollView)
+    let stream = runtime.get(scrollView)
     for (index, data) in datas.enumerated() {
       let page = CarouselPage(frame: view.bounds)
       page.frame.origin.x = CGFloat(index) * view.bounds.width

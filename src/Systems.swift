@@ -14,7 +14,26 @@
  limitations under the License.
  */
 
-import UIKit
+import Foundation
+
+/**
+ A gesture-to-stream function creates a MotionObservable from a gesture recognizer.
+
+ The stream is expected to dispatch the gesture recognizer each time its state is updated.
+ */
+public typealias GestureToStream<T: UIGestureRecognizer> = (T) -> MotionObservable<T>
+
+public typealias PathTweenToStream<T> = (PathTween) -> MotionObservable<CGPoint>
+
+/**
+ A scrollview-to-stream function creates a MotionObservable from a UIScrollView.
+
+ The stream is expected to dispatch changes of the scroll view's content offset.
+ */
+public typealias ScrollViewToStream = (UIScrollView) -> MotionObservable<CGPoint>
+
+/** A tween-to-stream function creates a MotionObservable from a Tween. */
+public typealias TweenToStream<T> = (Tween<T>) -> MotionObservable<T>
 
 /**
  A spring-to-stream function creates a MotionObservable from a Spring and initial value stream.
