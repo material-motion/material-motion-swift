@@ -18,24 +18,21 @@ import Foundation
 
 extension MotionObservableConvertible where T == CGFloat {
 
-  /** Emits the incoming value + amount. */
-  public func offset(by amount: CGFloat) -> MotionObservable<CGFloat> {
+  /** Emits the incoming value / amount. */
+  public func normalized(by amount: CGFloat) -> MotionObservable<CGFloat> {
     return _map(Metadata("\(#function)", args: [amount])) {
-      $0 + amount
+      $0 / amount
     }
   }
+}
 
-  /** Emits the incoming value * amount. */
-  public func scaled(by amount: CGFloat) -> MotionObservable<CGFloat> {
+extension MotionObservableConvertible where T == CGPoint {
+
+  /** Emits the incoming value / amount. */
+  public func normalized(by amount: CGSize) -> MotionObservable<CGPoint> {
     return _map(Metadata("\(#function)", args: [amount])) {
-      $0 * amount
-    }
-  }
-
-  /** Subtract the incoming value from the provided value. */
-  public func subtracted(from value: CGFloat) -> MotionObservable<CGFloat> {
-    return _map(Metadata("\(#function)", args: [value])) {
-      value - $0
+      return CGPoint(x: $0.x / amount.width,
+                     y: $0.y / amount.height)
     }
   }
 }
