@@ -42,7 +42,7 @@ class ModalDialogViewController: UIViewController {
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
     super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
-    transitionController.directorType = ModalDialogTransitionDirector.self
+    transitionController.transitionType = ModalDialogTransition.self
 
     modalPresentationStyle = .overCurrentContext
   }
@@ -66,18 +66,18 @@ class ModalDialogViewController: UIViewController {
   }
 }
 
-class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
+class ModalDialogTransition: SelfDismissingTransition {
 
   required init() {}
 
-  func willBeginTransition(_ transition: Transition, runtime: MotionRuntime) {
-    let size = transition.fore.preferredContentSize
+  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) {
+    let size = ctx.fore.preferredContentSize
 
-    if transition.direction == .forward {
-      transition.fore.view.bounds = CGRect(origin: .zero, size: size)
+    if ctx.direction == .forward {
+      ctx.fore.view.bounds = CGRect(origin: .zero, size: size)
     }
 
-    let bounds = transition.containerView().bounds
+    let bounds = ctx.containerView().bounds
     let backPositionY = bounds.maxY + size.height * 3 / 4
     let forePositionY = bounds.midY
 
@@ -92,13 +92,13 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
     }
     let spring = TransitionSpring(back: backPositionY,
                                   fore: forePositionY,
-                                  direction: transition.direction,
+                                  direction: ctx.direction,
                                   threshold: 1,
                                   system: system)
 
-    let reactiveForeLayer = runtime.get(transition.fore.view.layer)
+    let reactiveForeLayer = runtime.get(ctx.fore.view.layer)
 
-    for gestureRecognizer in transition.gestureRecognizers {
+    for gestureRecognizer in ctx.gestureRecognizers {
       switch gestureRecognizer {
       case let pan as UIPanGestureRecognizer:
         let gesture = runtime.get(pan)
@@ -109,9 +109,9 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
         let velocityStream = gesture.velocityOnReleaseStream().y()
         runtime.add(velocityStream, to: spring.initialVelocity)
 
-        let centerY = transition.containerView().bounds.height / 2.0
+        let centerY = ctx.containerView().bounds.height / 2.0
         let positionY = reactiveForeLayer.positionY
-        let positionDestination: MotionObservable<Transition.Direction> =
+        let positionDestination: MotionObservable<TransitionContext.Direction> =
           positionY.threshold(centerY).rewrite([.whenBelow: .forward, .whenAbove: .backward])
 
         runtime.add(velocityStream
@@ -121,7 +121,7 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
           .rewrite([.whenBelow: createProperty(withInitialValue: .forward).asStream(),
                     .whenWithin: positionDestination,
                     .whenAbove: createProperty(withInitialValue: .backward).asStream()]),
-                    to: transition.direction)
+                    to: ctx.direction)
 
         runtime.add(gesture.atRest(), to: spring.enabled)
 
@@ -141,7 +141,7 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
       runtime.add(rotation, to: reactiveForeLayer.rotation)
     }
 
-    transition.terminateWhenAllAtRest([spring.state.asStream()])
+    ctx.terminateWhenAllAtRest([spring.state.asStream()])
   }
 
   static func willPresent(fore: UIViewController, dismisser: ViewControllerDismisser) {

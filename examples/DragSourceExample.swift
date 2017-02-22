@@ -19,16 +19,16 @@ import MaterialMotionStreams
 
 // This example demonstrates how to connect a drag source to a property on a view.
 
-class ExampleTransitionDirector: TransitionDirector {
+class ExampleTransition: Transition {
   required init() {}
 
-  func willBeginTransition(_ transition: Transition, runtime: MotionRuntime) {
-    let backPositionY = transition.containerView().bounds.height * 1.5
-    let forePositionY = transition.containerView().bounds.midY
+  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) {
+    let backPositionY = ctx.containerView().bounds.height * 1.5
+    let forePositionY = ctx.containerView().bounds.midY
 
     let from: CGFloat
     let to: CGFloat
-    switch transition.direction.value {
+    switch ctx.direction.value {
     case .forward:
       from = backPositionY
       to = forePositionY
@@ -38,7 +38,7 @@ class ExampleTransitionDirector: TransitionDirector {
     }
 
     let tween = Tween(duration: 0.35, values: [from, to], system: coreAnimation)
-    runtime.add(tween, to: runtime.get(transition.fore.view.layer).positionY)
+    runtime.add(tween, to: runtime.get(ctx.fore.view.layer).positionY)
   }
 }
 
@@ -61,7 +61,7 @@ public class DragSourceExampleViewController: UIViewController {
     let tap = UITapGestureRecognizer()
     tap.addTarget(self, action: #selector(tapToDismiss))
     vc.view.addGestureRecognizer(tap)
-    vc.transitionController.directorType = ExampleTransitionDirector.self
+    vc.transitionController.transitionType = ExampleTransition.self
     present(vc, animated: true)
   }
 

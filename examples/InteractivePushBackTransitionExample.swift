@@ -40,7 +40,7 @@ private class ModalViewController: UIViewController {
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
     super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
-    transitionController.directorType = PushBackTransitionDirector.self
+    transitionController.transitionType = PushBackTransition.self
   }
 
   required init?(coder aDecoder: NSCoder) {
@@ -59,21 +59,21 @@ private class ModalViewController: UIViewController {
 }
 
 @available(iOS 9.0, *)
-private class PushBackTransitionDirector: TransitionDirector {
+private class PushBackTransition: Transition {
 
   required init() {}
 
-  func willBeginTransition(_ transition: Transition, runtime: MotionRuntime) {
-    let foreLayer = runtime.get(transition.fore.view.layer)
+  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) {
+    let foreLayer = runtime.get(ctx.fore.view.layer)
 
-    let movement = spring(back: transition.containerView().bounds.height + transition.fore.view.layer.bounds.height / 2,
-                          fore: transition.containerView().bounds.midY,
+    let movement = spring(back: ctx.containerView().bounds.height + ctx.fore.view.layer.bounds.height / 2,
+                          fore: ctx.containerView().bounds.midY,
                           threshold: 1,
-                          transition: transition)
+                          ctx: ctx)
 
-    let scale = spring(back: 1, fore: 0.95, threshold: 0.005, transition: transition)
+    let scale = spring(back: 1, fore: 0.95, threshold: 0.005, ctx: ctx)
 
-    for gestureRecognizer in transition.gestureRecognizers {
+    for gestureRecognizer in ctx.gestureRecognizers {
       switch gestureRecognizer {
       case let pan as UIPanGestureRecognizer:
         let gesture = runtime.get(pan)
@@ -85,7 +85,7 @@ private class PushBackTransitionDirector: TransitionDirector {
                                               end: movement.forwardDestination,
                                               destinationStart: scale.backwardDestination,
                                               destinationEnd: scale.forwardDestination)
-        runtime.add(scaleStream, to: runtime.get(transition.back.view.layer).scale)
+        runtime.add(scaleStream, to: runtime.get(ctx.back.view.layer).scale)
 
         let velocityStream = gesture.velocityOnReleaseStream().y()
         runtime.add(velocityStream, to: movement.initialVelocity)
@@ -93,9 +93,9 @@ private class PushBackTransitionDirector: TransitionDirector {
         runtime.add(velocityStream
           .thresholdRange(min: -100, max: 100)
           .rewrite([.whenBelow: .forward,
-                    .whenWithin: transition.direction.value,
+                    .whenWithin: ctx.direction.value,
                     .whenAbove: .backward]),
-                    to: transition.direction)
+                    to: ctx.direction)
 
         runtime.add(gesture.atRest(), to: movement.enabled)
         runtime.add(gesture.atRest(), to: scale.enabled)
@@ -106,13 +106,13 @@ private class PushBackTransitionDirector: TransitionDirector {
     }
 
     runtime.add(movement, to: foreLayer.positionY)
-    runtime.add(scale, to: runtime.get(transition.back.view.layer).scale)
+    runtime.add(scale, to: runtime.get(ctx.back.view.layer).scale)
 
-    transition.terminateWhenAllAtRest([movement.state.asStream(), scale.state.asStream()])
+    ctx.terminateWhenAllAtRest([movement.state.asStream(), scale.state.asStream()])
   }
 
-  private func spring(back: CGFloat, fore: CGFloat, threshold: CGFloat, transition: Transition) -> TransitionSpring<CGFloat> {
-    let spring = TransitionSpring(back: back, fore: fore, direction: transition.direction, threshold: threshold, system: coreAnimation)
+  private func spring(back: CGFloat, fore: CGFloat, threshold: CGFloat, ctx: TransitionContext) -> TransitionSpring<CGFloat> {
+    let spring = TransitionSpring(back: back, fore: fore, direction: ctx.direction, threshold: threshold, system: coreAnimation)
     spring.friction.value = 500
     spring.tension.value = 1000
     spring.mass.value = 3

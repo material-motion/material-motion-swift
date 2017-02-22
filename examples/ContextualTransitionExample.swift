@@ -167,7 +167,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 
     super.init(nibName: nil, bundle: nil)
 
-    transitionController.directorType = PushBackTransitionDirector.self
+    transitionController.transitionType = PushBackTransition.self
   }
 
   required init?(coder aDecoder: NSCoder) {
@@ -256,15 +256,15 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 }
 
 @available(iOS 9.0, *)
-private class PushBackTransitionDirector: TransitionDirector {
+private class PushBackTransition: Transition {
 
   required init() {}
 
-  func willBeginTransition(_ transition: Transition, runtime: MotionRuntime) {
-    let foreVC = transition.fore as! PhotoAlbumViewController
+  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) {
+    let foreVC = ctx.fore as! PhotoAlbumViewController
     let foreImageView = (foreVC.collectionView.cellForItem(at: foreVC.indexPathForCurrentPhoto()) as! PhotoCollectionViewCell).imageView
-    let contextView = transition.contextView() as! PhotoCollectionViewCell
-    let replicaView = transition.replicator.replicate(view: contextView.imageView)
+    let contextView = ctx.contextView() as! PhotoCollectionViewCell
+    let replicaView = ctx.replicator.replicate(view: contextView.imageView)
 
     let imageSize = foreImageView.image!.size
 
@@ -272,12 +272,12 @@ private class PushBackTransitionDirector: TransitionDirector {
                        foreImageView.bounds.height / imageSize.height)
     let fitSize = CGSize(width: fitScale * imageSize.width, height: fitScale * imageSize.height)
 
-    let movement = spring(back: contextView, fore: foreImageView, transition: transition)
-    let size = spring(back: contextView.bounds.size, fore: fitSize, threshold: 1, transition: transition)
+    let movement = spring(back: contextView, fore: foreImageView, ctx: ctx)
+    let size = spring(back: contextView.bounds.size, fore: fitSize, threshold: 1, ctx: ctx)
 
     var terminalStates = [movement.state.asStream(), size.state.asStream()]
 
-    let pans = transition.gestureRecognizers.filter { $0 is UIPanGestureRecognizer }.map { $0 as! UIPanGestureRecognizer }
+    let pans = ctx.gestureRecognizers.filter { $0 is UIPanGestureRecognizer }.map { $0 as! UIPanGestureRecognizer }
     for pan in pans {
       let atRestStream = runtime.get(pan).atRest()
       terminalStates.append(runtime.get(pan).asMotionState())
@@ -293,26 +293,26 @@ private class PushBackTransitionDirector: TransitionDirector {
         .y()
         .slop(size: 50)
         .rewrite([.onExit: .backward, .onReturn: .forward]),
-                  to: transition.direction)
+                  to: ctx.direction)
     }
 
     let reactivePhoto = runtime.get(replicaView.layer)
     runtime.add(movement, to: reactivePhoto.position)
     runtime.add(size, to: reactivePhoto.size)
-    runtime.add(Draggable(gestureRecognizers: transition.gestureRecognizers), to: replicaView)
+    runtime.add(Draggable(gestureRecognizers: ctx.gestureRecognizers), to: replicaView)
 
     runtime.add(Hidden(), to: foreImageView)
 
-    let opacity: TransitionSpring<CGFloat> = spring(back: 0, fore: 1, threshold: 0.01, transition: transition)
-    runtime.add(opacity, to: runtime.get(transition.fore.view.layer).opacity)
+    let opacity: TransitionSpring<CGFloat> = spring(back: 0, fore: 1, threshold: 0.01, ctx: ctx)
+    runtime.add(opacity, to: runtime.get(ctx.fore.view.layer).opacity)
 
     terminalStates.append(opacity.state.asStream())
 
-    transition.terminateWhenAllAtRest(terminalStates)
+    ctx.terminateWhenAllAtRest(terminalStates)
   }
 
-  private func spring<T where T: Subtractable, T: Zeroable, T: Equatable>(back: T, fore: T, threshold: CGFloat, transition: Transition) -> TransitionSpring<T> {
-    let spring = TransitionSpring(back: back, fore: fore, direction: transition.direction, threshold: threshold, system: coreAnimation)
+  private func spring<T where T: Subtractable, T: Zeroable, T: Equatable>(back: T, fore: T, threshold: CGFloat, ctx: TransitionContext) -> TransitionSpring<T> {
+    let spring = TransitionSpring(back: back, fore: fore, direction: ctx.direction, threshold: threshold, system: coreAnimation)
     spring.friction.value = 500
     spring.tension.value = 1000
     spring.mass.value = 3
@@ -320,10 +320,10 @@ private class PushBackTransitionDirector: TransitionDirector {
     return spring
   }
 
-  private func spring(back: UIView, fore: UIView, transition: Transition) -> TransitionSpring<CGPoint> {
-    let backPosition = back.superview!.convert(back.layer.position, to: transition.containerView())
-    let forePosition = fore.superview!.convert(fore.layer.position, to: transition.containerView())
-    let spring = TransitionSpring(back: backPosition, fore: forePosition, direction: transition.direction, threshold: 1, system: coreAnimation)
+  private func spring(back: UIView, fore: UIView, ctx: TransitionContext) -> TransitionSpring<CGPoint> {
+    let backPosition = back.superview!.convert(back.layer.position, to: ctx.containerView())
+    let forePosition = fore.superview!.convert(fore.layer.position, to: ctx.containerView())
+    let spring = TransitionSpring(back: backPosition, fore: forePosition, direction: ctx.direction, threshold: 1, system: coreAnimation)
     spring.friction.value = 500
     spring.tension.value = 1000
     spring.mass.value = 3

@@ -131,7 +131,7 @@ private class StickerListViewController: UICollectionViewController {
   init() {
     super.init(collectionViewLayout: UICollectionViewFlowLayout())
 
-    transitionController.directorType = ModalTransitionDirector.self
+    transitionController.transitionType = ModalTransition.self
 
     modalPresentationStyle = .overCurrentContext
   }
@@ -190,24 +190,24 @@ private protocol StickerListViewControllerDelegate: NSObjectProtocol {
 }
 
 @available(iOS 9.0, *)
-private class ModalTransitionDirector: TransitionDirector {
+private class ModalTransition: Transition {
 
   required init() {}
 
-  func willBeginTransition(_ transition: Transition, runtime: MotionRuntime) {
-    let size = transition.fore.preferredContentSize == .zero() ? transition.fore.view.bounds.size : transition.fore.preferredContentSize
+  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) {
+    let size = ctx.fore.preferredContentSize == .zero() ? ctx.fore.view.bounds.size : ctx.fore.preferredContentSize
 
-    if transition.direction == .forward {
-      transition.fore.view.bounds = CGRect(origin: .zero, size: size)
+    if ctx.direction == .forward {
+      ctx.fore.view.bounds = CGRect(origin: .zero, size: size)
     }
 
     let spring = TransitionSpring(back: CGFloat(0),
                                   fore: CGFloat(1),
-                                  direction: transition.direction,
+                                  direction: ctx.direction,
                                   threshold: 0.01,
                                   system: coreAnimation)
-    runtime.add(spring, to: runtime.get(transition.fore.view.layer).opacity)
+    runtime.add(spring, to: runtime.get(ctx.fore.view.layer).opacity)
 
-    transition.terminateWhenAllAtRest([spring.state.asStream()])
+    ctx.terminateWhenAllAtRest([spring.state.asStream()])
   }
 }

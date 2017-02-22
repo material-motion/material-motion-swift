@@ -40,7 +40,7 @@ private class ModalViewController: UIViewController {
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
     super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
-    transitionController.directorType = PushBackTransitionDirector.self
+    transitionController.transitionType = PushBackTransition.self
   }
 
   required init?(coder aDecoder: NSCoder) {
@@ -61,25 +61,25 @@ private class ModalViewController: UIViewController {
 }
 
 @available(iOS 9.0, *)
-private class PushBackTransitionDirector: TransitionDirector {
+private class PushBackTransition: Transition {
 
   required init() {}
 
-  func willBeginTransition(_ transition: Transition, runtime: MotionRuntime) {
-    let position = spring(back: transition.containerView().bounds.height + transition.fore.view.layer.bounds.height / 2,
-                          fore: transition.containerView().bounds.midY,
+  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) {
+    let position = spring(back: ctx.containerView().bounds.height + ctx.fore.view.layer.bounds.height / 2,
+                          fore: ctx.containerView().bounds.midY,
                           threshold: 1,
-                          transition: transition)
-    let scale = spring(back: 1, fore: 0.95, threshold: 0.005, transition: transition)
+                          ctx: ctx)
+    let scale = spring(back: 1, fore: 0.95, threshold: 0.005, ctx: ctx)
 
-    runtime.add(position, to: runtime.get(transition.fore.view.layer).positionY)
-    runtime.add(scale, to: runtime.get(transition.back.view.layer).scale)
+    runtime.add(position, to: runtime.get(ctx.fore.view.layer).positionY)
+    runtime.add(scale, to: runtime.get(ctx.back.view.layer).scale)
 
-    transition.terminateWhenAllAtRest([position.state.asStream(), scale.state.asStream()])
+    ctx.terminateWhenAllAtRest([position.state.asStream(), scale.state.asStream()])
   }
 
-  private func spring(back: CGFloat, fore: CGFloat, threshold: CGFloat, transition: Transition) -> TransitionSpring<CGFloat> {
-    let spring = TransitionSpring(back: back, fore: fore, direction: transition.direction, threshold: threshold, system: coreAnimation)
+  private func spring(back: CGFloat, fore: CGFloat, threshold: CGFloat, ctx: TransitionContext) -> TransitionSpring<CGFloat> {
+    let spring = TransitionSpring(back: back, fore: fore, direction: ctx.direction, threshold: threshold, system: coreAnimation)
     spring.friction.value = 500
     spring.tension.value = 1000
     spring.mass.value = 3

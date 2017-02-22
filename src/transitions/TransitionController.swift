@@ -60,9 +60,9 @@ public class TransitionController: NSObject {
 
    If no directorClass is provided then a default UIKit transition will be used.
 
-   Must be a subclass of MDMTransitionDirector.
+   Must be a subclass of MDMTransition.
    */
-  public var directorType: TransitionDirector.Type?
+  public var transitionType: Transition.Type?
 
   public let dismisser: ViewControllerDismisser
 
@@ -75,7 +75,7 @@ public class TransitionController: NSObject {
     self.dismisser.delegate = self
   }
 
-  fileprivate var transition: Transition?
+  fileprivate var ctx: TransitionContext?
 
   fileprivate weak var associatedViewController: UIViewController?
 }
@@ -88,25 +88,25 @@ extension TransitionController {
   func prepareForTransition(withSource: UIViewController,
                             back: UIViewController,
                             fore: UIViewController,
-                            direction: Transition.Direction) {
+                            direction: TransitionContext.Direction) {
     // It's possible for a backward transition to be initiated while a forward transition is active.
     // We prefer the most recent transition in this case by blowing away the existing transition.
     if direction == .backward {
-      transition = nil
+      ctx = nil
     }
-    assert(transition == nil, "A transition is already active.")
+    assert(ctx == nil, "A transition is already active.")
 
-    if let directorType = directorType {
-      if direction == .forward, let selfDismissingDirector = directorType as? SelfDismissingTransitionDirector.Type {
+    if let transitionType = transitionType {
+      if direction == .forward, let selfDismissingDirector = transitionType as? SelfDismissingTransition.Type {
         selfDismissingDirector.willPresent(fore: fore, dismisser: dismisser)
       }
 
-      transition = Transition(directorType: directorType,
+      ctx = TransitionContext(transitionType: transitionType,
                               direction: direction,
                               back: back,
                               fore: fore,
                               dismisser: dismisser)
-      transition?.delegate = self
+      ctx?.delegate = self
     }
   }
 }
@@ -130,9 +130,9 @@ extension TransitionController: ViewControllerDismisserDelegate {
 }
 
 extension TransitionController: TransitionDelegate {
-  func transitionDidComplete(_ transition: Transition) {
-    if transition === self.transition {
-      self.transition = nil
+  func transitionDidComplete(withContext ctx: TransitionContext) {
+    if ctx === self.ctx {
+      self.ctx = nil
     }
   }
 }
@@ -145,7 +145,7 @@ extension TransitionController: UIViewControllerTransitioningDelegate {
                          back: presenting,
                          fore: presented,
                          direction: .forward)
-    return transition
+    return ctx
   }
 
   public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
@@ -166,19 +166,19 @@ extension TransitionController: UIViewControllerTransitioningDelegate {
                          back: dismissed.presentingViewController!,
                          fore: dismissed,
                          direction: .backward)
-    return transition
+    return ctx
   }
 
   public func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-    if animator === transition && isInteractive() {
-      return transition
+    if animator === ctx && isInteractive() {
+      return ctx
     }
     return nil
   }
 
   public func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-    if animator === transition && isInteractive() {
-      return transition
+    if animator === ctx && isInteractive() {
+      return ctx
     }
     return nil
   }
