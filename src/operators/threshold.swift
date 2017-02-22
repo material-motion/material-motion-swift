@@ -27,10 +27,12 @@ extension MotionObservableConvertible where T: Comparable {
    - paramater whenAbove: The value to emit when the incoming value is above threshold.
    - paramater delta: An optional delta on either side of the threshold.
    */
-  public func threshold<U>(_ threshold: T,
-                        whenBelow below: U?,
-                        whenEqual equal: U?,
-                        whenAbove above: U?) -> MotionObservable<U> {
+  public func threshold<U>
+    ( _ threshold: T,
+      whenBelow below: U?,
+      whenEqual equal: U?,
+      whenAbove above: U?
+    ) -> MotionObservable<U> {
     return _nextOperator(Metadata("\(#function)", args: [threshold, below, equal, above])) { value, next in
       if let below = below, value < threshold {
         next(below)
@@ -42,53 +44,5 @@ extension MotionObservableConvertible where T: Comparable {
         next(equal)
       }
     }
-  }
-
-  /**
-   Emit a value based on the incoming value's position around a threshold.
-
-   - paramater min: The minimum threshold.
-   - paramater max: The maximum threshold.
-   - paramater whenBelow: The value to emit when the incoming value is below min.
-   - paramater whenWithin: The value to emit when the incoming value is within [min, max].
-   - paramater whenAbove: The value to emit when the incoming value is above max.
-   */
-  public func threshold<U>(min: T,
-                        max: T,
-                        whenBelow below: U?,
-                        whenWithin within: MotionObservable<U>?,
-                        whenAbove above: U?) -> MotionObservable<U> {
-    return _nextOperator(Metadata("\(#function)", args: [min, max, below, within, above])) { value, next in
-      if let below = below, value < min {
-        next(below)
-      }
-      if let above = above, value > max {
-        next(above)
-      }
-      if let within = within, let withinValue = within._read(), value <= max, value >= min {
-        next(withinValue)
-      }
-    }
-  }
-
-  /**
-   Emit a value based on the incoming value's position around a threshold.
-
-   - paramater min: The minimum threshold.
-   - paramater max: The maximum threshold.
-   - paramater whenWithin: The value to emit when the incoming value is within [min, max].
-   - paramater whenBelow: The value to emit when the incoming value is below min.
-   - paramater whenAbove: The value to emit when the incoming value is above max.
-   */
-  public func threshold<U>(min: T,
-                        max: T,
-                        whenBelow below: U?,
-                        whenWithin within: U?,
-                        whenAbove above: U?) -> MotionObservable<U> {
-    var observable: MotionObservable<U>?
-    if let within = within {
-      observable = createProperty("within", withInitialValue: within).asStream()
-    }
-    return threshold(min: min, max: max, whenBelow: below, whenWithin: observable, whenAbove: above)
   }
 }

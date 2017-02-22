@@ -49,10 +49,10 @@ class TossableStackedCard: ViewInteraction {
         .onRecognitionState(.ended)
         .velocity(in: relativeView)
         .x()
-        .threshold(min: -500, max: 500,
-                   whenBelow: TossDirection.left,
-                   whenWithin: TossDirection.none,
-                   whenAbove: TossDirection.right),
+        .thresholdRange(min: -500, max: 500,
+                        whenBelow: TossDirection.left,
+                        whenWithin: TossDirection.none,
+                        whenAbove: TossDirection.right),
       to: tossDirection)
 
     let destinationStream =

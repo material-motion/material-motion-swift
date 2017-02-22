@@ -114,10 +114,10 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
                                                                  whenBelow: Transition.Direction.backward,
                                                                  whenEqual: nil,
                                                                  whenAbove: .forward)
-        runtime.add(velocityStream.threshold(min: -100, max: 100,
-                                             whenBelow: .forward,
-                                             whenWithin: withinStream,
-                                             whenAbove: .backward),
+        runtime.add(velocityStream.thresholdRange(min: -100, max: 100,
+                                                  whenBelow: .forward,
+                                                  whenWithin: withinStream,
+                                                  whenAbove: .backward),
                     to: transition.direction)
 
         runtime.add(gesture.atRest(), to: spring.enabled)
