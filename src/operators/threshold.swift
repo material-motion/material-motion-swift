@@ -16,32 +16,29 @@
 
 import Foundation
 
+public enum ThresholdEvent {
+  case whenBelow
+  case whenWithin
+  case whenAbove
+}
+
 extension MotionObservableConvertible where T: Comparable {
 
   /**
    Emit a value based on the incoming value's position around a threshold.
 
    - paramater threshold: The position of the threshold.
-   - paramater whenBelow: The value to emit when the incoming value is below threshold.
-   - paramater whenEqual: The value to emit when the incoming value is equal to threshold.
-   - paramater whenAbove: The value to emit when the incoming value is above threshold.
-   - paramater delta: An optional delta on either side of the threshold.
    */
-  public func threshold<U>
-    ( _ threshold: T,
-      whenBelow below: U?,
-      whenEqual equal: U?,
-      whenAbove above: U?
-    ) -> MotionObservable<U> {
-    return _nextOperator(Metadata("\(#function)", args: [threshold, below, equal, above])) { value, next in
-      if let below = below, value < threshold {
-        next(below)
-      }
-      if let above = above, value > threshold {
-        next(above)
-      }
-      if let equal = equal {
-        next(equal)
+  public func threshold(_ threshold: T) -> MotionObservable<ThresholdEvent> {
+    return _nextOperator(Metadata("\(#function)", args: [threshold])) { value, next in
+      if value < threshold {
+        next(.whenBelow)
+
+      } else if value > threshold {
+        next(.whenAbove)
+
+      } else {
+        next(.whenWithin)
       }
     }
   }

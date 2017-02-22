@@ -90,12 +90,11 @@ private class PushBackTransitionDirector: TransitionDirector {
         let velocityStream = gesture.velocityOnReleaseStream().y()
         runtime.add(velocityStream, to: movement.initialVelocity)
 
-        // TODO: Allow "whenWithin" to be a stream so that we can add additional logic for "have we
-        // passed the y threshold?"
-        runtime.add(velocityStream.thresholdRange(min: -100, max: 100,
-                                                  whenBelow: .forward,
-                                                  whenWithin: transition.direction.value,
-                                                  whenAbove: .backward),
+        runtime.add(velocityStream
+          .thresholdRange(min: -100, max: 100)
+          .rewrite([.whenBelow: .forward,
+                    .whenWithin: transition.direction.value,
+                    .whenAbove: .backward]),
                     to: transition.direction)
 
         runtime.add(gesture.atRest(), to: movement.enabled)

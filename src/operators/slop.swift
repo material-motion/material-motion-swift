@@ -16,29 +16,34 @@
 
 import Foundation
 
+public enum SlopEvent {
+  case onExit
+  case onReturn
+}
+
 extension MotionObservableConvertible where T == CGFloat {
 
   /**
-   Emits values in reaction to exiting a slop region.
+   Emits values in reaction to exiting and re-entering a slop region.
 
    The slop region is centered around 0 and has the given size. This operator will not emit any
    values until the upstream value exits this slop region, at which point the onExit value will be
    emitted. If the upstream returns to the slop region then onReturn will be emitted.
    */
-  public func slop<U: Equatable>(size: CGFloat, onExit: U?, onReturn: U?) -> MotionObservable<U> {
+  public func slop(size: CGFloat) -> MotionObservable<SlopEvent> {
     let didLeaveSlopRegion = createProperty("slop.didLeaveSlopRegion", withInitialValue: false)
 
-    return MotionObservable(self.metadata.createChild(Metadata("\(#function)", type: .constraint, args: [size, onExit, onReturn]))) { observer in
+    return MotionObservable(self.metadata.createChild(Metadata("\(#function)", type: .constraint, args: [size]))) { observer in
       let upstreamSubscription = self
-        .thresholdRange(min: -size, max: size,
-                        whenBelow: true, whenWithin: nil as Bool?, whenAbove: true)
+        .thresholdRange(min: -size, max: size)
+        .rewrite([.whenBelow: true, .whenAbove: true])
         .dedupe()
         .subscribe { didLeaveSlopRegion.value = $0 }
 
       let downstreamSubscription = self
         .valve(openWhenTrue: didLeaveSlopRegion)
-        .thresholdRange(min: -size, max: size,
-                        whenBelow: onExit, whenWithin: onReturn, whenAbove: onExit)
+        .thresholdRange(min: -size, max: size)
+        .rewrite([.whenBelow: .onExit, .whenWithin: .onReturn, .whenAbove: .onExit])
         .dedupe()
         .subscribe(observer: observer)
 

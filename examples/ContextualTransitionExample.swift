@@ -291,7 +291,8 @@ private class PushBackTransitionDirector: TransitionDirector {
       runtime.add(runtime.get(pan)
         .translation(in: runtime.containerView)
         .y()
-        .slop(size: 50, onExit: .backward, onReturn: .forward),
+        .slop(size: 50)
+        .rewrite([.onExit: .backward, .onReturn: .forward]),
                   to: transition.direction)
     }
 

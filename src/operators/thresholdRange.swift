@@ -23,50 +23,18 @@ extension MotionObservableConvertible where T: Comparable {
 
    - paramater min: The minimum threshold.
    - paramater max: The maximum threshold.
-   - paramater whenBelow: The value to emit when the incoming value is below min.
-   - paramater whenWithin: The value to emit when the incoming value is within [min, max].
-   - paramater whenAbove: The value to emit when the incoming value is above max.
    */
-  public func thresholdRange<U>
-    ( min: T,
-      max: T,
-      whenBelow below: U?,
-      whenWithin within: MotionObservable<U>?,
-      whenAbove above: U?
-    ) -> MotionObservable<U> {
-    return _nextOperator(Metadata("\(#function)", args: [min, max, below, within, above])) { value, next in
-      if let below = below, value < min {
-        next(below)
-      }
-      if let above = above, value > max {
-        next(above)
-      }
-      if let within = within, let withinValue = within._read(), value <= max, value >= min {
-        next(withinValue)
+  public func thresholdRange(min: T, max: T) -> MotionObservable<ThresholdEvent> {
+    return _nextOperator(Metadata("\(#function)", args: [min, max])) { value, next in
+      if value < min {
+        next(.whenBelow)
+
+      } else if value > max {
+        next(.whenAbove)
+
+      } else {
+        next(.whenWithin)
       }
     }
-  }
-
-  /**
-   Emit a value based on the incoming value's position around a threshold range.
-
-   - paramater min: The minimum threshold.
-   - paramater max: The maximum threshold.
-   - paramater whenWithin: The value to emit when the incoming value is within [min, max].
-   - paramater whenBelow: The value to emit when the incoming value is below min.
-   - paramater whenAbove: The value to emit when the incoming value is above max.
-   */
-  public func thresholdRange<U>
-    ( min: T,
-      max: T,
-      whenBelow below: U?,
-      whenWithin within: U?,
-      whenAbove above: U?
-    ) -> MotionObservable<U> {
-    var observable: MotionObservable<U>?
-    if let within = within {
-      observable = createProperty("within", withInitialValue: within).asStream()
-    }
-    return thresholdRange(min: min, max: max, whenBelow: below, whenWithin: observable, whenAbove: above)
   }
 }

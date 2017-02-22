@@ -109,15 +109,18 @@ class ModalDialogTransitionDirector: SelfDismissingTransitionDirector {
         let velocityStream = gesture.velocityOnReleaseStream().y()
         runtime.add(velocityStream, to: spring.initialVelocity)
 
-        let centerY = reactiveForeLayer.layer.bounds.height / 2.0
-        let withinStream = reactiveForeLayer.positionY.threshold(centerY,
-                                                                 whenBelow: Transition.Direction.backward,
-                                                                 whenEqual: nil,
-                                                                 whenAbove: .forward)
-        runtime.add(velocityStream.thresholdRange(min: -100, max: 100,
-                                                  whenBelow: .forward,
-                                                  whenWithin: withinStream,
-                                                  whenAbove: .backward),
+        let centerY = transition.containerView().bounds.height / 2.0
+        let positionY = reactiveForeLayer.positionY
+        let positionDestination: MotionObservable<Transition.Direction> =
+          positionY.threshold(centerY).rewrite([.whenBelow: .forward, .whenAbove: .backward])
+
+        runtime.add(velocityStream
+          .thresholdRange(min: -100, max: 100)
+          // If one of rewrite's target values is a stream, then all the target values must be
+          // streams.
+          .rewrite([.whenBelow: createProperty(withInitialValue: .forward).asStream(),
+                    .whenWithin: positionDestination,
+                    .whenAbove: createProperty(withInitialValue: .backward).asStream()]),
                     to: transition.direction)
 
         runtime.add(gesture.atRest(), to: spring.enabled)
