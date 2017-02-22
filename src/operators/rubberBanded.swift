@@ -16,7 +16,28 @@
 
 import Foundation
 
-public func rubberBand(value: CGFloat, min: CGFloat, max: CGFloat, bandLength: CGFloat) -> CGFloat {
+extension MotionObservableConvertible where T == CGFloat {
+
+  /** Applies resistance to values that fall outside of the given range. */
+  public func rubberBanded(below: CGFloat, above: CGFloat, maxLength: CGFloat) -> MotionObservable<CGFloat> {
+    return _map(Metadata("\(#function)", args: [below, above, maxLength])) {
+      return rubberBand(value: $0, min: below, max: above, bandLength: maxLength)
+    }
+  }
+}
+
+extension MotionObservableConvertible where T == CGPoint {
+
+  /** Applies resistance to values that fall outside of the given range. */
+  public func rubberBanded(outsideOf rect: CGRect, maxLength: CGFloat) -> MotionObservable<CGPoint> {
+    return _map(Metadata("\(#function)", args: [rect, maxLength])) {
+      return CGPoint(x: rubberBand(value: $0.x, min: rect.minX, max: rect.maxX, bandLength: maxLength),
+                     y: rubberBand(value: $0.y, min: rect.minY, max: rect.maxY, bandLength: maxLength))
+    }
+  }
+}
+
+private func rubberBand(value: CGFloat, min: CGFloat, max: CGFloat, bandLength: CGFloat) -> CGFloat {
   if value >= min && value <= max {
     // While we're within range we don't rubber band the value.
     return value
@@ -42,25 +63,4 @@ public func rubberBand(value: CGFloat, min: CGFloat, max: CGFloat, bandLength: C
   }
 
   return value;
-}
-
-extension MotionObservableConvertible where T == CGFloat {
-
-  /** Applies resistance to values that fall outside of the given range. */
-  public func rubberBanded(below: CGFloat, above: CGFloat, length: CGFloat) -> MotionObservable<CGFloat> {
-    return _map(Metadata("\(#function)", args: [below, above, length])) {
-      return rubberBand(value: $0, min: below, max: above, bandLength: length)
-    }
-  }
-}
-
-extension MotionObservableConvertible where T == CGPoint {
-
-  /** Applies resistance to values that fall outside of the given range. */
-  public func rubberBanded(outsideOf rect: CGRect, length: CGFloat) -> MotionObservable<CGPoint> {
-    return _map(Metadata("\(#function)", args: [rect, length])) {
-      return CGPoint(x: rubberBand(value: $0.x, min: rect.minX, max: rect.maxX, bandLength: length),
-                     y: rubberBand(value: $0.y, min: rect.minY, max: rect.maxY, bandLength: length))
-    }
-  }
 }
