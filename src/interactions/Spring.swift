@@ -112,7 +112,7 @@ public struct SpringShadow<T: Zeroable> {
 extension Spring: MotionObservableConvertible {
   public func asStream() -> MotionObservable<T> {
     if stream == nil {
-      stream = system(SpringShadow(of: self))._memoize()
+      stream = system(SpringShadow(of: self))._remember()
     }
     return stream!
   }

@@ -21,12 +21,12 @@ extension MotionObservableConvertible {
   /**
    Caches the most recent upstream value and broadcasts it to all subscribers.
 
-   A memoized stream will only subscribe to its upstream the first time a subscription is made.
-   Subsequent subscriptions will receive channel events from the existing upstream subscription.
+   A memory stream will only subscribe to its upstream the first time a subscription is made.
+   Upstream values will be synchronously emitted to all subscribers.
 
-   When an observer subscribes it will synchronously receive the most recent value, if any.
+   When an observer subscribes it will synchronously receive the most recent upstream value, if any.
    */
-  public func _memoize() -> MotionObservable<T> {
+  public func _remember() -> MotionObservable<T> {
     var observers: [MotionObserver<T>] = []
     var subscription: Subscription?
 
