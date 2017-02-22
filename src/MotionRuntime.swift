@@ -73,6 +73,16 @@ public final class MotionRuntime {
   }
   private var reactiveLayers: [CALayer: ReactiveCALayer] = [:]
 
+  public func get(_ shapeLayer: CAShapeLayer) -> ReactiveCAShapeLayer {
+    if let reactiveObject = reactiveShapeLayers[shapeLayer] {
+      return reactiveObject
+    }
+    let reactiveObject = ReactiveCAShapeLayer(shapeLayer)
+    reactiveShapeLayers[shapeLayer] = reactiveObject
+    return reactiveObject
+  }
+  private var reactiveShapeLayers: [CAShapeLayer: ReactiveCAShapeLayer] = [:]
+
   public func get<O: UIGestureRecognizer>(_ gestureRecognizer: O) -> ReactiveUIGestureRecognizer<O> {
     if let reactiveObject = reactiveGestureRecognizers[gestureRecognizer] {
       return unsafeBitCast(reactiveObject, to: ReactiveUIGestureRecognizer<O>.self)

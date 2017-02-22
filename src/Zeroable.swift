@@ -34,6 +34,12 @@ extension CGSize: Zeroable {
   }
 }
 
+extension CGRect: Zeroable {
+  public static func zero() -> CGRect {
+    return .zero()
+  }
+}
+
 extension CGFloat: Zeroable {
   public static func zero() -> CGFloat {
     return 0

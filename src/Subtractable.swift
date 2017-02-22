@@ -33,4 +33,13 @@ extension CGSize: Subtractable {
   }
 }
 
+extension CGRect: Subtractable {
+  public static func -(left: CGRect, right: CGRect) -> CGRect {
+    return .init(x: left.origin.x - right.origin.x,
+                 y: left.origin.y - right.origin.y,
+                 width: left.width - right.width,
+                 height: left.height - right.height)
+  }
+}
+
 extension CGFloat: Subtractable {}
