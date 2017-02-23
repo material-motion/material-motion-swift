@@ -21,6 +21,15 @@ public class ReactiveCALayer {
   public let layer: CALayer
 
   /** A property representing the layer's .opacity value. */
+  public lazy var cornerRadius: ReactiveProperty<CGFloat> = {
+    let layer = self.layer
+    return self.property("\(pretty(layer)).\(#function)",
+                         initialValue: layer.cornerRadius,
+                         externalWrite: { layer.cornerRadius = $0 },
+                         keyPath: "cornerRadius")
+  }()
+
+  /** A property representing the layer's .opacity value. */
   public lazy var opacity: ReactiveProperty<CGFloat> = {
     let layer = self.layer
     return self.property("\(pretty(layer)).\(#function)",
@@ -94,7 +103,16 @@ public class ReactiveCALayer {
                          keyPath: "transform.scale.xy")
   }()
 
-  private func property<T>(_ name: String, initialValue: T, externalWrite: @escaping NextChannel<T>, keyPath: String) -> ReactiveProperty<T> {
+  /** A property representing the layer's .shadowPath value. */
+  public lazy var shadowPath: ReactiveProperty<CGPath> = {
+    let layer = self.layer
+    return self.property("\(pretty(layer)).\(#function)",
+                         initialValue: layer.shadowPath!,
+                         externalWrite: { layer.shadowPath = $0 },
+                         keyPath: "shadowPath")
+  }()
+
+  fileprivate func property<T>(_ name: String, initialValue: T, externalWrite: @escaping NextChannel<T>, keyPath: String) -> ReactiveProperty<T> {
     let layer = self.layer
     var lastAnimationKey: String?
     return ReactiveProperty(name, initialValue: initialValue, externalWrite: externalWrite, coreAnimation: { [weak self] event in
@@ -184,6 +202,24 @@ public class ReactiveCALayer {
 
   init(_ layer: CALayer) {
     self.layer = layer
+  }
+}
+
+public class ReactiveCAShapeLayer: ReactiveCALayer {
+  public let shapeLayer: CAShapeLayer
+
+  /** A property representing the layer's .path value. */
+  public lazy var path: ReactiveProperty<CGPath> = {
+    let layer = self.shapeLayer
+    return self.property("\(pretty(layer)).\(#function)",
+                         initialValue: layer.path!,
+                         externalWrite: { layer.path = $0 },
+                         keyPath: "path")
+  }()
+
+  init(_ shapeLayer: CAShapeLayer) {
+    self.shapeLayer = shapeLayer
+    super.init(shapeLayer)
   }
 }
 

@@ -51,6 +51,13 @@ extension ContextualTransitionExampleViewController {
 }
 
 @available(iOS 9.0, *)
+extension FabTransitionExampleViewController {
+  class func catalogBreadcrumbs() -> [String] {
+    return ["FAB transition"]
+  }
+}
+
+@available(iOS 9.0, *)
 extension PushBackTransitionExampleViewController {
   class func catalogBreadcrumbs() -> [String] {
     return ["Push back transition"]
