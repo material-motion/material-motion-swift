@@ -117,7 +117,7 @@ public class ReactiveCALayer {
     var lastAnimationKey: String?
     let property = ReactiveProperty(name, initialValue: initialValue, externalWrite: { value in
       let actionsWereDisabled = CATransaction.disableActions()
-      CATransaction.setDisableActions(false)
+      CATransaction.setDisableActions(true)
       externalWrite(value)
       CATransaction.setDisableActions(actionsWereDisabled)
     }, coreAnimation: { [weak self] event in

@@ -47,13 +47,7 @@ public class ArcMoveExampleViewController: UIViewController {
     draggable.targetView = targetView
     runtime.add(draggable, to: targetView)
 
-    // Note: this is a temporary solution to prevent implicit animations
-    let tapLayerPositionWrapper = ReactiveProperty(initialValue: tapCircleLayer.position, externalWrite: { position in
-      CATransaction.setDisableActions(true)
-      reactiveTapLayer.position.value = position
-      CATransaction.setDisableActions(false)
-    }, coreAnimation: {_ in })
-    runtime.add(Tap(), to: tapLayerPositionWrapper)
+    runtime.add(Tap(), to: reactiveTapLayer.position)
 
     let arcMove = ArcMove(duration: 0.4,
                           from: reactiveTapLayer.position,
