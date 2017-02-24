@@ -21,7 +21,7 @@ extension MotionObservableConvertible where T: Subtractable, T: Lerpable {
   /**
    Linearly interpolate the incoming value along the given range to the destination range.
    */
-  public func mapRange<U>
+  public func rewriteRange<U>
     ( start: T,
       end: T,
       destinationStart: U,

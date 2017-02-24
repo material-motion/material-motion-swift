@@ -81,10 +81,10 @@ private class PushBackTransition: Transition {
         let dragStream = gesture.translated(from: foreLayer.position).y().lowerBound(foreLayer.layer.bounds.height / 2)
         runtime.add(dragStream, to: foreLayer.positionY)
 
-        let scaleStream = dragStream.mapRange(start: movement.backwardDestination,
-                                              end: movement.forwardDestination,
-                                              destinationStart: scale.backwardDestination,
-                                              destinationEnd: scale.forwardDestination)
+        let scaleStream = dragStream.rewriteRange(start: movement.backwardDestination,
+                                                  end: movement.forwardDestination,
+                                                  destinationStart: scale.backwardDestination,
+                                                  destinationEnd: scale.forwardDestination)
         runtime.add(scaleStream, to: runtime.get(ctx.back.view.layer).scale)
 
         let velocityStream = gesture.velocityOnReleaseStream().y()
