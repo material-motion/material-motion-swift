@@ -37,7 +37,7 @@ public class AdjustsAnchorPoint: ViewInteraction {
     anchorPointStreams.append(contentsOf: gestureRecognizers.map {
       runtime.get($0)
         .onRecognitionStates([.ended, .cancelled])
-        .mapTo(CGPoint(x: 0.5, y: 0.5))
+        .rewriteTo(CGPoint(x: 0.5, y: 0.5))
         .anchorPointAdjustment(in: view)
     })
 
