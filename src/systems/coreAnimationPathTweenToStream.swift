@@ -21,13 +21,15 @@ import IndefiniteObservable
 public func coreAnimation(_ tween: PathTween) -> MotionObservable<CGPoint> {
   return MotionObservable(Metadata("Core Animation Path Tween", args: [tween.duration, tween.delay, tween.path, tween.timeline as Any, tween.enabled, tween.state])) { observer in
 
-    var animationKeys: [String] = []
     var subscriptions: [Subscription] = []
-    var activeAnimations = Set<String>()
+    var key = NSUUID().uuidString
+    var activeAnimations = Set<CAKeyframeAnimation>()
 
     let checkAndEmit = {
       subscriptions.append(tween.path.subscribe { pathValue in
+
         let animation = CAKeyframeAnimation()
+        activeAnimations.insert(animation)
         animation.path = pathValue
 
         observer.next(pathValue.getAllPoints().last!)
@@ -38,22 +40,17 @@ public func coreAnimation(_ tween: PathTween) -> MotionObservable<CGPoint> {
         animation.beginTime = tween.delay
         animation.duration = CFTimeInterval(duration)
 
-        let key = NSUUID().uuidString
-        activeAnimations.insert(key)
-        animationKeys.append(key)
-
         tween.state.value = .active
 
         if let timeline = tween.timeline {
           observer.coreAnimation?(.timeline(timeline))
         }
         observer.coreAnimation?(.add(animation, key, initialVelocity: nil, completionBlock: {
-          activeAnimations.remove(key)
+          activeAnimations.remove(animation)
           if activeAnimations.count == 0 {
             tween.state.value = .atRest
           }
         }))
-        animationKeys.append(key)
 
         let view = UIView()
         let brushLayer = CAShapeLayer()
@@ -106,15 +103,14 @@ public func coreAnimation(_ tween: PathTween) -> MotionObservable<CGPoint> {
       if enabled {
         checkAndEmit()
       } else {
-        animationKeys.forEach { observer.coreAnimation?(.remove($0)) }
+        observer.coreAnimation?(.remove(key))
         activeAnimations.removeAll()
-        animationKeys.removeAll()
         tween.state.value = .atRest
       }
     }
 
     return {
-      animationKeys.forEach { observer.coreAnimation?(.remove($0)) }
+      observer.coreAnimation?(.remove(key))
       subscriptions.forEach { $0.unsubscribe() }
       activeSubscription.unsubscribe()
     }
