@@ -36,7 +36,7 @@ extension CGSize: Zeroable {
 
 extension CGRect: Zeroable {
   public static func zero() -> CGRect {
-    return .zero()
+    return .zero
   }
 }
 
