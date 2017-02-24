@@ -81,7 +81,7 @@ class TossableStackedCard: ViewInteraction {
     runtime.add(drag.atRest(), to: attachment.enabled)
     runtime.add(attachment, to: reactiveView.centerX)
 
-    let radians = CGFloat(M_PI / 180.0 * 15.0)
+    let radians = CGFloat(Double.pi / 180.0 * 15.0)
     let rotationStream =
       reactiveView.centerX
         .offset(by: -relativeView.bounds.width / 2)
@@ -131,7 +131,7 @@ public class SwipeExampleViewController: UIViewController {
     }
   }
 
-  var lastRotation: CGFloat = CGFloat(M_PI / 180.0 * 2)
+  var lastRotation: CGFloat = CGFloat(Double.pi / 180.0 * 2)
   func dequeueCard() {
     let rotation = -lastRotation
 

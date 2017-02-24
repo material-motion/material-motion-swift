@@ -114,7 +114,6 @@ public class ReactiveCALayer {
 
   fileprivate func property<T>(_ name: String, initialValue: T, externalWrite: @escaping NextChannel<T>, keyPath: String) -> ReactiveProperty<T> {
     let layer = self.layer
-    var lastAnimationKey: String?
     let property = ReactiveProperty(name, initialValue: initialValue, externalWrite: { value in
       let actionsWereDisabled = CATransaction.disableActions()
       CATransaction.setDisableActions(true)

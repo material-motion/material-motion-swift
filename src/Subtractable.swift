@@ -18,7 +18,7 @@ import Foundation
 
 /** A subtractable type is able to subtract another instance of its type from itself. */
 public protocol Subtractable {
-  func - (left: Self, right: Self) -> Self
+  static func - (left: Self, right: Self) -> Self
 }
 
 extension CGPoint: Subtractable {

@@ -22,10 +22,9 @@ public func coreAnimation<T>(_ tween: TweenShadow<T>) -> MotionObservable<T> {
   return MotionObservable(Metadata("Core Animation Tween", args: [tween])) { observer in
 
     var animationKeys: [String] = []
-    var subscriptions: [Subscription] = []
     var activeAnimations = Set<String>()
 
-    var checkAndEmit = {
+    let checkAndEmit = {
       let animation: CAPropertyAnimation
       let timingFunctions = tween.timingFunctions
       if tween.values.value.count > 1 {
@@ -79,7 +78,6 @@ public func coreAnimation<T>(_ tween: TweenShadow<T>) -> MotionObservable<T> {
 
     return {
       animationKeys.forEach { observer.coreAnimation?(.remove($0)) }
-      subscriptions.forEach { $0.unsubscribe() }
       activeSubscription.unsubscribe()
     }
   }

@@ -44,7 +44,6 @@ private final class GestureConnection<T: UIGestureRecognizer> {
   }
 
   private func propagate(_ gesture: UIGestureRecognizer) {
-    let isActive = gesture.state == .began || gesture.state == .changed
     observer.next(gesture as! T)
   }
 

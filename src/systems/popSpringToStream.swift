@@ -22,7 +22,6 @@ import pop
 
 /** Create a pop spring source for a CGFloat Spring plan. */
 public func pop(_ spring: SpringShadow<CGFloat>) -> (MotionObservable<CGFloat>) {
-  let initialVelocity = spring.initialVelocity
   return MotionObservable(Metadata("POP CGFloat spring", args: [spring.enabled, spring.state, spring.initialValue, spring.initialVelocity, spring.destination, spring.tension, spring.friction, spring.mass, spring.suggestedDuration, spring.threshold])) { observer in
     let popProperty = POPMutableAnimatableProperty()
     popProperty.threshold = spring.threshold.value
@@ -38,7 +37,6 @@ public func pop(_ spring: SpringShadow<CGFloat>) -> (MotionObservable<CGFloat>) 
 
 /** Create a pop spring source for a CGPoint Spring plan. */
 public func pop(_ spring: SpringShadow<CGPoint>) -> (MotionObservable<CGPoint>) {
-  let initialVelocity = spring.initialVelocity
   return MotionObservable(Metadata("POP CGPoint spring", args: [spring.enabled, spring.state, spring.initialValue, spring.initialVelocity, spring.destination, spring.tension, spring.friction, spring.mass, spring.suggestedDuration, spring.threshold])) { observer in
     let popProperty = POPMutableAnimatableProperty()
     popProperty.threshold = spring.threshold.value
@@ -57,7 +55,7 @@ public func pop(_ spring: SpringShadow<CGPoint>) -> (MotionObservable<CGPoint>) 
 private func configureSpringAnimation<T>(_ property: POPAnimatableProperty, spring: SpringShadow<T>) -> () -> Void {
   var destination: T?
 
-  var createAnimation: () -> POPSpringAnimation = {
+  let createAnimation: () -> POPSpringAnimation = {
     let animation = POPSpringAnimation()
 
     animation.property = property

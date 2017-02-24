@@ -18,7 +18,7 @@ import Foundation
 
 /** An addable type is able to add another instance of its type to itself. */
 public protocol Addable {
-  func + (left: Self, right: Self) -> Self
+  static func + (left: Self, right: Self) -> Self
 }
 
 extension CGPoint: Addable {

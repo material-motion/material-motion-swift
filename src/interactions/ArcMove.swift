@@ -51,7 +51,7 @@ private func arcMove<O1: MotionObservableConvertible, O2: MotionObservableConver
       var latestFrom: CGPoint?
       var latestTo: CGPoint?
 
-      var checkAndEmit = {
+      let checkAndEmit = {
         guard let from = latestFrom, let to = latestTo else {
           return
         }
@@ -87,11 +87,11 @@ private let defaultMinArcAngle: CGFloat = 10.0
 private let defaultMaxArcAngle: CGFloat = 90.0
 
 private func rad2deg(_ radians: CGFloat) -> CGFloat {
-  return radians * 180.0 / CGFloat(M_PI)
+  return radians * 180.0 / CGFloat(Double.pi)
 }
 
 private func deg2rad(_ degrees: CGFloat) -> CGFloat {
-  return degrees * CGFloat(M_PI) / 180.0
+  return degrees * CGFloat(Double.pi) / 180.0
 }
 
 private func distance(from: CGPoint, to: CGPoint) -> CGFloat {
@@ -102,7 +102,7 @@ private func distance(from: CGPoint, to: CGPoint) -> CGFloat {
 
 private func normalized(_ point: CGPoint) -> CGPoint {
   let length = sqrt(point.x * point.x + point.y * point.y)
-  if length < CGFloat(FLT_EPSILON) {
+  if length < CGFloat(Double.ulpOfOne) {
     return .zero
   }
   return CGPoint(x: point.x / length, y: point.y / length)
@@ -181,7 +181,7 @@ private func arcMovement(from: CGPoint, to: CGPoint) -> ControlPoints {
   var adjMinLen: CGFloat
   if defaultMinArcAngle > 0 {
     let tanMinArcAngleRad = tan(minArcAngleRad)
-    if abs(tanMinArcAngleRad) < CGFloat(FLT_EPSILON) {
+    if abs(tanMinArcAngleRad) < CGFloat(Double.ulpOfOne) {
       // Protection against possible divide by zero - shouldn't happen in practice.
       adjMinLen = .greatestFiniteMagnitude
     } else {

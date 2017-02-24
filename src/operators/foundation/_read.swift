@@ -23,7 +23,7 @@ extension MotionObservableConvertible {
    */
   public func _read() -> T? {
     var value: T?
-    subscribe { value = $0 }
+    let _ = subscribe { value = $0 }
     return value
   }
 }

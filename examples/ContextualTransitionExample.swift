@@ -317,7 +317,7 @@ private class PushBackTransition: Transition {
     ctx.terminateWhenAllAtRest(terminalStates)
   }
 
-  private func spring<T where T: Subtractable, T: Zeroable, T: Equatable>(back: T, fore: T, threshold: CGFloat, ctx: TransitionContext) -> TransitionSpring<T> {
+  private func spring<T>(back: T, fore: T, threshold: CGFloat, ctx: TransitionContext) -> TransitionSpring<T> where T: Subtractable, T: Zeroable, T: Equatable {
     let spring = TransitionSpring(back: back, fore: fore, direction: ctx.direction, threshold: threshold, system: coreAnimation)
     spring.friction.value = 500
     spring.tension.value = 1000

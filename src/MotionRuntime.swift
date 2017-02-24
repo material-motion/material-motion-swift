@@ -97,7 +97,7 @@ public final class MotionRuntime {
       containerView.addGestureRecognizer(reactiveObject.gestureRecognizer)
     }
 
-    reactiveGestureRecognizers[gestureRecognizer] = reactiveObject as! ReactiveUIGestureRecognizer<O>
+    reactiveGestureRecognizers[gestureRecognizer] = reactiveObject
     return reactiveObject
   }
   private var reactiveGestureRecognizers: [UIGestureRecognizer: AnyObject] = [:]
