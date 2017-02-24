@@ -18,7 +18,7 @@ import Foundation
 import IndefiniteObservable
 
 /** Create a core animation tween system for a Tween plan. */
-public func coreAnimation<T>(_ tween: Tween<T>) -> MotionObservable<T> {
+public func coreAnimation<T>(_ tween: TweenShadow<T>) -> MotionObservable<T> {
   return MotionObservable(Metadata("Core Animation Tween", args: [tween])) { observer in
 
     var animationKeys: [String] = []
@@ -28,24 +28,24 @@ public func coreAnimation<T>(_ tween: Tween<T>) -> MotionObservable<T> {
     var checkAndEmit = {
       let animation: CAPropertyAnimation
       let timingFunctions = tween.timingFunctions
-      if tween.values.count > 1 {
+      if tween.values.value.count > 1 {
         let keyframeAnimation = CAKeyframeAnimation()
-        keyframeAnimation.values = tween.values
-        keyframeAnimation.keyTimes = tween.keyPositions?.map { NSNumber(value: $0) }
-        keyframeAnimation.timingFunctions = timingFunctions
+        keyframeAnimation.values = tween.values.value
+        keyframeAnimation.keyTimes = tween.keyPositions.value.map { NSNumber(value: Double($0)) }
+        keyframeAnimation.timingFunctions = timingFunctions.value
         animation = keyframeAnimation
       } else {
         let basicAnimation = CABasicAnimation()
-        basicAnimation.toValue = tween.values.last
-        basicAnimation.timingFunction = timingFunctions.first
+        basicAnimation.toValue = tween.values.value.last
+        basicAnimation.timingFunction = timingFunctions.value.first
         animation = basicAnimation
       }
-      observer.next(tween.values.last!)
+      observer.next(tween.values.value.last!)
 
       guard let duration = tween.duration._read() else {
         return
       }
-      animation.beginTime = tween.delay
+      animation.beginTime = CFTimeInterval(tween.delay.value)
       animation.duration = CFTimeInterval(duration)
 
       let key = NSUUID().uuidString

@@ -33,7 +33,7 @@ public typealias PathTweenToStream<T> = (PathTween) -> MotionObservable<CGPoint>
 public typealias ScrollViewToStream = (UIScrollView) -> MotionObservable<CGPoint>
 
 /** A tween-to-stream function creates a MotionObservable from a Tween. */
-public typealias TweenToStream<T> = (Tween<T>) -> MotionObservable<T>
+public typealias TweenToStream<T> = (TweenShadow<T>) -> MotionObservable<T>
 
 /**
  A spring-to-stream function creates a MotionObservable from a Spring and initial value stream.

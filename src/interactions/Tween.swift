@@ -20,10 +20,10 @@ import Foundation
 public final class Tween<T>: PropertyInteraction {
 
   /** The duration of the animation in seconds. */
-  public var duration: MotionObservable<CGFloat>
+  public let duration: ReactiveProperty<CGFloat>
 
   /** The delay of the animation in seconds. */
-  public var delay: CFTimeInterval = 0
+  public let delay = createProperty("Tween.delay", withInitialValue: CGFloat(0))
 
   /**
    An array of objects providing the value of the animation for each keyframe.
@@ -32,19 +32,21 @@ public final class Tween<T>: PropertyInteraction {
 
    See CAKeyframeAnimation documentation for more details.
    */
-  public let values: [T]
+  public let values: ReactiveProperty<[T]>
 
   /**
-   An optional array of double values defining the pacing of the animation. Each position
-   corresponds to one value in the `values' array, and defines when the value should be used in the
-   animation function. Each value in the array is a floating point number in the range [0,1].
+   An array of double values defining the pacing of the animation.
+
+   Each position corresponds to one value in the `values' array, and defines when the value should
+   be used in the animation function. Each value in the array is a floating point number in the
+   range [0,1].
 
    See CAKeyframeAnimation documentation for more details.
    */
-  public var keyPositions: [Double]?
+  public let keyPositions: ReactiveProperty<[CGFloat]> = createProperty("Tween.keyPositions", withInitialValue: [])
 
   /**
-   An optional array of CAMediaTimingFunction objects. If the `values' array defines n keyframes,
+   An array of CAMediaTimingFunction objects. If the `values' array defines n keyframes,
    there should be n-1 objects in the `timingFunctions' array. Each function describes the pacing of
    one keyframe to keyframe segment.
 
@@ -53,7 +55,9 @@ public final class Tween<T>: PropertyInteraction {
 
    See CAKeyframeAnimation documentation for more details.
    */
-  public var timingFunctions = [CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)]
+  public let timingFunctions: ReactiveProperty<[CAMediaTimingFunction]> =
+    createProperty("Tween.timingFunctions",
+                   withInitialValue: [CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)])
 
   /**
    An optional timeline that may scrub this tween animation.
@@ -64,30 +68,56 @@ public final class Tween<T>: PropertyInteraction {
 
   public let enabled = createProperty("Tween.enabled", withInitialValue: true)
 
-  public let state = createProperty("Tween.state", withInitialValue: MotionState.atRest)
+  public var state: MotionObservable<MotionState> {
+    return _state.asStream()
+  }
 
   public var system: TweenToStream<T>
 
   public let metadata = Metadata("Tween")
 
   /** Initializes a tween instance with its required properties. */
-  public init<O: MotionObservableConvertible>(duration: O, values: [T], system: @escaping TweenToStream<T>) where O.T == CGFloat {
-    self.duration = duration.asStream()
-    self.values = values
+  public init(duration: CGFloat, values: [T], system: @escaping TweenToStream<T>) {
+    self.duration = createProperty("Tween.duration", withInitialValue: duration)
+    self.values = createProperty("Tween.values", withInitialValue: values)
     self.system = system
-  }
-
-  public convenience init(duration: CFTimeInterval, values: [T], system: @escaping TweenToStream<T>) {
-    self.init(duration: createProperty("Tween.duration", withInitialValue: CGFloat(duration)), values: values, system: system)
   }
 
   public func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime) {
     runtime.add(asStream(), to: property)
   }
+
+  fileprivate var stream: MotionObservable<T>?
+  fileprivate let _state = createProperty("Tween._state", withInitialValue: MotionState.atRest)
+}
+
+public struct TweenShadow<T> {
+  public let enabled: ReactiveProperty<Bool>
+  public let state: ReactiveProperty<MotionState>
+  public let duration: ReactiveProperty<CGFloat>
+  public let delay: ReactiveProperty<CGFloat>
+  public let values: ReactiveProperty<[T]>
+  public let keyPositions: ReactiveProperty<[CGFloat]>
+  public let timingFunctions: ReactiveProperty<[CAMediaTimingFunction]>
+  public let timeline: Timeline?
+
+  init(of tween: Tween<T>) {
+    self.enabled = tween.enabled
+    self.state = tween._state
+    self.duration = tween.duration
+    self.delay = tween.delay
+    self.values = tween.values
+    self.keyPositions = tween.keyPositions
+    self.timingFunctions = tween.timingFunctions
+    self.timeline = tween.timeline
+  }
 }
 
 extension Tween: MotionObservableConvertible {
   public func asStream() -> MotionObservable<T> {
-    return system(self)
+    if stream == nil {
+      stream = system(TweenShadow(of: self))._remember()
+    }
+    return stream!
   }
 }
