@@ -18,15 +18,17 @@ import Foundation
 
 public class ArcMove: ViewInteraction {
 
-  public var duration: TimeInterval
+  public let duration: ReactiveProperty<CGFloat>
   public var from: MotionObservable<CGPoint>
   public var to: MotionObservable<CGPoint>
   public var system: PathTweenToStream<CGPoint>
 
   public var timeline: Timeline?
 
+  public let metadata = Metadata("ArcMove")
+
   init<O1: MotionObservableConvertible, O2: MotionObservableConvertible>(duration: TimeInterval, from: O1, to: O2, system: @escaping PathTweenToStream<CGPoint>) where O1.T == CGPoint, O2.T == CGPoint {
-    self.duration = duration
+    self.duration = createProperty("ArcMove.duration", withInitialValue: CGFloat(duration))
     self.from = from.asStream()
     self.to = to.asStream()
     self.system = system

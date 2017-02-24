@@ -36,4 +36,14 @@ extension MotionObservableConvertible where T == CGPoint {
       return sqrt(xDelta * xDelta + yDelta * yDelta)
     }
   }
+
+  /** Emits the distance between the incoming value and the current value of location. */
+  public func distance<O: MotionObservableConvertible>(from location: O) -> MotionObservable<CGFloat> where O.T == CGPoint {
+    return _map(Metadata("\(#function)", args: [location])) {
+      let locationValue = location._read()!
+      let xDelta = $0.x - locationValue.x
+      let yDelta = $0.y - locationValue.y
+      return sqrt(xDelta * xDelta + yDelta * yDelta)
+    }
+  }
 }

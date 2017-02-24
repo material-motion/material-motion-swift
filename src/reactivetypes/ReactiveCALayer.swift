@@ -115,7 +115,7 @@ public class ReactiveCALayer {
   fileprivate func property<T>(_ name: String, initialValue: T, externalWrite: @escaping NextChannel<T>, keyPath: String) -> ReactiveProperty<T> {
     let layer = self.layer
     var lastAnimationKey: String?
-    return ReactiveProperty(name, initialValue: initialValue, externalWrite: externalWrite, coreAnimation: { [weak self] event in
+    let property = ReactiveProperty(name, initialValue: initialValue, externalWrite: externalWrite, coreAnimation: { [weak self] event in
       guard let strongSelf = self else { return }
       switch event {
       case .add(let animation, let key, let initialVelocity, let completionBlock):
@@ -195,6 +195,18 @@ public class ReactiveCALayer {
         }
       }
     })
+    var lastView: UIView?
+    property.visualizer = { view, containerView in
+      if lastView != view, let lastView = lastView {
+        lastView.removeFromSuperview()
+      }
+      view.isUserInteractionEnabled = false
+      view.frame = layer.superlayer!.convert(layer.superlayer!.bounds, to: containerView.layer)
+      containerView.addSubview(view)
+      lastView = view
+    }
+
+    return property
   }
   private var decomposedKeys = Set<String>()
   private var lastTimelineState: Timeline.Snapshot?

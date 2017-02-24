@@ -19,60 +19,104 @@ import MaterialMotionStreams
 
 public class ArcMoveExampleViewController: UIViewController {
 
+  var tapCircleLayer: CAShapeLayer!
+  var blueSquare: UIView!
+  var targetView: UIView!
+
+  var slider: UISlider!
+  var toggle: UIButton!
+
   var runtime: MotionRuntime!
-  let timeline = Timeline()
+  var timeline = Timeline()
+  var duration: MotionObservable<CGFloat>!
+  var sliderValue: ReactiveProperty<CGFloat>!
+
   public override func viewDidLoad() {
     super.viewDidLoad()
+    view.backgroundColor = .white
+    self.createViews()
+    self.createTimelineViews()
 
     runtime = MotionRuntime(containerView: view)
+    runtime.visualizer = true
 
-    view.backgroundColor = .white
+    let reactiveTapLayer = runtime.get(tapCircleLayer)
+    let reactiveTargetLayer = runtime.get(targetView).reactiveLayer
 
+    let draggable = Draggable()
+    draggable.targetView = targetView
+    runtime.add(draggable, to: targetView)
+
+    // Note: this is a temporary solution to prevent implicit animations
+    let tapLayerPositionWrapper = ReactiveProperty(initialValue: tapCircleLayer.position, externalWrite: { position in
+      CATransaction.setDisableActions(true)
+      reactiveTapLayer.position.value = position
+      CATransaction.setDisableActions(false)
+    }, coreAnimation: {_ in })
+    runtime.add(Tap(), to: tapLayerPositionWrapper)
+
+    let arcMove = ArcMove(duration: 0.4,
+                          from: reactiveTapLayer.position,
+                          to: reactiveTargetLayer.position,
+                          system: coreAnimation)
+    // The duration of the animation is based on the distance to the target
+    duration = reactiveTapLayer.position.distance(from: reactiveTargetLayer.position).normalized(by: 600)
+    runtime.add(duration, to: arcMove.duration)
+
+    sliderValue = createProperty("Slider.value", withInitialValue: CGFloat(slider.value))
+    runtime.add(duration.scaled(by: sliderValue.asStream()), to: timeline.timeOffset)
+    timeline.paused.value = true
+    arcMove.timeline = timeline
+    runtime.add(arcMove, to: blueSquare)
+  }
+
+  func createViews() {
     var center = view.center
     center.x -= 32
     center.y -= 32
 
-    let square = UIView(frame: .init(x: center.x, y: center.y, width: 64, height: 64))
-    square.backgroundColor = .red
-    view.addSubview(square)
+    blueSquare = UIView(frame: .init(x: center.x, y: center.y, width: 64, height: 64))
+    blueSquare.backgroundColor = UIColor(red: 51/255.0, green: 139/255.0, blue: 237/255.0, alpha: 1)
+    view.addSubview(blueSquare)
 
-    let square2 = UIView(frame: .init(x: center.x, y: center.y, width: 64, height: 64))
-    square2.backgroundColor = .green
-    view.addSubview(square2)
+    tapCircleLayer = CAShapeLayer()
+    tapCircleLayer.frame = CGRect(x: center.x - 100, y: center.y - 200, width: 64, height: 64)
+    tapCircleLayer.path = UIBezierPath(ovalIn: tapCircleLayer.bounds).cgPath
+    tapCircleLayer.lineWidth = 1
+    tapCircleLayer.fillColor = UIColor.clear.cgColor
+    tapCircleLayer.strokeColor = UIColor(red: 237/255.0, green: 0/255.0, blue: 141/255.0, alpha: 1).cgColor
+    view.layer.addSublayer(tapCircleLayer)
 
-    let circle = UIView(frame: .init(x: center.x, y: center.y, width: 64, height: 64))
-    circle.backgroundColor = .blue
-    circle.layer.cornerRadius = circle.bounds.width / 2
-    view.addSubview(circle)
+    targetView = UIView(frame: .init(x: center.x, y: center.y, width: 64, height: 64))
+    targetView.layer.borderWidth = 1
+    targetView.layer.borderColor = UIColor.red.cgColor
+    view.addSubview(targetView)
+  }
 
-    let slider = UISlider(frame: .init(x: 0, y: view.bounds.height - 60, width: view.bounds.width, height: 60))
+  func createTimelineViews() {
+    var center = view.center
+    center.x -= 32
+    center.y -= 32
+
+    slider = UISlider(frame: .init(x: 0, y: view.bounds.height - 60, width: view.bounds.width, height: 60))
     slider.addTarget(self, action: #selector(didSlide), for: .valueChanged)
     slider.value = 0.5
     view.addSubview(slider)
 
-    let toggle = UIButton(type: .contactAdd)
+    toggle = UIButton(type: .custom)
+    toggle.setTitle("▶", for: .normal)
+    toggle.setTitleColor(.red, for: .normal)
     toggle.addTarget(self, action: #selector(didToggle), for: .touchUpInside)
-    toggle.frame = .init(x: 0, y: 200, width: 64, height: 64)
+    toggle.frame = .init(x: 0, y: center.y, width: 64, height: 64)
     view.addSubview(toggle)
-
-    runtime.add(Draggable(), to: square)
-
-    timeline.timeOffset.value = CGFloat(slider.value * 0.4)
-    timeline.paused.value = true
-
-    let arcMove = ArcMove(duration: 0.4,
-                          from: runtime.get(square.layer).position,
-                          to: runtime.get(circle.layer).position,
-                          system: coreAnimation)
-    arcMove.timeline = timeline
-    runtime.add(arcMove, to: square2)
   }
 
   func didSlide(_ slider: UISlider) {
-    timeline.timeOffset.value = CGFloat(slider.value * 0.4)
+    sliderValue.value = CGFloat(slider.value)
   }
 
-  func didToggle() {
+  func didToggle(_ button: UIButton) {
     timeline.paused.value = !timeline.paused.value
+    button.setTitle(timeline.paused.value ? "▶" : "❙❙", for: .normal)
   }
 }

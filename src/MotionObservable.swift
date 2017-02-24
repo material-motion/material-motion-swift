@@ -50,6 +50,11 @@ public enum CoreAnimationChannelEvent {
 }
 
 /**
+ The visualization channel shape.
+ */
+public typealias VisualizationChannel = (UIView) -> Void
+
+/**
  A MotionObservable is a type of [Observable](http://reactivex.io/documentation/observable.html)
  that also supports render server-based Core Animation events.
 
@@ -86,18 +91,29 @@ public final class MotionObservable<T>: IndefiniteObservable<MotionObserver<T>> 
 public final class MotionObserver<T>: Observer {
   public typealias Value = T
 
+  public init(next: @escaping NextChannel<T>,
+              coreAnimation: @escaping CoreAnimationChannel,
+              visualization: @escaping VisualizationChannel) {
+    self.next = next
+    self.coreAnimation = coreAnimation
+    self.visualization = visualization
+  }
+
   public init(next: @escaping NextChannel<T>, coreAnimation: @escaping CoreAnimationChannel) {
     self.next = next
     self.coreAnimation = coreAnimation
+    self.visualization = nil
   }
 
   public init(next: @escaping NextChannel<T>) {
     self.next = next
     self.coreAnimation = nil
+    self.visualization = nil
   }
 
   public let next: NextChannel<T>
   public let coreAnimation: CoreAnimationChannel?
+  public let visualization: VisualizationChannel?
 }
 
 /**
@@ -119,6 +135,17 @@ extension MotionObservable: MotionObservableConvertible {
 }
 
 extension MotionObservableConvertible {
+  /**
+   Sugar for subscribing a MotionObserver.
+   */
+  public func subscribe(next: @escaping NextChannel<T>,
+                        coreAnimation: @escaping CoreAnimationChannel,
+                        visualization: @escaping VisualizationChannel) -> Subscription {
+    return asStream().subscribe(observer: MotionObserver<T>(next: next,
+                                                            coreAnimation: coreAnimation,
+                                                            visualization: visualization))
+  }
+
   /**
    Sugar for subscribing a MotionObserver.
    */

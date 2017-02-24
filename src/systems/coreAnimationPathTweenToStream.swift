@@ -55,6 +55,50 @@ public func coreAnimation(_ tween: PathTween) -> MotionObservable<CGPoint> {
         }))
         animationKeys.append(key)
 
+        let view = UIView()
+        let brushLayer = CAShapeLayer()
+        brushLayer.opacity = 0.5
+        brushLayer.lineWidth = 2
+        brushLayer.strokeStart = 0
+        brushLayer.strokeEnd = 1
+        brushLayer.lineCap = kCALineJoinRound
+        brushLayer.fillColor = UIColor.white.withAlphaComponent(0).cgColor
+        brushLayer.strokeColor = UIColor(red: 22/255.0, green: 149/255.0, blue: 242/255.0, alpha: 1).cgColor
+        brushLayer.path = pathValue
+
+        if let timeline = tween.timeline {
+          if timeline.paused.value {
+            brushLayer.lineDashPattern = [2, 3]
+          } else {
+            brushLayer.lineDashPattern = nil
+            brushLayer.strokeStart = 1
+
+            let strokeEndAnimation = CABasicAnimation(keyPath: "strokeEnd")
+            strokeEndAnimation.duration = animation.duration
+            strokeEndAnimation.timingFunction = animation.timingFunction
+            strokeEndAnimation.fromValue = 0
+            strokeEndAnimation.toValue = 1
+            brushLayer.add(strokeEndAnimation, forKey: "strokeEnd")
+
+            let strokeStartAnimation = CABasicAnimation(keyPath: "strokeStart")
+            strokeStartAnimation.duration = animation.duration * 0.75
+            strokeStartAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+            strokeStartAnimation.fromValue = 0
+            strokeStartAnimation.toValue = 1
+            strokeStartAnimation.beginTime = CACurrentMediaTime() + animation.duration * 0.75
+            strokeStartAnimation.fillMode = kCAFillModeBackwards
+            brushLayer.add(strokeStartAnimation, forKey: "strokeStart")
+
+            let lineWidthAnimation = CABasicAnimation(keyPath: "lineWidth")
+            lineWidthAnimation.duration = animation.duration * 1.75
+            lineWidthAnimation.fromValue = 3
+            lineWidthAnimation.toValue = 0
+            brushLayer.add(lineWidthAnimation, forKey: "lineWidth")
+          }
+        }
+
+        view.layer.addSublayer(brushLayer)
+        observer.visualization?(view)
       })
     }
 

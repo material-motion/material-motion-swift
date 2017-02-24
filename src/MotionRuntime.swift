@@ -25,6 +25,9 @@ public final class MotionRuntime {
   /** All motion in this runtime is relative to this view. */
   public let containerView: UIView
 
+  /** Whether this runtime renders debug visualizations. */
+  public var visualizer = false
+
   /** Creates a motion runtime instance. */
   public init(containerView: UIView) {
     self.containerView = containerView
@@ -145,7 +148,13 @@ public final class MotionRuntime {
     //
     // For quick previewing, use an online graphviz visualizer like http://www.webgraphviz.com/
 
-    subscriptions.append(stream.subscribe(next: { property.value = $0 }, coreAnimation: property.coreAnimation))
+    subscriptions.append(stream.subscribe(next: { property.value = $0 },
+                                          coreAnimation: property.coreAnimation,
+                                          visualization: { [weak self] view in
+                                            guard let strongSelf = self else { return }
+                                            if !strongSelf.visualizer { return }
+                                            property.visualize(view, in: strongSelf.containerView)
+    }))
   }
 
   private var subscriptions: [Subscription] = []
