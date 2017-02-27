@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import IndefiniteObservable
 
 /**
  A Spring can pull a value from an initial position to a destination using a physical simulation.
@@ -33,8 +34,6 @@ public class Spring<T: Zeroable>: PropertyInteraction, ViewInteraction {
   public var state: MotionObservable<MotionState> {
     return _state.asStream()
   }
-
-  public let initialValue: ReactiveProperty<T> = createProperty("Spring.initialValue")
 
   /** The initial velocity of the spring represented as a stream. */
   public let initialVelocity: ReactiveProperty<T> = createProperty("Spring.initialVelocity")
@@ -65,27 +64,39 @@ public class Spring<T: Zeroable>: PropertyInteraction, ViewInteraction {
 
   public let metadata = Metadata("Spring")
 
-  fileprivate var stream: MotionObservable<T>?
   fileprivate let system: SpringToStream<T>
   fileprivate let _state = createProperty("Spring._state", withInitialValue: MotionState.atRest)
 
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
     if let castedSelf = self as? Spring<CGPoint> {
-      let position = reactiveView.reactiveLayer.position
-      runtime.add(position.asStream(), to: castedSelf.initialValue)
-      runtime.add(castedSelf.asStream(), to: position)
+      castedSelf.add(to: reactiveView.reactiveLayer.position, withRuntime: runtime)
     }
   }
 
   public func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime) {
-    runtime.add(property.asStream(), to: initialValue)
-    runtime.add(asStream(), to: property)
+    runtime.add(system(createShadow(initialValue: property)), to: property)
   }
+
+  private func createShadow(initialValue: ReactiveProperty<T>) -> SpringShadow<T> {
+    let spring = SpringShadow(of: self, initialValue: initialValue)
+    subscriptions.append(spring.state.dedupe().subscribe { state in
+      if state == .active {
+        self.activeSprings.insert(spring)
+      } else {
+        self.activeSprings.remove(spring)
+      }
+      self._state.value = self.activeSprings.count == 0 ? .atRest : .active
+    })
+    return spring
+  }
+
+  private var activeSprings = Set<SpringShadow<T>>()
+  private var subscriptions: [Subscription] = []
 }
 
-public struct SpringShadow<T: Zeroable> {
+public struct SpringShadow<T: Zeroable>: Hashable {
   public let enabled: ReactiveProperty<Bool>
-  public let state: ReactiveProperty<MotionState>
+  public let state = createProperty(withInitialValue: MotionState.atRest)
   public let initialValue: ReactiveProperty<T>
   public let initialVelocity: ReactiveProperty<T>
   public let destination: ReactiveProperty<T>
@@ -95,10 +106,9 @@ public struct SpringShadow<T: Zeroable> {
   public let suggestedDuration: ReactiveProperty<TimeInterval>
   public let threshold: ReactiveProperty<CGFloat>
 
-  init(of spring: Spring<T>) {
+  init(of spring: Spring<T>, initialValue: ReactiveProperty<T>) {
     self.enabled = spring.enabled
-    self.state = spring._state
-    self.initialValue = spring.initialValue
+    self.initialValue = initialValue
     self.initialVelocity = spring.initialVelocity
     self.destination = spring.destination
     self.tension = spring.tension
@@ -107,14 +117,14 @@ public struct SpringShadow<T: Zeroable> {
     self.suggestedDuration = spring.suggestedDuration
     self.threshold = spring.threshold
   }
-}
 
-extension Spring: MotionObservableConvertible {
-  public func asStream() -> MotionObservable<T> {
-    if stream == nil {
-      stream = system(SpringShadow(of: self))._remember()
-    }
-    return stream!
+  private let uuid = NSUUID().uuidString
+  public var hashValue: Int {
+    return uuid.hashValue
+  }
+
+  public static func ==(lhs: SpringShadow<T>, rhs: SpringShadow<T>) -> Bool {
+    return lhs.uuid == rhs.uuid
   }
 }
 

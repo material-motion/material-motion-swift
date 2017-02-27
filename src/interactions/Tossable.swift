@@ -52,7 +52,6 @@ public class Tossable: ViewInteraction {
     runtime.add(gesture.translated(from: position, in: relativeView), to: position)
 
     runtime.add(destination.asStream(), to: spring.destination)
-    runtime.add(position.asStream(), to: spring.initialValue)
     runtime.add(gesture.velocityOnReleaseStream(in: relativeView), to: spring.initialVelocity)
     runtime.add(spring, to: position)
 
