@@ -16,32 +16,42 @@
 
 import Foundation
 
+public enum TapConfiguration {
+  case registerNewRecognizerToContainerView
+  case registerNewRecognizerTo(UIView)
+  case withExistingRecognizer(UITapGestureRecognizer)
+}
+
 public class Tap: PropertyInteraction {
-
-  public let existingGestureRecognizer: UITapGestureRecognizer?
-  public let viewForNewGestureRecognizers: UIView?
-
-  init() {
-    self.existingGestureRecognizer = nil
-    self.viewForNewGestureRecognizers = nil
+  public let config: TapConfiguration
+  public let coordinateSpace: UIView
+  public init(coordinateSpace: UIView) {
+    self.config = .registerNewRecognizerToContainerView
+    self.coordinateSpace = coordinateSpace
   }
 
-  init(existingGestureRecognizer: UITapGestureRecognizer) {
-    self.existingGestureRecognizer = existingGestureRecognizer
-    self.viewForNewGestureRecognizers = nil
-  }
-
-  init(viewForNewGestureRecognizers: UIView) {
-    self.existingGestureRecognizer = nil
-    self.viewForNewGestureRecognizers = viewForNewGestureRecognizers
+  public init(_ config: TapConfiguration, coordinateSpace: UIView) {
+    self.config = config
+    self.coordinateSpace = coordinateSpace
   }
 
   public func add(to property: ReactiveProperty<CGPoint>, withRuntime runtime: MotionRuntime) {
-    let gesture = existingGestureRecognizer ?? UITapGestureRecognizer()
-    let viewForNewGestureRecognizers = self.viewForNewGestureRecognizers ?? runtime.containerView
-    if gesture.view == nil {
-      viewForNewGestureRecognizers.addGestureRecognizer(gesture)
+    let gestureRecognizer: UITapGestureRecognizer
+
+    switch config {
+    case .registerNewRecognizerToContainerView:
+      gestureRecognizer = UITapGestureRecognizer()
+      runtime.containerView.addGestureRecognizer(gestureRecognizer)
+
+    case .registerNewRecognizerTo(let view):
+      gestureRecognizer = UITapGestureRecognizer()
+      view.addGestureRecognizer(gestureRecognizer)
+
+    case .withExistingRecognizer(let existingGestureRecognizer):
+      gestureRecognizer = existingGestureRecognizer
     }
-    runtime.add(runtime.get(gesture).centroidOnRecognition(in: viewForNewGestureRecognizers), to: property)
+
+    runtime.add(runtime.get(gestureRecognizer).centroidOnRecognition(in: coordinateSpace),
+                to: property)
   }
 }

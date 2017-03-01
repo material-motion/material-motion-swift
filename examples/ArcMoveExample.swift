@@ -48,8 +48,7 @@ public class ArcMoveExampleViewController: UIViewController {
     let reactiveTargetLayer = runtime.get(targetView).reactiveLayer
 
     runtime.add(Draggable(), to: targetView)
-
-    runtime.add(Tap(), to: reactiveTapLayer.position)
+    runtime.add(Tap(coordinateSpace: view), to: reactiveTapLayer.position)
 
     let arcMove = ArcMove(duration: 0.4, system: coreAnimation, timeline: timeline)
     runtime.add(reactiveTapLayer.position, to: arcMove.from)
