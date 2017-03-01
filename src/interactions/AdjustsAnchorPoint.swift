@@ -18,10 +18,9 @@ import Foundation
 
 public class AdjustsAnchorPoint: ViewInteraction {
 
-  var gestureRecognizers: [UIGestureRecognizer] = []
+  let gestureRecognizers: [UIGestureRecognizer]
 
-  convenience init<S: Sequence>(gestureRecognizers: S) where S.Iterator.Element: UIGestureRecognizer {
-    self.init()
+  init<S: Sequence>(gestureRecognizers: S) where S.Iterator.Element: UIGestureRecognizer {
     self.gestureRecognizers = Array(gestureRecognizers)
   }
 
