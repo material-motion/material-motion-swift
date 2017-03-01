@@ -86,7 +86,7 @@ private func configureSpringAnimation<T>(_ property: POPAnimatableProperty, spri
   let key = NSUUID().uuidString
   let someObject = NSObject()
 
-  let activeSubscription = spring.enabled.asStream().dedupe().subscribe { enabled in
+  let activeSubscription = spring.enabled.dedupe().subscribe { enabled in
     if enabled {
       if animation == nil {
         animation = createAnimation()

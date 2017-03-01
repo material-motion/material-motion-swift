@@ -35,7 +35,7 @@ public class ArcMove: ViewInteraction {
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
     let tween = PathTween(system: system, timeline: timeline)
     runtime.add(arcMove(from: from, to: to), to: tween.path)
-    runtime.add(duration.asStream(), to: tween.duration)
+    runtime.add(duration, to: tween.duration)
 
     runtime.add(tween, to: reactiveView.reactiveLayer.position)
   }

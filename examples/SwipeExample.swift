@@ -73,7 +73,7 @@ class TossableStackedCard: ViewInteraction {
 
     let attachment = Spring<CGFloat>(threshold: 1, system: pop)
     runtime.add(drag.velocityOnReleaseStream(in: view).x(), to: attachment.initialVelocity)
-    runtime.add(destination.asStream(), to: attachment.destination)
+    runtime.add(destination, to: attachment.destination)
 
     let draggable = drag.translated(from: reactiveView.center, in: relativeView).x()
     runtime.add(draggable, to: reactiveView.centerX)

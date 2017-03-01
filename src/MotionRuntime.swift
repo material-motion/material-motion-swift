@@ -46,6 +46,10 @@ public final class MotionRuntime {
     write(stream, to: property.asProperty())
   }
 
+  public func add<T, P: ReactivePropertyConvertible>(_ fromProperty: ReactiveProperty<T>, to property: P) where P.T == T {
+    write(fromProperty.asStream(), to: property.asProperty())
+  }
+
   public func add<I: PropertyInteraction, P: ReactivePropertyConvertible>(_ interaction: I, to property: P) where I.T == P.T {
     interaction.add(to: property.asProperty(), withRuntime: self)
   }
