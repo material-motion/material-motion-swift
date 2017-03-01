@@ -17,7 +17,7 @@
 import Foundation
 
 /** A tween describes a potential interpolation from one value to another. */
-public final class PathTween: PropertyInteraction {
+public final class PathTween {
 
   /** The duration of the animation in seconds. */
   public let duration: ReactiveProperty<CGFloat>
@@ -55,15 +55,17 @@ public final class PathTween: PropertyInteraction {
     self.timeline = timeline
   }
 
-  public func add(to property: ReactiveProperty<CGPoint>, withRuntime runtime: MotionRuntime) {
-    runtime.add(asStream(), to: property)
-  }
-
   public let metadata = Metadata("Path Tween")
 
   fileprivate var stream: MotionObservable<CGPoint>?
   fileprivate let system: PathTweenToStream<CGPoint>
   fileprivate let _state = createProperty("PathTween._state", withInitialValue: MotionState.atRest)
+}
+
+extension PathTween: PropertyInteraction {
+  public func add(to property: ReactiveProperty<CGPoint>, withRuntime runtime: MotionRuntime) {
+    runtime.add(asStream(), to: property)
+  }
 }
 
 public struct PathTweenShadow {

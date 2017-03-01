@@ -16,15 +16,12 @@
 
 import Foundation
 
-public class ArcMove: ViewInteraction {
+public class ArcMove {
 
   public let duration: ReactiveProperty<CGFloat>
   public let from = createProperty("ArcMove.from", withInitialValue: CGPoint.zero)
   public let to = createProperty("ArcMove.to", withInitialValue: CGPoint.zero)
-
   public let timeline: Timeline?
-
-  public let metadata = Metadata("ArcMove")
 
   init(duration: TimeInterval, system: @escaping PathTweenToStream<CGPoint>, timeline: Timeline? = nil) {
     self.duration = createProperty("ArcMove.duration", withInitialValue: CGFloat(duration))
@@ -32,6 +29,11 @@ public class ArcMove: ViewInteraction {
     self.timeline = timeline
   }
 
+  public let metadata = Metadata("ArcMove")
+  fileprivate let system: PathTweenToStream<CGPoint>
+}
+
+extension ArcMove: ViewInteraction {
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
     let tween = PathTween(system: system, timeline: timeline)
     runtime.add(arcMove(from: from, to: to), to: tween.path)
@@ -39,8 +41,6 @@ public class ArcMove: ViewInteraction {
 
     runtime.add(tween, to: reactiveView.reactiveLayer.position)
   }
-
-  private let system: PathTweenToStream<CGPoint>
 }
 
 // Given two positional streams, returns a stream that emits an arc move path between the two

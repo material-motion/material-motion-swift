@@ -22,7 +22,7 @@ public enum TapConfiguration {
   case withExistingRecognizer(UITapGestureRecognizer)
 }
 
-public class Tap: PropertyInteraction {
+public class Tap {
   public let config: TapConfiguration
   public let coordinateSpace: UIView
   public init(coordinateSpace: UIView) {
@@ -34,7 +34,9 @@ public class Tap: PropertyInteraction {
     self.config = config
     self.coordinateSpace = coordinateSpace
   }
+}
 
+extension Tap: PropertyInteraction {
   public func add(to property: ReactiveProperty<CGPoint>, withRuntime runtime: MotionRuntime) {
     let gestureRecognizer: UITapGestureRecognizer
 

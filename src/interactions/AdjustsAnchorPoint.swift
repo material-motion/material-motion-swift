@@ -16,14 +16,15 @@
 
 import Foundation
 
-public class AdjustsAnchorPoint: ViewInteraction {
-
+public class AdjustsAnchorPoint {
   let gestureRecognizers: [UIGestureRecognizer]
 
   init<S: Sequence>(gestureRecognizers: S) where S.Iterator.Element: UIGestureRecognizer {
     self.gestureRecognizers = Array(gestureRecognizers)
   }
+}
 
+extension AdjustsAnchorPoint: ViewInteraction {
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
     let view = reactiveView.view
     var anchorPointStreams = gestureRecognizers.map {

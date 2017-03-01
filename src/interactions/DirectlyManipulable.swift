@@ -24,8 +24,7 @@ import Foundation
 
  The provided gesture recognizers must be configured to enable simultaneous recognition.
  */
-public class DirectlyManipulable: NSObject, ViewInteraction, UIGestureRecognizerDelegate {
-
+public class DirectlyManipulable: NSObject {
   public let draggable: Draggable
   public let rotatable: Rotatable
   public let scalable: Scalable
@@ -35,7 +34,9 @@ public class DirectlyManipulable: NSObject, ViewInteraction, UIGestureRecognizer
     self.rotatable = rotatable
     self.scalable = scalable
   }
+}
 
+extension DirectlyManipulable: ViewInteraction {
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
     for gestureRecognizer in [draggable.nextGestureRecognizer,
                               rotatable.nextGestureRecognizer,
@@ -52,7 +53,9 @@ public class DirectlyManipulable: NSObject, ViewInteraction, UIGestureRecognizer
     runtime.add(rotatable, to: reactiveView)
     runtime.add(scalable, to: reactiveView)
   }
+}
 
+extension DirectlyManipulable: UIGestureRecognizerDelegate {
   public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
     return true
   }

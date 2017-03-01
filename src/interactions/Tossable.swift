@@ -34,7 +34,7 @@ public class Destination: MotionObservableConvertible {
   }
 }
 
-public class Tossable: ViewInteraction {
+public class Tossable {
 
   public let draggable: Draggable
   public let spring: Spring<CGPoint>
@@ -45,6 +45,10 @@ public class Tossable: ViewInteraction {
     self.draggable = draggable
   }
 
+  fileprivate let destination: Destination
+}
+
+extension Tossable: ViewInteraction {
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
     let position = reactiveView.reactiveLayer.position
 
@@ -57,8 +61,6 @@ public class Tossable: ViewInteraction {
 
     runtime.add(gesture.atRest(), to: spring.enabled)
   }
-
-  fileprivate let destination: Destination
 }
 
 extension Destination: ReactivePropertyConvertible {

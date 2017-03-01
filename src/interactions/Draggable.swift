@@ -16,7 +16,10 @@
 
 import Foundation
 
-public class Draggable: Gesturable<UIPanGestureRecognizer>, ViewInteraction {
+public class Draggable: Gesturable<UIPanGestureRecognizer> {
+}
+
+extension Draggable: ViewInteraction {
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
     let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView)
     let position = reactiveView.reactiveLayer.position
