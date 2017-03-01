@@ -74,24 +74,19 @@ public class Spring<T: Zeroable>: PropertyInteraction, ViewInteraction {
   }
 
   public func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime) {
-    runtime.add(system(createShadow(initialValue: property)), to: property)
-  }
-
-  private func createShadow(initialValue: ReactiveProperty<T>) -> SpringShadow<T> {
-    let spring = SpringShadow(of: self, initialValue: initialValue)
-    subscriptions.append(spring.state.dedupe().subscribe { state in
+    let shadow = SpringShadow(of: self, initialValue: property)
+    runtime.add(shadow.state.dedupe(), to: ReactiveProperty(initialValue: .atRest) { state in
       if state == .active {
-        self.activeSprings.insert(spring)
+        self.activeSprings.insert(shadow)
       } else {
-        self.activeSprings.remove(spring)
+        self.activeSprings.remove(shadow)
       }
       self._state.value = self.activeSprings.count == 0 ? .atRest : .active
     })
-    return spring
+    runtime.add(system(shadow), to: property)
   }
 
   private var activeSprings = Set<SpringShadow<T>>()
-  private var subscriptions: [Subscription] = []
 }
 
 public struct SpringShadow<T: Zeroable>: Hashable {
