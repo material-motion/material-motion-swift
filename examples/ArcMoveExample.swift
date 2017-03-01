@@ -23,11 +23,10 @@ public class ArcMoveExampleViewController: UIViewController {
   var blueSquare: UIView!
   var targetView: UIView!
 
-  var slider: UISlider!
-  var toggle: UIButton!
+  var timelineView: TimelineView!
 
   var runtime: MotionRuntime!
-  var timeline = Timeline()
+  var timeline: Timeline!
   var duration: MotionObservable<CGFloat>!
   var sliderValue: ReactiveProperty<CGFloat>!
 
@@ -35,7 +34,12 @@ public class ArcMoveExampleViewController: UIViewController {
     super.viewDidLoad()
     view.backgroundColor = .white
     self.createViews()
-    self.createTimelineViews()
+
+    timeline = Timeline()
+    timelineView = TimelineView(timeline: timeline, frame: .zero)
+    let size = timelineView.sizeThatFits(view.bounds.size)
+    timelineView.frame = .init(x: 0, y: view.bounds.height - size.height, width: size.width, height: size.height)
+    view.addSubview(timelineView)
 
     runtime = MotionRuntime(containerView: view)
     runtime.visualizer = true
@@ -57,8 +61,7 @@ public class ArcMoveExampleViewController: UIViewController {
     duration = reactiveTapLayer.position.distance(from: reactiveTargetLayer.position).normalized(by: 600)
     runtime.add(duration, to: arcMove.duration)
 
-    sliderValue = createProperty("Slider.value", withInitialValue: CGFloat(slider.value))
-    runtime.add(duration.scaled(by: sliderValue.asStream()), to: timeline.timeOffset)
+    runtime.add(duration.scaled(by: timelineView.sliderValue.asStream()), to: timeline.timeOffset)
     timeline.paused.value = true
     arcMove.timeline = timeline
     runtime.add(arcMove, to: blueSquare)
@@ -85,32 +88,5 @@ public class ArcMoveExampleViewController: UIViewController {
     targetView.layer.borderWidth = 1
     targetView.layer.borderColor = UIColor.red.cgColor
     view.addSubview(targetView)
-  }
-
-  func createTimelineViews() {
-    var center = view.center
-    center.x -= 32
-    center.y -= 32
-
-    slider = UISlider(frame: .init(x: 0, y: view.bounds.height - 60, width: view.bounds.width, height: 60))
-    slider.addTarget(self, action: #selector(didSlide), for: .valueChanged)
-    slider.value = 0.5
-    view.addSubview(slider)
-
-    toggle = UIButton(type: .custom)
-    toggle.setTitle("▶", for: .normal)
-    toggle.setTitleColor(.red, for: .normal)
-    toggle.addTarget(self, action: #selector(didToggle), for: .touchUpInside)
-    toggle.frame = .init(x: 0, y: center.y, width: 64, height: 64)
-    view.addSubview(toggle)
-  }
-
-  func didSlide(_ slider: UISlider) {
-    sliderValue.value = CGFloat(slider.value)
-  }
-
-  func didToggle(_ button: UIButton) {
-    timeline.paused.value = !timeline.paused.value
-    button.setTitle(timeline.paused.value ? "▶" : "❙❙", for: .normal)
   }
 }
