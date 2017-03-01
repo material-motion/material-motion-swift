@@ -64,7 +64,7 @@ public final class Tween<T>: PropertyInteraction {
 
    If provided, this tween is expected to be timed in relation to the timeline's beginTime.
    */
-  public var timeline: Timeline?
+  public let timeline: Timeline?
 
   public let enabled = createProperty("Tween.enabled", withInitialValue: true)
 
@@ -77,10 +77,11 @@ public final class Tween<T>: PropertyInteraction {
   public let metadata = Metadata("Tween")
 
   /** Initializes a tween instance with its required properties. */
-  public init(duration: CGFloat, values: [T], system: @escaping TweenToStream<T>) {
+  public init(duration: CGFloat, values: [T], system: @escaping TweenToStream<T>, timeline: Timeline? = nil) {
     self.duration = createProperty("Tween.duration", withInitialValue: duration)
     self.values = createProperty("Tween.values", withInitialValue: values)
     self.system = system
+    self.timeline = timeline
   }
 
   public func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime) {
