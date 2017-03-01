@@ -72,8 +72,6 @@ public final class Tween<T>: PropertyInteraction {
     return _state.asStream()
   }
 
-  public var system: TweenToStream<T>
-
   public let metadata = Metadata("Tween")
 
   /** Initializes a tween instance with its required properties. */
@@ -88,6 +86,7 @@ public final class Tween<T>: PropertyInteraction {
     runtime.add(asStream(), to: property)
   }
 
+  fileprivate let system: TweenToStream<T>
   fileprivate var stream: MotionObservable<T>?
   fileprivate let _state = createProperty("Tween._state", withInitialValue: MotionState.atRest)
 }
