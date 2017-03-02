@@ -67,7 +67,7 @@ public func coreAnimation<T>(_ spring: SpringShadow<T>) -> (MotionObservable<T>)
 
         spring.state.value = .active
 
-        observer.coreAnimation?(.add(animation, key, initialVelocity: initialVelocity, completionBlock: {
+        observer.coreAnimation?(.add(animation, key, initialVelocity: initialVelocity, timeline: nil, completionBlock: {
           activeAnimations.remove(key)
           if activeAnimations.count == 0 {
             spring.state.value = .atRest

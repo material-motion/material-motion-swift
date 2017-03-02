@@ -64,7 +64,7 @@ class MotionObservableTests: XCTestCase {
         XCTAssert(false, "No Core Animation channel available")
         return noopDisconnect
       }
-      coreAnimation(.add(CABasicAnimation(), "key", initialVelocity: nil, completionBlock: { }))
+      coreAnimation(.add(CABasicAnimation(), "key", initialVelocity: nil, timeline: nil, completionBlock: { }))
       return noopDisconnect
     }
 

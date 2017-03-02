@@ -18,7 +18,7 @@ import Foundation
 import IndefiniteObservable
 
 /** Create a core animation tween system for a Tween plan. */
-public func coreAnimation(_ tween: PathTween) -> MotionObservable<CGPoint> {
+public func coreAnimation(_ tween: PathTweenShadow) -> MotionObservable<CGPoint> {
   return MotionObservable(Metadata("Core Animation Path Tween", args: [tween.duration, tween.delay, tween.path, tween.timeline as Any, tween.enabled, tween.state])) { observer in
 
     var subscriptions: [Subscription] = []
@@ -37,15 +37,12 @@ public func coreAnimation(_ tween: PathTween) -> MotionObservable<CGPoint> {
         guard let duration = tween.duration._read() else {
           return
         }
-        animation.beginTime = tween.delay
+        animation.beginTime = TimeInterval(tween.delay.value)
         animation.duration = CFTimeInterval(duration)
 
         tween.state.value = .active
 
-        if let timeline = tween.timeline {
-          observer.coreAnimation?(.timeline(timeline))
-        }
-        observer.coreAnimation?(.add(animation, key, initialVelocity: nil, completionBlock: {
+        observer.coreAnimation?(.add(animation, key, initialVelocity: nil, timeline: tween.timeline, completionBlock: {
           activeAnimations.remove(animation)
           if activeAnimations.count == 0 {
             tween.state.value = .atRest

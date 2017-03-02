@@ -33,9 +33,10 @@ public class ArcMove: ViewInteraction {
   }
 
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
-    let path = arcMove(from: from, to: to)
-    let tween = PathTween(duration: duration, path: path, system: system)
-    tween.timeline = timeline
+    let tween = PathTween(system: system, timeline: timeline)
+    runtime.add(arcMove(from: from, to: to), to: tween.path)
+    runtime.add(duration.asStream(), to: tween.duration)
+
     runtime.add(tween, to: reactiveView.reactiveLayer.position)
   }
 
@@ -68,7 +69,6 @@ private func arcMove<O1: MotionObservableConvertible, O2: MotionObservableConver
       let fromSubscription = from.subscribe { fromValue in
         latestFrom = fromValue
         checkAndEmit()
-
       }
 
       let toSubscription = to.subscribe { toValue in

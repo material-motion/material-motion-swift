@@ -122,7 +122,11 @@ public class ReactiveCALayer {
     }, coreAnimation: { [weak self] event in
       guard let strongSelf = self else { return }
       switch event {
-      case .add(let animation, let key, let initialVelocity, let completionBlock):
+      case .add(let animation, let key, let initialVelocity, let timeline, let completionBlock):
+        if let timeline = timeline {
+          strongSelf.configureTimeline(timeline)
+        }
+
         let animation = animation.copy() as! CAPropertyAnimation
 
         if layer.speed == 0, let lastTimelineState = strongSelf.lastTimelineState {
@@ -176,27 +180,6 @@ public class ReactiveCALayer {
         } else {
           layer.removeAnimation(forKey: key)
         }
-
-      case .timeline(let timeline):
-        strongSelf.timelineSubscription = timeline.subscribe { [weak self] state in
-          guard let strongSelf = self else { return }
-          strongSelf.lastTimelineState = state
-
-          if state.paused {
-            layer.speed = 0
-            layer.timeOffset = TimeInterval(state.beginTime + state.timeOffset)
-
-          } else if layer.speed == 0 { // Unpause the layer.
-            // The following logic is the magic sauce required to reconnect a CALayer with the
-            // render server's clock.
-            let pausedTime = layer.timeOffset
-            layer.speed = 1
-            layer.timeOffset = 0
-            layer.beginTime = 0
-            let timeSincePause = layer.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
-            layer.beginTime = timeSincePause
-          }
-        }
       }
     })
     var lastView: UIView?
@@ -212,8 +195,35 @@ public class ReactiveCALayer {
 
     return property
   }
+
+  private func configureTimeline(_ timeline: Timeline) {
+    if self.timeline === timeline { // Avoid re-subscribing to the same timeline.
+      return
+    }
+    self.timeline = timeline
+    timelineSubscription = timeline.subscribe { [weak self] state in
+      guard let strongSelf = self else { return }
+      strongSelf.lastTimelineState = state
+
+      if state.paused {
+        strongSelf.layer.speed = 0
+        strongSelf.layer.timeOffset = TimeInterval(state.beginTime + state.timeOffset)
+
+      } else if strongSelf.layer.speed == 0 { // Unpause the layer.
+        // The following logic is the magic sauce required to reconnect a CALayer with the
+        // render server's clock.
+        let pausedTime = strongSelf.layer.timeOffset
+        strongSelf.layer.speed = 1
+        strongSelf.layer.timeOffset = 0
+        strongSelf.layer.beginTime = 0
+        let timeSincePause = strongSelf.layer.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
+        strongSelf.layer.beginTime = timeSincePause
+      }
+    }
+  }
   private var decomposedKeys = Set<String>()
   private var lastTimelineState: Timeline.Snapshot?
+  private var timeline: Timeline?
   private var timelineSubscription: Subscription?
 
   init(_ layer: CALayer) {

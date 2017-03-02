@@ -20,38 +20,39 @@ import Foundation
 public final class PathTween: PropertyInteraction {
 
   /** The duration of the animation in seconds. */
-  public var duration: MotionObservable<CGFloat>
+  public let duration: ReactiveProperty<CGFloat>
 
   /** The delay of the animation in seconds. */
-  public var delay: CFTimeInterval = 0
+  public let delay = createProperty("PathTween.delay", withInitialValue: CGFloat(0))
 
   /** The mode defining this tween's values over time. */
-  public let path: MotionObservable<CGPath>
+  public let path: ReactiveProperty<CGPath>
 
   /**
    An optional timeline that may scrub this tween animation.
 
    If provided, this tween is expected to be timed in relation to the timeline's beginTime.
    */
-  public var timeline: Timeline?
+  public let timeline: Timeline?
 
   public let enabled = createProperty("PathTween.enabled", withInitialValue: true)
 
-  public let state = createProperty("PathTween.state", withInitialValue: MotionState.atRest)
-
-  public var system: PathTweenToStream<CGPoint>
-
-  /** Initializes a tween instance with its required properties. */
-  public init<O: MotionObservableConvertible>(duration: O, path: MotionObservable<CGPath>, system: @escaping PathTweenToStream<CGPoint>) where O.T == CGFloat {
-    self.duration = duration.asStream()
-    self.path = path
-    self.system = system
+  public var state: MotionObservable<MotionState> {
+    return _state.asStream()
   }
 
-  public convenience init(duration: CFTimeInterval, path: MotionObservable<CGPath>, system: @escaping PathTweenToStream<CGPoint>) {
-    self.init(duration: createProperty("PathTween.duration", withInitialValue: CGFloat(duration)),
-              path: path,
-              system: system)
+  public init(duration: CGFloat, path: CGPath, system: @escaping PathTweenToStream<CGPoint>, timeline: Timeline? = nil) {
+    self.duration = createProperty("PathTween.duration", withInitialValue: CGFloat(duration))
+    self.path = createProperty("PathTween.path", withInitialValue: path)
+    self.system = system
+    self.timeline = timeline
+  }
+
+  public init(system: @escaping PathTweenToStream<CGPoint>, timeline: Timeline? = nil) {
+    self.duration = createProperty("PathTween.duration", withInitialValue: CGFloat(0))
+    self.path = createProperty("PathTween.path", withInitialValue: UIBezierPath().cgPath)
+    self.system = system
+    self.timeline = timeline
   }
 
   public func add(to property: ReactiveProperty<CGPoint>, withRuntime runtime: MotionRuntime) {
@@ -59,10 +60,35 @@ public final class PathTween: PropertyInteraction {
   }
 
   public let metadata = Metadata("Path Tween")
+
+  fileprivate var stream: MotionObservable<CGPoint>?
+  fileprivate let system: PathTweenToStream<CGPoint>
+  fileprivate let _state = createProperty("PathTween._state", withInitialValue: MotionState.atRest)
+}
+
+public struct PathTweenShadow {
+  public let enabled: ReactiveProperty<Bool>
+  public let state: ReactiveProperty<MotionState>
+  public let duration: ReactiveProperty<CGFloat>
+  public let delay: ReactiveProperty<CGFloat>
+  public let path: ReactiveProperty<CGPath>
+  public let timeline: Timeline?
+
+  init(of tween: PathTween) {
+    self.enabled = tween.enabled
+    self.state = tween._state
+    self.duration = tween.duration
+    self.delay = tween.delay
+    self.path = tween.path
+    self.timeline = tween.timeline
+  }
 }
 
 extension PathTween: MotionObservableConvertible {
   public func asStream() -> MotionObservable<CGPoint> {
-    return system(self)
+    if stream == nil {
+      stream = system(PathTweenShadow(of: self))._remember()
+    }
+    return stream!
   }
 }

@@ -36,17 +36,12 @@ public enum CoreAnimationChannelEvent {
   /**
    The provided animation is expected to be added to a layer.
    */
-  case add(CAPropertyAnimation, String, initialVelocity: Any?, completionBlock: () -> Void)
+  case add(CAPropertyAnimation, String, initialVelocity: Any?, timeline: Timeline?, completionBlock: () -> Void)
 
   /**
    Any animation with the given key is expected to be removed from a layer.
    */
   case remove(String)
-
-  /**
-   The timeline should be observed, and changes in its state should be used to scrub an interaction.
-   */
-  case timeline(Timeline)
 }
 
 /**

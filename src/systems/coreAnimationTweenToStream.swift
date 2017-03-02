@@ -53,10 +53,7 @@ public func coreAnimation<T>(_ tween: TweenShadow<T>) -> MotionObservable<T> {
 
       tween.state.value = .active
 
-      if let timeline = tween.timeline {
-        observer.coreAnimation?(.timeline(timeline))
-      }
-      observer.coreAnimation?(.add(animation, key, initialVelocity: nil, completionBlock: {
+      observer.coreAnimation?(.add(animation, key, initialVelocity: nil, timeline: tween.timeline, completionBlock: {
         activeAnimations.remove(key)
         if activeAnimations.count == 0 {
           tween.state.value = .atRest

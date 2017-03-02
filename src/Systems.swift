@@ -23,7 +23,7 @@ import Foundation
  */
 public typealias GestureToStream<T: UIGestureRecognizer> = (T) -> MotionObservable<T>
 
-public typealias PathTweenToStream<T> = (PathTween) -> MotionObservable<CGPoint>
+public typealias PathTweenToStream<T> = (PathTweenShadow) -> MotionObservable<CGPoint>
 
 /**
  A scrollview-to-stream function creates a MotionObservable from a UIScrollView.
