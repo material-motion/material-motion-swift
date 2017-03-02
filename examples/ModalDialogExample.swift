@@ -70,7 +70,7 @@ class ModalDialogTransition: SelfDismissingTransition {
 
   required init() {}
 
-  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) {
+  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [MotionObservable<MotionState>] {
     let size = ctx.fore.preferredContentSize
 
     if ctx.direction == .forward {
@@ -141,7 +141,7 @@ class ModalDialogTransition: SelfDismissingTransition {
       runtime.add(rotation, to: reactiveForeLayer.rotation)
     }
 
-    ctx.terminateWhenAllAtRest([spring.state.asStream()])
+    return [spring.state.asStream()]
   }
 
   static func willPresent(fore: UIViewController, dismisser: ViewControllerDismisser) {

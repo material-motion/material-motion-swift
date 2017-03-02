@@ -168,16 +168,12 @@ extension TransitionContext {
     self.runtime = MotionRuntime(containerView: containerView())
     self.replicator.containerView = containerView()
 
-    transition.willBeginTransition(withContext: self, runtime: self.runtime)
-
-    assert(didRegisterTerminator, "Must register terminators or transition will run forever.")
-  }
-
-  public func terminateWhenAllAtRest(_ streams: [MotionObservable<MotionState>]) {
-    didRegisterTerminator = true
-    runtime.whenAllAtRest(streams) { [weak self] in
+    let terminators = transition.willBeginTransition(withContext: self, runtime: self.runtime)
+    runtime.whenAllAtRest(terminators) { [weak self] in
       self?.terminate()
     }
+
+    assert(didRegisterTerminator, "Must register terminators or transition will run forever.")
   }
 
   private func terminate() {

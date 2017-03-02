@@ -260,7 +260,7 @@ private class PushBackTransition: Transition {
 
   required init() {}
 
-  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) {
+  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [MotionObservable<MotionState>] {
     let foreVC = ctx.fore as! PhotoAlbumViewController
     let foreImageView = (foreVC.collectionView.cellForItem(at: foreVC.indexPathForCurrentPhoto()) as! PhotoCollectionViewCell).imageView
     let contextView = ctx.contextView() as! PhotoCollectionViewCell
@@ -317,7 +317,7 @@ private class PushBackTransition: Transition {
 
     terminalStates.append(opacity.state.asStream())
 
-    ctx.terminateWhenAllAtRest(terminalStates)
+    return terminalStates
   }
 
   private func spring<T>(back: T, fore: T, threshold: CGFloat, ctx: TransitionContext) -> TransitionSpring<T> where T: Subtractable, T: Zeroable, T: Equatable {

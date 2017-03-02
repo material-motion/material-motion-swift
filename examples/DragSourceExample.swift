@@ -17,57 +17,8 @@
 import UIKit
 import MaterialMotionStreams
 
-// This example demonstrates how to connect a drag source to a property on a view.
-
-class ExampleTransition: Transition {
-  required init() {}
-
-  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) {
-    let backPositionY = ctx.containerView().bounds.height * 1.5
-    let forePositionY = ctx.containerView().bounds.midY
-
-    let from: CGFloat
-    let to: CGFloat
-    switch ctx.direction.value {
-    case .forward:
-      from = backPositionY
-      to = forePositionY
-    case .backward:
-      from = forePositionY
-      to = backPositionY
-    }
-
-    let tween = Tween(duration: 0.35, values: [from, to], system: coreAnimation)
-    runtime.add(tween, to: runtime.get(ctx.fore.view.layer).positionY)
-  }
-}
-
 @available(iOS 9.0, *)
 public class DragSourceExampleViewController: UIViewController {
-
-  override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-    super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-
-    navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTap))
-  }
-
-  required public init?(coder aDecoder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-
-  func didTap() {
-    let vc = UIViewController()
-    vc.view.backgroundColor = .red
-    let tap = UITapGestureRecognizer()
-    tap.addTarget(self, action: #selector(tapToDismiss))
-    vc.view.addGestureRecognizer(tap)
-    vc.transitionController.transitionType = ExampleTransition.self
-    present(vc, animated: true)
-  }
-
-  func tapToDismiss() {
-    dismiss(animated: true)
-  }
 
   var runtime: MotionRuntime!
   public override func viewDidLoad() {

@@ -118,6 +118,10 @@ public final class MotionRuntime {
   private var reactiveScrollViews: [UIScrollView: MotionObservable<CGPoint>] = [:]
 
   public func whenAllAtRest(_ streams: [MotionObservable<MotionState>], body: @escaping () -> Void) {
+    guard streams.count > 0 else {
+      body()
+      return
+    }
     var subscriptions: [Subscription] = []
     var activeIndices = Set<Int>()
     for (index, stream) in streams.enumerated() {

@@ -24,8 +24,12 @@ public protocol Transition {
   /** Transition directors must be instantiable. */
   init()
 
-  /** Invoked on initiation of a view controller transition. */
-  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime)
+  /**
+   Invoked on initiation of a view controller transition.
+
+   Must return a list of streams that will determine when this transition comes to rest.
+   */
+  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [MotionObservable<MotionState>]
 }
 
 /**
