@@ -18,11 +18,30 @@ import Foundation
 
 public class Tap: PropertyInteraction {
 
-  public var relativeView: UIView?
-  public lazy var gestureRecognizer = UITapGestureRecognizer()
+  public let existingGestureRecognizer: UITapGestureRecognizer?
+  public let viewForNewGestureRecognizers: UIView?
+
+  init() {
+    self.existingGestureRecognizer = nil
+    self.viewForNewGestureRecognizers = nil
+  }
+
+  init(existingGestureRecognizer: UITapGestureRecognizer) {
+    self.existingGestureRecognizer = existingGestureRecognizer
+    self.viewForNewGestureRecognizers = nil
+  }
+
+  init(viewForNewGestureRecognizers: UIView) {
+    self.existingGestureRecognizer = nil
+    self.viewForNewGestureRecognizers = viewForNewGestureRecognizers
+  }
 
   public func add(to property: ReactiveProperty<CGPoint>, withRuntime runtime: MotionRuntime) {
-    let relativeView = self.relativeView ?? runtime.containerView
-    runtime.add(runtime.get(gestureRecognizer).centroidOnRecognition(in: relativeView), to: property)
+    let gesture = existingGestureRecognizer ?? UITapGestureRecognizer()
+    let viewForNewGestureRecognizers = self.viewForNewGestureRecognizers ?? runtime.containerView
+    if gesture.view == nil {
+      viewForNewGestureRecognizers.addGestureRecognizer(gesture)
+    }
+    runtime.add(runtime.get(gesture).centroidOnRecognition(in: viewForNewGestureRecognizers), to: property)
   }
 }

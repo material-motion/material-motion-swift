@@ -16,35 +16,10 @@
 
 import Foundation
 
-public class Rotatable: ViewInteraction {
-
-  public var targetView: UIView?
-  public lazy var gestureRecognizer = UIRotationGestureRecognizer()
-
-  convenience init<S: Sequence>(gestureRecognizers: S) where S.Iterator.Element: UIGestureRecognizer {
-    self.init()
-
-    for gestureRecognizer in gestureRecognizers {
-      switch gestureRecognizer {
-      case let rotate as UIRotationGestureRecognizer:
-        self.gestureRecognizer = rotate
-        break
-
-      default:
-        ()
-      }
-    }
-  }
-
+public class Rotatable: Gesturable<UIRotationGestureRecognizer>, ViewInteraction {
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
+    let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView)
     let rotation = reactiveView.reactiveLayer.rotation
-
-    targetView?.isUserInteractionEnabled = true
-
-    var stream = runtime.get(gestureRecognizer).asStream()
-    if let targetView = targetView {
-      stream = stream.filter(whenStartsWithin: targetView)
-    }
-    runtime.add(stream.rotated(from: rotation), to: rotation)
+    runtime.add(runtime.get(gestureRecognizer).rotated(from: rotation), to: rotation)
   }
 }

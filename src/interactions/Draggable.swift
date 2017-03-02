@@ -16,38 +16,10 @@
 
 import Foundation
 
-public class Draggable: ViewInteraction {
-
-  public var targetView: UIView?
-  public var relativeView: UIView?
-  public lazy var gestureRecognizer = UIPanGestureRecognizer()
-
-  convenience init<S: Sequence>(gestureRecognizers: S) where S.Iterator.Element: UIGestureRecognizer {
-    self.init()
-
-    for gestureRecognizer in gestureRecognizers {
-      switch gestureRecognizer {
-      case let pan as UIPanGestureRecognizer:
-        self.gestureRecognizer = pan
-        break
-
-      default:
-        ()
-      }
-    }
-  }
-
+public class Draggable: Gesturable<UIPanGestureRecognizer>, ViewInteraction {
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
+    let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView)
     let position = reactiveView.reactiveLayer.position
-    let relativeView = self.relativeView ?? runtime.containerView
-
-    targetView?.isUserInteractionEnabled = true
-
-    var stream = runtime.get(gestureRecognizer).asStream()
-    if let targetView = targetView {
-      stream = stream.filter(whenStartsWithin: targetView)
-    }
-    runtime.add(stream.translated(from: position, in: relativeView),
-                to: position)
+    runtime.add(runtime.get(gestureRecognizer).translated(from: position), to: position)
   }
 }

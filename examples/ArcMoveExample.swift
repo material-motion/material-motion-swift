@@ -47,9 +47,7 @@ public class ArcMoveExampleViewController: UIViewController {
     let reactiveTapLayer = runtime.get(tapCircleLayer)
     let reactiveTargetLayer = runtime.get(targetView).reactiveLayer
 
-    let draggable = Draggable()
-    draggable.targetView = targetView
-    runtime.add(draggable, to: targetView)
+    runtime.add(Draggable(), to: targetView)
 
     runtime.add(Tap(), to: reactiveTapLayer.position)
 

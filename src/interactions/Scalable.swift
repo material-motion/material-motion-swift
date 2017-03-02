@@ -16,35 +16,10 @@
 
 import Foundation
 
-public class Scalable: ViewInteraction {
-
-  public var targetView: UIView?
-  public lazy var gestureRecognizer = UIPinchGestureRecognizer()
-
-  convenience init<S: Sequence>(gestureRecognizers: S) where S.Iterator.Element: UIGestureRecognizer {
-    self.init()
-
-    for gestureRecognizer in gestureRecognizers {
-      switch gestureRecognizer {
-      case let pinch as UIPinchGestureRecognizer:
-        self.gestureRecognizer = pinch
-        break
-
-      default:
-        ()
-      }
-    }
-  }
-
+public class Scalable: Gesturable<UIPinchGestureRecognizer>, ViewInteraction {
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
+    let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView)
     let scale = reactiveView.reactiveLayer.scale
-
-    targetView?.isUserInteractionEnabled = true
-
-    var stream = runtime.get(gestureRecognizer).asStream()
-    if let targetView = targetView {
-      stream = stream.filter(whenStartsWithin: targetView)
-    }
-    runtime.add(stream.scaled(from: scale), to: scale)
+    runtime.add(runtime.get(gestureRecognizer).scaled(from: scale), to: scale)
   }
 }

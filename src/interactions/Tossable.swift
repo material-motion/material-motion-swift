@@ -36,23 +36,23 @@ public class Destination: MotionObservableConvertible {
 
 public class Tossable: ViewInteraction {
 
-  public let draggable = Draggable()
+  public let draggable: Draggable
   public let spring: Spring<CGPoint>
 
-  init(destination: Destination, system: @escaping SpringToStream<CGPoint>) {
+  init(destination: Destination, system: @escaping SpringToStream<CGPoint>, draggable: Draggable = Draggable()) {
     self.destination = destination
     self.spring = Spring(threshold: 1, system: system)
+    self.draggable = draggable
   }
 
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
     let position = reactiveView.reactiveLayer.position
-    let relativeView = draggable.relativeView ?? runtime.containerView
-    let gesture = runtime.get(draggable.gestureRecognizer)
 
-    runtime.add(gesture.translated(from: position, in: relativeView), to: position)
+    let gesture = runtime.get(draggable.nextGestureRecognizer)
 
+    runtime.add(draggable, to: reactiveView)
     runtime.add(destination.asStream(), to: spring.destination)
-    runtime.add(gesture.velocityOnReleaseStream(in: relativeView), to: spring.initialVelocity)
+    runtime.add(gesture.velocityOnReleaseStream(in: runtime.containerView), to: spring.initialVelocity)
     runtime.add(spring, to: position)
 
     runtime.add(gesture.atRest(), to: spring.enabled)

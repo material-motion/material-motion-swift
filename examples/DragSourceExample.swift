@@ -81,10 +81,6 @@ public class DragSourceExampleViewController: UIViewController {
     center.x -= 32
     center.y -= 32
 
-    let square = UIView(frame: .init(x: center.x, y: center.y, width: 64, height: 64))
-    square.backgroundColor = .red
-    view.addSubview(square)
-
     let square2 = UIView(frame: .init(x: center.x, y: center.y, width: 64, height: 64))
     square2.backgroundColor = .orange
     view.addSubview(square2)
@@ -94,7 +90,14 @@ public class DragSourceExampleViewController: UIViewController {
     circle.layer.cornerRadius = circle.bounds.width / 2
     view.addSubview(circle)
 
-    let tossable = Tossable(destination: Destination(runtime.get(circle)), system: pop)
+    let square = UIView(frame: .init(x: center.x, y: center.y, width: 64, height: 64))
+    square.backgroundColor = .red
+    view.addSubview(square)
+
+    let gesture = UIPanGestureRecognizer()
+    view.addGestureRecognizer(gesture)
+    let draggable = Draggable(.withExistingRecognizer(gesture))
+    let tossable = Tossable(destination: Destination(runtime.get(circle)), system: pop, draggable: draggable)
     runtime.add(tossable, to: square)
     runtime.add(Tap(), to: tossable)
 

@@ -305,7 +305,10 @@ private class PushBackTransition: Transition {
     let reactivePhoto = runtime.get(replicaView.layer)
     runtime.add(movement, to: reactivePhoto.position)
     runtime.add(size, to: reactivePhoto.size)
-    runtime.add(Draggable(gestureRecognizers: ctx.gestureRecognizers), to: replicaView)
+
+    for pan in pans {
+      runtime.add(Draggable(.withExistingRecognizer(pan)), to: replicaView)
+    }
 
     runtime.add(Hidden(), to: foreImageView)
 

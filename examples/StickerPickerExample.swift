@@ -57,7 +57,7 @@ public class StickerPickerExampleViewController: UIViewController, StickerListVi
     spring.destination.value = 1
     runtime.add(spring, to: runtime.get(imageView.layer).scale)
 
-    runtime.add(DirectlyManipulable(targetView: imageView), to: imageView)
+    runtime.add(DirectlyManipulable(), to: imageView)
   }
 }
 
