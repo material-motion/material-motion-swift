@@ -154,11 +154,11 @@ private class CircularRevealTransition: Transition {
 
     runtime.add(Hidden(), to: contextView)
 
-    return [expansion.state.asStream(),
-            fadeOut.state.asStream(),
-            radius.state.asStream(),
-            shadowPath.state.asStream(),
-            shiftIn.state.asStream()]
+    return [expansion.state,
+            fadeOut.state,
+            radius.state,
+            shadowPath.state,
+            shiftIn.state]
   }
 
   private func tween<T>(back: T, fore: T, ctx: TransitionContext) -> Tween<T> {

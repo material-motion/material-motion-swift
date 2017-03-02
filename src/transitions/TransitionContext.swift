@@ -172,8 +172,6 @@ extension TransitionContext {
     runtime.whenAllAtRest(terminators) { [weak self] in
       self?.terminate()
     }
-
-    assert(didRegisterTerminator, "Must register terminators or transition will run forever.")
   }
 
   private func terminate() {

@@ -141,7 +141,7 @@ class ModalDialogTransition: SelfDismissingTransition {
       runtime.add(rotation, to: reactiveForeLayer.rotation)
     }
 
-    return [spring.state.asStream()]
+    return [spring.state]
   }
 
   static func willPresent(fore: UIViewController, dismisser: ViewControllerDismisser) {

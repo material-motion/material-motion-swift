@@ -275,7 +275,7 @@ private class PushBackTransition: Transition {
     let movement = spring(back: contextView, fore: foreImageView, ctx: ctx)
     let size = spring(back: contextView.bounds.size, fore: fitSize, threshold: 1, ctx: ctx)
 
-    var terminalStates = [movement.state.asStream(), size.state.asStream()]
+    var terminalStates = [movement.state, size.state]
 
     let pans = ctx.gestureRecognizers.filter { $0 is UIPanGestureRecognizer }.map { $0 as! UIPanGestureRecognizer }
     for pan in pans {
@@ -315,7 +315,7 @@ private class PushBackTransition: Transition {
     let opacity: TransitionSpring<CGFloat> = spring(back: 0, fore: 1, threshold: 0.01, ctx: ctx)
     runtime.add(opacity, to: runtime.get(ctx.fore.view.layer).opacity)
 
-    terminalStates.append(opacity.state.asStream())
+    terminalStates.append(opacity.state)
 
     return terminalStates
   }

@@ -75,7 +75,7 @@ private class PushBackTransition: Transition {
     runtime.add(position, to: runtime.get(ctx.fore.view.layer).positionY)
     runtime.add(scale, to: runtime.get(ctx.back.view.layer).scale)
 
-    return [position.state.asStream(), scale.state.asStream()]
+    return [position.state, scale.state]
   }
 
   private func spring(back: CGFloat, fore: CGFloat, threshold: CGFloat, ctx: TransitionContext) -> TransitionSpring<CGFloat> {
