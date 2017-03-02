@@ -194,7 +194,7 @@ private class ModalTransition: Transition {
 
   required init() {}
 
-  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [MotionObservable<MotionState>] {
+  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [StatefulInteraction] {
     let size = ctx.fore.preferredContentSize == .zero() ? ctx.fore.view.bounds.size : ctx.fore.preferredContentSize
 
     if ctx.direction == .forward {
@@ -208,6 +208,6 @@ private class ModalTransition: Transition {
                                   system: coreAnimation)
     runtime.add(spring, to: runtime.get(ctx.fore.view.layer).opacity)
 
-    return [spring.state.asStream()]
+    return [spring]
   }
 }

@@ -260,7 +260,7 @@ private class PushBackTransition: Transition {
 
   required init() {}
 
-  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [MotionObservable<MotionState>] {
+  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [StatefulInteraction] {
     let foreVC = ctx.fore as! PhotoAlbumViewController
     let foreImageView = (foreVC.collectionView.cellForItem(at: foreVC.indexPathForCurrentPhoto()) as! PhotoCollectionViewCell).imageView
     let contextView = ctx.contextView() as! PhotoCollectionViewCell
@@ -275,12 +275,12 @@ private class PushBackTransition: Transition {
     let movement = spring(back: contextView, fore: foreImageView, ctx: ctx)
     let size = spring(back: contextView.bounds.size, fore: fitSize, threshold: 1, ctx: ctx)
 
-    var terminalStates = [movement.state, size.state]
+    var terminalStates: [StatefulInteraction] = [movement, size]
 
     let pans = ctx.gestureRecognizers.filter { $0 is UIPanGestureRecognizer }.map { $0 as! UIPanGestureRecognizer }
     for pan in pans {
       let atRestStream = runtime.get(pan).atRest()
-      terminalStates.append(runtime.get(pan).asMotionState())
+      terminalStates.append(runtime.get(pan))
 
       let velocityStream = runtime.get(pan).velocityOnReleaseStream()
       runtime.add(velocityStream, to: movement.initialVelocity)
@@ -315,7 +315,7 @@ private class PushBackTransition: Transition {
     let opacity: TransitionSpring<CGFloat> = spring(back: 0, fore: 1, threshold: 0.01, ctx: ctx)
     runtime.add(opacity, to: runtime.get(ctx.fore.view.layer).opacity)
 
-    terminalStates.append(opacity.state)
+    terminalStates.append(opacity)
 
     return terminalStates
   }

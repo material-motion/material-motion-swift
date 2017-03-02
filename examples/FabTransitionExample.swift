@@ -97,7 +97,7 @@ private class CircularRevealTransition: Transition {
 
   required init() {}
 
-  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [MotionObservable<MotionState>] {
+  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [StatefulInteraction] {
     foreViewLayer = ctx.fore.view.layer
 
     let contextView = ctx.contextView()!
@@ -154,11 +154,7 @@ private class CircularRevealTransition: Transition {
 
     runtime.add(Hidden(), to: contextView)
 
-    return [expansion.state,
-            fadeOut.state,
-            radius.state,
-            shadowPath.state,
-            shiftIn.state]
+    return [expansion, fadeOut, radius, shadowPath, shiftIn]
   }
 
   private func tween<T>(back: T, fore: T, ctx: TransitionContext) -> Tween<T> {

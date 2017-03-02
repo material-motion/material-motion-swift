@@ -29,7 +29,7 @@ public protocol Transition {
 
    Must return a list of streams that will determine when this transition comes to rest.
    */
-  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [MotionObservable<MotionState>]
+  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [StatefulInteraction]
 }
 
 /**

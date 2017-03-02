@@ -65,7 +65,7 @@ private class PushBackTransition: Transition {
 
   required init() {}
 
-  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [MotionObservable<MotionState>] {
+  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [StatefulInteraction] {
     let position = spring(back: ctx.containerView().bounds.height + ctx.fore.view.layer.bounds.height / 2,
                           fore: ctx.containerView().bounds.midY,
                           threshold: 1,
@@ -75,7 +75,7 @@ private class PushBackTransition: Transition {
     runtime.add(position, to: runtime.get(ctx.fore.view.layer).positionY)
     runtime.add(scale, to: runtime.get(ctx.back.view.layer).scale)
 
-    return [position.state, scale.state]
+    return [position, scale]
   }
 
   private func spring(back: CGFloat, fore: CGFloat, threshold: CGFloat, ctx: TransitionContext) -> TransitionSpring<CGFloat> {
