@@ -22,6 +22,14 @@ public protocol TransitionInteraction {
   func initialValue() -> ValueType
 }
 
+public protocol TogglableInteraction {
+  var enabled: ReactiveProperty<Bool> { get }
+}
+
+public protocol StatefulInteraction {
+  var state: MotionObservable<MotionState> { get }
+}
+
 public protocol ViewInteraction {
   /** Connect all streams with the provided runtime. */
   func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime)

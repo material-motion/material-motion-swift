@@ -97,8 +97,8 @@ private class PushBackTransition: Transition {
                     .whenAbove: .backward]),
                     to: ctx.direction)
 
-        runtime.add(gesture.atRest(), to: movement.enabled)
-        runtime.add(gesture.atRest(), to: scale.enabled)
+        runtime.enable(movement, whenAtRest: gesture)
+        runtime.enable(scale, whenAtRest: gesture)
 
       default:
         ()

@@ -33,6 +33,10 @@ public final class MotionRuntime {
     self.containerView = containerView
   }
 
+  public func enable(_ interaction: TogglableInteraction, whenAtRest otherInteraction: StatefulInteraction) {
+    add(otherInteraction.state.rewrite([.atRest: true, .active: false]), to: interaction.enabled)
+  }
+
   public func add(_ interaction: ViewInteraction, to reactiveView: ReactiveUIView) {
     interaction.add(to: reactiveView, withRuntime: self)
     viewInteractions.append(interaction)

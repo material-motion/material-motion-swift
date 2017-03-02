@@ -16,7 +16,7 @@
 
 import UIKit
 
-public class ReactiveUIGestureRecognizer<O: UIGestureRecognizer> {
+public class ReactiveUIGestureRecognizer<O: UIGestureRecognizer>: StatefulInteraction {
   public let gestureRecognizer: O
 
   public lazy var isEnabled: ReactiveProperty<Bool> = {
@@ -33,6 +33,10 @@ public class ReactiveUIGestureRecognizer<O: UIGestureRecognizer> {
   }
 
   public let metadata = Metadata("Gesture Recognizer")
+
+  public var state: MotionObservable<MotionState> {
+    return asStream().asMotionState()
+  }
 
   fileprivate let containerView: UIView
   fileprivate let stream: MotionObservable<O>

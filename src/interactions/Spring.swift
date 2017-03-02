@@ -22,7 +22,7 @@ import IndefiniteObservable
 
  This class defines the expected shape of a Spring for use in creating a Spring source.
  */
-public class Spring<T: Zeroable>: PropertyInteraction, ViewInteraction {
+public class Spring<T: Zeroable>: PropertyInteraction, ViewInteraction, TogglableInteraction, StatefulInteraction {
   /** Creates a spring with the provided properties and an initial velocity. */
   public init(threshold: CGFloat, system: @escaping SpringToStream<T>) {
     self.threshold = createProperty("Spring.threshold", withInitialValue: threshold)

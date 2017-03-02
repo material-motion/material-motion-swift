@@ -123,7 +123,7 @@ class ModalDialogTransition: SelfDismissingTransition {
                     .whenAbove: createProperty(withInitialValue: .backward).asStream()]),
                     to: ctx.direction)
 
-        runtime.add(gesture.atRest(), to: spring.enabled)
+        runtime.enable(spring, whenAtRest: gesture)
 
       default:
         ()
