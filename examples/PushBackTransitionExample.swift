@@ -66,20 +66,27 @@ private class PushBackTransition: Transition {
   required init() {}
 
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [StatefulInteraction] {
-    let position = spring(back: ctx.containerView().bounds.height + ctx.fore.view.layer.bounds.height / 2,
-                          fore: ctx.containerView().bounds.midY,
-                          threshold: 1,
-                          ctx: ctx)
-    let scale = spring(back: 1, fore: 0.95, threshold: 0.005, ctx: ctx)
+    let position = TransitionProperty(runtime.get(ctx.fore.view.layer).positionY,
+                                      back: ctx.containerView().bounds.height + ctx.fore.view.layer.bounds.height / 2,
+                                      fore: ctx.containerView().bounds.midY,
+                                      direction: ctx.direction)
+    let scale = TransitionProperty(runtime.get(ctx.back.view.layer).scale,
+                                   back: 1,
+                                   fore: 0.95,
+                                   direction: ctx.direction)
 
-    runtime.add(position, to: runtime.get(ctx.fore.view.layer).positionY)
-    runtime.add(scale, to: runtime.get(ctx.back.view.layer).scale)
+    let positionSpring: Spring<CGFloat> = spring(threshold: 1)
+    let scaleSpring: Spring<CGFloat> = spring(threshold: 0.005)
+    runtime.add(position, to: positionSpring.destination)
+    runtime.add(scale, to: scaleSpring.destination)
+    runtime.add(positionSpring, to: position)
+    runtime.add(scaleSpring, to: scale)
 
-    return [position, scale]
+    return [positionSpring, scaleSpring]
   }
 
-  private func spring(back: CGFloat, fore: CGFloat, threshold: CGFloat, ctx: TransitionContext) -> TransitionSpring<CGFloat> {
-    let spring = TransitionSpring(back: back, fore: fore, direction: ctx.direction, threshold: threshold, system: coreAnimation)
+  private func spring<T>(threshold: CGFloat) -> Spring<T> where T: Subtractable, T: Zeroable, T: Equatable {
+    let spring = Spring<T>(threshold: threshold, system: coreAnimation)
     spring.friction.value = 500
     spring.tension.value = 1000
     spring.mass.value = 3

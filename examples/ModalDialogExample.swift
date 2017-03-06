@@ -112,10 +112,10 @@ class ModalDialogTransition: SelfDismissingTransition {
                 to: ctx.direction)
 
     let destination = Destination()
-    runtime.add(TransitionValue(back: backPosition,
-                                fore: forePosition,
-                                direction: ctx.direction,
-                                property: position),
+    runtime.add(TransitionProperty(position,
+                                   back: backPosition,
+                                   fore: forePosition,
+                                   direction: ctx.direction),
                 to: destination)
 
     let tossable = Tossable(destination: destination, system: coreAnimation, draggable: draggable)

@@ -16,7 +16,7 @@
 
 import Foundation
 
-public class TransitionValue<T>: PropertyInteraction {
+public class TransitionProperty<T>: PropertyInteraction {
 
   public let backwardDestination: T
   public let forwardDestination: T
@@ -29,10 +29,11 @@ public class TransitionValue<T>: PropertyInteraction {
    - parameter direction: The spring will change its destination in reaction to this property's
    changes.
    */
-  public init(back backwardDestination: T,
+  public init(_ property: ReactiveProperty<T>,
+              back backwardDestination: T,
               fore forwardDestination: T,
-              direction: ReactiveProperty<TransitionContext.Direction>,
-              property: ReactiveProperty<T>) {
+              direction: ReactiveProperty<TransitionContext.Direction>) {
+    self.property = property
     self.backwardDestination = backwardDestination
     self.forwardDestination = forwardDestination
     property.value = direction == .forward ? backwardDestination : forwardDestination
@@ -44,5 +45,12 @@ public class TransitionValue<T>: PropertyInteraction {
     runtime.add(toggledDestination, to: property)
   }
 
+  fileprivate let property: ReactiveProperty<T>
   private let toggledDestination: MotionObservable<T>
+}
+
+extension TransitionProperty: ReactivePropertyConvertible {
+  public func asProperty() -> ReactiveProperty<T> {
+    return property
+  }
 }
