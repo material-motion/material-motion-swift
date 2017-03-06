@@ -21,7 +21,7 @@ public class Destination: MotionObservableConvertible {
     property = view.center
   }
 
-  init(_ position: CGPoint) {
+  init(_ position: CGPoint = .zero()) {
     property = createProperty("Destination.position", withInitialValue: position)
   }
 
