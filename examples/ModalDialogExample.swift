@@ -42,7 +42,11 @@ class ModalDialogViewController: UIViewController {
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
     super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
-    transitionController.transitionType = ModalDialogTransition.self
+    if #available(iOS 9.0, *) {
+      transitionController.transitionType = ModalDialogTransition.self
+    } else {
+      // Fallback on earlier versions
+    }
 
     modalPresentationStyle = .overCurrentContext
   }
@@ -66,6 +70,7 @@ class ModalDialogViewController: UIViewController {
   }
 }
 
+@available(iOS 9.0, *)
 class ModalDialogTransition: SelfDismissingTransition {
 
   required init() {}
@@ -78,70 +83,43 @@ class ModalDialogTransition: SelfDismissingTransition {
     }
 
     let bounds = ctx.containerView().bounds
-    let backPositionY = bounds.maxY + size.height * 3 / 4
-    let forePositionY = bounds.midY
+    let backPosition = CGPoint(x: bounds.midX, y: bounds.maxY + size.height * 3 / 4)
+    let forePosition = CGPoint(x: bounds.midX, y: bounds.midY)
 
-    let mainThreadReactive: Bool
-    let system: SpringToStream<CGFloat>
-    if #available(iOS 9.0, *) {
-      mainThreadReactive = false
-      system = coreAnimation
+    var firstPan = ctx.gestureRecognizers.first { $0 is UIPanGestureRecognizer }
+    let draggable: Draggable
+    if let firstPan = firstPan as? UIPanGestureRecognizer {
+      draggable = Draggable(.withExistingRecognizer(firstPan))
     } else {
-      mainThreadReactive = true
-      system = pop
+      draggable = Draggable()
     }
-    let spring = TransitionSpring(back: backPositionY,
-                                  fore: forePositionY,
-                                  direction: ctx.direction,
-                                  threshold: 1,
-                                  system: system)
 
     let reactiveForeLayer = runtime.get(ctx.fore.view.layer)
+    let position = reactiveForeLayer.position
 
-    for gestureRecognizer in ctx.gestureRecognizers {
-      switch gestureRecognizer {
-      case let pan as UIPanGestureRecognizer:
-        let gesture = runtime.get(pan)
+    let gesture = runtime.get(draggable.nextGestureRecognizer)
+    let centerY = ctx.containerView().bounds.height / 2.0
+    runtime.add(gesture
+      .velocityOnReleaseStream()
+      .y()
+      .thresholdRange(min: -100, max: 100)
+      // If one of rewrite's target values is a stream, then all the target values must be
+      // streams.
+      .rewrite([.whenBelow: createProperty(withInitialValue: .forward).asStream(),
+                .whenWithin: position.y().threshold(centerY).rewrite([.whenBelow: .forward,
+                                                                      .whenAbove: .backward]),
+                .whenAbove: createProperty(withInitialValue: .backward).asStream()]),
+                to: ctx.direction)
 
-        let dragStream = gesture.translated(from: reactiveForeLayer.position).y()
-        runtime.add(dragStream, to: reactiveForeLayer.positionY)
+    let movement = TransitionSpring(back: backPosition,
+                                    fore: forePosition,
+                                    direction: ctx.direction,
+                                    threshold: 1,
+                                    system: coreAnimation)
+    let tossable = Tossable(spring: movement, draggable: draggable)
+    runtime.add(tossable, to: ctx.fore.view)
 
-        let velocityStream = gesture.velocityOnReleaseStream().y()
-        runtime.add(velocityStream, to: spring.initialVelocity)
-
-        let centerY = ctx.containerView().bounds.height / 2.0
-        let positionY = reactiveForeLayer.positionY
-        let positionDestination: MotionObservable<TransitionContext.Direction> =
-          positionY.threshold(centerY).rewrite([.whenBelow: .forward, .whenAbove: .backward])
-
-        runtime.add(velocityStream
-          .thresholdRange(min: -100, max: 100)
-          // If one of rewrite's target values is a stream, then all the target values must be
-          // streams.
-          .rewrite([.whenBelow: createProperty(withInitialValue: .forward).asStream(),
-                    .whenWithin: positionDestination,
-                    .whenAbove: createProperty(withInitialValue: .backward).asStream()]),
-                    to: ctx.direction)
-
-        runtime.enable(spring, whenAtRest: gesture)
-
-      default:
-        ()
-      }
-    }
-
-    runtime.add(spring, to: reactiveForeLayer.positionY)
-
-    if mainThreadReactive {
-      let rotation = reactiveForeLayer.positionY
-        .rewriteRange(start: spring.backwardDestination,
-                      end: spring.forwardDestination,
-                      destinationStart: CGFloat(Double.pi / 8),
-                      destinationEnd: 0)
-      runtime.add(rotation, to: reactiveForeLayer.rotation)
-    }
-
-    return [spring]
+    return [tossable.spring]
   }
 
   static func willPresent(fore: UIViewController, dismisser: ViewControllerDismisser) {
