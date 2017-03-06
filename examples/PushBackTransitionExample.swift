@@ -60,37 +60,76 @@ private class ModalViewController: UIViewController {
   }
 }
 
+public enum DefaultKey {
+  case friction
+  case tension
+  case mass
+  case suggestedDuration
+}
+
+public enum LayerProperty {
+  case positionY
+  case scale
+}
+
+public class StateMachine<State: Hashable>: CoordinatingInteraction, StatefulInteraction {
+  init(runtime: MotionRuntime) {
+    self.runtime = runtime
+  }
+
+  public var defaults: [DefaultKey: CGFloat]?
+
+  subscript(layer: CALayer) -> [State: [LayerProperty: Any]]? {
+    get {
+      return layerStates[layer]
+    }
+    set {
+      layerStates[layer] = newValue
+    }
+  }
+
+  public var state: MotionObservable<MotionState> {
+    return _state.asStream()
+  }
+
+  public func add(withRuntime runtime: MotionRuntime) {
+
+  }
+
+  private var layerStates: [CALayer: [State: [LayerProperty: Any]]] = [:]
+  private let runtime: MotionRuntime
+
+  private let _state = createProperty("StateMachine._state", withInitialValue: MotionState.atRest)
+}
+
 @available(iOS 9.0, *)
 private class PushBackTransition: Transition {
 
   required init() {}
 
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [StatefulInteraction] {
-    let position = TransitionProperty(runtime.get(ctx.fore.view.layer).positionY,
-                                      back: ctx.containerView().bounds.height + ctx.fore.view.layer.bounds.height / 2,
-                                      fore: ctx.containerView().bounds.midY,
-                                      direction: ctx.direction)
-    let positionSpring: Spring<CGFloat> = spring(threshold: 1)
-    runtime.add(position, to: positionSpring.destination)
-    runtime.add(positionSpring, to: position.property)
+    let stateMachine = StateMachine<TransitionContext.Direction>(runtime: runtime)
 
-    let scale = TransitionProperty(runtime.get(ctx.back.view.layer).scale,
-                                   back: 1,
-                                   fore: 0.95,
-                                   direction: ctx.direction)
-    let scaleSpring: Spring<CGFloat> = spring(threshold: 0.005)
-    runtime.add(scale, to: scaleSpring.destination)
-    runtime.add(scaleSpring, to: scale.property)
+    stateMachine.defaults = [
+      .friction: 500,
+      .tension: 1000,
+      .mass: 3,
+      .suggestedDuration: 0.5,
+    ]
 
-    return [positionSpring, scaleSpring]
-  }
+    stateMachine[ctx.fore.view.layer] = [
+      .backward: [
+        .positionY: ctx.containerView().bounds.height + ctx.fore.view.layer.bounds.height / 2,
+        .scale: 1
+      ],
+      .forward: [
+        .positionY: ctx.containerView().bounds.midY,
+        .scale: 0.95
+      ]
+    ]
 
-  private func spring<T>(threshold: CGFloat) -> Spring<T> where T: Subtractable, T: Zeroable, T: Equatable {
-    let spring = Spring<T>(threshold: threshold, system: coreAnimation)
-    spring.friction.value = 500
-    spring.tension.value = 1000
-    spring.mass.value = 3
-    spring.suggestedDuration.value = 0.5
-    return spring
+    runtime.add(stateMachine)
+
+    return [stateMachine]
   }
 }

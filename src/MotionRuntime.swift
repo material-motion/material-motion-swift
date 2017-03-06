@@ -46,6 +46,10 @@ public final class MotionRuntime {
     add(interaction, to: get(view))
   }
 
+  public func add(_ interaction: CoordinatingInteraction) {
+    interaction.add(withRuntime: self)
+  }
+
   public func add<T, P: ReactivePropertyConvertible>(_ stream: MotionObservable<T>, to property: P) where P.T == T {
     write(stream, to: property.asProperty())
   }

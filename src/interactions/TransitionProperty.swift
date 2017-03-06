@@ -36,9 +36,12 @@ public class TransitionProperty<T>: PropertyInteraction {
     self.property = property
     self.backwardDestination = backwardDestination
     self.forwardDestination = forwardDestination
-    property.value = direction == .forward ? backwardDestination : forwardDestination
     self.toggledDestination = direction.rewrite([.backward: backwardDestination,
                                                  .forward: forwardDestination])
+
+    // Initialize the property so that we always start at the opposite side of the transition's
+    // direction.
+    property.value = direction == .forward ? backwardDestination : forwardDestination
   }
 
   public func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime) {

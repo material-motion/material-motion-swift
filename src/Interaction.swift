@@ -39,3 +39,7 @@ public protocol PropertyInteraction {
   associatedtype T
   func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime)
 }
+
+public protocol CoordinatingInteraction {
+  func add(withRuntime runtime: MotionRuntime)
+}
