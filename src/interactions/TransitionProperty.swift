@@ -45,12 +45,6 @@ public class TransitionProperty<T>: PropertyInteraction {
     runtime.add(toggledDestination, to: property)
   }
 
-  fileprivate let property: ReactiveProperty<T>
+  public let property: ReactiveProperty<T>
   private let toggledDestination: MotionObservable<T>
-}
-
-extension TransitionProperty: ReactivePropertyConvertible {
-  public func asProperty() -> ReactiveProperty<T> {
-    return property
-  }
 }

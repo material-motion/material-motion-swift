@@ -70,17 +70,17 @@ private class PushBackTransition: Transition {
                                       back: ctx.containerView().bounds.height + ctx.fore.view.layer.bounds.height / 2,
                                       fore: ctx.containerView().bounds.midY,
                                       direction: ctx.direction)
+    let positionSpring: Spring<CGFloat> = spring(threshold: 1)
+    runtime.add(position, to: positionSpring.destination)
+    runtime.add(positionSpring, to: position.property)
+
     let scale = TransitionProperty(runtime.get(ctx.back.view.layer).scale,
                                    back: 1,
                                    fore: 0.95,
                                    direction: ctx.direction)
-
-    let positionSpring: Spring<CGFloat> = spring(threshold: 1)
     let scaleSpring: Spring<CGFloat> = spring(threshold: 0.005)
-    runtime.add(position, to: positionSpring.destination)
     runtime.add(scale, to: scaleSpring.destination)
-    runtime.add(positionSpring, to: position)
-    runtime.add(scaleSpring, to: scale)
+    runtime.add(scaleSpring, to: scale.property)
 
     return [positionSpring, scaleSpring]
   }
