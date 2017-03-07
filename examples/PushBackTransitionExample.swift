@@ -72,6 +72,10 @@ public enum LayerProperty {
   case scale
 }
 
+public class StateMachineStates<State: Hashable, Property: Hashable> {
+  var states: [State: [Property: Any]] = [:]
+}
+
 public class StateMachine<State: Hashable>: CoordinatingInteraction, StatefulInteraction {
   init(runtime: MotionRuntime) {
     self.runtime = runtime
@@ -79,12 +83,14 @@ public class StateMachine<State: Hashable>: CoordinatingInteraction, StatefulInt
 
   public var defaults: [DefaultKey: CGFloat]?
 
-  subscript(layer: CALayer) -> [State: [LayerProperty: Any]]? {
+  subscript(layer: CALayer) -> StateMachineStates<State, LayerProperty> {
     get {
-      return layerStates[layer]
-    }
-    set {
-      layerStates[layer] = newValue
+      if let states = layerStates[layer] {
+        return states
+      }
+      let states = StateMachineStates<State, LayerProperty>()
+      layerStates[layer] = states
+      return states
     }
   }
 
@@ -93,10 +99,16 @@ public class StateMachine<State: Hashable>: CoordinatingInteraction, StatefulInt
   }
 
   public func add(withRuntime runtime: MotionRuntime) {
+    for (layer, states) in layerStates {
+      for (state, values) in states.states {
+        for (property, value) in values {
 
+        }
+      }
+    }
   }
 
-  private var layerStates: [CALayer: [State: [LayerProperty: Any]]] = [:]
+  private var layerStates: [CALayer: StateMachineStates<State, LayerProperty>] = [:]
   private let runtime: MotionRuntime
 
   private let _state = createProperty("StateMachine._state", withInitialValue: MotionState.atRest)
@@ -117,7 +129,7 @@ private class PushBackTransition: Transition {
       .suggestedDuration: 0.5,
     ]
 
-    stateMachine[ctx.fore.view.layer] = [
+    stateMachine[ctx.fore.view.layer].states = [
       .backward: [
         .positionY: ctx.containerView().bounds.height + ctx.fore.view.layer.bounds.height / 2,
         .scale: 1
