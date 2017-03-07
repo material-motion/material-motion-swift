@@ -58,12 +58,6 @@ public final class MotionRuntime {
     interaction.add(to: property.asProperty(), withRuntime: self)
   }
 
-  public func add<I: TransitionInteraction, P: ReactivePropertyConvertible>(_ interaction: I, to property: P) where I.ValueType == P.T, I: PropertyInteraction {
-    let property = property.asProperty()
-    property.value = interaction.initialValue()
-    interaction.add(to: property as! ReactiveProperty<I.T>, withRuntime: self)
-  }
-
   public func get(_ view: UIView) -> ReactiveUIView {
     if let reactiveObject = reactiveViews[view] {
       return reactiveObject

@@ -17,7 +17,7 @@
 import Foundation
 
 /** Attaches a position to a destination on either side of a transition using a spring. */
-public class TransitionSpring<T: Zeroable>: Spring<T>, TransitionInteraction {
+public class TransitionSpring<T: Zeroable>: Spring<T> {
 
   public let backwardDestination: T
   public let forwardDestination: T
@@ -39,21 +39,19 @@ public class TransitionSpring<T: Zeroable>: Spring<T>, TransitionInteraction {
               system: @escaping SpringToStream<T>) {
     self.backwardDestination = backwardDestination
     self.forwardDestination = forwardDestination
-    self._initialValue = direction == .forward ? backwardDestination : forwardDestination
+    self.initialValue = direction == .forward ? backwardDestination : forwardDestination
 
     self.toggledDestination = direction.rewrite([.backward: backwardDestination, .forward: forwardDestination])
     super.init(threshold: threshold, system: system)
   }
 
   public override func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime) {
+    property.value = initialValue
+
     runtime.add(toggledDestination, to: destination)
     super.add(to: property, withRuntime: runtime)
   }
 
-  public func initialValue() -> T {
-    return _initialValue
-  }
-
-  private let _initialValue: T
+  private let initialValue: T
   private let toggledDestination: MotionObservable<T>
 }

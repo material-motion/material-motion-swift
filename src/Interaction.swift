@@ -16,12 +16,6 @@
 
 import Foundation
 
-public protocol TransitionInteraction {
-  associatedtype ValueType
-
-  func initialValue() -> ValueType
-}
-
 public protocol TogglableInteraction {
   var enabled: ReactiveProperty<Bool> { get }
 }
