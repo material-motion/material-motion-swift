@@ -16,36 +16,20 @@
 
 import Foundation
 
-public class Destination: MotionObservableConvertible {
-  init(_ view: ReactiveUIView) {
-    property = view.center
-  }
-
-  init(_ position: CGPoint) {
-    property = createProperty("Destination.position", withInitialValue: position)
-  }
-
-  public let property: ReactiveProperty<CGPoint>
-
-  public let metadata = Metadata("Destination")
-
-  public func asStream() -> MotionObservable<CGPoint> {
-    return property.asStream()
-  }
-}
-
 public class Tossable {
 
   public let draggable: Draggable
   public let spring: Spring<CGPoint>
 
-  init(destination: Destination, system: @escaping SpringToStream<CGPoint>, draggable: Draggable = Draggable()) {
-    self.destination = destination
+  init(system: @escaping SpringToStream<CGPoint>, draggable: Draggable = Draggable()) {
     self.spring = Spring(threshold: 1, system: system)
     self.draggable = draggable
   }
 
-  fileprivate let destination: Destination
+  init(spring: Spring<CGPoint>, draggable: Draggable = Draggable()) {
+    self.spring = spring
+    self.draggable = draggable
+  }
 }
 
 extension Tossable: ViewInteraction {
@@ -55,22 +39,9 @@ extension Tossable: ViewInteraction {
     let gesture = runtime.get(draggable.nextGestureRecognizer)
 
     runtime.add(draggable, to: reactiveView)
-    runtime.add(destination.asStream(), to: spring.destination)
     runtime.add(gesture.velocityOnReleaseStream(in: runtime.containerView), to: spring.initialVelocity)
     runtime.add(spring, to: position)
 
     runtime.add(gesture.atRest(), to: spring.enabled)
-  }
-}
-
-extension Destination: ReactivePropertyConvertible {
-  public func asProperty() -> ReactiveProperty<CGPoint> {
-    return property
-  }
-}
-
-extension Tossable: ReactivePropertyConvertible {
-  public func asProperty() -> ReactiveProperty<CGPoint> {
-    return destination.property
   }
 }

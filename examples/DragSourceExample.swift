@@ -48,9 +48,11 @@ public class DragSourceExampleViewController: UIViewController {
     let gesture = UIPanGestureRecognizer()
     view.addGestureRecognizer(gesture)
     let draggable = Draggable(.withExistingRecognizer(gesture))
-    let tossable = Tossable(destination: Destination(runtime.get(circle)), system: pop, draggable: draggable)
+    let tossable = Tossable(system: pop, draggable: draggable)
+    let target = runtime.get(circle).reactiveLayer.position
+    runtime.add(target, to: tossable.spring.destination)
     runtime.add(tossable, to: square)
-    runtime.add(Tap(coordinateSpace: view), to: tossable)
+    runtime.add(Tap(coordinateSpace: view), to: target)
 
     let spring = Spring<CGPoint>(threshold: 1, system: coreAnimation)
     runtime.add(tossable.spring.destination, to: spring.destination)
