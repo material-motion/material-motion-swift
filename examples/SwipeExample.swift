@@ -44,7 +44,7 @@ class TossableStackedCard: ViewInteraction {
     let destination = createProperty("destination", withInitialValue: relativeView.bounds.midX)
 
     let drag = runtime.get(dragGesture)
-    runtime.add(
+    runtime.connect(
       drag
         .onRecognitionState(.ended)
         .velocity(in: relativeView)
@@ -60,7 +60,7 @@ class TossableStackedCard: ViewInteraction {
           .left: -view.bounds.width,
           .right: relativeView.bounds.width + view.bounds.width
           ])
-    runtime.add(destinationStream, to: destination)
+    runtime.connect(destinationStream, to: destination)
 
     let gestureEnabledStream = tossDirection.rewrite([
       .none: true,
@@ -68,16 +68,16 @@ class TossableStackedCard: ViewInteraction {
       .right: false
       ]
     )
-    runtime.add(gestureEnabledStream, to: drag.isEnabled)
-    runtime.add(gestureEnabledStream, to: reactiveView.isUserInteractionEnabled)
+    runtime.connect(gestureEnabledStream, to: drag.isEnabled)
+    runtime.connect(gestureEnabledStream, to: reactiveView.isUserInteractionEnabled)
 
     let attachment = Spring<CGFloat>(threshold: 1, system: pop)
-    runtime.add(drag.velocityOnReleaseStream(in: view).x(), to: attachment.initialVelocity)
-    runtime.add(destination, to: attachment.destination)
+    runtime.connect(drag.velocityOnReleaseStream(in: view).x(), to: attachment.initialVelocity)
+    runtime.connect(destination, to: attachment.destination)
 
     let draggable = drag.translated(from: reactiveView.center, in: relativeView).x()
-    runtime.add(draggable, to: reactiveView.centerX)
-    runtime.add(drag.atRest(), to: attachment.enabled)
+    runtime.connect(draggable, to: reactiveView.centerX)
+    runtime.connect(drag.atRest(), to: attachment.enabled)
     runtime.add(attachment, to: reactiveView.centerX)
 
     let radians = CGFloat(Double.pi / 180.0 * 15.0)
@@ -99,10 +99,10 @@ class TossableStackedCard: ViewInteraction {
           .upperBound(1)
           .subtracted(from: 1)
           .scaled(by: rotation)
-      runtime.add(nextRotationStream.valve(openWhenTrue: drag.atRest()), to: reactiveLayer.rotation)
-      runtime.add(rotationStream.valve(openWhenTrue: drag.active()), to: reactiveLayer.rotation)
+      runtime.connect(nextRotationStream.valve(openWhenTrue: drag.atRest()), to: reactiveLayer.rotation)
+      runtime.connect(rotationStream.valve(openWhenTrue: drag.active()), to: reactiveLayer.rotation)
     } else {
-      runtime.add(rotationStream, to: reactiveLayer.rotation)
+      runtime.connect(rotationStream, to: reactiveLayer.rotation)
     }
   }
 

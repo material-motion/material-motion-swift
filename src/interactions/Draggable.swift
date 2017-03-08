@@ -23,6 +23,6 @@ extension Draggable: ViewInteraction {
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
     let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView)
     let position = reactiveView.reactiveLayer.position
-    runtime.add(runtime.get(gestureRecognizer).translated(from: position), to: position)
+    runtime.connect(runtime.get(gestureRecognizer).translated(from: position), to: position)
   }
 }

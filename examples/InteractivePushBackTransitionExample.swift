@@ -75,7 +75,7 @@ private class PushBackTransition: Transition {
     }
 
     let gesture = runtime.get(draggable.nextGestureRecognizer)
-    runtime.add(gesture
+    runtime.connect(gesture
       .velocityOnReleaseStream()
       .y()
       .thresholdRange(min: -100, max: 100)
@@ -94,7 +94,7 @@ private class PushBackTransition: Transition {
     let scaleSpring = spring(back: CGFloat(1), fore: CGFloat(0.95), threshold: 0.005, ctx: ctx)
 
     let scale = runtime.get(ctx.back.view.layer).scale
-    runtime.add(runtime.get(ctx.fore.view.layer).position.y()
+    runtime.connect(runtime.get(ctx.fore.view.layer).position.y()
       // The position's final value gets written to by Core Animation when the gesture ends and the
       // movement spring engages. Because we're connecting position to the scale here, this would
       // also cause scale to jump to its destination as well (without animating, unfortunately).

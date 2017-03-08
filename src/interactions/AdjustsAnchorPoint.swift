@@ -42,7 +42,7 @@ extension AdjustsAnchorPoint: ViewInteraction {
     })
 
     for stream in anchorPointStreams {
-      runtime.add(stream, to: reactiveView.reactiveLayer.anchorPointAdjustment)
+      runtime.connect(stream, to: reactiveView.reactiveLayer.anchorPointAdjustment)
     }
   }
 }

@@ -75,7 +75,7 @@ public class Spring<T: Zeroable>: PropertyInteraction, ViewInteraction, Togglabl
 
   public func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime) {
     let shadow = SpringShadow(of: self, initialValue: property)
-    runtime.add(shadow.state.dedupe(), to: ReactiveProperty(initialValue: .atRest) { state in
+    runtime.connect(shadow.state.dedupe(), to: ReactiveProperty(initialValue: .atRest) { state in
       if state == .active {
         self.activeSprings.insert(shadow)
       } else {
@@ -83,7 +83,7 @@ public class Spring<T: Zeroable>: PropertyInteraction, ViewInteraction, Togglabl
       }
       self._state.value = self.activeSprings.count == 0 ? .atRest : .active
     })
-    runtime.add(system(shadow), to: property)
+    runtime.connect(system(shadow), to: property)
   }
 
   private var activeSprings = Set<SpringShadow<T>>()

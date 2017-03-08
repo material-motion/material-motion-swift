@@ -51,13 +51,13 @@ public class ArcMoveExampleViewController: UIViewController {
     runtime.add(Tap(coordinateSpace: view), to: reactiveTapLayer.position)
 
     let arcMove = ArcMove(duration: 0.4, system: coreAnimation, timeline: timeline)
-    runtime.add(reactiveTapLayer.position, to: arcMove.from)
-    runtime.add(reactiveTargetLayer.position, to: arcMove.to)
+    runtime.connect(reactiveTapLayer.position, to: arcMove.from)
+    runtime.connect(reactiveTargetLayer.position, to: arcMove.to)
     // The duration of the animation is based on the distance to the target
     duration = reactiveTapLayer.position.distance(from: reactiveTargetLayer.position).normalized(by: 600)
-    runtime.add(duration, to: arcMove.duration)
+    runtime.connect(duration, to: arcMove.duration)
 
-    runtime.add(duration.scaled(by: timelineView.sliderValue.asStream()), to: timeline.timeOffset)
+    runtime.connect(duration.scaled(by: timelineView.sliderValue.asStream()), to: timeline.timeOffset)
     timeline.paused.value = true
     runtime.add(arcMove, to: blueSquare)
   }

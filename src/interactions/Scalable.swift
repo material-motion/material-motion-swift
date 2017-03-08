@@ -23,6 +23,6 @@ extension Scalable: ViewInteraction {
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
     let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView)
     let scale = reactiveView.reactiveLayer.scale
-    runtime.add(runtime.get(gestureRecognizer).scaled(from: scale), to: scale)
+    runtime.connect(runtime.get(gestureRecognizer).scaled(from: scale), to: scale)
   }
 }

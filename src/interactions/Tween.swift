@@ -83,7 +83,7 @@ public final class Tween<T>: PropertyInteraction, TogglableInteraction, Stateful
   }
 
   public func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime) {
-    runtime.add(asStream(), to: property)
+    runtime.connect(asStream(), to: property)
   }
 
   fileprivate let system: TweenToStream<T>

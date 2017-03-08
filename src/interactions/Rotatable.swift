@@ -23,6 +23,6 @@ extension Rotatable: ViewInteraction {
   public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
     let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView)
     let rotation = reactiveView.reactiveLayer.rotation
-    runtime.add(runtime.get(gestureRecognizer).rotated(from: rotation), to: rotation)
+    runtime.connect(runtime.get(gestureRecognizer).rotated(from: rotation), to: rotation)
   }
 }

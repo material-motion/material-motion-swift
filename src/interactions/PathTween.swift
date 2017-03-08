@@ -64,7 +64,7 @@ public final class PathTween: TogglableInteraction, StatefulInteraction {
 
 extension PathTween: PropertyInteraction {
   public func add(to property: ReactiveProperty<CGPoint>, withRuntime runtime: MotionRuntime) {
-    runtime.add(asStream(), to: property)
+    runtime.connect(asStream(), to: property)
   }
 }
 

@@ -60,12 +60,12 @@ public class CarouselExampleViewController: UIViewController, UIScrollViewDelega
 
       let pageEdge = stream.x().offset(by: -page.frame.origin.x)
 
-      runtime.add(pageEdge.rewriteRange(start: 0, end: 128,
-                                        destinationStart: 1, destinationEnd: 0),
-                  to: runtime.get(page).alpha)
-      runtime.add(pageEdge.rewriteRange(start: -view.bounds.width, end: 0,
-                                        destinationStart: 0.5, destinationEnd: 1.0),
-                  to: runtime.get(page.layer).scale)
+      runtime.connect(pageEdge.rewriteRange(start: 0, end: 128,
+                                            destinationStart: 1, destinationEnd: 0),
+                      to: runtime.get(page).alpha)
+      runtime.connect(pageEdge.rewriteRange(start: -view.bounds.width, end: 0,
+                                            destinationStart: 0.5, destinationEnd: 1.0),
+                      to: runtime.get(page.layer).scale)
     }
   }
 

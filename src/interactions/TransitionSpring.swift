@@ -48,7 +48,7 @@ public class TransitionSpring<T: Zeroable>: Spring<T> {
   public override func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime) {
     property.value = initialValue
 
-    runtime.add(toggledDestination, to: destination)
+    runtime.connect(toggledDestination, to: destination)
     super.add(to: property, withRuntime: runtime)
   }
 

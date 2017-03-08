@@ -99,7 +99,7 @@ class ModalDialogTransition: SelfDismissingTransition {
 
     let gesture = runtime.get(draggable.nextGestureRecognizer)
     let centerY = ctx.containerView().bounds.height / 2.0
-    runtime.add(gesture
+    runtime.connect(gesture
       .velocityOnReleaseStream()
       .y()
       .thresholdRange(min: -100, max: 100)

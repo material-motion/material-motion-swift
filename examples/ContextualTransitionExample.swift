@@ -281,13 +281,13 @@ private class PushBackTransition: Transition {
     }
 
     let gesture = runtime.get(draggable.nextGestureRecognizer)
-    runtime.add(gesture
+    runtime.connect(gesture
       .translation(in: runtime.containerView)
       .y()
       .slop(size: 100)
       .rewrite([.onExit: .backward, .onReturn: .forward]),
                 to: ctx.direction)
-    runtime.add(gesture
+    runtime.connect(gesture
       .velocityOnReleaseStream()
       .y()
       .thresholdRange(min: -100, max: 100)

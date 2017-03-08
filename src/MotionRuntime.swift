@@ -33,8 +33,12 @@ public final class MotionRuntime {
     self.containerView = containerView
   }
 
-  public func enable(_ interaction: TogglableInteraction, whenAtRest otherInteraction: StatefulInteraction) {
-    add(otherInteraction.state.rewrite([.atRest: true, .active: false]), to: interaction.enabled)
+  public func add(_ interaction: ViewInteraction, to view: UIView) {
+    add(interaction, to: get(view))
+  }
+
+  public func add<I: PropertyInteraction, P: ReactivePropertyConvertible>(_ interaction: I, to property: P) where I.T == P.T {
+    interaction.add(to: property.asProperty(), withRuntime: self)
   }
 
   public func add(_ interaction: ViewInteraction, to reactiveView: ReactiveUIView) {
@@ -42,20 +46,16 @@ public final class MotionRuntime {
     viewInteractions.append(interaction)
   }
 
-  public func add(_ interaction: ViewInteraction, to view: UIView) {
-    add(interaction, to: get(view))
-  }
-
-  public func add<T, P: ReactivePropertyConvertible>(_ stream: MotionObservable<T>, to property: P) where P.T == T {
+  public func connect<T, P: ReactivePropertyConvertible>(_ stream: MotionObservable<T>, to property: P) where P.T == T {
     write(stream, to: property.asProperty())
   }
 
-  public func add<T, P: ReactivePropertyConvertible>(_ fromProperty: ReactiveProperty<T>, to property: P) where P.T == T {
+  public func connect<T, P: ReactivePropertyConvertible>(_ fromProperty: ReactiveProperty<T>, to property: P) where P.T == T {
     write(fromProperty.asStream(), to: property.asProperty())
   }
 
-  public func add<I: PropertyInteraction, P: ReactivePropertyConvertible>(_ interaction: I, to property: P) where I.T == P.T {
-    interaction.add(to: property.asProperty(), withRuntime: self)
+  public func enable(_ interaction: TogglableInteraction, whenAtRest otherInteraction: StatefulInteraction) {
+    connect(otherInteraction.state.rewrite([.atRest: true, .active: false]), to: interaction.enabled)
   }
 
   public func get(_ view: UIView) -> ReactiveUIView {

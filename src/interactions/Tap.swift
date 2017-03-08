@@ -53,7 +53,7 @@ extension Tap: PropertyInteraction {
       gestureRecognizer = existingGestureRecognizer
     }
 
-    runtime.add(runtime.get(gestureRecognizer).centroidOnRecognition(in: coordinateSpace),
-                to: property)
+    runtime.connect(runtime.get(gestureRecognizer).centroidOnRecognition(in: coordinateSpace),
+                    to: property)
   }
 }

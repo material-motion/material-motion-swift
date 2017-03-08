@@ -44,7 +44,7 @@ extension Tossable: ViewInteraction {
     // 2. The spring must be registered before draggable in case draggable's gesture is already
     //    active and will want to immediately read the current state of the position property.
 
-    runtime.add(gesture.velocityOnReleaseStream(in: runtime.containerView), to: spring.initialVelocity)
+    runtime.connect(gesture.velocityOnReleaseStream(in: runtime.containerView), to: spring.initialVelocity)
     runtime.enable(spring, whenAtRest: gesture)
     runtime.add(spring, to: position)
 
