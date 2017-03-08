@@ -38,10 +38,16 @@ extension Tossable: ViewInteraction {
 
     let gesture = runtime.get(draggable.nextGestureRecognizer)
 
-    runtime.add(draggable, to: reactiveView)
+    // Order matters:
+    //
+    // 1. The spring's initial velocity must be set before it's re-enabled.
+    // 2. The spring must be registered before draggable in case draggable's gesture is already
+    //    active and will want to immediately read the current state of the position property.
+
     runtime.add(gesture.velocityOnReleaseStream(in: runtime.containerView), to: spring.initialVelocity)
+    runtime.enable(spring, whenAtRest: gesture)
     runtime.add(spring, to: position)
 
-    runtime.add(gesture.atRest(), to: spring.enabled)
+    runtime.add(draggable, to: reactiveView)
   }
 }
