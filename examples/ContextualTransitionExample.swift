@@ -272,52 +272,42 @@ private class PushBackTransition: Transition {
                        foreImageView.bounds.height / imageSize.height)
     let fitSize = CGSize(width: fitScale * imageSize.width, height: fitScale * imageSize.height)
 
+    let firstPan = ctx.gestureRecognizers.first { $0 is UIPanGestureRecognizer }
+    let draggable: Draggable
+    if let firstPan = firstPan as? UIPanGestureRecognizer {
+      draggable = Draggable(.withExistingRecognizer(firstPan))
+    } else {
+      draggable = Draggable()
+    }
+
+    let gesture = runtime.get(draggable.nextGestureRecognizer)
+    runtime.add(gesture
+      .translation(in: runtime.containerView)
+      .y()
+      .slop(size: 100)
+      .rewrite([.onExit: .backward, .onReturn: .forward]),
+                to: ctx.direction)
+    runtime.add(gesture
+      .velocityOnReleaseStream()
+      .y()
+      .thresholdRange(min: -100, max: 100)
+      .rewrite([.whenBelow: .backward, .whenAbove: .backward]),
+                to: ctx.direction)
+
     let movement = spring(back: contextView, fore: foreImageView, ctx: ctx)
+    let tossable = Tossable(spring: movement, draggable: draggable)
+    runtime.add(tossable, to: replicaView)
+
     let size = spring(back: contextView.bounds.size, fore: fitSize, threshold: 1, ctx: ctx)
+    runtime.enable(size, whenAtRest: gesture)
+    runtime.add(size, to: runtime.get(replicaView).reactiveLayer.size)
 
-    var terminalStates: [StatefulInteraction] = [movement, size]
-
-    let pans = ctx.gestureRecognizers.filter { $0 is UIPanGestureRecognizer }.map { $0 as! UIPanGestureRecognizer }
-    for pan in pans {
-      let atRestStream = runtime.get(pan).atRest()
-      terminalStates.append(runtime.get(pan))
-
-      let velocityStream = runtime.get(pan).velocityOnReleaseStream()
-      runtime.add(velocityStream, to: movement.initialVelocity)
-
-      runtime.add(atRestStream, to: movement.enabled)
-      runtime.add(atRestStream, to: size.enabled)
-
-      runtime.add(runtime.get(pan)
-        .translation(in: runtime.containerView)
-        .y()
-        .slop(size: 100)
-        .rewrite([.onExit: .backward, .onReturn: .forward]),
-                  to: ctx.direction)
-
-      runtime.add(velocityStream
-        .y()
-        .thresholdRange(min: -100, max: 100)
-        .rewrite([.whenBelow: .backward, .whenAbove: .backward]),
-                  to: ctx.direction)
-    }
-
-    let reactivePhoto = runtime.get(replicaView.layer)
-    runtime.add(movement, to: reactivePhoto.position)
-    runtime.add(size, to: reactivePhoto.size)
-
-    for pan in pans {
-      runtime.add(Draggable(.withExistingRecognizer(pan)), to: replicaView)
-    }
+    let opacity = spring(back: CGFloat(0), fore: CGFloat(1), threshold: 0.01, ctx: ctx)
+    runtime.add(opacity, to: runtime.get(ctx.fore.view.layer).opacity)
 
     runtime.add(Hidden(), to: foreImageView)
 
-    let opacity: TransitionSpring<CGFloat> = spring(back: 0, fore: 1, threshold: 0.01, ctx: ctx)
-    runtime.add(opacity, to: runtime.get(ctx.fore.view.layer).opacity)
-
-    terminalStates.append(opacity)
-
-    return terminalStates
+    return [tossable.spring, gesture, size, opacity]
   }
 
   private func spring<T>(back: T, fore: T, threshold: CGFloat, ctx: TransitionContext) -> TransitionSpring<T> where T: Subtractable, T: Zeroable, T: Equatable {
