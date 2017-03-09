@@ -19,15 +19,15 @@
 import MaterialMotionStreams
 
 extension DraggableExampleViewController {
-  class func catalogBreadcrumbs() -> [String] {
-    return ["Draggable"]
-  }
+  class func catalogBreadcrumbs() -> [String] { return ["Draggable"] }
 }
 
 extension DraggableConstraintExampleViewController {
-  class func catalogBreadcrumbs() -> [String] {
-    return ["Draggable (with constraints)"]
-  }
+  class func catalogBreadcrumbs() -> [String] { return ["Draggable with constraints"] }
+}
+
+extension DraggableReactiveConstraintExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Draggable with reactive constraints"] }
 }
 
 @available(iOS 9.0, *)

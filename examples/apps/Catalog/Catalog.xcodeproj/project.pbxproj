@@ -37,6 +37,7 @@
 		66DDFD101E71F32800AA46B7 /* DraggableConstraintExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD0F1E71F32800AA46B7 /* DraggableConstraintExample.swift */; };
 		66DDFD121E71F39700AA46B7 /* ExampleViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD111E71F39700AA46B7 /* ExampleViews.swift */; };
 		66DDFD141E71F3D600AA46B7 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD131E71F3D600AA46B7 /* Layout.swift */; };
+		66DDFD161E71F90F00AA46B7 /* DraggableReactiveConstraintExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD151E71F90F00AA46B7 /* DraggableReactiveConstraintExample.swift */; };
 		66E6F2371E3FC791003158D3 /* PhotoAlbum.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6F2361E3FC791003158D3 /* PhotoAlbum.xcassets */; };
 		C1F5E1D37D0DA71224EFC15E /* Pods_Catalog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E95CBDC1BABF9E6E385A124B /* Pods_Catalog.framework */; };
 /* End PBXBuildFile section */
@@ -87,6 +88,7 @@
 		66DDFD0F1E71F32800AA46B7 /* DraggableConstraintExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DraggableConstraintExample.swift; path = ../../DraggableConstraintExample.swift; sourceTree = "<group>"; };
 		66DDFD111E71F39700AA46B7 /* ExampleViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleViews.swift; sourceTree = "<group>"; };
 		66DDFD131E71F3D600AA46B7 /* Layout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
+		66DDFD151E71F90F00AA46B7 /* DraggableReactiveConstraintExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DraggableReactiveConstraintExample.swift; path = ../../DraggableReactiveConstraintExample.swift; sourceTree = "<group>"; };
 		66E6F2361E3FC791003158D3 /* PhotoAlbum.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = PhotoAlbum.xcassets; sourceTree = SOURCE_ROOT; };
 		B05E63B8F92D94A8819B0ABB /* Pods_UnitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UnitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC5B661FDF1C5375A0D3B88E /* Pods-UnitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UnitTests.release.xcconfig"; path = "../../../Pods/Target Support Files/Pods-UnitTests/Pods-UnitTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -260,6 +262,7 @@
 			children = (
 				66DDFD0C1E71F0F100AA46B7 /* DraggableExample.swift */,
 				66DDFD0F1E71F32800AA46B7 /* DraggableConstraintExample.swift */,
+				66DDFD151E71F90F00AA46B7 /* DraggableReactiveConstraintExample.swift */,
 			);
 			name = Draggable;
 			sourceTree = "<group>";
@@ -497,6 +500,7 @@
 				667E94561E71EF0E005CAC78 /* DragSourceExample.swift in Sources */,
 				667E94571E71EF0E005CAC78 /* FabTransitionExample.swift in Sources */,
 				667E94541E71EF0E005CAC78 /* ContextualTransitionExample.swift in Sources */,
+				66DDFD161E71F90F00AA46B7 /* DraggableReactiveConstraintExample.swift in Sources */,
 				66DDFD101E71F32800AA46B7 /* DraggableConstraintExample.swift in Sources */,
 				667E94521E71EF0E005CAC78 /* ArcMoveExample.swift in Sources */,
 				667E945D1E71EF0E005CAC78 /* SwipeExample.swift in Sources */,
