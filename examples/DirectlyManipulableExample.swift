@@ -40,6 +40,6 @@ public class DirectlyManipulableExampleViewController: UIViewController {
     view.addSubview(square2)
 
     runtime.add(DirectlyManipulable(), to: square)
-    runtime.add(Draggable(), to: square2)
+    runtime.add(Draggable(), to: square2) { $0.xLocked(to: square2.layer.position.x) }
   }
 }

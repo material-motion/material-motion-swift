@@ -26,5 +26,6 @@ public protocol StatefulInteraction {
 
 public protocol Interaction {
   associatedtype Target
-  func add(to target: Target, withRuntime runtime: MotionRuntime)
+  associatedtype Constraints
+  func add(to target: Target, withRuntime runtime: MotionRuntime, constraints: Constraints?)
 }

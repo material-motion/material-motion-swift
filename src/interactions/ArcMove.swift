@@ -34,7 +34,7 @@ public class ArcMove {
 }
 
 extension ArcMove: Interaction {
-  public func add(to view: UIView, withRuntime runtime: MotionRuntime) {
+  public func add(to view: UIView, withRuntime runtime: MotionRuntime, constraints: Void?) {
     let tween = PathTween(system: system, timeline: timeline)
     runtime.connect(arcMove(from: from, to: to), to: tween.path)
     runtime.connect(duration, to: tween.duration)

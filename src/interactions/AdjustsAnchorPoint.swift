@@ -25,7 +25,7 @@ public class AdjustsAnchorPoint {
 }
 
 extension AdjustsAnchorPoint: Interaction {
-  public func add(to view: UIView, withRuntime runtime: MotionRuntime) {
+  public func add(to view: UIView, withRuntime runtime: MotionRuntime, constraints: Void?) {
     var anchorPointStreams = gestureRecognizers.map {
       runtime.get($0)
         .onRecognitionState(.began)

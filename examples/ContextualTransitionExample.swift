@@ -339,7 +339,7 @@ private class Hidden: Interaction {
       view.isHidden = false
     }
   }
-  func add(to view: UIView, withRuntime runtime: MotionRuntime) {
+  func add(to view: UIView, withRuntime runtime: MotionRuntime, constraints: Void?) {
     view.isHidden = true
     hiddenViews.insert(view)
   }

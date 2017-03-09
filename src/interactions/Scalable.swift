@@ -20,7 +20,7 @@ public class Scalable: Gesturable<UIPinchGestureRecognizer> {
 }
 
 extension Scalable: Interaction {
-  public func add(to view: UIView, withRuntime runtime: MotionRuntime) {
+  public func add(to view: UIView, withRuntime runtime: MotionRuntime, constraints: Void?) {
     let reactiveView = runtime.get(view)
     let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView)
     let scale = reactiveView.reactiveLayer.scale

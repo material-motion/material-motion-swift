@@ -34,7 +34,7 @@ class TossableStackedCard: Interaction {
     self.dragGesture = UIPanGestureRecognizer()
   }
 
-  func add(to view: UIView, withRuntime runtime: MotionRuntime) {
+  func add(to view: UIView, withRuntime runtime: MotionRuntime, constraints: Void?) {
     let reactiveView = runtime.get(view)
     let position = reactiveView.centerX
     self.position = position

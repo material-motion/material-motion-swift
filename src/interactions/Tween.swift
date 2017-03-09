@@ -82,7 +82,7 @@ public final class Tween<T>: Interaction, TogglableInteraction, StatefulInteract
     self.timeline = timeline
   }
 
-  public func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime) {
+  public func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime, constraints: Void?) {
     runtime.connect(asStream(), to: property)
   }
 

@@ -37,7 +37,7 @@ public class DirectlyManipulable: NSObject {
 }
 
 extension DirectlyManipulable: Interaction {
-  public func add(to view: UIView, withRuntime runtime: MotionRuntime) {
+  public func add(to view: UIView, withRuntime runtime: MotionRuntime, constraints: Void?) {
     for gestureRecognizer in [draggable.nextGestureRecognizer,
                               rotatable.nextGestureRecognizer,
                               scalable.nextGestureRecognizer] {

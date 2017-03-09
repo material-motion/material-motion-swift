@@ -33,8 +33,8 @@ public final class MotionRuntime {
     self.containerView = containerView
   }
 
-  public func add<I: Interaction>(_ interaction: I, to target: I.Target) {
-    interaction.add(to: target, withRuntime: self)
+  public func add<I: Interaction>(_ interaction: I, to target: I.Target, constraints: I.Constraints? = nil) {
+    interaction.add(to: target, withRuntime: self, constraints: constraints)
     interactions.append(interaction)
   }
 

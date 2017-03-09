@@ -33,7 +33,7 @@ public class Tossable {
 }
 
 extension Tossable: Interaction {
-  public func add(to view: UIView, withRuntime runtime: MotionRuntime) {
+  public func add(to view: UIView, withRuntime runtime: MotionRuntime, constraints: Void?) {
     let position = runtime.get(view.layer).position
 
     let gesture = runtime.get(draggable.nextGestureRecognizer)

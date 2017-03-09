@@ -67,7 +67,7 @@ public class Spring<T: Zeroable>: Interaction, TogglableInteraction, StatefulInt
   fileprivate let system: SpringToStream<T>
   fileprivate let _state = createProperty("Spring._state", withInitialValue: MotionState.atRest)
 
-  public func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime) {
+  public func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime, constraints: Void?) {
     let shadow = SpringShadow(of: self, initialValue: property)
     runtime.connect(shadow.state.dedupe(), to: ReactiveProperty(initialValue: .atRest) { state in
       if state == .active {

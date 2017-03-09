@@ -37,7 +37,7 @@ public class Tap {
 }
 
 extension Tap: Interaction {
-  public func add(to property: ReactiveProperty<CGPoint>, withRuntime runtime: MotionRuntime) {
+  public func add(to property: ReactiveProperty<CGPoint>, withRuntime runtime: MotionRuntime, constraints: Void?) {
     let gestureRecognizer: UITapGestureRecognizer
 
     switch config {
