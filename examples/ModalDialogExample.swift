@@ -75,7 +75,7 @@ class ModalDialogTransition: SelfDismissingTransition {
 
   required init() {}
 
-  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [StatefulInteraction] {
+  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
     let size = ctx.fore.preferredContentSize
 
     if ctx.direction == .forward {

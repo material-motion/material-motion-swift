@@ -63,7 +63,7 @@ private class PushBackTransition: Transition {
 
   required init() {}
 
-  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [StatefulInteraction] {
+  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
     let foreLayer = runtime.get(ctx.fore.view.layer)
 
     let firstPan = ctx.gestureRecognizers.first { $0 is UIPanGestureRecognizer }

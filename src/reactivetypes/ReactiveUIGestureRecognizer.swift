@@ -16,7 +16,7 @@
 
 import UIKit
 
-public class ReactiveUIGestureRecognizer<O: UIGestureRecognizer>: StatefulInteraction {
+public class ReactiveUIGestureRecognizer<O: UIGestureRecognizer>: Stateful {
   public let gestureRecognizer: O
 
   public lazy var isEnabled: ReactiveProperty<Bool> = {

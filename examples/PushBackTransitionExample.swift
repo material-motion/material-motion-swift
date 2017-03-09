@@ -65,7 +65,7 @@ private class PushBackTransition: Transition {
 
   required init() {}
 
-  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [StatefulInteraction] {
+  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
     let position = spring(back: ctx.containerView().bounds.height + ctx.fore.view.layer.bounds.height / 2,
                           fore: ctx.containerView().bounds.midY,
                           threshold: 1,

@@ -260,7 +260,7 @@ private class PushBackTransition: Transition {
 
   required init() {}
 
-  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [StatefulInteraction] {
+  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
     let foreVC = ctx.fore as! PhotoAlbumViewController
     let foreImageView = (foreVC.collectionView.cellForItem(at: foreVC.indexPathForCurrentPhoto()) as! PhotoCollectionViewCell).imageView
     let contextView = ctx.contextView() as! PhotoCollectionViewCell

@@ -16,18 +16,33 @@
 
 import Foundation
 
-public protocol TogglableInteraction {
-  var enabled: ReactiveProperty<Bool> { get }
-}
+/**
+ An interaction is responsible for associating one or more streams of information to a given target.
 
-public protocol StatefulInteraction {
-  var state: MotionObservable<MotionState> { get }
-}
+ A single instance of an Interaction may be associated with many distinct targets. This one-to-many
+ behavior varies per-interaction and should be clearly documented by the concrete type.
 
+ Properties on an interaction should either be constants or ReactiveProperty instances. Changes to a
+ reactive property should affect all previously-associated targets.
+ */
 public protocol Interaction {
   associatedtype Target
   associatedtype Constraints
+
+  /**
+   Invoked when an interaction is added to a runtime.
+
+   The conforming type defines the target and optional constraints types via this signature.
+
+   Use Void? as the constraints type to indicate that the interaction does not support constraints.
+   */
   func add(to target: Target, withRuntime runtime: MotionRuntime, constraints: Constraints?)
 }
 
+/**
+ A typical constraint shape for an interaction.
+
+ Accepts a stream and returns a stream of the same type. This is a convenient way to modify a stream
+ with operators.
+ */
 public typealias ConstraintApplicator<T> = (MotionObservable<T>) -> MotionObservable<T>

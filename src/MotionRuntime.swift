@@ -42,7 +42,7 @@ public final class MotionRuntime {
     write(stream.asStream(), to: property)
   }
 
-  public func enable(_ interaction: TogglableInteraction, whenAtRest otherInteraction: StatefulInteraction) {
+  public func enable(_ interaction: Togglable, whenAtRest otherInteraction: Stateful) {
     connect(otherInteraction.state.rewrite([.atRest: true, .active: false]), to: interaction.enabled)
   }
 
@@ -103,7 +103,7 @@ public final class MotionRuntime {
   }
   private var reactiveScrollViews: [UIScrollView: MotionObservable<CGPoint>] = [:]
 
-  public func whenAllAtRest(_ streams: [StatefulInteraction], body: @escaping () -> Void) {
+  public func whenAllAtRest(_ streams: [Stateful], body: @escaping () -> Void) {
     guard streams.count > 0 else {
       body()
       return

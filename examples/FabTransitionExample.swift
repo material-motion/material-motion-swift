@@ -97,7 +97,7 @@ private class CircularRevealTransition: Transition {
 
   required init() {}
 
-  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [StatefulInteraction] {
+  func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
     foreViewLayer = ctx.fore.view.layer
 
     let contextView = ctx.contextView()!
