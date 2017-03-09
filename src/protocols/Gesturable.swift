@@ -62,7 +62,7 @@ public class Gesturable<T: UIGestureRecognizer> {
    This property may change after the interaction has been added to a view depending on the
    interaction's configuration.
    */
-  var nextGestureRecognizer: T {
+  public var nextGestureRecognizer: T {
     if let nextGestureRecognizer = _nextGestureRecognizer {
       return nextGestureRecognizer
     }

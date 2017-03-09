@@ -3,13 +3,15 @@ use_frameworks!
 
 target "Catalog" do
   pod 'CatalogByConvention'
-  pod 'MaterialMotionStreams/examples', :path => './'
+  pod 'MaterialMotionStreams', :path => './'
+
   project 'examples/apps/Catalog/Catalog.xcodeproj'
 end
 
 target "UnitTests" do
+  pod 'MaterialMotionStreams', :path => './'
+
   project 'examples/apps/Catalog/Catalog.xcodeproj'
-  pod 'MaterialMotionStreams/tests', :path => './'
 end
 
 post_install do |installer|

@@ -61,7 +61,7 @@ public class TimelineView: UIView {
 
     bgView.frame = .init(x: 0, y: 20, width: bounds.size.width, height: bounds.size.height - 20)
 
-    var center = CGPoint(x: bounds.size.width / 2.0, y: bounds.size.height / 2.0)
+    let center = CGPoint(x: bounds.size.width / 2.0, y: bounds.size.height / 2.0)
     slider.frame = .init(x: 0, y: 0, width: frame.width, height: 40)
     toggle.frame = .init(x: center.x - 16, y: center.y - 16 + 12, width: 32, height: 32)
   }

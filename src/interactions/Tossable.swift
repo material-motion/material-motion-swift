@@ -21,12 +21,12 @@ public class Tossable {
   public let draggable: Draggable
   public let spring: Spring<CGPoint>
 
-  init(system: @escaping SpringToStream<CGPoint>, draggable: Draggable = Draggable()) {
+  public init(system: @escaping SpringToStream<CGPoint>, draggable: Draggable = Draggable()) {
     self.spring = Spring(threshold: 1, system: system)
     self.draggable = draggable
   }
 
-  init(spring: Spring<CGPoint>, draggable: Draggable = Draggable()) {
+  public init(spring: Spring<CGPoint>, draggable: Draggable = Draggable()) {
     self.spring = spring
     self.draggable = draggable
   }

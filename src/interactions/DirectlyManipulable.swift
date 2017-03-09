@@ -29,7 +29,7 @@ public class DirectlyManipulable: NSObject {
   public let rotatable: Rotatable
   public let scalable: Scalable
 
-  init(draggable: Draggable = Draggable(), rotatable: Rotatable = Rotatable(), scalable: Scalable = Scalable()) {
+  public init(draggable: Draggable = Draggable(), rotatable: Rotatable = Rotatable(), scalable: Scalable = Scalable()) {
     self.draggable = draggable
     self.rotatable = rotatable
     self.scalable = scalable

@@ -30,7 +30,7 @@ public class ViewReplicator {
 
    The provided view will be hidden.
    */
-  func replicate(view: UIView) -> UIView {
+  public func replicate(view: UIView) -> UIView {
     var copiedView: UIView
     switch view {
     case let imageView as UIImageView:

@@ -24,6 +24,11 @@ import UIKit
 public final class Timeline {
 
   /**
+   Creates a new timeline instance.
+   */
+  public init() {}
+
+  /**
    When a timeline is paused, the timeOffset value should be used to interpolate an interaction to
    that specific time offset in relation to the timeline's beginTime.
 

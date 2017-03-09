@@ -20,6 +20,18 @@
 		666FAA841D384A6B000363DA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666FAA831D384A6B000363DA /* AppDelegate.swift */; };
 		666FAA8B1D384A6B000363DA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 666FAA8A1D384A6B000363DA /* Assets.xcassets */; };
 		666FAA8E1D384A6B000363DA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 666FAA8C1D384A6B000363DA /* LaunchScreen.storyboard */; };
+		667E94521E71EF0E005CAC78 /* ArcMoveExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E94451E71EF0E005CAC78 /* ArcMoveExample.swift */; };
+		667E94531E71EF0E005CAC78 /* CarouselExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E94461E71EF0E005CAC78 /* CarouselExample.swift */; };
+		667E94541E71EF0E005CAC78 /* ContextualTransitionExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E94471E71EF0E005CAC78 /* ContextualTransitionExample.swift */; };
+		667E94551E71EF0E005CAC78 /* DirectlyManipulableExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E94481E71EF0E005CAC78 /* DirectlyManipulableExample.swift */; };
+		667E94561E71EF0E005CAC78 /* DragSourceExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E94491E71EF0E005CAC78 /* DragSourceExample.swift */; };
+		667E94571E71EF0E005CAC78 /* FabTransitionExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E944A1E71EF0E005CAC78 /* FabTransitionExample.swift */; };
+		667E94581E71EF0E005CAC78 /* InteractivePushBackTransitionExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E944B1E71EF0E005CAC78 /* InteractivePushBackTransitionExample.swift */; };
+		667E94591E71EF0E005CAC78 /* ModalDialogExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E944C1E71EF0E005CAC78 /* ModalDialogExample.swift */; };
+		667E945A1E71EF0E005CAC78 /* PushBackTransitionExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E944D1E71EF0E005CAC78 /* PushBackTransitionExample.swift */; };
+		667E945B1E71EF0E005CAC78 /* StickerPickerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E944E1E71EF0E005CAC78 /* StickerPickerExample.swift */; };
+		667E945C1E71EF0E005CAC78 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E94501E71EF0E005CAC78 /* TimelineView.swift */; };
+		667E945D1E71EF0E005CAC78 /* SwipeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E94511E71EF0E005CAC78 /* SwipeExample.swift */; };
 		669F80CA1E41A20E00E46B38 /* Stickers.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 669F80C91E41A20E00E46B38 /* Stickers.xcassets */; };
 		66E6F2371E3FC791003158D3 /* PhotoAlbum.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6F2361E3FC791003158D3 /* PhotoAlbum.xcassets */; };
 		C1F5E1D37D0DA71224EFC15E /* Pods_Catalog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E95CBDC1BABF9E6E385A124B /* Pods_Catalog.framework */; };
@@ -54,6 +66,18 @@
 		666FAA8F1D384A6B000363DA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		666FAA941D384A6B000363DA /* UnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		666FAA9A1D384A6B000363DA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../UnitTests/Info.plist; sourceTree = "<group>"; };
+		667E94451E71EF0E005CAC78 /* ArcMoveExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArcMoveExample.swift; path = ../../ArcMoveExample.swift; sourceTree = "<group>"; };
+		667E94461E71EF0E005CAC78 /* CarouselExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CarouselExample.swift; path = ../../CarouselExample.swift; sourceTree = "<group>"; };
+		667E94471E71EF0E005CAC78 /* ContextualTransitionExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContextualTransitionExample.swift; path = ../../ContextualTransitionExample.swift; sourceTree = "<group>"; };
+		667E94481E71EF0E005CAC78 /* DirectlyManipulableExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DirectlyManipulableExample.swift; path = ../../DirectlyManipulableExample.swift; sourceTree = "<group>"; };
+		667E94491E71EF0E005CAC78 /* DragSourceExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DragSourceExample.swift; path = ../../DragSourceExample.swift; sourceTree = "<group>"; };
+		667E944A1E71EF0E005CAC78 /* FabTransitionExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FabTransitionExample.swift; path = ../../FabTransitionExample.swift; sourceTree = "<group>"; };
+		667E944B1E71EF0E005CAC78 /* InteractivePushBackTransitionExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InteractivePushBackTransitionExample.swift; path = ../../InteractivePushBackTransitionExample.swift; sourceTree = "<group>"; };
+		667E944C1E71EF0E005CAC78 /* ModalDialogExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModalDialogExample.swift; path = ../../ModalDialogExample.swift; sourceTree = "<group>"; };
+		667E944D1E71EF0E005CAC78 /* PushBackTransitionExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PushBackTransitionExample.swift; path = ../../PushBackTransitionExample.swift; sourceTree = "<group>"; };
+		667E944E1E71EF0E005CAC78 /* StickerPickerExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StickerPickerExample.swift; path = ../../StickerPickerExample.swift; sourceTree = "<group>"; };
+		667E94501E71EF0E005CAC78 /* TimelineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
+		667E94511E71EF0E005CAC78 /* SwipeExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwipeExample.swift; path = ../../SwipeExample.swift; sourceTree = "<group>"; };
 		669F80C91E41A20E00E46B38 /* Stickers.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Stickers.xcassets; sourceTree = SOURCE_ROOT; };
 		66E6F2361E3FC791003158D3 /* PhotoAlbum.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = PhotoAlbum.xcassets; sourceTree = SOURCE_ROOT; };
 		B05E63B8F92D94A8819B0ABB /* Pods_UnitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UnitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -134,7 +158,19 @@
 			isa = PBXGroup;
 			children = (
 				664A5B761DD10D320082B5DF /* TableOfContents.swift */,
-				666FAAA61D384B77000363DA /* catalog */,
+				667E94451E71EF0E005CAC78 /* ArcMoveExample.swift */,
+				667E94461E71EF0E005CAC78 /* CarouselExample.swift */,
+				667E94471E71EF0E005CAC78 /* ContextualTransitionExample.swift */,
+				667E94481E71EF0E005CAC78 /* DirectlyManipulableExample.swift */,
+				667E94491E71EF0E005CAC78 /* DragSourceExample.swift */,
+				667E944A1E71EF0E005CAC78 /* FabTransitionExample.swift */,
+				667E944B1E71EF0E005CAC78 /* InteractivePushBackTransitionExample.swift */,
+				667E944C1E71EF0E005CAC78 /* ModalDialogExample.swift */,
+				667E944D1E71EF0E005CAC78 /* PushBackTransitionExample.swift */,
+				667E944E1E71EF0E005CAC78 /* StickerPickerExample.swift */,
+				667E94511E71EF0E005CAC78 /* SwipeExample.swift */,
+				667E944F1E71EF0E005CAC78 /* supplemental */,
+				666FAAA61D384B77000363DA /* app */,
 				666FAA971D384A6B000363DA /* tests */,
 				666FAA821D384A6B000363DA /* resources */,
 				666FAA811D384A6B000363DA /* Products */,
@@ -191,12 +227,21 @@
 			name = catalog;
 			sourceTree = "<group>";
 		};
-		666FAAA61D384B77000363DA /* catalog */ = {
+		666FAAA61D384B77000363DA /* app */ = {
 			isa = PBXGroup;
 			children = (
 				666FAA831D384A6B000363DA /* AppDelegate.swift */,
 			);
-			name = catalog;
+			name = app;
+			sourceTree = "<group>";
+		};
+		667E944F1E71EF0E005CAC78 /* supplemental */ = {
+			isa = PBXGroup;
+			children = (
+				667E94501E71EF0E005CAC78 /* TimelineView.swift */,
+			);
+			name = supplemental;
+			path = ../../supplemental;
 			sourceTree = "<group>";
 		};
 		8C6A745BCA20C3282C1419A7 /* Pods */ = {
@@ -413,8 +458,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				667E945B1E71EF0E005CAC78 /* StickerPickerExample.swift in Sources */,
+				667E94551E71EF0E005CAC78 /* DirectlyManipulableExample.swift in Sources */,
 				666FAA841D384A6B000363DA /* AppDelegate.swift in Sources */,
+				667E94591E71EF0E005CAC78 /* ModalDialogExample.swift in Sources */,
 				664A5B771DD10D320082B5DF /* TableOfContents.swift in Sources */,
+				667E94531E71EF0E005CAC78 /* CarouselExample.swift in Sources */,
+				667E94581E71EF0E005CAC78 /* InteractivePushBackTransitionExample.swift in Sources */,
+				667E94561E71EF0E005CAC78 /* DragSourceExample.swift in Sources */,
+				667E94571E71EF0E005CAC78 /* FabTransitionExample.swift in Sources */,
+				667E94541E71EF0E005CAC78 /* ContextualTransitionExample.swift in Sources */,
+				667E94521E71EF0E005CAC78 /* ArcMoveExample.swift in Sources */,
+				667E945D1E71EF0E005CAC78 /* SwipeExample.swift in Sources */,
+				667E945A1E71EF0E005CAC78 /* PushBackTransitionExample.swift in Sources */,
+				667E945C1E71EF0E005CAC78 /* TimelineView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

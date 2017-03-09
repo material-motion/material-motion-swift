@@ -21,11 +21,11 @@ import Foundation
 
 #if (arch(i386) || arch(x86_64)) && os(iOS)
   @_silgen_name("UIAnimationDragCoefficient") func UIAnimationDragCoefficient() -> Float
-  func simulatorDragCoefficient() -> CGFloat {
+  public func simulatorDragCoefficient() -> CGFloat {
     return CGFloat(UIAnimationDragCoefficient())
   }
 #else
-  func simulatorDragCoefficient() -> CGFloat {
+  public func simulatorDragCoefficient() -> CGFloat {
     return 1
   }
 #endif

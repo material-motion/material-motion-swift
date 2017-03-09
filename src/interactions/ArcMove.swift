@@ -23,7 +23,7 @@ public class ArcMove {
   public let to = createProperty("ArcMove.to", withInitialValue: CGPoint.zero)
   public let timeline: Timeline?
 
-  init(duration: TimeInterval, system: @escaping PathTweenToStream<CGPoint>, timeline: Timeline? = nil) {
+  public init(duration: TimeInterval, system: @escaping PathTweenToStream<CGPoint>, timeline: Timeline? = nil) {
     self.duration = createProperty("ArcMove.duration", withInitialValue: CGFloat(duration))
     self.system = system
     self.timeline = timeline

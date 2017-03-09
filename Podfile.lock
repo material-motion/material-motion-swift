@@ -3,19 +3,14 @@ PODS:
   - IndefiniteObservable (3.1.0):
     - IndefiniteObservable/lib (= 3.1.0)
   - IndefiniteObservable/lib (3.1.0)
-  - MaterialMotionStreams/examples (1.0.0):
-    - MaterialMotionStreams/lib
-  - MaterialMotionStreams/lib (1.0.0):
+  - MaterialMotionStreams (1.0.0):
     - IndefiniteObservable (~> 3.0)
     - pop
-  - MaterialMotionStreams/tests (1.0.0):
-    - MaterialMotionStreams/lib
   - pop (1.0.9)
 
 DEPENDENCIES:
   - CatalogByConvention
-  - MaterialMotionStreams/examples (from `./`)
-  - MaterialMotionStreams/tests (from `./`)
+  - MaterialMotionStreams (from `./`)
 
 EXTERNAL SOURCES:
   MaterialMotionStreams:
@@ -24,9 +19,9 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   CatalogByConvention: be55c2263132e4f9f59299ac8a528ee8715b3275
   IndefiniteObservable: 2789d61f487d8d37fa2b9c3153cc44d4447ff744
-  MaterialMotionStreams: b73443e425318d5c658355fa2bd6fb4577c06267
+  MaterialMotionStreams: 4853105d4a03dbd08af4a1a2a3379b6e3d2d4ab5
   pop: f667631a5108a2e60d9e8797c9b32ddaf2080bce
 
-PODFILE CHECKSUM: 99dcd9b4c5334eda66d28ad66fb128a3679e56cd
+PODFILE CHECKSUM: 43a37b1a7504afcf78a6d5c290a4d023c3cd60ca
 
 COCOAPODS: 1.2.0
