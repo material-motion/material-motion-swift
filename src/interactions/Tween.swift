@@ -17,7 +17,7 @@
 import Foundation
 
 /** A tween describes a potential interpolation from one value to another. */
-public final class Tween<T>: PropertyInteraction, TogglableInteraction, StatefulInteraction {
+public final class Tween<T>: Interaction, TogglableInteraction, StatefulInteraction {
 
   /** The duration of the animation in seconds. */
   public let duration: ReactiveProperty<CGFloat>

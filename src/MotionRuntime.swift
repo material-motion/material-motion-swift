@@ -33,17 +33,9 @@ public final class MotionRuntime {
     self.containerView = containerView
   }
 
-  public func add(_ interaction: ViewInteraction, to view: UIView) {
-    add(interaction, to: get(view))
-  }
-
-  public func add<I: PropertyInteraction, P: ReactivePropertyConvertible>(_ interaction: I, to property: P) where I.T == P.T {
-    interaction.add(to: property.asProperty(), withRuntime: self)
-  }
-
-  public func add(_ interaction: ViewInteraction, to reactiveView: ReactiveUIView) {
-    interaction.add(to: reactiveView, withRuntime: self)
-    viewInteractions.append(interaction)
+  public func add<I: Interaction>(_ interaction: I, to target: I.Target) {
+    interaction.add(to: target, withRuntime: self)
+    interactions.append(interaction)
   }
 
   public func connect<O: MotionObservableConvertible>(_ stream: O, to property: ReactiveProperty<O.T>) {
@@ -160,5 +152,5 @@ public final class MotionRuntime {
   }
 
   private var subscriptions: [Subscription] = []
-  private var viewInteractions: [ViewInteraction] = []
+  private var interactions: [Any] = []
 }

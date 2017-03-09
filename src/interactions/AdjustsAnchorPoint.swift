@@ -24,9 +24,8 @@ public class AdjustsAnchorPoint {
   }
 }
 
-extension AdjustsAnchorPoint: ViewInteraction {
-  public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
-    let view = reactiveView.view
+extension AdjustsAnchorPoint: Interaction {
+  public func add(to view: UIView, withRuntime runtime: MotionRuntime) {
     var anchorPointStreams = gestureRecognizers.map {
       runtime.get($0)
         .onRecognitionState(.began)
@@ -42,7 +41,7 @@ extension AdjustsAnchorPoint: ViewInteraction {
     })
 
     for stream in anchorPointStreams {
-      runtime.connect(stream, to: reactiveView.reactiveLayer.anchorPointAdjustment)
+      runtime.connect(stream, to: runtime.get(view.layer).anchorPointAdjustment)
     }
   }
 }

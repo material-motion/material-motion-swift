@@ -23,7 +23,7 @@ enum TossDirection {
   case right
 }
 
-class TossableStackedCard: ViewInteraction {
+class TossableStackedCard: Interaction {
   public let tossDirection = createProperty("tossDirection", withInitialValue: TossDirection.none)
 
   init(relativeView: UIView, previousCard: TossableStackedCard? = nil, rotation: CGFloat) {
@@ -34,11 +34,11 @@ class TossableStackedCard: ViewInteraction {
     self.dragGesture = UIPanGestureRecognizer()
   }
 
-  func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
+  func add(to view: UIView, withRuntime runtime: MotionRuntime) {
+    let reactiveView = runtime.get(view)
     let position = reactiveView.centerX
     self.position = position
 
-    let view = reactiveView.view
     view.addGestureRecognizer(dragGesture)
 
     let destination = createProperty("destination", withInitialValue: relativeView.bounds.midX)
@@ -145,7 +145,7 @@ public class SwipeExampleViewController: UIViewController {
                                    alpha: 1)
 
     let interaction = TossableStackedCard(relativeView: view, previousCard: queue.last, rotation: rotation)
-    runtime.add(interaction, to: runtime.get(card))
+    runtime.add(interaction, to: card)
 
     lastRotation = rotation
 

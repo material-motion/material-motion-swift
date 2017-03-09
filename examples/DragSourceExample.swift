@@ -56,6 +56,6 @@ public class DragSourceExampleViewController: UIViewController {
 
     let spring = Spring<CGPoint>(threshold: 1, system: coreAnimation)
     runtime.connect(tossable.spring.destination, to: spring.destination)
-    runtime.add(spring, to: square2)
+    runtime.add(spring, to: runtime.get(square2.layer).position)
   }
 }

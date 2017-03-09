@@ -33,13 +33,13 @@ public class ArcMove {
   fileprivate let system: PathTweenToStream<CGPoint>
 }
 
-extension ArcMove: ViewInteraction {
-  public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
+extension ArcMove: Interaction {
+  public func add(to view: UIView, withRuntime runtime: MotionRuntime) {
     let tween = PathTween(system: system, timeline: timeline)
     runtime.connect(arcMove(from: from, to: to), to: tween.path)
     runtime.connect(duration, to: tween.duration)
 
-    runtime.add(tween, to: reactiveView.reactiveLayer.position)
+    runtime.add(tween, to: runtime.get(view.layer).position)
   }
 }
 

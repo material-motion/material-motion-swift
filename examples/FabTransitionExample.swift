@@ -170,15 +170,15 @@ private class CircularRevealTransition: Transition {
 
 // TODO: The need here is we want to hide a given view will the transition is active. This
 // implementation does not register a stream with the runtime.
-private class Hidden: ViewInteraction {
+private class Hidden: Interaction {
   deinit {
     for view in hiddenViews {
       view.isHidden = false
     }
   }
-  func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
-    reactiveView.view.isHidden = true
-    hiddenViews.insert(reactiveView.view)
+  func add(to view: UIView, withRuntime runtime: MotionRuntime) {
+    view.isHidden = true
+    hiddenViews.insert(view)
   }
   var hiddenViews = Set<UIView>()
 }

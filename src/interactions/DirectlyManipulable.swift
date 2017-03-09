@@ -36,8 +36,8 @@ public class DirectlyManipulable: NSObject {
   }
 }
 
-extension DirectlyManipulable: ViewInteraction {
-  public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
+extension DirectlyManipulable: Interaction {
+  public func add(to view: UIView, withRuntime runtime: MotionRuntime) {
     for gestureRecognizer in [draggable.nextGestureRecognizer,
                               rotatable.nextGestureRecognizer,
                               scalable.nextGestureRecognizer] {
@@ -48,10 +48,10 @@ extension DirectlyManipulable: ViewInteraction {
 
     let adjustsAnchorPoint = AdjustsAnchorPoint(gestureRecognizers: [rotatable.nextGestureRecognizer,
                                                                      scalable.nextGestureRecognizer])
-    runtime.add(adjustsAnchorPoint, to: reactiveView)
-    runtime.add(draggable, to: reactiveView)
-    runtime.add(rotatable, to: reactiveView)
-    runtime.add(scalable, to: reactiveView)
+    runtime.add(adjustsAnchorPoint, to: view)
+    runtime.add(draggable, to: view)
+    runtime.add(rotatable, to: view)
+    runtime.add(scalable, to: view)
   }
 }
 

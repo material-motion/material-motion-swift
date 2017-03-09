@@ -19,8 +19,9 @@ import Foundation
 public class Rotatable: Gesturable<UIRotationGestureRecognizer> {
 }
 
-extension Rotatable: ViewInteraction {
-  public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
+extension Rotatable: Interaction {
+  public func add(to view: UIView, withRuntime runtime: MotionRuntime) {
+    let reactiveView = runtime.get(view)
     let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView)
     let rotation = reactiveView.reactiveLayer.rotation
     runtime.connect(runtime.get(gestureRecognizer).rotated(from: rotation), to: rotation)

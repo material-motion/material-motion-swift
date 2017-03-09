@@ -32,9 +32,9 @@ public class Tossable {
   }
 }
 
-extension Tossable: ViewInteraction {
-  public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
-    let position = reactiveView.reactiveLayer.position
+extension Tossable: Interaction {
+  public func add(to view: UIView, withRuntime runtime: MotionRuntime) {
+    let position = runtime.get(view.layer).position
 
     let gesture = runtime.get(draggable.nextGestureRecognizer)
 
@@ -48,6 +48,6 @@ extension Tossable: ViewInteraction {
     runtime.enable(spring, whenAtRest: gesture)
     runtime.add(spring, to: position)
 
-    runtime.add(draggable, to: reactiveView)
+    runtime.add(draggable, to: view)
   }
 }

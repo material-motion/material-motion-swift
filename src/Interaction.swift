@@ -24,12 +24,7 @@ public protocol StatefulInteraction {
   var state: MotionObservable<MotionState> { get }
 }
 
-public protocol ViewInteraction {
-  /** Connect all streams with the provided runtime. */
-  func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime)
-}
-
-public protocol PropertyInteraction {
-  associatedtype T
-  func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime)
+public protocol Interaction {
+  associatedtype Target
+  func add(to target: Target, withRuntime runtime: MotionRuntime)
 }

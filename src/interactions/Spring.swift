@@ -22,7 +22,7 @@ import IndefiniteObservable
 
  This class defines the expected shape of a Spring for use in creating a Spring source.
  */
-public class Spring<T: Zeroable>: PropertyInteraction, ViewInteraction, TogglableInteraction, StatefulInteraction {
+public class Spring<T: Zeroable>: Interaction, TogglableInteraction, StatefulInteraction {
   /** Creates a spring with the provided properties and an initial velocity. */
   public init(threshold: CGFloat, system: @escaping SpringToStream<T>) {
     self.threshold = createProperty("Spring.threshold", withInitialValue: threshold)
@@ -66,12 +66,6 @@ public class Spring<T: Zeroable>: PropertyInteraction, ViewInteraction, Togglabl
 
   fileprivate let system: SpringToStream<T>
   fileprivate let _state = createProperty("Spring._state", withInitialValue: MotionState.atRest)
-
-  public func add(to reactiveView: ReactiveUIView, withRuntime runtime: MotionRuntime) {
-    if let castedSelf = self as? Spring<CGPoint> {
-      castedSelf.add(to: reactiveView.reactiveLayer.position, withRuntime: runtime)
-    }
-  }
 
   public func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime) {
     let shadow = SpringShadow(of: self, initialValue: property)
