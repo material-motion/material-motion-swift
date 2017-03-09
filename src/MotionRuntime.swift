@@ -46,12 +46,8 @@ public final class MotionRuntime {
     viewInteractions.append(interaction)
   }
 
-  public func connect<T, P: ReactivePropertyConvertible>(_ stream: MotionObservable<T>, to property: P) where P.T == T {
-    write(stream, to: property.asProperty())
-  }
-
-  public func connect<T, P: ReactivePropertyConvertible>(_ fromProperty: ReactiveProperty<T>, to property: P) where P.T == T {
-    write(fromProperty.asStream(), to: property.asProperty())
+  public func connect<O: MotionObservableConvertible>(_ stream: O, to property: ReactiveProperty<O.T>) {
+    write(stream.asStream(), to: property)
   }
 
   public func enable(_ interaction: TogglableInteraction, whenAtRest otherInteraction: StatefulInteraction) {
