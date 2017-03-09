@@ -20,10 +20,16 @@ public class Rotatable: Gesturable<UIRotationGestureRecognizer> {
 }
 
 extension Rotatable: Interaction {
-  public func add(to view: UIView, withRuntime runtime: MotionRuntime, constraints: Void?) {
+  public func add(to view: UIView,
+                  withRuntime runtime: MotionRuntime,
+                  constraints applyConstraints: ConstraintApplicator<CGFloat>? = nil) {
     let reactiveView = runtime.get(view)
     let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView)
     let rotation = reactiveView.reactiveLayer.rotation
-    runtime.connect(runtime.get(gestureRecognizer).rotated(from: rotation), to: rotation)
+    var stream = runtime.get(gestureRecognizer).rotated(from: rotation)
+    if let applyConstraints = applyConstraints {
+      stream = applyConstraints(stream)
+    }
+    runtime.connect(stream, to: rotation)
   }
 }

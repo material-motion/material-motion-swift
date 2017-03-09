@@ -29,3 +29,5 @@ public protocol Interaction {
   associatedtype Constraints
   func add(to target: Target, withRuntime runtime: MotionRuntime, constraints: Constraints?)
 }
+
+public typealias ConstraintApplicator<T> = (MotionObservable<T>) -> MotionObservable<T>

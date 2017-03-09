@@ -20,7 +20,9 @@ public class Draggable: Gesturable<UIPanGestureRecognizer> {
 }
 
 extension Draggable: Interaction {
-  public func add(to view: UIView, withRuntime runtime: MotionRuntime, constraints applyConstraints: ((MotionObservable<CGPoint>) -> MotionObservable<CGPoint>)? = nil) {
+  public func add(to view: UIView,
+                  withRuntime runtime: MotionRuntime,
+                  constraints applyConstraints: ConstraintApplicator<CGPoint>? = nil) {
     let reactiveView = runtime.get(view)
     let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView)
     let position = reactiveView.reactiveLayer.position
