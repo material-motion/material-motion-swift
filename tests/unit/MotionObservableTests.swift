@@ -19,7 +19,12 @@ import CoreGraphics
 import IndefiniteObservable
 import MaterialMotionStreams
 
+// These tests aren't functionally exhaustive because we're depending on IndefiniteObservable's
+// tests to be more comprehensive.
+
 class MotionObservableTests: XCTestCase {
+
+  // MARK: Validating data flow
 
   func testReceivesValue() {
     let value = 10
@@ -76,6 +81,26 @@ class MotionObservableTests: XCTestCase {
       default:
         XCTAssert(false)
       }
+    })
+
+    waitForExpectations(timeout: 0)
+  }
+
+  func testReceivesValueWithAllChannels() {
+    let value = 10
+
+    let observable = MotionObservable<Int> { observer in
+      observer.next(value)
+      return noopDisconnect
+    }
+
+    let valueReceived = expectation(description: "Value was received")
+    let _ = observable.subscribe(next: {
+      if $0 == value {
+        valueReceived.fulfill()
+      }
+    }, coreAnimation: { event in
+    }, visualization: { view in
     })
 
     waitForExpectations(timeout: 0)
