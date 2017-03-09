@@ -22,4 +22,36 @@ extension MotionObservableConvertible where T == CGPoint {
       .init(x: xValue, y: $0.y)
     }
   }
+
+  /** Lock the point's x value to the given reactive value. */
+  public func xLocked<O: MotionObservableConvertible>(to xValueStream: O) -> MotionObservable<CGPoint> where O.T == CGFloat {
+    var lastUpstreamValue: CGPoint?
+    var lastXValue: CGFloat?
+    return MotionObservable(self.metadata.createChild(Metadata("\(#function)", type: .constraint, args: [xValueStream]))) { observer in
+
+      let checkAndEmit = {
+        guard let lastUpstreamValue = lastUpstreamValue, let lastXValue = lastXValue else { return }
+
+        observer.next(.init(x: lastXValue, y: lastUpstreamValue.y))
+      }
+
+      let xValueSubscription = xValueStream.subscribe { value in
+        lastXValue = value
+        checkAndEmit()
+      }
+
+      let upstreamSubscription = self.subscribe(next: { value in
+        lastUpstreamValue = value
+        checkAndEmit()
+
+      }, coreAnimation: { event in observer.coreAnimation?(event) },
+         visualization: { view in observer.visualization?(view) }
+      )
+
+      return {
+        upstreamSubscription.unsubscribe()
+        xValueSubscription.unsubscribe()
+      }
+    }
+  }
 }
