@@ -33,6 +33,10 @@
 		667E945C1E71EF0E005CAC78 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E94501E71EF0E005CAC78 /* TimelineView.swift */; };
 		667E945D1E71EF0E005CAC78 /* SwipeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E94511E71EF0E005CAC78 /* SwipeExample.swift */; };
 		669F80CA1E41A20E00E46B38 /* Stickers.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 669F80C91E41A20E00E46B38 /* Stickers.xcassets */; };
+		66DDFD0D1E71F0F100AA46B7 /* DraggableExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD0C1E71F0F100AA46B7 /* DraggableExample.swift */; };
+		66DDFD101E71F32800AA46B7 /* DraggableConstraintExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD0F1E71F32800AA46B7 /* DraggableConstraintExample.swift */; };
+		66DDFD121E71F39700AA46B7 /* ExampleViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD111E71F39700AA46B7 /* ExampleViews.swift */; };
+		66DDFD141E71F3D600AA46B7 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD131E71F3D600AA46B7 /* Layout.swift */; };
 		66E6F2371E3FC791003158D3 /* PhotoAlbum.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6F2361E3FC791003158D3 /* PhotoAlbum.xcassets */; };
 		C1F5E1D37D0DA71224EFC15E /* Pods_Catalog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E95CBDC1BABF9E6E385A124B /* Pods_Catalog.framework */; };
 /* End PBXBuildFile section */
@@ -79,6 +83,10 @@
 		667E94501E71EF0E005CAC78 /* TimelineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
 		667E94511E71EF0E005CAC78 /* SwipeExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwipeExample.swift; path = ../../SwipeExample.swift; sourceTree = "<group>"; };
 		669F80C91E41A20E00E46B38 /* Stickers.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Stickers.xcassets; sourceTree = SOURCE_ROOT; };
+		66DDFD0C1E71F0F100AA46B7 /* DraggableExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DraggableExample.swift; path = ../../DraggableExample.swift; sourceTree = "<group>"; };
+		66DDFD0F1E71F32800AA46B7 /* DraggableConstraintExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DraggableConstraintExample.swift; path = ../../DraggableConstraintExample.swift; sourceTree = "<group>"; };
+		66DDFD111E71F39700AA46B7 /* ExampleViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleViews.swift; sourceTree = "<group>"; };
+		66DDFD131E71F3D600AA46B7 /* Layout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
 		66E6F2361E3FC791003158D3 /* PhotoAlbum.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = PhotoAlbum.xcassets; sourceTree = SOURCE_ROOT; };
 		B05E63B8F92D94A8819B0ABB /* Pods_UnitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UnitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC5B661FDF1C5375A0D3B88E /* Pods-UnitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UnitTests.release.xcconfig"; path = "../../../Pods/Target Support Files/Pods-UnitTests/Pods-UnitTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -158,10 +166,11 @@
 			isa = PBXGroup;
 			children = (
 				664A5B761DD10D320082B5DF /* TableOfContents.swift */,
+				66DDFD0B1E71F0B300AA46B7 /* Draggable */,
+				66DDFD0E1E71F0F600AA46B7 /* Directly Manipulable */,
 				667E94451E71EF0E005CAC78 /* ArcMoveExample.swift */,
 				667E94461E71EF0E005CAC78 /* CarouselExample.swift */,
 				667E94471E71EF0E005CAC78 /* ContextualTransitionExample.swift */,
-				667E94481E71EF0E005CAC78 /* DirectlyManipulableExample.swift */,
 				667E94491E71EF0E005CAC78 /* DragSourceExample.swift */,
 				667E944A1E71EF0E005CAC78 /* FabTransitionExample.swift */,
 				667E944B1E71EF0E005CAC78 /* InteractivePushBackTransitionExample.swift */,
@@ -239,9 +248,28 @@
 			isa = PBXGroup;
 			children = (
 				667E94501E71EF0E005CAC78 /* TimelineView.swift */,
+				66DDFD111E71F39700AA46B7 /* ExampleViews.swift */,
+				66DDFD131E71F3D600AA46B7 /* Layout.swift */,
 			);
 			name = supplemental;
 			path = ../../supplemental;
+			sourceTree = "<group>";
+		};
+		66DDFD0B1E71F0B300AA46B7 /* Draggable */ = {
+			isa = PBXGroup;
+			children = (
+				66DDFD0C1E71F0F100AA46B7 /* DraggableExample.swift */,
+				66DDFD0F1E71F32800AA46B7 /* DraggableConstraintExample.swift */,
+			);
+			name = Draggable;
+			sourceTree = "<group>";
+		};
+		66DDFD0E1E71F0F600AA46B7 /* Directly Manipulable */ = {
+			isa = PBXGroup;
+			children = (
+				667E94481E71EF0E005CAC78 /* DirectlyManipulableExample.swift */,
+			);
+			name = "Directly Manipulable";
 			sourceTree = "<group>";
 		};
 		8C6A745BCA20C3282C1419A7 /* Pods */ = {
@@ -463,15 +491,19 @@
 				666FAA841D384A6B000363DA /* AppDelegate.swift in Sources */,
 				667E94591E71EF0E005CAC78 /* ModalDialogExample.swift in Sources */,
 				664A5B771DD10D320082B5DF /* TableOfContents.swift in Sources */,
+				66DDFD141E71F3D600AA46B7 /* Layout.swift in Sources */,
 				667E94531E71EF0E005CAC78 /* CarouselExample.swift in Sources */,
 				667E94581E71EF0E005CAC78 /* InteractivePushBackTransitionExample.swift in Sources */,
 				667E94561E71EF0E005CAC78 /* DragSourceExample.swift in Sources */,
 				667E94571E71EF0E005CAC78 /* FabTransitionExample.swift in Sources */,
 				667E94541E71EF0E005CAC78 /* ContextualTransitionExample.swift in Sources */,
+				66DDFD101E71F32800AA46B7 /* DraggableConstraintExample.swift in Sources */,
 				667E94521E71EF0E005CAC78 /* ArcMoveExample.swift in Sources */,
 				667E945D1E71EF0E005CAC78 /* SwipeExample.swift in Sources */,
 				667E945A1E71EF0E005CAC78 /* PushBackTransitionExample.swift in Sources */,
 				667E945C1E71EF0E005CAC78 /* TimelineView.swift in Sources */,
+				66DDFD0D1E71F0F100AA46B7 /* DraggableExample.swift in Sources */,
+				66DDFD121E71F39700AA46B7 /* ExampleViews.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

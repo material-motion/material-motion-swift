@@ -17,7 +17,7 @@
 import UIKit
 import MaterialMotionStreams
 
-public class DirectlyManipulableExampleViewController: UIViewController {
+public class DraggableExampleViewController: UIViewController {
 
   var runtime: MotionRuntime!
 
@@ -31,14 +31,14 @@ public class DirectlyManipulableExampleViewController: UIViewController {
     let square = center(createExampleView(), within: view)
     view.addSubview(square)
 
-    runtime.add(DirectlyManipulable(), to: square)
+    runtime.add(Draggable(), to: square)
   }
 
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
     super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
     title = type(of: self).catalogBreadcrumbs().last
-    navigationItem.prompt = "Pinch, rotate, and drag the view to manipulate it."
+    navigationItem.prompt = "Drag the blue square to move it."
   }
 
   required public init?(coder aDecoder: NSCoder) {

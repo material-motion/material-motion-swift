@@ -18,6 +18,18 @@
 
 import MaterialMotionStreams
 
+extension DraggableExampleViewController {
+  class func catalogBreadcrumbs() -> [String] {
+    return ["Draggable"]
+  }
+}
+
+extension DraggableConstraintExampleViewController {
+  class func catalogBreadcrumbs() -> [String] {
+    return ["Draggable (with constraints)"]
+  }
+}
+
 @available(iOS 9.0, *)
 extension DragSourceExampleViewController {
   class func catalogBreadcrumbs() -> [String] {
