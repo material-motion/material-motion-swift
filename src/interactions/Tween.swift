@@ -82,8 +82,14 @@ public final class Tween<T>: Interaction, TogglableInteraction, StatefulInteract
     self.timeline = timeline
   }
 
-  public func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime, constraints: Void?) {
-    runtime.connect(asStream(), to: property)
+  public func add(to property: ReactiveProperty<T>,
+                  withRuntime runtime: MotionRuntime,
+                  constraints applyConstraints: ConstraintApplicator<T>? = nil) {
+    var stream = asStream()
+    if let applyConstraints = applyConstraints {
+      stream = applyConstraints(stream)
+    }
+    runtime.connect(stream, to: property)
   }
 
   fileprivate let system: TweenToStream<T>
