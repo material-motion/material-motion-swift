@@ -67,7 +67,9 @@ public class Spring<T: Zeroable>: Interaction, Togglable, Stateful {
   fileprivate let system: SpringToStream<T>
   fileprivate let _state = createProperty("Spring._state", withInitialValue: MotionState.atRest)
 
-  public func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime, constraints: Void?) {
+  public func add(to property: ReactiveProperty<T>,
+                  withRuntime runtime: MotionRuntime,
+                  constraints applyConstraints: ConstraintApplicator<T>? = nil) {
     let shadow = SpringShadow(of: self, initialValue: property)
     runtime.connect(shadow.state.dedupe(), to: ReactiveProperty(initialValue: .atRest) { state in
       if state == .active {
@@ -77,7 +79,11 @@ public class Spring<T: Zeroable>: Interaction, Togglable, Stateful {
       }
       self._state.value = self.activeSprings.count == 0 ? .atRest : .active
     })
-    runtime.connect(system(shadow), to: property)
+    var stream = system(shadow)
+    if let applyConstraints = applyConstraints {
+      stream = applyConstraints(stream)
+    }
+    runtime.connect(stream, to: property)
   }
 
   private var activeSprings = Set<SpringShadow<T>>()

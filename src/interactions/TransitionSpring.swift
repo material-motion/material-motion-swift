@@ -45,7 +45,9 @@ public class TransitionSpring<T: Zeroable>: Spring<T> {
     super.init(threshold: threshold, system: system)
   }
 
-  public override func add(to property: ReactiveProperty<T>, withRuntime runtime: MotionRuntime, constraints: Void?) {
+  public override func add(to property: ReactiveProperty<T>,
+                           withRuntime runtime: MotionRuntime,
+                           constraints: ConstraintApplicator<T>? = nil) {
     property.value = initialValue
 
     runtime.connect(toggledDestination, to: destination)

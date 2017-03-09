@@ -33,7 +33,9 @@ public class Tossable {
 }
 
 extension Tossable: Interaction {
-  public func add(to view: UIView, withRuntime runtime: MotionRuntime, constraints: Void?) {
+  public func add(to view: UIView,
+                  withRuntime runtime: MotionRuntime,
+                  constraints: ConstraintApplicator<CGPoint>? = nil) {
     let position = runtime.get(view.layer).position
 
     let gesture = runtime.get(draggable.nextGestureRecognizer)
@@ -46,8 +48,8 @@ extension Tossable: Interaction {
 
     runtime.connect(gesture.velocityOnReleaseStream(in: runtime.containerView), to: spring.initialVelocity)
     runtime.enable(spring, whenAtRest: gesture)
-    runtime.add(spring, to: position)
+    runtime.add(spring, to: position, constraints: constraints)
 
-    runtime.add(draggable, to: view)
+    runtime.add(draggable, to: view, constraints: constraints)
   }
 }
