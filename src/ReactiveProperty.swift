@@ -156,21 +156,3 @@ extension ReactiveProperty: MotionObservableConvertible {
     }
   }
 }
-
-/**
- An extensible type allowing classes to be treated as properties.
- */
-public protocol ReactivePropertyConvertible {
-  associatedtype T
-
-  /**
-   Returns the canonical ReactiveProperty for this object.
-   */
-  func asProperty() -> ReactiveProperty<T>
-}
-
-extension ReactiveProperty: ReactivePropertyConvertible {
-  public func asProperty() -> ReactiveProperty<T> {
-    return self
-  }
-}
