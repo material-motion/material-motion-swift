@@ -36,12 +36,67 @@ public enum CoreAnimationChannelEvent {
   /**
    The provided animation is expected to be added to a layer.
    */
-  case add(CAPropertyAnimation, String, initialVelocity: Any?, timeline: Timeline?, completionBlock: () -> Void)
+  case add(CoreAnimationChannelAdd)
 
   /**
    Any animation with the given key is expected to be removed from a layer.
    */
   case remove(String)
+}
+
+/**
+ Information related to the Core Animation channel add event.
+ */
+public struct CoreAnimationChannelAdd {
+
+  /**
+   Initialize a new instance with required values.
+   */
+  public init(animation: CAPropertyAnimation, key: String, onCompletion: @escaping () -> Void) {
+    self.animation = animation
+    self.key = key
+    self.onCompletion = onCompletion
+  }
+
+  /**
+   The animation to be added.
+   */
+  public var animation: CAPropertyAnimation
+
+  /**
+   The key to be used for the animation.
+
+   This should be the same key provided to the .remove event.
+   */
+  public let key: String
+
+  /**
+   A completion handler, fired once Core Animation reports that the animation has completed.
+   */
+  public let onCompletion: () -> Void
+
+  /**
+   The initial velocity of the animation, if relevant.
+
+   Only applies to CASpringAnimation animation instances.
+   */
+  public var initialVelocity: Any?
+
+  /**
+   A method that transforms an absolute animation's from/to values into a relative animation's
+   from/to values.
+
+   The method accepts (from, to) and must return (from - to, zero).
+   */
+  public var makeAdditive: ((Any, Any) -> (Any, Any))?
+
+  /**
+   The timeline associated with this animation.
+
+   This is primarily provided for layer-based animation scrubbing. Non layer-based animation
+   scrubbing is preferably done at the source.
+   */
+  public var timeline: Timeline?
 }
 
 /**

@@ -122,12 +122,12 @@ public class ReactiveCALayer {
     }, coreAnimation: { [weak self] event in
       guard let strongSelf = self else { return }
       switch event {
-      case .add(let animation, let key, let initialVelocity, let timeline, let completionBlock):
-        if let timeline = timeline {
+      case .add(let info):
+        if let timeline = info.timeline {
           strongSelf.configureTimeline(timeline)
         }
 
-        let animation = animation.copy() as! CAPropertyAnimation
+        let animation = info.animation.copy() as! CAPropertyAnimation
 
         if layer.speed == 0, let lastTimelineState = strongSelf.lastTimelineState {
           animation.beginTime = TimeInterval(lastTimelineState.beginTime) + animation.beginTime
@@ -137,35 +137,42 @@ public class ReactiveCALayer {
 
         animation.keyPath = keyPath
 
+        if let makeAdditive = info.makeAdditive, let basicAnimation = animation as? CABasicAnimation {
+          let (fromValue, toValue) = makeAdditive(basicAnimation.fromValue, basicAnimation.toValue)
+          basicAnimation.fromValue = fromValue
+          basicAnimation.toValue = toValue
+          basicAnimation.isAdditive = true
+        }
+
         if #available(iOS 9.0, *) {
           // Core Animation springs do not support multi-dimensional velocity, so we bear the burden
           // of decomposing multi-dimensional springs here.
           if let springAnimation = animation as? CASpringAnimation
             , springAnimation.isAdditive
-            , let initialVelocity = initialVelocity as? CGPoint
+            , let initialVelocity = info.initialVelocity as? CGPoint
             , let delta = springAnimation.fromValue as? CGPoint {
             let decomposed = decompose(springAnimation: springAnimation,
                                        delta: delta,
                                        initialVelocity: initialVelocity)
 
             CATransaction.begin()
-            CATransaction.setCompletionBlock(completionBlock)
-            layer.add(decomposed.0, forKey: key + ".x")
-            layer.add(decomposed.1, forKey: key + ".y")
+            CATransaction.setCompletionBlock(info.onCompletion)
+            layer.add(decomposed.0, forKey: info.key + ".x")
+            layer.add(decomposed.1, forKey: info.key + ".y")
             CATransaction.commit()
 
-            strongSelf.decomposedKeys.insert(key)
+            strongSelf.decomposedKeys.insert(info.key)
             return
           }
         }
 
-        if let initialVelocity = initialVelocity {
+        if let initialVelocity = info.initialVelocity {
           applyInitialVelocity(initialVelocity, to: animation)
         }
 
         CATransaction.begin()
-        CATransaction.setCompletionBlock(completionBlock)
-        layer.add(animation, forKey: key)
+        CATransaction.setCompletionBlock(info.onCompletion)
+        layer.add(animation, forKey: info.key)
         CATransaction.commit()
 
       case .remove(let key):

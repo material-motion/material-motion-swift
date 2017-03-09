@@ -53,12 +53,14 @@ public func coreAnimation<T>(_ tween: TweenShadow<T>) -> MotionObservable<T> {
 
       tween.state.value = .active
 
-      observer.coreAnimation?(.add(animation, key, initialVelocity: nil, timeline: tween.timeline, completionBlock: {
+      var info = CoreAnimationChannelAdd(animation: animation, key: key, onCompletion: {
         activeAnimations.remove(key)
         if activeAnimations.count == 0 {
           tween.state.value = .atRest
         }
-      }))
+      })
+      info.timeline = tween.timeline
+      observer.coreAnimation?(.add(info))
       animationKeys.append(key)
     }
 

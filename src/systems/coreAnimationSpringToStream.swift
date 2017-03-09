@@ -45,12 +45,8 @@ public func coreAnimation<T>(_ spring: SpringShadow<T>) -> (MotionObservable<T>)
       animation.stiffness = spring.tension.value
       animation.mass = spring.mass.value
 
-      animation.isAdditive = true
-
-      let from = spring.initialValue.value
-      let delta = from - to
-      animation.fromValue = delta
-      animation.toValue = T.zero()
+      animation.fromValue = spring.initialValue.value
+      animation.toValue = to
 
       if spring.suggestedDuration.value != 0 {
         animation.duration = spring.suggestedDuration.value
@@ -58,24 +54,27 @@ public func coreAnimation<T>(_ spring: SpringShadow<T>) -> (MotionObservable<T>)
         animation.duration = animation.settlingDuration
       }
 
-      if delta != T.zero() as! T {
-        observer.next(to)
+      observer.next(to)
 
-        let key = NSUUID().uuidString
-        activeAnimations.insert(key)
-        animationKeys.append(key)
+      let key = NSUUID().uuidString
+      activeAnimations.insert(key)
+      animationKeys.append(key)
 
-        spring.state.value = .active
+      spring.state.value = .active
 
-        observer.coreAnimation?(.add(animation, key, initialVelocity: initialVelocity, timeline: nil, completionBlock: {
-          activeAnimations.remove(key)
-          if activeAnimations.count == 0 {
-            spring.state.value = .atRest
-          }
-        }))
-
-        initialVelocity = nil
+      var info = CoreAnimationChannelAdd(animation: animation, key: key, onCompletion: {
+        activeAnimations.remove(key)
+        if activeAnimations.count == 0 {
+          spring.state.value = .atRest
+        }
+      })
+      info.initialVelocity = initialVelocity
+      info.makeAdditive = { from, to in
+        return ((from as! T) - (to as! T), T.zero())
       }
+      observer.coreAnimation?(.add(info))
+
+      initialVelocity = nil
     }
 
     let destinationSubscription = spring.destination.subscribe { value in

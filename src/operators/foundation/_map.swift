@@ -26,14 +26,14 @@ extension MotionObservableConvertible {
     }, coreAnimation: { event, coreAnimation in
       let transformedInitialVelocity: Any?
       switch event {
-      case .add(let animation, let key, let initialVelocity, let timeline, let completionBlock):
-        if let initialVelocity = initialVelocity {
+      case .add(let info):
+        if let initialVelocity = info.initialVelocity {
           transformedInitialVelocity = transform(initialVelocity as! T)
         } else {
           transformedInitialVelocity = nil
         }
 
-        let copy = animation.copy() as! CAPropertyAnimation
+        let copy = info.animation.copy() as! CAPropertyAnimation
         switch copy {
         case let basicAnimation as CABasicAnimation:
           if let fromValue = basicAnimation.fromValue {
@@ -45,14 +45,20 @@ extension MotionObservableConvertible {
           if let byValue = basicAnimation.byValue {
             basicAnimation.byValue = transform(byValue as! T)
           }
-          coreAnimation?(.add(basicAnimation, key, initialVelocity: transformedInitialVelocity, timeline: timeline, completionBlock: completionBlock))
+          var modified = info
+          modified.animation = basicAnimation
+          modified.initialVelocity = transformedInitialVelocity
+          coreAnimation?(.add(modified))
 
         case let keyframeAnimation as CAKeyframeAnimation:
           keyframeAnimation.values = keyframeAnimation.values?.map { transform($0 as! T) }
-          coreAnimation?(.add(keyframeAnimation, key, initialVelocity: transformedInitialVelocity, timeline: timeline, completionBlock: completionBlock))
+          var modified = info
+          modified.animation = keyframeAnimation
+          modified.initialVelocity = transformedInitialVelocity
+          coreAnimation?(.add(modified))
 
         default:
-          assertionFailure("Unsupported animation type: \(type(of: animation))")
+          assertionFailure("Unsupported animation type: \(type(of: info.animation))")
         }
 
       default:
