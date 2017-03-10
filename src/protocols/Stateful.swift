@@ -25,3 +25,18 @@ public protocol Stateful {
    */
   var state: MotionObservable<MotionState> { get }
 }
+
+/**
+ The possible states that an interaction may be in.
+ */
+public enum MotionState {
+  /**
+   The interaction is at rest.
+   */
+  case atRest
+
+  /**
+   The interaction is currently taking effect.
+   */
+  case active
+}
