@@ -16,13 +16,24 @@
 
 import Foundation
 
-/** A tween describes a potential interpolation from one value to another. */
+/**
+ A tween is an interpolation between two or more values, often making use of a non-linear timing
+ function.
+
+ **Constraints**
+
+ T-value constraints may be applied to this interaction.
+ */
 public final class Tween<T>: Interaction, Togglable, Stateful {
 
-  /** The duration of the animation in seconds. */
+  /**
+   The duration of the animation in seconds.
+   */
   public let duration: ReactiveProperty<CGFloat>
 
-  /** The delay of the animation in seconds. */
+  /**
+   The delay of the animation in seconds.
+   */
   public let delay = createProperty("Tween.delay", withInitialValue: CGFloat(0))
 
   /**
@@ -35,7 +46,7 @@ public final class Tween<T>: Interaction, Togglable, Stateful {
   public let values: ReactiveProperty<[T]>
 
   /**
-   An array of double values defining the pacing of the animation.
+   An array of number values defining the pacing of the animation.
 
    Each position corresponds to one value in the `values' array, and defines when the value should
    be used in the animation function. Each value in the array is a floating point number in the
@@ -43,7 +54,7 @@ public final class Tween<T>: Interaction, Togglable, Stateful {
 
    See CAKeyframeAnimation documentation for more details.
    */
-  public let keyPositions: ReactiveProperty<[CGFloat]> = createProperty("Tween.keyPositions", withInitialValue: [])
+  public let keyPositions = createProperty("Tween.keyPositions", withInitialValue: [] as [CGFloat])
 
   /**
    An array of CAMediaTimingFunction objects. If the `values' array defines n keyframes,
@@ -55,9 +66,9 @@ public final class Tween<T>: Interaction, Togglable, Stateful {
 
    See CAKeyframeAnimation documentation for more details.
    */
-  public let timingFunctions: ReactiveProperty<[CAMediaTimingFunction]> =
-    createProperty("Tween.timingFunctions",
-                   withInitialValue: [CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)])
+  public let timingFunctions = createProperty("Tween.timingFunctions", withInitialValue:
+    [CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)]
+  )
 
   /**
    An optional timeline that may scrub this tween animation.
@@ -66,13 +77,19 @@ public final class Tween<T>: Interaction, Togglable, Stateful {
    */
   public let timeline: Timeline?
 
+  /**
+   Whether or not the tween animation is currently taking effect.
+
+   Enabling a previously disabled tween will restart the animation from the beginning.
+   */
   public let enabled = createProperty("Tween.enabled", withInitialValue: true)
 
+  /**
+   The current state of the tween animation.
+   */
   public var state: MotionObservable<MotionState> {
     return _state.asStream()
   }
-
-  public let metadata = Metadata("Tween")
 
   /** Initializes a tween instance with its required properties. */
   public init(duration: CGFloat, values: [T], system: @escaping TweenToStream<T>, timeline: Timeline? = nil) {
@@ -90,6 +107,13 @@ public final class Tween<T>: Interaction, Togglable, Stateful {
       stream = applyConstraints(stream)
     }
     runtime.connect(stream, to: property)
+  }
+
+  private func asStream() -> MotionObservable<T> {
+    if stream == nil {
+      stream = system(TweenShadow(of: self))._remember()
+    }
+    return stream!
   }
 
   fileprivate let system: TweenToStream<T>
@@ -116,14 +140,5 @@ public struct TweenShadow<T> {
     self.keyPositions = tween.keyPositions
     self.timingFunctions = tween.timingFunctions
     self.timeline = tween.timeline
-  }
-}
-
-extension Tween: MotionObservableConvertible {
-  public func asStream() -> MotionObservable<T> {
-    if stream == nil {
-      stream = system(TweenShadow(of: self))._remember()
-    }
-    return stream!
   }
 }
