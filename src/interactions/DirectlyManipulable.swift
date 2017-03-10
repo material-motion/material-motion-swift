@@ -17,18 +17,42 @@
 import Foundation
 
 /**
- Allows a view to be directly manipulated with a combination of pan, rotation, and scale gestures.
+ Allows a view to be directly manipulated with a combination of drag, rotation, and scale gestures.
 
- Composed of three sub-interactions: Draggable, Rotatable, and Scalable, along with anchor point
- manipulation and resetting.
+ Composed of three primary sub-interactions: Draggable, Rotatable, and Scalable.
 
- The provided gesture recognizers must be configured to enable simultaneous recognition.
+ If the sub-interaction gesture recognizers do not have an associated delegate, then this
+ interaction will become the delegate and allow the gestures to recognize simultaneously
+ uncoditionally.
+
+ When other gesture recognizers are in play, it is recommended that you make use of the
+ `.withExistingRecognizer` configuration option. Provide a gesture recognizer that already has a
+ delegate associated with it and the relevant delegate methods implemented to support simultaneous
+ recognition that doesn't conflict with the other gesture recognizers.
  */
 public class DirectlyManipulable: NSObject {
+  /**
+   The interaction governing drag behaviors.
+   */
   public let draggable: Draggable
+
+  /**
+   The interaction governing rotation behaviors.
+   */
   public let rotatable: Rotatable
+
+  /**
+   The interaction governing scale behaviors.
+   */
   public let scalable: Scalable
 
+  /**
+   Creates a new interaction with the provided sub-interactions.
+
+   If no arguments are provided, then the default behavior is to create a new gesture recognizer for
+   each sub-interaction and associate it with the target view upon association. Each gesture
+   recognizer's delegate will also be configured to allow simultaneous recognition unconditionally.
+   */
   public init(draggable: Draggable = Draggable(), rotatable: Rotatable = Rotatable(), scalable: Scalable = Scalable()) {
     self.draggable = draggable
     self.rotatable = rotatable
@@ -57,6 +81,9 @@ extension DirectlyManipulable: Interaction {
 
 extension DirectlyManipulable: UIGestureRecognizerDelegate {
   public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    // This is overly simple, but works in isolated situations. If there are other gesture
+    // recognizers in play then the user of this interaction may want to consider creating and
+    // managing their own gesture recognizers.
     return true
   }
 }
