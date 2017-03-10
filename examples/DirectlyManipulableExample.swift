@@ -15,7 +15,7 @@
  */
 
 import UIKit
-import MaterialMotionStreams
+import ReactiveMotion
 
 public class DirectlyManipulableExampleViewController: UIViewController {
 

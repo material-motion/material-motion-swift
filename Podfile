@@ -1,15 +1,15 @@
-workspace 'MaterialMotionStreams.xcworkspace'
+workspace 'ReactiveMotion.xcworkspace'
 use_frameworks!
 
 target "Catalog" do
   pod 'CatalogByConvention'
-  pod 'MaterialMotionStreams', :path => './'
+  pod 'ReactiveMotion', :path => './'
 
   project 'examples/apps/Catalog/Catalog.xcodeproj'
 end
 
 target "UnitTests" do
-  pod 'MaterialMotionStreams', :path => './'
+  pod 'ReactiveMotion', :path => './'
 
   project 'examples/apps/Catalog/Catalog.xcodeproj'
 end

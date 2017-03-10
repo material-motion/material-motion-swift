@@ -16,7 +16,7 @@
 
 // MARK: Catalog by convention
 
-import MaterialMotionStreams
+import ReactiveMotion
 
 extension DraggableExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["Draggable"] }

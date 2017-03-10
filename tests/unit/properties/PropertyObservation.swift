@@ -15,7 +15,7 @@
  */
 
 import XCTest
-@testable import MaterialMotionStreams
+@testable import ReactiveMotion
 
 class PropertyObservation: XCTestCase {
 

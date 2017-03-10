@@ -14,13 +14,13 @@
   "arc.feature.start.default": "origin/develop",
   "unit.xcode": {
     "build": {
-      "workspace": "MaterialMotionStreams.xcworkspace",
+      "workspace": "ReactiveMotion.xcworkspace",
       "scheme": "UnitTests",
       "configuration": "Debug",
       "destination": "platform=iOS Simulator,name=iPhone 6s"
     },
     "coverage": {
-      "product": "MaterialMotionStreams.framework/MaterialMotionStreams"
+      "product": "ReactiveMotion.framework/ReactiveMotion"
     },
     "pre-build": "pod install"
   }

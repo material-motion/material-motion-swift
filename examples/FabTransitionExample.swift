@@ -15,7 +15,7 @@
  */
 
 import UIKit
-import MaterialMotionStreams
+import ReactiveMotion
 
 @available(iOS 9.0, *)
 public class FabTransitionExampleViewController: UIViewController, TransitionContextViewRetriever {

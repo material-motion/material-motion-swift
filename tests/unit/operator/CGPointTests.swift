@@ -17,7 +17,7 @@
 import XCTest
 import CoreGraphics
 import IndefiniteObservable
-@testable import MaterialMotionStreams
+@testable import ReactiveMotion
 
 class CGPointTests: XCTestCase {
 
