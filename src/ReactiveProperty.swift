@@ -64,7 +64,7 @@ public final class ReactiveProperty<T> {
   /**
    Creates a property that writes to some external information.
    */
-  public init(_ name: String? = nil, initialValue: T, externalWrite: @escaping NextChannel<T>) {
+  init(_ name: String? = nil, initialValue: T, externalWrite: @escaping NextChannel<T>) {
     self.metadata = Metadata(name, type: .property)
     self.value = initialValue
     self._externalWrite = externalWrite
@@ -74,17 +74,17 @@ public final class ReactiveProperty<T> {
   /**
    Creates a property that writes to some external information and supports Core Animation.
    */
-  public init(_ name: String? = nil,
-              initialValue: T,
-              externalWrite: @escaping NextChannel<T>,
-              coreAnimation: @escaping CoreAnimationChannel) {
+  init(_ name: String? = nil,
+       initialValue: T,
+       externalWrite: @escaping NextChannel<T>,
+       coreAnimation: @escaping CoreAnimationChannel) {
     self.metadata = Metadata(name, type: .property)
     self.value = initialValue
     self._externalWrite = externalWrite
     self._coreAnimation = coreAnimation
   }
 
-  public func visualize(_ view: UIView, in containerView: UIView) {
+  func visualize(_ view: UIView, in containerView: UIView) {
     visualizer?(view, containerView)
   }
   var visualizer: ((UIView, UIView) -> Void)?
@@ -93,13 +93,8 @@ public final class ReactiveProperty<T> {
    Forwards the invocation to the channel if a core animation channel was provided to this property,
    otherwise throws an assertion.
    */
-  public func coreAnimation(_ event: CoreAnimationChannelEvent) {
-    guard let coreAnimation = _coreAnimation else {
-      return
-    }
-
-    coreAnimationEvent = event
-    coreAnimation(event)
+  func coreAnimation(_ event: CoreAnimationChannelEvent) {
+    _coreAnimation?(event)
   }
 
   /**
@@ -109,9 +104,6 @@ public final class ReactiveProperty<T> {
 
   private let _externalWrite: NextChannel<T>?
   private let _coreAnimation: CoreAnimationChannel?
-
-  private var state = MotionState.atRest
-  private var coreAnimationEvent: CoreAnimationChannelEvent?
 
   fileprivate var observers: [MotionObserver<T>] = []
 }

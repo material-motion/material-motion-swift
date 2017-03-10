@@ -15,11 +15,13 @@
  */
 
 import XCTest
-import MaterialMotionStreams
+@testable import MaterialMotionStreams
 
 class ReactivePropertyTests: XCTestCase {
 
-  func testReadsAndWrites() {
+  // MARK: External writes
+
+  func testExternalWrites() {
     var someVar = 10
     let property = ReactiveProperty(initialValue: someVar, externalWrite: { someVar = $0 })
 
@@ -32,6 +34,8 @@ class ReactivePropertyTests: XCTestCase {
     XCTAssertEqual(someVar, property.value)
   }
 
+  // MARK: Comparisons
+
   func testComparison() {
     let property1 = createProperty(withInitialValue: 10)
     let property2 = createProperty(withInitialValue: 100)
@@ -41,5 +45,72 @@ class ReactivePropertyTests: XCTestCase {
     XCTAssertTrue(property2 == property3)
     XCTAssertTrue(property1 == 10)
     XCTAssertTrue(property1 != 100)
+  }
+
+  // MARK: Observer events
+
+  func testWritesInformObservers() {
+    let property = ReactiveProperty(initialValue: 10)
+
+    let observerReceivedInitialValue = expectation(description: "Observer received initial value")
+    let observerReceivedChange = expectation(description: "Observer received changes")
+    let subscription = property.subscribe { value in
+      if value == 10 {
+        observerReceivedInitialValue.fulfill()
+      }
+      if value == 5 {
+        observerReceivedChange.fulfill()
+      }
+    }
+
+    property.value = 5
+
+    waitForExpectations(timeout: 0)
+
+    subscription.unsubscribe()
+  }
+
+  func testWritesDoNotInformObserversWhenUnbsubscribed() {
+    let property = ReactiveProperty(initialValue: 10)
+
+    // Expectations will throw when invoked more than once, so we use that behavior to build a test
+    // that will throw if the subscription is invoked more than once.
+    let observerReceivedInitialValue = expectation(description: "Observer received initial value")
+    let subscription = property.subscribe { value in
+      observerReceivedInitialValue.fulfill()
+    }
+
+    subscription.unsubscribe()
+
+    property.value = 5
+
+    waitForExpectations(timeout: 0)
+  }
+
+  // MARK: Core Animation
+
+  func testCoreAnimation() {
+    let didReceiveEvent = expectation(description: "Did receive event")
+    let property = ReactiveProperty("test", initialValue: 10, externalWrite: { _ in }, coreAnimation: { event in
+      didReceiveEvent.fulfill()
+    })
+
+    property.coreAnimation(.remove("key"))
+
+    waitForExpectations(timeout: 0)
+  }
+
+  // MARK: Visualizer
+
+  func testVisualizer() {
+    let didReceiveEvent = expectation(description: "Did receive event")
+    let property = ReactiveProperty(initialValue: 10)
+    property.visualizer = { _ in
+      didReceiveEvent.fulfill()
+    }
+
+    property.visualize(UIView(), in: UIView())
+
+    waitForExpectations(timeout: 0)
   }
 }
