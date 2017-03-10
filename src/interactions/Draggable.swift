@@ -32,7 +32,7 @@ import Foundation
  - `{ $0.xLocked(to: somePosition) }`
  - `{ $0.yLocked(to: somePosition) }`
  */
-public class Draggable: Gesturable<UIPanGestureRecognizer> {}
+public final class Draggable: Gesturable<UIPanGestureRecognizer> {}
 
 extension Draggable: Interaction {
   public func add(to view: UIView,

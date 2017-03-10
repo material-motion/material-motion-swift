@@ -30,7 +30,7 @@ import Foundation
  delegate associated with it and the relevant delegate methods implemented to support simultaneous
  recognition that doesn't conflict with the other gesture recognizers.
  */
-public class DirectlyManipulable: NSObject {
+public final class DirectlyManipulable: NSObject {
   /**
    The interaction governing drag behaviors.
    */

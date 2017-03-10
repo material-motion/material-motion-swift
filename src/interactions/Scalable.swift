@@ -29,7 +29,7 @@ import Foundation
 
  CGFloat constraints may be applied to this interaction.
  */
-public class Scalable: Gesturable<UIPinchGestureRecognizer> {}
+public final class Scalable: Gesturable<UIPinchGestureRecognizer> {}
 
 extension Scalable: Interaction {
   public func add(to view: UIView,
