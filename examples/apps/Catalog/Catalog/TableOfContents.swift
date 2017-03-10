@@ -26,6 +26,10 @@ extension DraggableConstraintExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["Draggable with constraints"] }
 }
 
+extension DraggableCustomOperatorExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Draggable with custom operator"] }
+}
+
 extension DraggableReactiveConstraintExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["Draggable with reactive constraints"] }
 }
