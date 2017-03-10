@@ -32,3 +32,15 @@ extension MotionObservableConvertible {
     })
   }
 }
+
+extension MotionObservableConvertible {
+
+  /** Writes any incoming value to the console and then passes the value on. */
+  public func trace(with tracer: Tracer) -> MotionObservable<T> {
+    return MotionObservable(self.metadata.createChild(Metadata(#function, type: .constraint))) { observer in
+      // TODO: Create a subscription method that provides a tracer to each observable.
+      return self.subscribe(observer: observer, withTracer: tracer).unsubscribe
+    }
+
+  }
+}

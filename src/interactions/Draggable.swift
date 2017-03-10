@@ -45,6 +45,6 @@ extension Draggable: Interaction {
     if let applyConstraints = applyConstraints {
       stream = applyConstraints(stream)
     }
-    runtime.connect(stream, to: position)
+    runtime.connect(stream.trace(), to: position)
   }
 }
