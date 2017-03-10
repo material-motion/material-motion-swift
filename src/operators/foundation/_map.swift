@@ -20,7 +20,7 @@ extension MotionObservableConvertible {
 
   /** Transform the items emitted by an Observable by applying a function to each item. */
   public func _map<U>(_ name: String? = nil, args: [Any]? = nil, transform: @escaping (T) -> U) -> MotionObservable<U> {
-    return _nextOperator(Metadata(name, args: args), operation: { value, next in
+    return _nextOperator(name, args: args, operation: { value, next in
       next(transform(value))
 
     }, coreAnimation: { event, coreAnimation in

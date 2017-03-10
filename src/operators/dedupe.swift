@@ -24,7 +24,7 @@ extension MotionObservableConvertible where T: Equatable {
   public func dedupe() -> MotionObservable<T> {
     var emitted = false
     var lastValue: T?
-    return _nextOperator(Metadata(#function)) { value, next in
+    return _nextOperator(#function) { value, next in
       if emitted && lastValue == value {
         return
       }

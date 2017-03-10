@@ -25,7 +25,7 @@ extension MotionObservableConvertible where T: Comparable {
    - paramater max: The maximum threshold.
    */
   public func thresholdRange(min: T, max: T) -> MotionObservable<ThresholdEvent> {
-    return _nextOperator(Metadata(#function, args: [min, max])) { value, next in
+    return _nextOperator(#function, args: [min, max]) { value, next in
       if value < min {
         next(.whenBelow)
 

@@ -24,8 +24,8 @@ extension MotionObservableConvertible {
    This is the preferred method for building new operators. This builder can be used to create any
    operator that only needs to modify values. All state events are forwarded along.
    */
-  func _nextOperator<U>(_ metadata: Metadata, operation: @escaping (T, (U) -> Void) -> Void) -> MotionObservable<U> {
-    return MotionObservable<U>(self.metadata.createChild(metadata, type: .constraint)) { observer in
+  func _nextOperator<U>(_ name: String? = nil, args: [Any]? = nil, operation: @escaping (T, (U) -> Void) -> Void) -> MotionObservable<U> {
+    return MotionObservable<U>(self.metadata.createChild(Metadata(name, args: args), type: .constraint)) { observer in
       return self.subscribe(next: {
         return operation($0, observer.next)
       }, coreAnimation: { _ in
@@ -41,8 +41,8 @@ extension MotionObservableConvertible {
    can be used to create any operator that only needs to modify values. All state events are
    forwarded along.
    */
-  func _nextOperator<U>(_ metadata: Metadata, operation: @escaping (T, (U) -> Void) -> Void, coreAnimation: @escaping (CoreAnimationChannelEvent, CoreAnimationChannel?) -> Void) -> MotionObservable<U> {
-    return MotionObservable<U>(self.metadata.createChild(metadata, type: .constraint)) { observer in
+  func _nextOperator<U>(_ name: String? = nil, args: [Any]? = nil, operation: @escaping (T, (U) -> Void) -> Void, coreAnimation: @escaping (CoreAnimationChannelEvent, CoreAnimationChannel?) -> Void) -> MotionObservable<U> {
+    return MotionObservable<U>(self.metadata.createChild(Metadata(name, args: args), type: .constraint)) { observer in
       return self.subscribe(next: {
         return operation($0, observer.next)
       }, coreAnimation: {

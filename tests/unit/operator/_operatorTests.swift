@@ -30,7 +30,7 @@ class _nextOperatorTests: XCTestCase {
     }
 
     let valueReceived = expectation(description: "Value was received")
-    let _ = observable._nextOperator(Metadata("")) { value, next in
+    let _ = observable._nextOperator { value, next in
       next(value * 10)
 
     }.subscribe {
