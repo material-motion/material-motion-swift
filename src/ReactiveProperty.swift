@@ -20,7 +20,7 @@ import IndefiniteObservable
 /**
  Creates a property with an initial value of zero.
  */
-public func createProperty<T: Zeroable>(_ name: String? = nil) -> ReactiveProperty<T> {
+public func createProperty<T>(_ name: String? = nil) -> ReactiveProperty<T> where T: Zeroable {
   return ReactiveProperty(name, initialValue: T.zero() as! T)
 }
 
