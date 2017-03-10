@@ -10,6 +10,6 @@ before_install:
 script:
   - set -o pipefail
   - arcanist/bin/arc unit --everything --trace
-  - xcodebuild build -workspace MaterialMotionStreams.xcworkspace -scheme Catalog -sdk "iphonesimulator10.1" -destination "name=iPhone 6s,OS=10.1" ONLY_ACTIVE_ARCH=YES | xcpretty -c;
+  - xcodebuild build -workspace ReactiveMotion.xcworkspace -scheme Catalog -sdk "iphonesimulator10.1" -destination "name=iPhone 6s,OS=10.1" ONLY_ACTIVE_ARCH=YES | xcpretty -c;
 after_success:
   - bash <(curl -s https://codecov.io/bash)
