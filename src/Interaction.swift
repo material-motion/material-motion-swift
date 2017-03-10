@@ -17,7 +17,7 @@
 import Foundation
 
 /**
- An interaction is responsible for associating one or more streams of information to a given target.
+ An interaction is responsible for associating motion with a given target.
 
  A single instance of an Interaction may be associated with many distinct targets. This one-to-many
  behavior varies per-interaction and should be clearly documented by the concrete type.
@@ -41,8 +41,5 @@ public protocol Interaction {
 
 /**
  A typical constraint shape for an interaction.
-
- Accepts a stream and returns a stream of the same type. This is a convenient way to modify a stream
- with operators.
  */
 public typealias ConstraintApplicator<T> = (MotionObservable<T>) -> MotionObservable<T>
