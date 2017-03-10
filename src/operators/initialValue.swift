@@ -25,7 +25,7 @@ extension MotionObservableConvertible {
    Helpful for priming a stream with an initial value.
    */
   public func initialValue(_ value: T) -> MotionObservable<T> {
-    return MotionObservable(self.metadata.createChild(Metadata("\(#function)", type: .constraint, args: [value]))) { observer in
+    return MotionObservable(self.metadata.createChild(Metadata(#function, type: .constraint, args: [value]))) { observer in
       observer.next(value)
       return self.asStream().subscribe(observer: observer).unsubscribe
     }

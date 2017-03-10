@@ -21,7 +21,7 @@ public class ReactiveUIGestureRecognizer<O: UIGestureRecognizer>: Stateful {
 
   public lazy var isEnabled: ReactiveProperty<Bool> = {
     let gestureRecognizer = self.gestureRecognizer
-    return ReactiveProperty("\(#function)",
+    return ReactiveProperty(#function,
                             initialValue: gestureRecognizer.isEnabled,
                             externalWrite: { gestureRecognizer.isEnabled = $0 })
   }()

@@ -32,7 +32,7 @@ class _filterTests: XCTestCase {
     }
 
     let valueReceived = expectation(description: "Value was received")
-    let _ = observable._filter(Metadata("")) { value in
+    let _ = observable._filter { value in
       return value == 10
 
     }.subscribe {

@@ -18,7 +18,7 @@ extension MotionObservableConvertible where T == CGPoint {
 
   /** Lock the point's x value to the given value. */
   public func xLocked(to xValue: CGFloat) -> MotionObservable<CGPoint> {
-    return _map(Metadata("\(#function)", args: [xValue])) {
+    return _map(#function, args: [xValue]) {
       .init(x: xValue, y: $0.y)
     }
   }
@@ -27,7 +27,7 @@ extension MotionObservableConvertible where T == CGPoint {
   public func xLocked<O: MotionObservableConvertible>(to xValueStream: O) -> MotionObservable<CGPoint> where O.T == CGFloat {
     var lastUpstreamValue: CGPoint?
     var lastXValue: CGFloat?
-    return MotionObservable(self.metadata.createChild(Metadata("\(#function)", type: .constraint, args: [xValueStream]))) { observer in
+    return MotionObservable(self.metadata.createChild(Metadata(#function, type: .constraint, args: [xValueStream]))) { observer in
 
       let checkAndEmit = {
         guard let lastUpstreamValue = lastUpstreamValue, let lastXValue = lastXValue else { return }

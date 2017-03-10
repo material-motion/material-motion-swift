@@ -30,7 +30,7 @@ class _mapTests: XCTestCase {
     }
 
     let valueReceived = expectation(description: "Value was received")
-    let _ = observable._map(Metadata("")) { value in
+    let _ = observable._map { value in
       return value * 10
 
     }.subscribe {

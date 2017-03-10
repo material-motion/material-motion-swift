@@ -30,7 +30,7 @@ extension MotionObservableConvertible where T: Comparable {
    - paramater threshold: The position of the threshold.
    */
   public func threshold(_ threshold: T) -> MotionObservable<ThresholdEvent> {
-    return _nextOperator(Metadata("\(#function)", args: [threshold])) { value, next in
+    return _nextOperator(Metadata(#function, args: [threshold])) { value, next in
       if value < threshold {
         next(.whenBelow)
 

@@ -20,7 +20,7 @@ extension MotionObservableConvertible where T: Comparable {
 
   /** Emits either the incoming value or the provided minValue, whichever is larger. */
   public func lowerBound(_ minValue: T) -> MotionObservable<T> {
-    return _map(Metadata("\(#function)", args: [minValue])) {
+    return _map(#function, args: [minValue]) {
       return Swift.max($0, minValue)
     }
   }

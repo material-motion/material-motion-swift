@@ -21,19 +21,19 @@ public protocol Inspectable {
 }
 
 public class Metadata: CustomDebugStringConvertible {
-  public enum Metatype {
+  enum Metatype {
     case node
     case constraint
     case property
     case constant
   }
-  public var type: Metatype
-  public let name: String
-  public let args: [Any]?
-  public let label: String
-  public var parent: Metadata?
+  var type: Metatype
+  let name: String
+  let args: [Any]?
+  let label: String
+  var parent: Metadata?
 
-  public init(_ name: String? = nil, type: Metatype = .node, args: [Any]? = nil, parent: Metadata? = nil) {
+  init(_ name: String? = nil, type: Metatype = .node, args: [Any]? = nil, parent: Metadata? = nil) {
     if let name = name {
       self.name = "\(name)(\(NSUUID().uuidString))"
       self.label = name
@@ -46,7 +46,7 @@ public class Metadata: CustomDebugStringConvertible {
     self.type = type
   }
 
-  public init(_ metadata: Metadata, type: Metatype = .node, parent: Metadata) {
+  init(_ metadata: Metadata, type: Metatype = .node, parent: Metadata) {
     self.name = metadata.name
     self.label = metadata.label
     self.args = metadata.args
@@ -54,7 +54,7 @@ public class Metadata: CustomDebugStringConvertible {
     self.parent = parent
   }
 
-  public func createChild(_ metadata: Metadata, type: Metatype = .node) -> Metadata {
+  func createChild(_ metadata: Metadata, type: Metatype = .node) -> Metadata {
     return Metadata(metadata, type: type, parent: self)
   }
 

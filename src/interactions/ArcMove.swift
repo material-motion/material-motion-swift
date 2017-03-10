@@ -48,7 +48,7 @@ extension ArcMove: Interaction {
 private func arcMove<O1: MotionObservableConvertible, O2: MotionObservableConvertible>
   (from: O1, to: O2)
   -> MotionObservable<CGPath> where O1.T == CGPoint, O2.T == CGPoint {
-    return MotionObservable(Metadata("\(#function)", args: [from, to])) { observer in
+    return MotionObservable(Metadata(#function, args: [from, to])) { observer in
       var latestFrom: CGPoint?
       var latestTo: CGPoint?
 
