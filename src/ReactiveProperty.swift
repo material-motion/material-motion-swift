@@ -85,9 +85,9 @@ public final class ReactiveProperty<T> {
   }
 
   func visualize(_ view: UIView, in containerView: UIView) {
-    visualizer?(view, containerView)
+    shouldVisualizeMotion?(view, containerView)
   }
-  var visualizer: ((UIView, UIView) -> Void)?
+  var shouldVisualizeMotion: ((UIView, UIView) -> Void)?
 
   /**
    Forwards the invocation to the channel if a core animation channel was provided to this property,

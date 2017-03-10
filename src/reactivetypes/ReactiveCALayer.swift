@@ -190,7 +190,7 @@ public class ReactiveCALayer {
       }
     })
     var lastView: UIView?
-    property.visualizer = { view, containerView in
+    property.shouldVisualizeMotion = { view, containerView in
       if lastView != view, let lastView = lastView {
         lastView.removeFromSuperview()
       }

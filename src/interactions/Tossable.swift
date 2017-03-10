@@ -47,7 +47,7 @@ extension Tossable: Interaction {
     //    active and will want to immediately read the current state of the position property.
 
     runtime.connect(gesture.velocityOnReleaseStream(in: runtime.containerView), to: spring.initialVelocity)
-    runtime.enable(spring, whenAtRest: gesture)
+    runtime.disable(spring, whenActive: gesture)
     runtime.add(spring, to: position, constraints: constraints)
 
     runtime.add(draggable, to: view, constraints: constraints)

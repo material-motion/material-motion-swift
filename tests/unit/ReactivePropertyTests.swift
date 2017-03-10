@@ -100,12 +100,12 @@ class ReactivePropertyTests: XCTestCase {
     waitForExpectations(timeout: 0)
   }
 
-  // MARK: Visualizer
+  // MARK: shouldVisualizeMotion
 
-  func testVisualizer() {
+  func testshouldVisualizeMotion() {
     let didReceiveEvent = expectation(description: "Did receive event")
     let property = ReactiveProperty(initialValue: 10)
-    property.visualizer = { _ in
+    property.shouldVisualizeMotion = { _ in
       didReceiveEvent.fulfill()
     }
 

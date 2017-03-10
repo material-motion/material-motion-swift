@@ -109,7 +109,7 @@ private class PushBackTransition: Transition {
     let tossable = Tossable(spring: movement, draggable: draggable)
     runtime.add(tossable, to: ctx.fore.view) { $0.xLocked(to: ctx.fore.view.layer.position.x) }
  
-    runtime.enable(scaleSpring, whenAtRest: gesture)
+    runtime.disable(scaleSpring, whenActive: gesture)
     runtime.add(scaleSpring, to: scale)
 
     return [tossable.spring, scaleSpring, gesture]

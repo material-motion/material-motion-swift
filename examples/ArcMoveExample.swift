@@ -42,7 +42,7 @@ public class ArcMoveExampleViewController: UIViewController {
     view.addSubview(timelineView)
 
     runtime = MotionRuntime(containerView: view)
-    runtime.visualizer = true
+    runtime.shouldVisualizeMotion = true
 
     let reactiveTapLayer = runtime.get(tapCircleLayer)
     let reactiveTargetLayer = runtime.get(targetView).reactiveLayer
