@@ -135,6 +135,10 @@ public final class MotionObservable<T>: IndefiniteObservable<MotionObserver<T>> 
   public let metadata: Metadata
 }
 
+public protocol Tracer {
+  func trace(metadata: Metadata, value: Any)
+}
+
 /**
  A MotionObserver receives values and core animation events from a MotionObservable subscription.
  */
@@ -143,27 +147,43 @@ public final class MotionObserver<T>: Observer {
 
   public init(next: @escaping NextChannel<T>,
               coreAnimation: @escaping CoreAnimationChannel,
-              visualization: @escaping VisualizationChannel) {
+              visualization: @escaping VisualizationChannel,
+              tracer: Tracer? = nil) {
     self.next = next
     self.coreAnimation = coreAnimation
     self.visualization = visualization
+    self.tracer = tracer
   }
 
   public init(next: @escaping NextChannel<T>, coreAnimation: @escaping CoreAnimationChannel) {
     self.next = next
     self.coreAnimation = coreAnimation
     self.visualization = nil
+    self.tracer = nil
   }
 
   public init(next: @escaping NextChannel<T>) {
     self.next = next
     self.coreAnimation = nil
     self.visualization = nil
+    self.tracer = nil
+  }
+
+  public func next(withMetadata metadata: Metadata) -> NextChannel<T> {
+    if let tracer = tracer {
+      return { value in
+        tracer.trace(metadata: metadata, value: value)
+        self.next(value)
+      }
+    } else {
+      return next
+    }
   }
 
   public let next: NextChannel<T>
   public let coreAnimation: CoreAnimationChannel?
   public let visualization: VisualizationChannel?
+  public let tracer: Tracer?
 }
 
 /**
@@ -190,10 +210,12 @@ extension MotionObservableConvertible {
    */
   public func subscribe(next: @escaping NextChannel<T>,
                         coreAnimation: @escaping CoreAnimationChannel,
-                        visualization: @escaping VisualizationChannel) -> Subscription {
+                        visualization: @escaping VisualizationChannel,
+                        tracer: Tracer? = nil) -> Subscription {
     return asStream().subscribe(observer: MotionObserver<T>(next: next,
                                                             coreAnimation: coreAnimation,
-                                                            visualization: visualization))
+                                                            visualization: visualization,
+                                                            tracer: tracer))
   }
 
   /**

@@ -51,7 +51,7 @@ extension MotionObservableConvertible {
           for observer in observers {
             observer.visualization?(view)
           }
-        })
+        }, tracer: observer.tracer)
       }
 
       // Add the observer to the list after subscribing so that we don't double-send.

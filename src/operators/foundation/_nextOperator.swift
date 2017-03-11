@@ -25,12 +25,15 @@ extension MotionObservableConvertible {
    operator that only needs to modify values. All state events are forwarded along.
    */
   func _nextOperator<U>(_ name: String? = nil, args: [Any]? = nil, operation: @escaping (T, (U) -> Void) -> Void) -> MotionObservable<U> {
-    return MotionObservable<U>(self.metadata.createChild(Metadata(name, args: args), type: .constraint)) { observer in
+    let metadata = Metadata(name, args: args)
+    return MotionObservable<U>(self.metadata.createChild(metadata, type: .constraint)) { observer in
       return self.subscribe(next: {
-        return operation($0, observer.next)
+        operation($0, observer.next(withMetadata: metadata))
       }, coreAnimation: { _ in
         assertionFailure("Core animation is not supported by this operator.")
-      }).unsubscribe
+      }, visualization: {
+        observer.visualization?($0)
+      }, tracer: observer.tracer).unsubscribe
     }
   }
 
@@ -42,12 +45,15 @@ extension MotionObservableConvertible {
    forwarded along.
    */
   func _nextOperator<U>(_ name: String? = nil, args: [Any]? = nil, operation: @escaping (T, (U) -> Void) -> Void, coreAnimation: @escaping (CoreAnimationChannelEvent, CoreAnimationChannel?) -> Void) -> MotionObservable<U> {
-    return MotionObservable<U>(self.metadata.createChild(Metadata(name, args: args), type: .constraint)) { observer in
+    let metadata = Metadata(name, args: args)
+    return MotionObservable<U>(self.metadata.createChild(metadata, type: .constraint)) { observer in
       return self.subscribe(next: {
-        return operation($0, observer.next)
+        operation($0, observer.next(withMetadata: metadata))
       }, coreAnimation: {
         return coreAnimation($0, observer.coreAnimation)
-      }).unsubscribe
+      }, visualization: {
+        observer.visualization?($0)
+      }, tracer: observer.tracer).unsubscribe
     }
   }
 }

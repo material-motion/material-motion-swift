@@ -26,10 +26,11 @@ extension MotionObservableConvertible where T: UIPanGestureRecognizer {
     var cachedInitialPosition: CGPoint?
     var lastInitialPosition: CGPoint?
 
-    return MotionObservable(metadata.createChild(Metadata(#function, type: .constraint, args: [initialPosition, view]))) { observer in
+    let metadata = Metadata(#function, type: .constraint, args: [initialPosition, view])
+    return MotionObservable(metadata.createChild(metadata)) { observer in
       let initialPositionSubscription = initialPosition.subscribe { lastInitialPosition = $0 }
 
-      let upstreamSubscription = self.subscribe { value in
+      let upstreamSubscription = self.subscribe(next: { value in
         if value.state == .began || (value.state == .changed && cachedInitialPosition == nil)  {
           cachedInitialPosition = lastInitialPosition
 
@@ -38,10 +39,12 @@ extension MotionObservableConvertible where T: UIPanGestureRecognizer {
         }
         if let cachedInitialPosition = cachedInitialPosition {
           let translation = value.translation(in: view)
-          observer.next(CGPoint(x: cachedInitialPosition.x + translation.x,
-                                y: cachedInitialPosition.y + translation.y))
+          observer.next(withMetadata: metadata)(CGPoint(x: cachedInitialPosition.x + translation.x,
+                                                        y: cachedInitialPosition.y + translation.y))
         }
-      }
+      }, coreAnimation: { event in observer.coreAnimation?(event) },
+         visualization: { view in observer.visualization?(view) },
+         tracer: observer.tracer)
 
       return {
         upstreamSubscription.unsubscribe()

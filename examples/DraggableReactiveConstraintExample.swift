@@ -41,7 +41,7 @@ public class DraggableReactiveConstraintExampleViewController: UIViewController 
       .xLocked(to: axisCenterX)
     }
 
-    runtime.add(Draggable(), to: axisLine) { $0.yLocked(to: axisLine.layer.position.y) }
+    runtime.add(Draggable(), to: axisLine) { $0.yLocked(to: axisLine.layer.position.y).trace(with: LogTracer()) }
   }
 
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {

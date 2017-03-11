@@ -33,14 +33,24 @@ extension MotionObservableConvertible {
   }
 }
 
+public class LogTracer: Tracer {
+  public init() {
+    
+  }
+  public func trace(metadata: Metadata, value: Any) {
+    print("\(metadata.name): \(value)")
+  }
+}
+
 extension MotionObservableConvertible {
 
   /** Writes any incoming value to the console and then passes the value on. */
   public func trace(with tracer: Tracer) -> MotionObservable<T> {
     return MotionObservable(self.metadata.createChild(Metadata(#function, type: .constraint))) { observer in
-      // TODO: Create a subscription method that provides a tracer to each observable.
-      return self.subscribe(observer: observer, withTracer: tracer).unsubscribe
+      return self.subscribe(next: observer.next,
+                            coreAnimation: { event in observer.coreAnimation?(event) },
+                            visualization: { view in observer.visualization?(view) },
+                            tracer: tracer).unsubscribe
     }
-
   }
 }

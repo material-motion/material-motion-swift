@@ -207,13 +207,11 @@ public final class MotionRuntime {
 
   private func write<O: MotionObservableConvertible, T>(_ stream: O, to property: ReactiveProperty<T>) where O.T == T {
     metadata.append(stream.metadata.createChild(property.metadata))
-    subscriptions.append(stream.subscribe(next: { property.value = $0 },
-                                          coreAnimation: property.coreAnimation,
-                                          visualization: { [weak self] view in
-                                            guard let strongSelf = self else { return }
-                                            if !strongSelf.shouldVisualizeMotion { return }
-                                            property.visualize(view, in: strongSelf.containerView)
-    }))
+    subscriptions.append(stream.subscribe(next: { property.value = $0 }, coreAnimation: property.coreAnimation, visualization: { [weak self] view in
+      guard let strongSelf = self else { return }
+      if !strongSelf.shouldVisualizeMotion { return }
+      property.visualize(view, in: strongSelf.containerView)
+    }, tracer: nil))
   }
 
   private var metadata: [Metadata] = []

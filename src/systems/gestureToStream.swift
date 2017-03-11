@@ -44,7 +44,7 @@ private final class GestureConnection<T: UIGestureRecognizer> {
   }
 
   private func propagate(_ gesture: UIGestureRecognizer) {
-    observer.next(gesture as! T)
+    observer.next(withMetadata: Metadata("Gesture Recognizer"))(gesture as! T)
   }
 
   private var gesture: (T)?
