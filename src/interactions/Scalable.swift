@@ -16,8 +16,20 @@
 
 import Foundation
 
-public class Scalable: Gesturable<UIPinchGestureRecognizer> {
-}
+/**
+ Allows a view to be scaled by a gesture recognizer.
+
+ Can be initialized with any of the GesturableConfiguration options.
+
+ **Affected properties**
+
+ - `view.layer.scale`
+
+ **Constraints**
+
+ CGFloat constraints may be applied to this interaction.
+ */
+public class Scalable: Gesturable<UIPinchGestureRecognizer> {}
 
 extension Scalable: Interaction {
   public func add(to view: UIView,

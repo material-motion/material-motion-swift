@@ -16,8 +16,23 @@
 
 import Foundation
 
-public class Draggable: Gesturable<UIPanGestureRecognizer> {
-}
+/**
+ Allows a view to be dragged by a gesture recognizer.
+
+ Can be initialized with any of the GesturableConfiguration options.
+
+ **Affected properties**
+
+ - `view.layer.position`
+
+ **Constraints**
+
+ CGPoint constraints may be applied to this interaction. Common constraints include:
+
+ - `{ $0.xLocked(to: somePosition) }`
+ - `{ $0.yLocked(to: somePosition) }`
+ */
+public class Draggable: Gesturable<UIPanGestureRecognizer> {}
 
 extension Draggable: Interaction {
   public func add(to view: UIView,

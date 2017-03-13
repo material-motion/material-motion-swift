@@ -16,8 +16,20 @@
 
 import Foundation
 
-public class Rotatable: Gesturable<UIRotationGestureRecognizer> {
-}
+/**
+ Allows a view to be rotated by a gesture recognizer.
+
+ Can be initialized with any of the GesturableConfiguration options.
+
+ **Affected properties**
+
+ - `view.layer.rotation`
+
+ **Constraints**
+
+ CGFloat constraints may be applied to this interaction.
+ */
+public class Rotatable: Gesturable<UIRotationGestureRecognizer> {}
 
 extension Rotatable: Interaction {
   public func add(to view: UIView,
