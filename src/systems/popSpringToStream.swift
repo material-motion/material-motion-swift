@@ -20,34 +20,35 @@ import pop
 // In order to support POP's vector-based properties we create specialized connectPOPSpring methods.
 // Each specialized method is expected to read from and write to a POP vector value.
 
-/** Create a pop spring source for a CGFloat Spring plan. */
-public func pop(_ spring: SpringShadow<CGFloat>) -> (MotionObservable<CGFloat>) {
-  return MotionObservable(Metadata("POP CGFloat spring", args: [spring.enabled, spring.state, spring.initialValue, spring.initialVelocity, spring.destination, spring.tension, spring.friction, spring.mass, spring.suggestedDuration, spring.threshold])) { observer in
+/**
+ Create a motion observable that will emit T values on the main thread simulating the provided
+ spring parameters.
+ */
+public func pop<T>(_ spring: SpringShadow<T>) -> (MotionObservable<T>) {
+  return MotionObservable(Metadata("POP spring", args: [spring.enabled, spring.state, spring.initialValue, spring.initialVelocity, spring.destination, spring.tension, spring.friction, spring.mass, spring.suggestedDuration, spring.threshold])) { observer in
     let popProperty = POPMutableAnimatableProperty()
     popProperty.threshold = spring.threshold.value
-    popProperty.readBlock = { _, toWrite in
-      toWrite![0] = spring.initialValue.value
-    }
-    popProperty.writeBlock = { _, toRead in
-      observer.next(toRead![0])
-    }
-    return configureSpringAnimation(popProperty, spring: spring)
-  }
-}
 
-/** Create a pop spring source for a CGPoint Spring plan. */
-public func pop(_ spring: SpringShadow<CGPoint>) -> (MotionObservable<CGPoint>) {
-  return MotionObservable(Metadata("POP CGPoint spring", args: [spring.enabled, spring.state, spring.initialValue, spring.initialVelocity, spring.destination, spring.tension, spring.friction, spring.mass, spring.suggestedDuration, spring.threshold])) { observer in
-    let popProperty = POPMutableAnimatableProperty()
-    popProperty.threshold = spring.threshold.value
-    popProperty.readBlock = { _, toWrite in
-      let value = spring.initialValue.value
-      toWrite![0] = value.x
-      toWrite![1] = value.y
+    if let observer = observer as? MotionObserver<CGPoint> {
+      popProperty.readBlock = { _, toWrite in
+        let value = spring.initialValue.value as! CGPoint
+        toWrite![0] = value.x
+        toWrite![1] = value.y
+      }
+      popProperty.writeBlock = { _, toRead in
+        observer.next(CGPoint(x: toRead![0], y: toRead![1]))
+      }
+    } else if let observer = observer as? MotionObserver<CGFloat> {
+      popProperty.readBlock = { _, toWrite in
+        toWrite![0] = spring.initialValue.value as! CGFloat
+      }
+      popProperty.writeBlock = { _, toRead in
+        observer.next(toRead![0])
+      }
+    } else {
+      assertionFailure("Unsupported type")
     }
-    popProperty.writeBlock = { _, toRead in
-      observer.next(CGPoint(x: toRead![0], y: toRead![1]))
-    }
+
     return configureSpringAnimation(popProperty, spring: spring)
   }
 }
