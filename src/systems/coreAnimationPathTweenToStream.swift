@@ -26,7 +26,7 @@ public func coreAnimation(_ tween: PathTweenShadow) -> MotionObservable<CGPoint>
     var activeAnimations = Set<CAKeyframeAnimation>()
 
     let checkAndEmit = {
-      subscriptions.append(tween.path.subscribe { pathValue in
+      subscriptions.append(tween.path.subscribeToValue { pathValue in
 
         let animation = CAKeyframeAnimation()
         activeAnimations.insert(animation)
@@ -98,7 +98,7 @@ public func coreAnimation(_ tween: PathTweenShadow) -> MotionObservable<CGPoint>
       })
     }
 
-    let activeSubscription = tween.enabled.dedupe().subscribe { enabled in
+    let activeSubscription = tween.enabled.dedupe().subscribeToValue { enabled in
       if enabled {
         checkAndEmit()
       } else {

@@ -35,18 +35,15 @@ extension MotionObservableConvertible where T == CGPoint {
         observer.next(.init(x: lastXValue, y: lastUpstreamValue.y))
       }
 
-      let xValueSubscription = xValueStream.subscribe { value in
+      let xValueSubscription = xValueStream.subscribeToValue { value in
         lastXValue = value
         checkAndEmit()
       }
 
-      let upstreamSubscription = self.subscribe(next: { value in
+      let upstreamSubscription = self.subscribeAndForward(to: observer) { value in
         lastUpstreamValue = value
         checkAndEmit()
-
-      }, coreAnimation: { event in observer.coreAnimation?(event) },
-         visualization: { view in observer.visualization?(view) }
-      )
+      }
 
       return {
         upstreamSubscription.unsubscribe()

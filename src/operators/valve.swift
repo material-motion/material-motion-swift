@@ -28,9 +28,9 @@ extension MotionObservableConvertible {
     return MotionObservable<T>(Metadata(#function, args: [valveStream])) { observer in
       var upstreamSubscription: Subscription?
 
-      let valveSubscription = valveStream.subscribe { shouldOpen in
+      let valveSubscription = valveStream.subscribeToValue { shouldOpen in
         if shouldOpen && upstreamSubscription == nil {
-          upstreamSubscription = self.asStream().subscribe(observer: observer)
+          upstreamSubscription = self.asStream().subscribeAndForward(to: observer)
         }
 
         if !shouldOpen && upstreamSubscription != nil {

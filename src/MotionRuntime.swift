@@ -142,7 +142,7 @@ public final class MotionRuntime {
     var subscriptions: [Subscription] = []
     var activeIndices = Set<Int>()
     for (index, stream) in interactions.enumerated() {
-      subscriptions.append(stream.state.dedupe().subscribe { state in
+      subscriptions.append(stream.state.dedupe().subscribeToValue { state in
         if state == .active {
           activeIndices.insert(index)
 

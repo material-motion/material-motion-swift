@@ -35,7 +35,7 @@ class _filterTests: XCTestCase {
     let _ = observable._filter { value in
       return value == 10
 
-    }.subscribe {
+    }.subscribeToValue {
       if $0 == value {
         valueReceived.fulfill()
       }

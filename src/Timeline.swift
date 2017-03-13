@@ -84,12 +84,12 @@ extension Timeline: MotionObservableConvertible {
       var paused = self.paused.value
       var timeOffset = self.timeOffset.value
 
-      let pauseSubscription = self.paused.dedupe().subscribe {
+      let pauseSubscription = self.paused.dedupe().subscribeToValue {
         paused = $0
         observer.next(Snapshot(paused: paused, beginTime: self.beginTime, timeOffset: timeOffset))
       }
 
-      let timeOffsetSubscription = self.timeOffset.dedupe().subscribe {
+      let timeOffsetSubscription = self.timeOffset.dedupe().subscribeToValue {
         timeOffset = $0
         observer.next(Snapshot(paused: paused, beginTime: self.beginTime, timeOffset: timeOffset))
       }

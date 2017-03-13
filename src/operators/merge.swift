@@ -23,8 +23,8 @@ extension MotionObservableConvertible {
    */
   public func merge(with stream: MotionObservable<T>) -> MotionObservable<T> {
     return MotionObservable<T>(Metadata(#function, args: [stream])) { observer in
-      let upstreamSubscription = self.asStream().subscribe(observer: observer)
-      let subscription = stream.subscribe(observer: observer)
+      let upstreamSubscription = self.asStream().subscribeAndForward(to: observer)
+      let subscription = stream.subscribeAndForward(to: observer)
       return {
         subscription.unsubscribe()
         upstreamSubscription.unsubscribe()

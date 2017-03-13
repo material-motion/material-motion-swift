@@ -149,12 +149,6 @@ public final class MotionObserver<T>: Observer {
     self.visualization = visualization
   }
 
-  public init(next: @escaping NextChannel<T>, coreAnimation: @escaping CoreAnimationChannel) {
-    self.next = next
-    self.coreAnimation = coreAnimation
-    self.visualization = nil
-  }
-
   public init(next: @escaping NextChannel<T>) {
     self.next = next
     self.coreAnimation = nil
@@ -197,16 +191,26 @@ extension MotionObservableConvertible {
   }
 
   /**
-   Sugar for subscribing a MotionObserver.
+   Forwards all channel values to the provided observer except next, which is provided as an
+   argument.
    */
-  public func subscribe(next: @escaping NextChannel<T>, coreAnimation: @escaping CoreAnimationChannel) -> Subscription {
-    return asStream().subscribe(observer: MotionObserver<T>(next: next, coreAnimation: coreAnimation))
+  public func subscribeAndForward<U>(to observer: MotionObserver<U>, next: @escaping NextChannel<T>) -> Subscription {
+    return subscribe(next: next,
+                     coreAnimation: { event in observer.coreAnimation?(event) },
+                     visualization: { view in observer.visualization?(view) })
   }
 
   /**
-   Sugar for subscribing a MotionObserver.
+   Forwards all channel values to the provided observer.
    */
-  public func subscribe(_ next: @escaping NextChannel<T>) -> Subscription {
+  public func subscribeAndForward(to observer: MotionObserver<T>) -> Subscription {
+    return asStream().subscribe(observer: observer)
+  }
+
+  /**
+   Subscribes only to the value channel of the stream.
+   */
+  public func subscribeToValue(_ next: @escaping NextChannel<T>) -> Subscription {
     return asStream().subscribe(observer: MotionObserver<T>(next: next))
   }
 }

@@ -54,7 +54,7 @@ class ReactivePropertyTests: XCTestCase {
 
     let observerReceivedInitialValue = expectation(description: "Observer received initial value")
     let observerReceivedChange = expectation(description: "Observer received changes")
-    let subscription = property.subscribe { value in
+    let subscription = property.subscribeToValue { value in
       if value == 10 {
         observerReceivedInitialValue.fulfill()
       }
@@ -76,7 +76,7 @@ class ReactivePropertyTests: XCTestCase {
     // Expectations will throw when invoked more than once, so we use that behavior to build a test
     // that will throw if the subscription is invoked more than once.
     let observerReceivedInitialValue = expectation(description: "Observer received initial value")
-    let subscription = property.subscribe { value in
+    let subscription = property.subscribeToValue { value in
       observerReceivedInitialValue.fulfill()
     }
 

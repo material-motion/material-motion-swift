@@ -33,7 +33,7 @@ class _mapTests: XCTestCase {
     let _ = observable._map { value in
       return value * 10
 
-    }.subscribe {
+    }.subscribeToValue {
       if $0 == value * 10 {
         valueReceived.fulfill()
       }

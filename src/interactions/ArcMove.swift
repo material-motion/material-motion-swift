@@ -66,12 +66,12 @@ private func arcMove<O1: MotionObservableConvertible, O2: MotionObservableConver
         observer.next(path.cgPath)
       }
 
-      let fromSubscription = from.subscribe { fromValue in
+      let fromSubscription = from.subscribeToValue { fromValue in
         latestFrom = fromValue
         checkAndEmit()
       }
 
-      let toSubscription = to.subscribe { toValue in
+      let toSubscription = to.subscribeToValue { toValue in
         latestTo = toValue
         checkAndEmit()
       }

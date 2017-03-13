@@ -38,11 +38,13 @@ extension MotionObservableConvertible where T == CGFloat {
         guard let amount = amountValue, let value = lastValue else { return }
         observer.next(value * amount)
       }
-      let selfSubscription = self.subscribe({ value in
+
+      let selfSubscription = self.subscribeAndForward(to: observer) { value in
         lastValue = value
         checkAndEmit()
-      })
-      let amountSubscription = amount.subscribe({ amount in
+      }
+
+      let amountSubscription = amount.subscribeToValue({ amount in
         amountValue = amount
         checkAndEmit()
       })

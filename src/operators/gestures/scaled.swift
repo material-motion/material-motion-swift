@@ -27,9 +27,9 @@ extension MotionObservableConvertible where T: UIPinchGestureRecognizer {
     var lastInitialScale: CGFloat?
 
     return MotionObservable(metadata.createChild(Metadata(#function, type: .constraint, args: [initialScale]))) { observer in
-      let initialScaleSubscription = initialScale.subscribe { lastInitialScale = $0 }
+      let initialScaleSubscription = initialScale.subscribeToValue { lastInitialScale = $0 }
 
-      let upstreamSubscription = self.subscribe { value in
+      let upstreamSubscription = self.subscribeAndForward(to: observer) { value in
         if value.state == .began || (value.state == .changed && cachedInitialScale == nil)  {
           cachedInitialScale = lastInitialScale
 

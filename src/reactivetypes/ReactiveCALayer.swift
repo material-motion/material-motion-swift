@@ -208,7 +208,7 @@ public class ReactiveCALayer {
       return
     }
     self.timeline = timeline
-    timelineSubscription = timeline.subscribe { [weak self] state in
+    timelineSubscription = timeline.subscribeToValue { [weak self] state in
       guard let strongSelf = self else { return }
       strongSelf.lastTimelineState = state
 

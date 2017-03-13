@@ -64,7 +64,7 @@ public func coreAnimation<T>(_ tween: TweenShadow<T>) -> MotionObservable<T> {
       animationKeys.append(key)
     }
 
-    let activeSubscription = tween.enabled.dedupe().subscribe { enabled in
+    let activeSubscription = tween.enabled.dedupe().subscribeToValue { enabled in
       if enabled {
         checkAndEmit()
       } else {

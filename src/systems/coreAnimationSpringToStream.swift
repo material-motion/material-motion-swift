@@ -32,7 +32,7 @@ public func coreAnimation<T>(_ spring: SpringShadow<T>) -> (MotionObservable<T>)
 
     var initialVelocity: T?
 
-    let initialVelocitySubscription = initialVelocityStream.subscribe {
+    let initialVelocitySubscription = initialVelocityStream.subscribeToValue {
       initialVelocity = $0
     }
 
@@ -77,13 +77,13 @@ public func coreAnimation<T>(_ spring: SpringShadow<T>) -> (MotionObservable<T>)
       initialVelocity = nil
     }
 
-    let destinationSubscription = spring.destination.subscribe { value in
+    let destinationSubscription = spring.destination.subscribeToValue { value in
       to = value
       checkAndEmit()
     }
 
     var wasDisabled = false
-    let activeSubscription = spring.enabled.asStream().dedupe().subscribe { enabled in
+    let activeSubscription = spring.enabled.asStream().dedupe().subscribeToValue { enabled in
       if enabled {
         if wasDisabled {
           wasDisabled = false
