@@ -93,73 +93,43 @@ public final class MotionRuntime {
    Returns a reactive version of the given object and caches the returned result for future access.
    */
   public func get(_ view: UIView) -> ReactiveUIView {
-    if let reactiveObject = reactiveViews[view] {
-      return reactiveObject
-    }
-    let reactiveObject = ReactiveUIView(view, runtime: self)
-    reactiveViews[view] = reactiveObject
-    return reactiveObject
+    return get(view) { .init($0, runtime: self) }
   }
-  private var reactiveViews: [UIView: ReactiveUIView] = [:]
 
   /**
    Returns a reactive version of the given object and caches the returned result for future access.
    */
   public func get(_ layer: CALayer) -> ReactiveCALayer {
-    if let reactiveObject = reactiveLayers[layer] {
-      return reactiveObject
-    }
-    let reactiveObject = ReactiveCALayer(layer)
-    reactiveLayers[layer] = reactiveObject
-    return reactiveObject
+    return get(layer) { .init($0) }
   }
-  private var reactiveLayers: [CALayer: ReactiveCALayer] = [:]
 
   /**
    Returns a reactive version of the given object and caches the returned result for future access.
    */
-  public func get(_ shapeLayer: CAShapeLayer) -> ReactiveCAShapeLayer {
-    if let reactiveObject = reactiveShapeLayers[shapeLayer] {
-      return reactiveObject
-    }
-    let reactiveObject = ReactiveCAShapeLayer(shapeLayer)
-    reactiveShapeLayers[shapeLayer] = reactiveObject
-    return reactiveObject
+  public func get(_ layer: CAShapeLayer) -> ReactiveCAShapeLayer {
+    return get(layer) { .init($0) }
   }
-  private var reactiveShapeLayers: [CAShapeLayer: ReactiveCAShapeLayer] = [:]
 
   /**
    Returns a reactive version of the given object and caches the returned result for future access.
    */
   public func get(_ scrollView: UIScrollView) -> MotionObservable<CGPoint> {
-    if let reactiveObject = reactiveScrollViews[scrollView] {
-      return reactiveObject
-    }
-
-    let reactiveObject = scrollViewToStream(scrollView)
-    reactiveScrollViews[scrollView] = reactiveObject
-    return reactiveObject
+    return get(scrollView) { scrollViewToStream($0) }
   }
-  private var reactiveScrollViews: [UIScrollView: MotionObservable<CGPoint>] = [:]
 
   /**
    Returns a reactive version of the given object and caches the returned result for future access.
    */
   public func get<O: UIGestureRecognizer>(_ gestureRecognizer: O) -> ReactiveUIGestureRecognizer<O> {
-    if let reactiveObject = reactiveGestureRecognizers[gestureRecognizer] {
-      return unsafeBitCast(reactiveObject, to: ReactiveUIGestureRecognizer<O>.self)
+    return get(gestureRecognizer) {
+      let reactiveObject = ReactiveUIGestureRecognizer<O>($0, containerView: containerView)
+
+      if reactiveObject.gestureRecognizer.view == nil {
+        containerView.addGestureRecognizer(reactiveObject.gestureRecognizer)
+      }
+      return reactiveObject
     }
-
-    let reactiveObject = ReactiveUIGestureRecognizer<O>(gestureRecognizer, containerView: containerView)
-
-    if reactiveObject.gestureRecognizer.view == nil {
-      containerView.addGestureRecognizer(reactiveObject.gestureRecognizer)
-    }
-
-    reactiveGestureRecognizers[gestureRecognizer] = reactiveObject
-    return reactiveObject
   }
-  private var reactiveGestureRecognizers: [UIGestureRecognizer: AnyObject] = [:]
 
   /**
    Executes a block when all of the provided Stateful interactions have come to rest.
@@ -215,6 +185,17 @@ public final class MotionRuntime {
                                             property.visualize(view, in: strongSelf.containerView)
     }))
   }
+
+  private func get<T: AnyObject, U: AnyObject>(_ object: T, initializer: (T) -> U) -> U {
+    let identifier = ObjectIdentifier(object)
+    if let reactiveObject = reactiveObjects[identifier] {
+      return reactiveObject as! U
+    }
+    let reactiveObject = initializer(object)
+    reactiveObjects[identifier] = reactiveObject as! AnyObject
+    return reactiveObject
+  }
+  private var reactiveObjects: [ObjectIdentifier: AnyObject] = [:]
 
   private var metadata: [Metadata] = []
   private var subscriptions: [Subscription] = []
