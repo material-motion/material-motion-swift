@@ -17,23 +17,31 @@
 import UIKit
 import ReactiveMotion
 
-class DraggableConstraintExampleViewController: ExampleViewController {
+struct ExampleInfo {
+  let title: String
+  let instructions: String
+}
 
-  var runtime: MotionRuntime!
+class ExampleViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-
-    runtime = MotionRuntime(containerView: view)
-
-    let square = center(createExampleView(), within: view)
-    view.addSubview(square)
-
-    runtime.add(Draggable(), to: square) { $0.xLocked(to: square.layer.position.x) }
+    view.backgroundColor = .white
   }
 
-  override func exampleInformation() -> ExampleInfo {
-    return .init(title: type(of: self).catalogBreadcrumbs().last!,
-                 instructions: "Drag the blue square to move it on the y axis.")
+  func exampleInformation() -> ExampleInfo {
+    return ExampleInfo(title: "Uninitialized", instructions: "")
+  }
+
+  override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+
+    let info = exampleInformation()
+    self.title = info.title
+    navigationItem.prompt = info.instructions
+  }
+
+  required init?(coder aDecoder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
   }
 }

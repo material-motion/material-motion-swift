@@ -17,11 +17,11 @@
 import UIKit
 import ReactiveMotion
 
-public class DirectlyManipulableExampleViewController: UIViewController {
+class DirectlyManipulableExampleViewController: ExampleViewController {
 
   var runtime: MotionRuntime!
 
-  public override func viewDidLoad() {
+  override func viewDidLoad() {
     super.viewDidLoad()
 
     runtime = MotionRuntime(containerView: view)
@@ -34,14 +34,8 @@ public class DirectlyManipulableExampleViewController: UIViewController {
     runtime.add(DirectlyManipulable(), to: square)
   }
 
-  override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-    super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-
-    title = type(of: self).catalogBreadcrumbs().last
-    navigationItem.prompt = "Pinch, rotate, and drag the view to manipulate it."
-  }
-
-  required public init?(coder aDecoder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
+  override func exampleInformation() -> ExampleInfo {
+    return .init(title: type(of: self).catalogBreadcrumbs().last!,
+                 instructions: "Pinch, rotate, and drag the view to manipulate it.")
   }
 }

@@ -17,16 +17,14 @@
 import UIKit
 import ReactiveMotion
 
-public class DraggableCustomOperatorExampleViewController: UIViewController {
+class DraggableCustomOperatorExampleViewController: ExampleViewController {
 
   var runtime: MotionRuntime!
 
-  public override func viewDidLoad() {
+  override func viewDidLoad() {
     super.viewDidLoad()
 
     runtime = MotionRuntime(containerView: view)
-
-    view.backgroundColor = .white
 
     let square = center(createExampleView(), within: view)
     view.addSubview(square)
@@ -34,15 +32,9 @@ public class DraggableCustomOperatorExampleViewController: UIViewController {
     runtime.add(Draggable(), to: square) { $0.wobble(width: 100) }
   }
 
-  override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-    super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-
-    title = type(of: self).catalogBreadcrumbs().last
-    navigationItem.prompt = "Drag up and down to wobble the square."
-  }
-
-  required public init?(coder aDecoder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
+  override func exampleInformation() -> ExampleInfo {
+    return .init(title: type(of: self).catalogBreadcrumbs().last!,
+                 instructions: "Drag up and down to wobble the square.")
   }
 }
 

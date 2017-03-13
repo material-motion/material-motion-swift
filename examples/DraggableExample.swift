@@ -17,16 +17,14 @@
 import UIKit
 import ReactiveMotion
 
-public class DraggableExampleViewController: UIViewController {
+class DraggableExampleViewController: ExampleViewController {
 
   var runtime: MotionRuntime!
 
-  public override func viewDidLoad() {
+  override func viewDidLoad() {
     super.viewDidLoad()
 
     runtime = MotionRuntime(containerView: view)
-
-    view.backgroundColor = .white
 
     let square = center(createExampleView(), within: view)
     view.addSubview(square)
@@ -34,14 +32,8 @@ public class DraggableExampleViewController: UIViewController {
     runtime.add(Draggable(), to: square)
   }
 
-  override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-    super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-
-    title = type(of: self).catalogBreadcrumbs().last
-    navigationItem.prompt = "Drag the blue square to move it."
-  }
-
-  required public init?(coder aDecoder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
+  override func exampleInformation() -> ExampleInfo {
+    return .init(title: type(of: self).catalogBreadcrumbs().last!,
+                 instructions: "Drag the blue square to move it.")
   }
 }
