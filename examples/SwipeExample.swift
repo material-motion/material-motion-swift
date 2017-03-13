@@ -46,7 +46,7 @@ class TossableStackedCard: Interaction {
     let drag = runtime.get(dragGesture)
     runtime.connect(
       drag
-        .onRecognitionState(.ended)
+        .whenRecognitionState(is: .ended)
         .velocity(in: relativeView)
         .x()
         .thresholdRange(min: -500, max: 500)

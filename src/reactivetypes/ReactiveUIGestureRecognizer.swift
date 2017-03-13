@@ -50,31 +50,31 @@ extension ReactiveUIGestureRecognizer: MotionObservableConvertible {
 
 extension ReactiveUIGestureRecognizer {
   public func centroidOnRecognition(in relativeView: UIView) -> MotionObservable<CGPoint> {
-    return stream.onRecognitionState(.recognized).centroid(in: relativeView)
+    return stream.whenRecognitionState(is: .recognized).centroid(in: relativeView)
   }
 }
 
 extension ReactiveUIGestureRecognizer where O: UIPanGestureRecognizer {
 
   public func translated<O: MotionObservableConvertible>(from initialPosition: O) -> MotionObservable<CGPoint> where O.T == CGPoint {
-    return stream.onRecognitionStates([.began, .changed]).translated(from: initialPosition, in: containerView)
+    return stream.whenRecognitionState(isAnyOf: [.began, .changed]).translated(from: initialPosition, in: containerView)
   }
   public func velocityOnReleaseStream() -> MotionObservable<CGPoint> {
-    return stream.onRecognitionState(.ended).velocity(in: containerView)
+    return stream.whenRecognitionState(is: .ended).velocity(in: containerView)
   }
   public func velocityOnReleaseStream(in relativeView: UIView) -> MotionObservable<CGPoint> {
-    return stream.onRecognitionState(.ended).velocity(in: relativeView)
+    return stream.whenRecognitionState(is: .ended).velocity(in: relativeView)
   }
 }
 
 extension ReactiveUIGestureRecognizer where O: UIRotationGestureRecognizer {
   public func velocityOnReleaseStream() -> MotionObservable<CGFloat> {
-    return stream.onRecognitionState(.ended).velocity()
+    return stream.whenRecognitionState(is: .ended).velocity()
   }
 }
 
 extension ReactiveUIGestureRecognizer where O: UIPinchGestureRecognizer {
   public func velocityOnReleaseStream() -> MotionObservable<CGFloat> {
-    return stream.onRecognitionState(.ended).velocity()
+    return stream.whenRecognitionState(is: .ended).velocity()
   }
 }

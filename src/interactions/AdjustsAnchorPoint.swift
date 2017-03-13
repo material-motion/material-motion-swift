@@ -28,14 +28,14 @@ extension AdjustsAnchorPoint: Interaction {
   public func add(to view: UIView, withRuntime runtime: MotionRuntime, constraints: Void?) {
     var anchorPointStreams = gestureRecognizers.map {
       runtime.get($0)
-        .onRecognitionState(.began)
+        .whenRecognitionState(is: .began)
         .centroid(in: view)
         .normalized(by: view.bounds.size)
         .anchorPointAdjustment(in: view)
     }
     anchorPointStreams.append(contentsOf: gestureRecognizers.map {
       runtime.get($0)
-        .onRecognitionStates([.ended, .cancelled])
+        .whenRecognitionState(isAnyOf: [.ended, .cancelled])
         .rewriteTo(CGPoint(x: 0.5, y: 0.5))
         .anchorPointAdjustment(in: view)
     })
