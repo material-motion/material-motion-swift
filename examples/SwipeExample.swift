@@ -75,7 +75,7 @@ class TossableStackedCard: Interaction {
     runtime.connect(drag.velocityOnReleaseStream(in: view).x(), to: attachment.initialVelocity)
     runtime.connect(destination, to: attachment.destination)
 
-    let draggable = drag.translated(from: reactiveView.center, in: relativeView).x()
+    let draggable = drag.translation(addedTo: reactiveView.center, in: relativeView).x()
     runtime.connect(draggable, to: reactiveView.centerX)
     runtime.connect(drag.atRest(), to: attachment.enabled)
     runtime.add(attachment, to: reactiveView.centerX)

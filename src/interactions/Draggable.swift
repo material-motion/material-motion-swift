@@ -41,7 +41,7 @@ extension Draggable: Interaction {
     let reactiveView = runtime.get(view)
     let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView)
     let position = reactiveView.reactiveLayer.position
-    var stream = runtime.get(gestureRecognizer).translated(from: position)
+    var stream = runtime.get(gestureRecognizer).translation(addedTo: position)
     if let applyConstraints = applyConstraints {
       stream = applyConstraints(stream)
     }
