@@ -20,7 +20,7 @@ import Foundation
  An interaction is responsible for associating motion with a given target.
 
  A single instance of an Interaction may be associated with many distinct targets. This one-to-many
- behavior varies per-interaction and should be clearly documented by the concrete type.
+ behavior varies per interaction and should be clearly documented by the concrete type.
 
  Properties on an interaction should either be constants or ReactiveProperty instances. Changes to a
  reactive property should affect all previously-associated targets.
