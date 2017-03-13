@@ -18,36 +18,77 @@ import Foundation
 import IndefiniteObservable
 
 /**
- A Spring can pull a value from an initial position to a destination using a physical simulation.
+ The default tension configuration.
+ */
+public let defaultSpringTension: CGFloat = 342
 
- This class defines the expected shape of a Spring for use in creating a Spring source.
+/**
+ The default friction configuration.
+ */
+public let defaultSpringFriction: CGFloat = 30
+
+/**
+ The default mass configuration.
+ */
+public let defaultSpringMass: CGFloat = 1
+
+/**
+ A spring pulls a value from an initial position to a destination using a physical simulation of a
+ dampened oscillator.
+
+ A spring can be associated with many properties. Each property receives its own distinct simulator
+ that reads the property as the initial value and pulls the value towards the destination.
+ Configuration values are shared across all running instances.
+
+ **Constraints**
+
+ T-value constraints may be applied to this interaction.
  */
 public class Spring<T: Zeroable>: Interaction, Togglable, Stateful {
-  /** Creates a spring with the provided properties and an initial velocity. */
+  /**
+   Creates a spring with a given threshold and system.
+
+   - parameter threshold: The threshold of movement defining the completion of the spring simulation.
+   - parameter system: Often coreAnimation. Can be another system if a system support library is available.
+   */
   public init(threshold: CGFloat, system: @escaping SpringToStream<T>) {
     self.threshold = createProperty("Spring.threshold", withInitialValue: threshold)
     self.system = system
   }
 
-  public let enabled = createProperty("Spring.enabled", withInitialValue: true)
+  /**
+   The initial velocity of the spring.
 
-  public var state: MotionObservable<MotionState> {
-    return _state.asStream()
-  }
+   Applied to the physical simulation only when it starts.
+   */
+  public let initialVelocity = createProperty("Spring.initialVelocity", withInitialValue: T.zero() as! T)
 
-  /** The initial velocity of the spring represented as a stream. */
-  public let initialVelocity: ReactiveProperty<T> = createProperty("Spring.initialVelocity")
+  /**
+   The destination value of the spring represented as a property.
 
-  /** The destination value of the spring represented as a property. */
-  public let destination: ReactiveProperty<T> = createProperty("Spring.destination")
+   Changing this property will immediately affect the spring simulation.
+   */
+  public let destination = createProperty("Spring.destination", withInitialValue: T.zero() as! T)
 
-  /** The tension configuration of the spring represented as a property. */
+  /**
+   Tension defines how quickly the spring's value moves towards its destination.
+
+   Higher tension means higher initial velocity and more overshoot.
+   */
   public let tension = createProperty("Spring.tension", withInitialValue: defaultSpringTension)
 
-  /** The friction configuration of the spring represented as a property. */
+  /**
+   Tension defines how quickly the spring's velocity slows down.
+
+   Higher friction means quicker deceleration and less overshoot.
+   */
   public let friction = createProperty("Spring.friction", withInitialValue: defaultSpringFriction)
 
-  /** The mass configuration of the spring represented as a property. */
+  /**
+   The mass affects the value's acceleration.
+
+   Higher mass means slower acceleration and deceleration.
+   */
   public let mass = createProperty("Spring.mass", withInitialValue: defaultSpringMass)
 
   /**
@@ -59,13 +100,24 @@ public class Spring<T: Zeroable>: Interaction, Togglable, Stateful {
    */
   public let suggestedDuration = createProperty("Spring.suggestedDuration", withInitialValue: TimeInterval(0))
 
-  /** The value used when determining completion of the spring simulation. */
+  /**
+   The value used when determining completion of the spring simulation.
+   */
   public let threshold: ReactiveProperty<CGFloat>
 
-  public let metadata = Metadata("Spring")
+  /**
+   Whether or not the spring is currently taking effect.
 
-  fileprivate let system: SpringToStream<T>
-  fileprivate let _state = createProperty("Spring._state", withInitialValue: MotionState.atRest)
+   Enabling a previously disabled spring will restart the animation from the current initial value.
+   */
+  public let enabled = createProperty("Spring.enabled", withInitialValue: true)
+
+  /**
+   The current state of the spring animation.
+   */
+  public var state: MotionObservable<MotionState> {
+    return _state.asStream()
+  }
 
   public func add(to property: ReactiveProperty<T>,
                   withRuntime runtime: MotionRuntime,
@@ -85,6 +137,11 @@ public class Spring<T: Zeroable>: Interaction, Togglable, Stateful {
     }
     runtime.connect(stream, to: property)
   }
+
+  public let metadata = Metadata("Spring")
+
+  fileprivate let system: SpringToStream<T>
+  fileprivate let _state = createProperty("Spring._state", withInitialValue: MotionState.atRest)
 
   private var activeSprings = Set<SpringShadow<T>>()
 }
@@ -122,12 +179,3 @@ public struct SpringShadow<T: Zeroable>: Hashable {
     return lhs.uuid == rhs.uuid
   }
 }
-
-/** The default tension configuration. */
-public let defaultSpringTension: CGFloat = 342
-
-/** The default friction configuration. */
-public let defaultSpringFriction: CGFloat = 30
-
-/** The default mass configuration. */
-public let defaultSpringMass: CGFloat = 1
