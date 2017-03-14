@@ -16,7 +16,7 @@
 
 import Foundation
 
-public class Tossable {
+public class Tossable: Interaction {
 
   public let draggable: Draggable
   public let spring: Spring<CGPoint>
@@ -30,9 +30,7 @@ public class Tossable {
     self.spring = spring
     self.draggable = draggable
   }
-}
 
-extension Tossable: Interaction {
   public func add(to view: UIView,
                   withRuntime runtime: MotionRuntime,
                   constraints: ConstraintApplicator<CGPoint>? = nil) {

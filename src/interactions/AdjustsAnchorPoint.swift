@@ -24,7 +24,7 @@ import Foundation
  - `view.layer.anchorPoint`
  - `view.layer.position`
  */
-public final class AdjustsAnchorPoint {
+public final class AdjustsAnchorPoint: Interaction {
   /**
    The gesture recognizers that will be observed.
    */
@@ -38,9 +38,7 @@ public final class AdjustsAnchorPoint {
   init<S: Sequence>(gestureRecognizers: S) where S.Iterator.Element: UIGestureRecognizer {
     self.gestureRecognizers = Array(gestureRecognizers)
   }
-}
 
-extension AdjustsAnchorPoint: Interaction {
   public func add(to view: UIView, withRuntime runtime: MotionRuntime, constraints: Void?) {
     var anchorPointStreams = gestureRecognizers.map {
       runtime.get($0)

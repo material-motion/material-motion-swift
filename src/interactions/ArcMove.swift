@@ -24,7 +24,7 @@ import Foundation
 
  - `view.layer.position`
  */
-public final class ArcMove {
+public final class ArcMove: Interaction {
 
   /**
    The initial position of the arc move animation.
@@ -48,14 +48,12 @@ public final class ArcMove {
     self.tween = tween
   }
 
-  public let metadata = Metadata("ArcMove")
-}
-
-extension ArcMove: Interaction {
   public func add(to view: UIView, withRuntime runtime: MotionRuntime, constraints: Void?) {
     runtime.connect(arcMove(from: from, to: to), to: tween.path)
     runtime.add(tween, to: runtime.get(view.layer).position)
   }
+
+  public let metadata = Metadata("ArcMove")
 }
 
 // Given two positional streams, returns a stream that emits an arc move path between the two

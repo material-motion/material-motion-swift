@@ -29,9 +29,7 @@ import Foundation
 
  CGFloat constraints may be applied to this interaction.
  */
-public final class Rotatable: Gesturable<UIRotationGestureRecognizer> {}
-
-extension Rotatable: Interaction {
+public final class Rotatable: Gesturable<UIRotationGestureRecognizer>, Interaction {
   public func add(to view: UIView,
                   withRuntime runtime: MotionRuntime,
                   constraints applyConstraints: ConstraintApplicator<CGFloat>? = nil) {

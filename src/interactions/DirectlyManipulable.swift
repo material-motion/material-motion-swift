@@ -30,7 +30,7 @@ import Foundation
  delegate associated with it and the relevant delegate methods implemented to support simultaneous
  recognition that doesn't conflict with the other gesture recognizers.
  */
-public final class DirectlyManipulable: NSObject {
+public final class DirectlyManipulable: NSObject, Interaction {
   /**
    The interaction governing drag behaviors.
    */
@@ -58,16 +58,14 @@ public final class DirectlyManipulable: NSObject {
     self.rotatable = rotatable
     self.scalable = scalable
   }
-}
 
-extension DirectlyManipulable: Interaction {
   public func add(to view: UIView, withRuntime runtime: MotionRuntime, constraints: Void?) {
     for gestureRecognizer in [draggable.nextGestureRecognizer,
                               rotatable.nextGestureRecognizer,
                               scalable.nextGestureRecognizer] {
-      if gestureRecognizer.delegate == nil {
-        gestureRecognizer.delegate = self
-      }
+                                if gestureRecognizer.delegate == nil {
+                                  gestureRecognizer.delegate = self
+                                }
     }
 
     let adjustsAnchorPoint = AdjustsAnchorPoint(gestureRecognizers: [rotatable.nextGestureRecognizer,

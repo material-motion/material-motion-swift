@@ -48,7 +48,7 @@ public enum SetPositionOnTapConfiguration {
 
  CGPoint constraints may be applied to this interaction.
  */
-public class SetPositionOnTap {
+public class SetPositionOnTap: Interaction {
   /**
    Creates a new instance with a given configuration and coordinate space.
 
@@ -78,9 +78,7 @@ public class SetPositionOnTap {
    The position will be relative to this coordinate space.
    */
   public let coordinateSpace: UIView
-}
 
-extension SetPositionOnTap: Interaction {
   public func add(to property: ReactiveProperty<CGPoint>,
                   withRuntime runtime: MotionRuntime,
                   constraints applyConstraints: ConstraintApplicator<CGPoint>? = nil) {
