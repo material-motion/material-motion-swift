@@ -16,9 +16,25 @@
 
 import Foundation
 
-public class AdjustsAnchorPoint {
+/**
+ Modifies the anchor point of a view when any of the provided gesture recognizers begin.
+
+ **Affected properties**
+
+ - `view.layer.anchorPoint`
+ - `view.layer.position`
+ */
+public final class AdjustsAnchorPoint {
+  /**
+   The gesture recognizers that will be observed.
+   */
   let gestureRecognizers: [UIGestureRecognizer]
 
+  /**
+   Creates a new anchor point adjustment interaction with the provided gesture recognizers.
+
+   - parameter gestureRecognizers: The gesture recognizers to be observed.
+   */
   init<S: Sequence>(gestureRecognizers: S) where S.Iterator.Element: UIGestureRecognizer {
     self.gestureRecognizers = Array(gestureRecognizers)
   }

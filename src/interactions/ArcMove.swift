@@ -16,29 +16,44 @@
 
 import Foundation
 
-public class ArcMove {
+/**
+ Calculates an arc path between two points and uses a PathTween interaction to move between the two
+ points.
 
-  public let duration: ReactiveProperty<CGFloat>
+ **Affected properties**
+
+ - `view.layer.position`
+ */
+public final class ArcMove {
+
+  /**
+   The initial position of the arc move animation.
+   */
   public let from = createProperty("ArcMove.from", withInitialValue: CGPoint.zero)
-  public let to = createProperty("ArcMove.to", withInitialValue: CGPoint.zero)
-  public let timeline: Timeline?
 
-  public init(duration: TimeInterval, system: @escaping PathTweenToStream<CGPoint>, timeline: Timeline? = nil) {
-    self.duration = createProperty("ArcMove.duration", withInitialValue: CGFloat(duration))
-    self.system = system
-    self.timeline = timeline
+  /**
+   The final position of the arc move animation.
+   */
+  public let to = createProperty("ArcMove.to", withInitialValue: CGPoint.zero)
+
+  /**
+   The tween interaction that will interpolate between the from and to values.
+   */
+  public let tween: PathTween
+
+  /**
+   Initializes an arc move instance with its required properties.
+   */
+  public init(tween: PathTween) {
+    self.tween = tween
   }
 
   public let metadata = Metadata("ArcMove")
-  fileprivate let system: PathTweenToStream<CGPoint>
 }
 
 extension ArcMove: Interaction {
   public func add(to view: UIView, withRuntime runtime: MotionRuntime, constraints: Void?) {
-    let tween = PathTween(system: system, timeline: timeline)
     runtime.connect(arcMove(from: from, to: to), to: tween.path)
-    runtime.connect(duration, to: tween.duration)
-
     runtime.add(tween, to: runtime.get(view.layer).position)
   }
 }

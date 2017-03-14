@@ -63,8 +63,14 @@ public final class PathTween: Togglable, Stateful {
 }
 
 extension PathTween: Interaction {
-  public func add(to property: ReactiveProperty<CGPoint>, withRuntime runtime: MotionRuntime, constraints: Void?) {
-    runtime.connect(asStream(), to: property)
+  public func add(to property: ReactiveProperty<CGPoint>,
+                  withRuntime runtime: MotionRuntime,
+                  constraints applyConstraints: ConstraintApplicator<CGPoint>? = nil) {
+    var stream = asStream()
+    if let applyConstraints = applyConstraints {
+      stream = applyConstraints(stream)
+    }
+    runtime.connect(stream, to: property)
   }
 }
 
