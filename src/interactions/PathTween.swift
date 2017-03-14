@@ -16,16 +16,24 @@
 
 import Foundation
 
-/** A tween describes a potential interpolation from one value to another. */
+/**
+ A path tween is an interpolation along a two-dimensional path.
+ */
 public final class PathTween: Interaction, Togglable, Stateful {
 
-  /** The duration of the animation in seconds. */
+  /**
+   The duration of the animation in seconds.
+   */
   public let duration: ReactiveProperty<CGFloat>
 
-  /** The delay of the animation in seconds. */
+  /**
+   The delay of the animation in seconds.
+   */
   public let delay = createProperty("PathTween.delay", withInitialValue: CGFloat(0))
 
-  /** The mode defining this tween's values over time. */
+  /**
+   The path this animation will follow.
+   */
   public let path: ReactiveProperty<CGPath>
 
   /**
@@ -35,12 +43,23 @@ public final class PathTween: Interaction, Togglable, Stateful {
    */
   public let timeline: Timeline?
 
+  /**
+   Whether or not the tween animation is currently taking effect.
+
+   Enabling a previously disabled tween will restart the animation from the beginning.
+   */
   public let enabled = createProperty("PathTween.enabled", withInitialValue: true)
 
+  /**
+   The current state of the tween animation.
+   */
   public var state: MotionObservable<MotionState> {
     return _state.asStream()
   }
 
+  /**
+   Initializes a path tween instance with its required properties.
+   */
   public init(duration: CGFloat, path: CGPath, system: @escaping PathTweenToStream<CGPoint>, timeline: Timeline? = nil) {
     self.duration = createProperty("PathTween.duration", withInitialValue: CGFloat(duration))
     self.path = createProperty("PathTween.path", withInitialValue: path)
@@ -48,6 +67,12 @@ public final class PathTween: Interaction, Togglable, Stateful {
     self.timeline = timeline
   }
 
+  /**
+   Initializes a path tween instance with a default duration of 0 and an empty path.
+
+   The duration and path should be modified after initialization in order to configure the
+   animation.
+   */
   public init(system: @escaping PathTweenToStream<CGPoint>, timeline: Timeline? = nil) {
     self.duration = createProperty("PathTween.duration", withInitialValue: CGFloat(0))
     self.path = createProperty("PathTween.path", withInitialValue: UIBezierPath().cgPath)
@@ -55,14 +80,8 @@ public final class PathTween: Interaction, Togglable, Stateful {
     self.timeline = timeline
   }
 
-  public func add(to property: ReactiveProperty<CGPoint>,
-                  withRuntime runtime: MotionRuntime,
-                  constraints applyConstraints: ConstraintApplicator<CGPoint>? = nil) {
-    var stream = asStream()
-    if let applyConstraints = applyConstraints {
-      stream = applyConstraints(stream)
-    }
-    runtime.connect(stream, to: property)
+  public func add(to property: ReactiveProperty<CGPoint>, withRuntime runtime: MotionRuntime, constraints: Void?) {
+    runtime.connect(asStream(), to: property)
   }
 
   public let metadata = Metadata("Path Tween")
