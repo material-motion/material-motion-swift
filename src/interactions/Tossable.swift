@@ -16,9 +16,35 @@
 
 import Foundation
 
+/**
+ Allows a view to be tossed by a gesture recognizer and animated to a destination using a spring.
+
+ Composed of two sub-interactions: Draggable and Spring.
+
+ The spring interaction will be disabled while the drag interaction is active. The spring
+ interaction is enabled once the drag interaction comes to rest.
+
+ **Affected properties**
+
+ - `view.layer.position`
+
+ **Constraints**
+
+ CGPoint constraints may be applied to this interaction. Common constraints include:
+
+ - `{ $0.xLocked(to: somePosition) }`
+ - `{ $0.yLocked(to: somePosition) }`
+ */
 public class Tossable: Interaction {
 
+  /**
+   The interaction governing drag behaviors.
+   */
   public let draggable: Draggable
+
+  /**
+   The interaction governing the spring animation.
+   */
   public let spring: Spring<CGPoint>
 
   public init(system: @escaping SpringToStream<CGPoint>, draggable: Draggable = Draggable()) {
