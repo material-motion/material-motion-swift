@@ -18,7 +18,9 @@ import Foundation
 
 extension MotionObservableConvertible where T == CGFloat {
 
-  /** Emits the distance between the incoming value and the location. */
+  /**
+   Emits the distance between the incoming value and the location.
+   */
   public func distance(from location: CGFloat) -> MotionObservable<CGFloat> {
     return _map(#function, args: [location]) {
       fabs($0 - location)
@@ -28,7 +30,9 @@ extension MotionObservableConvertible where T == CGFloat {
 
 extension MotionObservableConvertible where T == CGPoint {
 
-  /** Emits the distance between the incoming value and the location. */
+  /**
+   Emits the distance between the incoming value and the location.
+   */
   public func distance(from location: CGPoint) -> MotionObservable<CGFloat> {
     return _map(#function, args: [location]) {
       let xDelta = $0.x - location.x
@@ -37,7 +41,9 @@ extension MotionObservableConvertible where T == CGPoint {
     }
   }
 
-  /** Emits the distance between the incoming value and the current value of location. */
+  /**
+   Emits the distance between the incoming value and the current value of location.
+   */
   public func distance<O: MotionObservableConvertible>(from location: O) -> MotionObservable<CGFloat> where O.T == CGPoint {
     return _map(#function, args: [location]) {
       let locationValue = location._read()!

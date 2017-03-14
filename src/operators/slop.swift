@@ -16,18 +16,28 @@
 
 import Foundation
 
+/**
+ A slop event is emitted by the slop operator.
+ */
 public enum SlopEvent {
+  /**
+   Emitted each time the position leaves the slop region.
+   */
   case onExit
+
+  /**
+   Emitted each time the position enters the slop region.
+   */
   case onReturn
 }
 
 extension MotionObservableConvertible where T == CGFloat {
 
   /**
-   Emits values in reaction to exiting and re-entering a slop region.
+   Emits slop events in reaction to exiting and re-entering a slop region.
 
    The slop region is centered around 0 and has the given size. This operator will not emit any
-   values until the upstream value exits this slop region, at which point the onExit value will be
+   events until the upstream value exits this slop region, at which point the onExit event will be
    emitted. If the upstream returns to the slop region then onReturn will be emitted.
    */
   public func slop(size: CGFloat) -> MotionObservable<SlopEvent> {

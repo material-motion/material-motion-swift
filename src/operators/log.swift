@@ -18,7 +18,11 @@ import Foundation
 
 extension MotionObservableConvertible {
 
-  /** Writes any incoming value to the console and then passes the value on. */
+  /**
+   Prints any incoming value to the console and then emits the value.
+
+   - parameter context: An optional string to be printed before the value.
+   */
   public func log(_ context: String? = nil) -> MotionObservable<T> {
     return _nextOperator(#function, args: [context as Any], operation: { value, next in
       if let context = context {

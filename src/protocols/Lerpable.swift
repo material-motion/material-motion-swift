@@ -16,12 +16,18 @@
 
 import Foundation
 
-/** A lerpable type is capable of calculating a linear interpolation from one vector to another. */
+/**
+ A lerpable type is capable of calculating a linear interpolation from one vector to another.
+ */
 public protocol Lerpable {
-  /** Returns the progress of this vector along a given vector. */
+  /**
+   Returns the progress of this vector along a given vector.
+   */
   func progress(along vector: Self) -> CGFloat
 
-  /** Returns the result of multiplying the given progress along this vector. */
+  /**
+   Returns the result of multiplying the given progress along this vector.
+   */
   func project(progress: CGFloat) -> Self
 }
 

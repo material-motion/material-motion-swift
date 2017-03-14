@@ -18,7 +18,11 @@ import Foundation
 
 extension MotionObservableConvertible {
 
-  /** Only emit those items from an Observable that pass a test. */
+  /**
+   Only emit those items from an Observable that pass a test.
+
+   This operator is meant to be used when building other operators.
+   */
   public func _filter(_ name: String? = nil, args: [Any]? = nil, predicate: @escaping (T) -> Bool) -> MotionObservable<T> {
     return _nextOperator(name, args: args) { value, next in
       if predicate(value) {

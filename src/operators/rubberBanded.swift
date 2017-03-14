@@ -18,7 +18,9 @@ import Foundation
 
 extension MotionObservableConvertible where T == CGFloat {
 
-  /** Applies resistance to values that fall outside of the given range. */
+  /**
+   Applies resistance to values that fall outside of the given range.
+   */
   public func rubberBanded(below: CGFloat, above: CGFloat, maxLength: CGFloat) -> MotionObservable<CGFloat> {
     return _map(#function, args: [below, above, maxLength]) {
       return rubberBand(value: $0, min: below, max: above, bandLength: maxLength)
@@ -28,7 +30,9 @@ extension MotionObservableConvertible where T == CGFloat {
 
 extension MotionObservableConvertible where T == CGPoint {
 
-  /** Applies resistance to values that fall outside of the given range. */
+  /**
+   Applies resistance to values that fall outside of the given range.
+   */
   public func rubberBanded(outsideOf rect: CGRect, maxLength: CGFloat) -> MotionObservable<CGPoint> {
     return _map(#function, args: [rect, maxLength]) {
       return CGPoint(x: rubberBand(value: $0.x, min: rect.minX, max: rect.maxX, bandLength: maxLength),

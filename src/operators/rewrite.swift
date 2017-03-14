@@ -18,7 +18,9 @@ import Foundation
 
 extension MotionObservableConvertible where T: Hashable {
 
-  /** Emits the mapped value for each incoming value, if one exists, otherwise emits nothing. */
+  /**
+   Emits the mapped value for each incoming value, if one exists, otherwise emits nothing.
+   */
   public func rewrite<U>(_ values: [T: U]) -> MotionObservable<U> {
     return _nextOperator(#function, args: [values]) { value, next in
       if let mappedValue = values[value] {
@@ -27,7 +29,9 @@ extension MotionObservableConvertible where T: Hashable {
     }
   }
 
-  /** Emits the mapped value for each incoming value, if one exists, otherwise emits nothing. */
+  /**
+   Emits the mapped value for each incoming value, if one exists, otherwise emits nothing.
+   */
   public func rewrite<U, O: MotionObservableConvertible>(_ values: [T: O]) -> MotionObservable<U> where O.T == U {
     return _nextOperator(#function, args: [values]) { value, next in
       if let mappedValue = values[value], let value = mappedValue._read() {

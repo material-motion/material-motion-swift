@@ -16,7 +16,9 @@
 
 import Foundation
 
-/** A type that is able to instantiate a zero representation of itself. */
+/**
+ A type that is able to instantiate a zero representation of itself.
+ */
 public protocol Zeroable {
   associatedtype T
   static func zero() -> T

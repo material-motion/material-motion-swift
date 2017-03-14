@@ -16,7 +16,9 @@
 
 import Foundation
 
-/** An addable type is able to add another instance of its type to itself. */
+/**
+ An addable type is able to add another instance of its type to itself.
+ */
 public protocol Addable {
   static func + (left: Self, right: Self) -> Self
 }

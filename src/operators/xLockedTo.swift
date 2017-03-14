@@ -16,14 +16,18 @@
 
 extension MotionObservableConvertible where T == CGPoint {
 
-  /** Lock the point's x value to the given value. */
+  /**
+   Lock the point's x value to the given value.
+   */
   public func xLocked(to xValue: CGFloat) -> MotionObservable<CGPoint> {
     return _map(#function, args: [xValue]) {
       .init(x: xValue, y: $0.y)
     }
   }
 
-  /** Lock the point's x value to the given reactive value. */
+  /**
+   Lock the point's x value to the given reactive value.
+   */
   public func xLocked<O: MotionObservableConvertible>(to xValueStream: O) -> MotionObservable<CGPoint> where O.T == CGFloat {
     var lastUpstreamValue: CGPoint?
     var lastXValue: CGFloat?

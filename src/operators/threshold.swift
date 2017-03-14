@@ -16,9 +16,23 @@
 
 import Foundation
 
+/**
+ A threshold event is emitted by the threshold operator.
+ */
 public enum ThresholdEvent {
+  /**
+   Emitted if the value is less than the threshold.
+   */
   case whenBelow
+
+  /**
+   Emitted if the value is equal to or within the threshold.
+   */
   case whenWithin
+
+  /**
+   Emitted if the value is greater than the threshold.
+   */
   case whenAbove
 }
 

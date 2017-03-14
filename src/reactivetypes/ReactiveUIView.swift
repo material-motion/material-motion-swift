@@ -19,7 +19,6 @@ import UIKit
 public class ReactiveUIView {
   public let view: UIView
 
-  /** A property representing the view's .isUserInteractionEnabled value. */
   public lazy var isUserInteractionEnabled: ReactiveProperty<Bool> = {
     let view = self.view
     return ReactiveProperty("\(pretty(view)).\(#function)",
@@ -34,7 +33,6 @@ public class ReactiveUIView {
                             externalWrite: { view.backgroundColor = $0 })
   }()
 
-  /** A property representing the view's .alpha value. */
   public lazy var alpha: ReactiveProperty<CGFloat> = {
     let view = self.view
     return ReactiveProperty("\(pretty(view)).\(#function)",
@@ -42,7 +40,6 @@ public class ReactiveUIView {
                             externalWrite: { view.alpha = $0 })
   }()
 
-  /** A property representing the view's .center value. */
   public lazy var center: ReactiveProperty<CGPoint> = {
     let view = self.view
     return ReactiveProperty("\(pretty(view)).\(#function)",
@@ -50,7 +47,6 @@ public class ReactiveUIView {
                             externalWrite: { view.center = $0 })
   }()
 
-  /** A property representing the view's .center.x value. */
   public lazy var centerX: ReactiveProperty<CGFloat> = {
     let center = self.center
     return ReactiveProperty("\(pretty(self.view)).\(#function)",
@@ -58,7 +54,6 @@ public class ReactiveUIView {
                             externalWrite: { var point = center.value; point.x = $0; center.value = point })
   }()
 
-  /** A property representing the view's .center.y value. */
   public lazy var centerY: ReactiveProperty<CGFloat> = {
     let center = self.center
     return ReactiveProperty("\(pretty(self.view)).\(#function)",

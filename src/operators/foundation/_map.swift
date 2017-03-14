@@ -18,7 +18,11 @@ import Foundation
 
 extension MotionObservableConvertible {
 
-  /** Transform the items emitted by an Observable by applying a function to each item. */
+  /**
+   Transform the items emitted by an Observable by applying a function to each item.
+
+   This operator is meant to be used when building other operators.
+   */
   public func _map<U>(_ name: String? = nil, args: [Any]? = nil, transform: @escaping (T) -> U) -> MotionObservable<U> {
     return _nextOperator(name, args: args, operation: { value, next in
       next(transform(value))

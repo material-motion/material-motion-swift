@@ -20,7 +20,6 @@ import UIKit
 public class ReactiveCALayer {
   public let layer: CALayer
 
-  /** A property representing the layer's .opacity value. */
   public lazy var cornerRadius: ReactiveProperty<CGFloat> = {
     let layer = self.layer
     return self.property("\(pretty(layer)).\(#function)",
@@ -29,7 +28,6 @@ public class ReactiveCALayer {
                          keyPath: "cornerRadius")
   }()
 
-  /** A property representing the layer's .opacity value. */
   public lazy var opacity: ReactiveProperty<CGFloat> = {
     let layer = self.layer
     return self.property("\(pretty(layer)).\(#function)",
@@ -38,7 +36,6 @@ public class ReactiveCALayer {
                          keyPath: "opacity")
   }()
 
-  /** A property representing the layer's .position value. */
   public lazy var position: ReactiveProperty<CGPoint> = {
     let layer = self.layer
     return self.property("\(pretty(layer)).\(#function)",
@@ -47,7 +44,6 @@ public class ReactiveCALayer {
                          keyPath: "position")
   }()
 
-  /** A property representing the layer's .position.y value. */
   public lazy var positionY: ReactiveProperty<CGFloat> = {
     let position = self.position
     return self.property("\(pretty(self.layer)).\(#function)",
@@ -56,7 +52,6 @@ public class ReactiveCALayer {
                          keyPath: "position.y")
   }()
 
-  /** A property representing the layer's .bounds.size value. */
   public lazy var size: ReactiveProperty<CGSize> = {
     let layer = self.layer
     return self.property("\(pretty(layer)).\(#function)",
@@ -65,7 +60,6 @@ public class ReactiveCALayer {
                          keyPath: "bounds.size")
   }()
 
-  /** A property representing the layer's .anchorPoint value. */
   public lazy var anchorPoint: ReactiveProperty<CGPoint> = {
     let layer = self.layer
     return self.property("\(pretty(layer)).\(#function)",
@@ -74,7 +68,6 @@ public class ReactiveCALayer {
                          keyPath: "anchorPoint")
   }()
 
-  /** A property representing the layer's .anchorPoint value. */
   public lazy var anchorPointAdjustment: ReactiveProperty<AnchorPointAdjustment> = {
     let anchorPoint = self.anchorPoint
     let position = self.position
@@ -85,7 +78,6 @@ public class ReactiveCALayer {
                             coreAnimation: { _ in })
   }()
 
-  /** A property representing the layer's .transform.rotation.z value. */
   public lazy var rotation: ReactiveProperty<CGFloat> = {
     let layer = self.layer
     return self.property("\(pretty(layer)).\(#function)",
@@ -94,7 +86,6 @@ public class ReactiveCALayer {
                          keyPath: "transform.rotation.z")
   }()
 
-  /** A property representing the layer's .transform.scale value. */
   public lazy var scale: ReactiveProperty<CGFloat> = {
     let layer = self.layer
     return self.property("\(pretty(layer)).\(#function)",
@@ -103,7 +94,6 @@ public class ReactiveCALayer {
                          keyPath: "transform.scale.xy")
   }()
 
-  /** A property representing the layer's .shadowPath value. */
   public lazy var shadowPath: ReactiveProperty<CGPath> = {
     let layer = self.layer
     return self.property("\(pretty(layer)).\(#function)",

@@ -18,7 +18,9 @@ import Foundation
 
 extension MotionObservableConvertible where T == CGFloat {
 
-  /** Subtract the incoming value from the provided value. */
+  /**
+   Subtract the incoming value from the provided value.
+   */
   public func subtracted(from value: CGFloat) -> MotionObservable<CGFloat> {
     return _map(#function, args: [value]) {
       value - $0

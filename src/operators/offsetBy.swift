@@ -18,7 +18,9 @@ import Foundation
 
 extension MotionObservableConvertible where T == CGFloat {
 
-  /** Emits the incoming value + amount. */
+  /**
+   Emits the incoming value + amount.
+   */
   public func offset(by amount: CGFloat) -> MotionObservable<CGFloat> {
     return _map(#function, args: [amount]) {
       $0 + amount

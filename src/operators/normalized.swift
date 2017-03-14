@@ -18,7 +18,9 @@ import Foundation
 
 extension MotionObservableConvertible where T == CGFloat {
 
-  /** Emits the incoming value / amount. */
+  /**
+   Emits the incoming value / amount.
+   */
   public func normalized(by amount: CGFloat) -> MotionObservable<CGFloat> {
     return _map(#function, args: [amount]) {
       $0 / amount
@@ -28,7 +30,9 @@ extension MotionObservableConvertible where T == CGFloat {
 
 extension MotionObservableConvertible where T == CGPoint {
 
-  /** Emits the incoming value / amount. */
+  /**
+   Emits the incoming value / amount.
+   */
   public func normalized(by amount: CGSize) -> MotionObservable<CGPoint> {
     return _map(#function, args: [amount]) {
       return CGPoint(x: $0.x / amount.width,

@@ -16,7 +16,9 @@
 
 import Foundation
 
-/** A subtractable type is able to subtract another instance of its type from itself. */
+/**
+ A subtractable type is able to subtract another instance of its type from itself.
+ */
 public protocol Subtractable {
   static func - (left: Self, right: Self) -> Self
 }
