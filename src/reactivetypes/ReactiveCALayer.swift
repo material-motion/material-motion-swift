@@ -22,218 +22,235 @@ public class ReactiveCALayer {
 
   public lazy var cornerRadius: ReactiveProperty<CGFloat> = {
     let layer = self.layer
-    return self.property("\(pretty(layer)).\(#function)",
-                         initialValue: layer.cornerRadius,
-                         externalWrite: { layer.cornerRadius = $0 },
-                         keyPath: "cornerRadius")
+    return createCoreAnimationProperty(#function,
+                                       initialValue: layer.cornerRadius,
+                                       externalWrite: { layer.cornerRadius = $0 },
+                                       keyPath: "cornerRadius",
+                                       reactiveLayer: self)
   }()
 
   public lazy var opacity: ReactiveProperty<CGFloat> = {
     let layer = self.layer
-    return self.property("\(pretty(layer)).\(#function)",
-                         initialValue: CGFloat(layer.opacity),
-                         externalWrite: { layer.opacity = Float($0) },
-                         keyPath: "opacity")
+    return createCoreAnimationProperty(#function,
+                                       initialValue: CGFloat(layer.opacity),
+                                       externalWrite: { layer.opacity = Float($0) },
+                                       keyPath: "opacity",
+                                       reactiveLayer: self)
   }()
 
   public lazy var position: ReactiveProperty<CGPoint> = {
     let layer = self.layer
-    return self.property("\(pretty(layer)).\(#function)",
-                         initialValue: layer.position,
-                         externalWrite: { layer.position = $0 },
-                         keyPath: "position")
+    return createCoreAnimationProperty(#function,
+                                       initialValue: layer.position,
+                                       externalWrite: { layer.position = $0 },
+                                       keyPath: "position",
+                                       reactiveLayer: self)
   }()
 
   public lazy var positionX: ReactiveProperty<CGFloat> = {
     let position = self.position
-    return self.property("\(pretty(self.layer)).\(#function)",
-                         initialValue: position.value.x,
-                         externalWrite: { var point = position.value; point.x = $0; position.value = point },
-                         keyPath: "position.x")
+    return createCoreAnimationProperty(#function,
+                                       initialValue: position.value.x,
+                                       externalWrite: { var point = position.value; point.x = $0; position.value = point },
+                                       keyPath: "position.x",
+                                       reactiveLayer: self)
   }()
 
   public lazy var positionY: ReactiveProperty<CGFloat> = {
     let position = self.position
-    return self.property("\(pretty(self.layer)).\(#function)",
-                         initialValue: position.value.y,
-                         externalWrite: { var point = position.value; point.y = $0; position.value = point },
-                         keyPath: "position.y")
+    return createCoreAnimationProperty(#function,
+                                       initialValue: position.value.y,
+                                       externalWrite: { var point = position.value; point.y = $0; position.value = point },
+                                       keyPath: "position.y",
+                                       reactiveLayer: self)
   }()
 
   public lazy var size: ReactiveProperty<CGSize> = {
     let layer = self.layer
-    return self.property("\(pretty(layer)).\(#function)",
-                         initialValue: layer.bounds.size,
-                         externalWrite: { layer.bounds.size = $0 },
-                         keyPath: "bounds.size")
+    return createCoreAnimationProperty(#function,
+                                       initialValue: layer.bounds.size,
+                                       externalWrite: { layer.bounds.size = $0 },
+                                       keyPath: "bounds.size",
+                                       reactiveLayer: self)
   }()
 
   public lazy var anchorPoint: ReactiveProperty<CGPoint> = {
     let layer = self.layer
-    return self.property("\(pretty(layer)).\(#function)",
-                         initialValue: layer.anchorPoint,
-                         externalWrite: { layer.anchorPoint = $0 },
-                         keyPath: "anchorPoint")
+    return createCoreAnimationProperty(#function,
+                                       initialValue: layer.anchorPoint,
+                                       externalWrite: { layer.anchorPoint = $0 },
+                                       keyPath: "anchorPoint",
+                                       reactiveLayer: self)
   }()
 
   public lazy var anchorPointAdjustment: ReactiveProperty<AnchorPointAdjustment> = {
     let anchorPoint = self.anchorPoint
     let position = self.position
     let layer = self.layer
-    return ReactiveProperty("\(pretty(layer)).\(#function)",
+    return ReactiveProperty(#function,
                             initialValue: .init(anchorPoint: anchorPoint.value, position: position.value),
-                            externalWrite: { anchorPoint.value = $0.anchorPoint; position.value = $0.position },
-                            coreAnimation: { _ in })
+                            externalWrite: { anchorPoint.value = $0.anchorPoint; position.value = $0.position })
   }()
 
   public lazy var rotation: ReactiveProperty<CGFloat> = {
     let layer = self.layer
-    return self.property("\(pretty(layer)).\(#function)",
-                         initialValue: layer.value(forKeyPath: "transform.rotation.z") as! CGFloat,
-                         externalWrite: { layer.setValue($0, forKeyPath: "transform.rotation.z") },
-                         keyPath: "transform.rotation.z")
+    return createCoreAnimationProperty(#function,
+                                       initialValue: layer.value(forKeyPath: "transform.rotation.z") as! CGFloat,
+                                       externalWrite: { layer.setValue($0, forKeyPath: "transform.rotation.z") },
+                                       keyPath: "transform.rotation.z",
+                                       reactiveLayer: self)
   }()
 
   public lazy var scale: ReactiveProperty<CGFloat> = {
     let layer = self.layer
-    return self.property("\(pretty(layer)).\(#function)",
-                         initialValue: layer.value(forKeyPath: "transform.scale") as! CGFloat,
-                         externalWrite: { layer.setValue($0, forKeyPath: "transform.scale") },
-                         keyPath: "transform.scale.xy")
+    return createCoreAnimationProperty(#function,
+                                       initialValue: layer.value(forKeyPath: "transform.scale") as! CGFloat,
+                                       externalWrite: { layer.setValue($0, forKeyPath: "transform.scale") },
+                                       keyPath: "transform.scale.xy",
+                                       reactiveLayer: self)
   }()
 
   public lazy var shadowPath: ReactiveProperty<CGPath> = {
     let layer = self.layer
-    return self.property("\(pretty(layer)).\(#function)",
-                         initialValue: layer.shadowPath!,
-                         externalWrite: { layer.shadowPath = $0 },
-                         keyPath: "shadowPath")
+    return createCoreAnimationProperty(#function,
+                                       initialValue: layer.shadowPath!,
+                                       externalWrite: { layer.shadowPath = $0 },
+                                       keyPath: "shadowPath",
+                                       reactiveLayer: self)
   }()
 
-  fileprivate func property<T>(_ name: String, initialValue: T, externalWrite: @escaping NextChannel<T>, keyPath: String) -> ReactiveProperty<T> {
-    let layer = self.layer
-    let property = ReactiveProperty(name, initialValue: initialValue, externalWrite: { value in
-      let actionsWereDisabled = CATransaction.disableActions()
-      CATransaction.setDisableActions(true)
-      externalWrite(value)
-      CATransaction.setDisableActions(actionsWereDisabled)
-    }, coreAnimation: { [weak self] event in
-      guard let strongSelf = self else { return }
-      switch event {
-      case .add(let info):
-        if let timeline = info.timeline {
-          strongSelf.configureTimeline(timeline)
-        }
-
-        let animation = info.animation.copy() as! CAPropertyAnimation
-
-        if layer.speed == 0, let lastTimelineState = strongSelf.lastTimelineState {
-          animation.beginTime = TimeInterval(lastTimelineState.beginTime) + animation.beginTime
-        } else {
-          animation.beginTime = layer.convertTime(CACurrentMediaTime(), from: nil) + animation.beginTime
-        }
-
-        animation.keyPath = keyPath
-
-        if let makeAdditive = info.makeAdditive, let basicAnimation = animation as? CABasicAnimation {
-          let (fromValue, toValue) = makeAdditive(basicAnimation.fromValue, basicAnimation.toValue)
-          basicAnimation.fromValue = fromValue
-          basicAnimation.toValue = toValue
-          basicAnimation.isAdditive = true
-        }
-
-        if #available(iOS 9.0, *) {
-          // Core Animation springs do not support multi-dimensional velocity, so we bear the burden
-          // of decomposing multi-dimensional springs here.
-          if let springAnimation = animation as? CASpringAnimation
-            , springAnimation.isAdditive
-            , let initialVelocity = info.initialVelocity as? CGPoint
-            , let delta = springAnimation.fromValue as? CGPoint {
-            let decomposed = decompose(springAnimation: springAnimation,
-                                       delta: delta,
-                                       initialVelocity: initialVelocity)
-
-            CATransaction.begin()
-            CATransaction.setCompletionBlock(info.onCompletion)
-            layer.add(decomposed.0, forKey: info.key + ".x")
-            layer.add(decomposed.1, forKey: info.key + ".y")
-            CATransaction.commit()
-
-            strongSelf.decomposedKeys.insert(info.key)
-            return
-          }
-        }
-
-        if let initialVelocity = info.initialVelocity {
-          applyInitialVelocity(initialVelocity, to: animation)
-        }
-
-        CATransaction.begin()
-        CATransaction.setCompletionBlock(info.onCompletion)
-        layer.add(animation, forKey: info.key)
-        CATransaction.commit()
-
-      case .remove(let key):
-        if let presentationLayer = layer.presentation() {
-          layer.setValue(presentationLayer.value(forKeyPath: keyPath), forKeyPath: keyPath)
-        }
-        if strongSelf.decomposedKeys.contains(key) {
-          layer.removeAnimation(forKey: key + ".x")
-          layer.removeAnimation(forKey: key + ".y")
-          strongSelf.decomposedKeys.remove(key)
-
-        } else {
-          layer.removeAnimation(forKey: key)
-        }
+  fileprivate var timeline: Timeline? {
+    didSet {
+      if oldValue === timeline {
+        return
       }
-    })
-    var lastView: UIView?
-    property.shouldVisualizeMotion = { view, containerView in
-      if lastView != view, let lastView = lastView {
-        lastView.removeFromSuperview()
+      guard let timeline = timeline else {
+        timelineSubscription = nil
+        return
       }
-      view.isUserInteractionEnabled = false
-      view.frame = layer.superlayer!.convert(layer.superlayer!.bounds, to: containerView.layer)
-      containerView.addSubview(view)
-      lastView = view
-    }
 
-    return property
-  }
+      timelineSubscription = timeline.subscribeToValue { [weak self] state in
+        guard let strongSelf = self else { return }
+        strongSelf.lastTimelineState = state
 
-  private func configureTimeline(_ timeline: Timeline) {
-    if self.timeline === timeline { // Avoid re-subscribing to the same timeline.
-      return
-    }
-    self.timeline = timeline
-    timelineSubscription = timeline.subscribeToValue { [weak self] state in
-      guard let strongSelf = self else { return }
-      strongSelf.lastTimelineState = state
+        if state.paused {
+          strongSelf.layer.speed = 0
+          strongSelf.layer.timeOffset = TimeInterval(state.beginTime + state.timeOffset)
 
-      if state.paused {
-        strongSelf.layer.speed = 0
-        strongSelf.layer.timeOffset = TimeInterval(state.beginTime + state.timeOffset)
-
-      } else if strongSelf.layer.speed == 0 { // Unpause the layer.
-        // The following logic is the magic sauce required to reconnect a CALayer with the
-        // render server's clock.
-        let pausedTime = strongSelf.layer.timeOffset
-        strongSelf.layer.speed = 1
-        strongSelf.layer.timeOffset = 0
-        strongSelf.layer.beginTime = 0
-        let timeSincePause = strongSelf.layer.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
-        strongSelf.layer.beginTime = timeSincePause
+        } else if strongSelf.layer.speed == 0 { // Unpause the layer.
+          // The following logic is the magic sauce required to reconnect a CALayer with the
+          // render server's clock.
+          let pausedTime = strongSelf.layer.timeOffset
+          strongSelf.layer.speed = 1
+          strongSelf.layer.timeOffset = 0
+          strongSelf.layer.beginTime = 0
+          let timeSincePause = strongSelf.layer.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
+          strongSelf.layer.beginTime = timeSincePause
+        }
       }
     }
   }
-  private var decomposedKeys = Set<String>()
-  private var lastTimelineState: Timeline.Snapshot?
-  private var timeline: Timeline?
+  fileprivate var decomposedKeys = Set<String>()
+  fileprivate var lastTimelineState: Timeline.Snapshot?
   private var timelineSubscription: Subscription?
 
   init(_ layer: CALayer) {
     self.layer = layer
   }
+}
+
+/**
+ Creates a Core Animation-compatible reactive property instance.
+ */
+public func createCoreAnimationProperty<T>(_ name: String, initialValue: T, externalWrite: @escaping NextChannel<T>, keyPath: String, reactiveLayer: ReactiveCALayer) -> ReactiveProperty<T> {
+  let layer = reactiveLayer.layer
+  let property = ReactiveProperty("\(pretty(reactiveLayer)).\(name)", initialValue: initialValue, externalWrite: { value in
+    let actionsWereDisabled = CATransaction.disableActions()
+    CATransaction.setDisableActions(true)
+    externalWrite(value)
+    CATransaction.setDisableActions(actionsWereDisabled)
+  }, coreAnimation: { [weak reactiveLayer] event in
+    guard let strongReactiveLayer = reactiveLayer else { return }
+    switch event {
+    case .add(let info):
+      if let timeline = info.timeline {
+        strongReactiveLayer.timeline = timeline
+      }
+
+      let animation = info.animation.copy() as! CAPropertyAnimation
+
+      if layer.speed == 0, let lastTimelineState = strongReactiveLayer.lastTimelineState {
+        animation.beginTime = TimeInterval(lastTimelineState.beginTime) + animation.beginTime
+      } else {
+        animation.beginTime = layer.convertTime(CACurrentMediaTime(), from: nil) + animation.beginTime
+      }
+
+      animation.keyPath = keyPath
+
+      if let makeAdditive = info.makeAdditive, let basicAnimation = animation as? CABasicAnimation {
+        let (fromValue, toValue) = makeAdditive(basicAnimation.fromValue, basicAnimation.toValue)
+        basicAnimation.fromValue = fromValue
+        basicAnimation.toValue = toValue
+        basicAnimation.isAdditive = true
+      }
+
+      if #available(iOS 9.0, *) {
+        // Core Animation springs do not support multi-dimensional velocity, so we bear the burden
+        // of decomposing multi-dimensional springs here.
+        if let springAnimation = animation as? CASpringAnimation
+          , springAnimation.isAdditive
+          , let initialVelocity = info.initialVelocity as? CGPoint
+          , let delta = springAnimation.fromValue as? CGPoint {
+          let decomposed = decompose(springAnimation: springAnimation,
+                                     delta: delta,
+                                     initialVelocity: initialVelocity)
+
+          CATransaction.begin()
+          CATransaction.setCompletionBlock(info.onCompletion)
+          layer.add(decomposed.0, forKey: info.key + ".x")
+          layer.add(decomposed.1, forKey: info.key + ".y")
+          CATransaction.commit()
+
+          strongReactiveLayer.decomposedKeys.insert(info.key)
+          return
+        }
+      }
+
+      if let initialVelocity = info.initialVelocity {
+        applyInitialVelocity(initialVelocity, to: animation)
+      }
+
+      CATransaction.begin()
+      CATransaction.setCompletionBlock(info.onCompletion)
+      layer.add(animation, forKey: info.key)
+      CATransaction.commit()
+
+    case .remove(let key):
+      if let presentationLayer = layer.presentation() {
+        layer.setValue(presentationLayer.value(forKeyPath: keyPath), forKeyPath: keyPath)
+      }
+      if strongReactiveLayer.decomposedKeys.contains(key) {
+        layer.removeAnimation(forKey: key + ".x")
+        layer.removeAnimation(forKey: key + ".y")
+        strongReactiveLayer.decomposedKeys.remove(key)
+
+      } else {
+        layer.removeAnimation(forKey: key)
+      }
+    }
+  })
+  var lastView: UIView?
+  property.shouldVisualizeMotion = { view, containerView in
+    if lastView != view, let lastView = lastView {
+      lastView.removeFromSuperview()
+    }
+    view.isUserInteractionEnabled = false
+    view.frame = layer.superlayer!.convert(layer.superlayer!.bounds, to: containerView.layer)
+    containerView.addSubview(view)
+    lastView = view
+  }
+
+  return property
 }
 
 public class ReactiveCAShapeLayer: ReactiveCALayer {
@@ -242,10 +259,11 @@ public class ReactiveCAShapeLayer: ReactiveCALayer {
   /** A property representing the layer's .path value. */
   public lazy var path: ReactiveProperty<CGPath> = {
     let layer = self.shapeLayer
-    return self.property("\(pretty(layer)).\(#function)",
-                         initialValue: layer.path!,
-                         externalWrite: { layer.path = $0 },
-                         keyPath: "path")
+    return createCoreAnimationProperty(#function,
+                                       initialValue: layer.path!,
+                                       externalWrite: { layer.path = $0 },
+                                       keyPath: "path",
+                                       reactiveLayer: self)
   }()
 
   init(_ shapeLayer: CAShapeLayer) {
