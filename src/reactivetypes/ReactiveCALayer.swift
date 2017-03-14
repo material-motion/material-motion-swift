@@ -44,6 +44,14 @@ public class ReactiveCALayer {
                          keyPath: "position")
   }()
 
+  public lazy var positionX: ReactiveProperty<CGFloat> = {
+    let position = self.position
+    return self.property("\(pretty(self.layer)).\(#function)",
+                         initialValue: position.value.x,
+                         externalWrite: { var point = position.value; point.x = $0; position.value = point },
+                         keyPath: "position.x")
+  }()
+
   public lazy var positionY: ReactiveProperty<CGFloat> = {
     let position = self.position
     return self.property("\(pretty(self.layer)).\(#function)",

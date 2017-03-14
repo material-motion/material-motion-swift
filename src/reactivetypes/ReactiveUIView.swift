@@ -40,27 +40,6 @@ public class ReactiveUIView {
                             externalWrite: { view.alpha = $0 })
   }()
 
-  public lazy var center: ReactiveProperty<CGPoint> = {
-    let view = self.view
-    return ReactiveProperty("\(pretty(view)).\(#function)",
-                            initialValue: view.center,
-                            externalWrite: { view.center = $0 })
-  }()
-
-  public lazy var centerX: ReactiveProperty<CGFloat> = {
-    let center = self.center
-    return ReactiveProperty("\(pretty(self.view)).\(#function)",
-                            initialValue: center.value.x,
-                            externalWrite: { var point = center.value; point.x = $0; center.value = point })
-  }()
-
-  public lazy var centerY: ReactiveProperty<CGFloat> = {
-    let center = self.center
-    return ReactiveProperty("\(pretty(self.view)).\(#function)",
-                            initialValue: self.center.value.y,
-                            externalWrite: { var point = center.value; point.y = $0; center.value = point })
-  }()
-
   public lazy var reactiveLayer: ReactiveCALayer = {
     return self.runtime?.get(self.view.layer) ?? ReactiveCALayer(self.view.layer)
   }()

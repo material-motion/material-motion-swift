@@ -36,7 +36,7 @@ class TossableStackedCard: Interaction {
 
   func add(to view: UIView, withRuntime runtime: MotionRuntime, constraints: Void?) {
     let reactiveView = runtime.get(view)
-    let position = reactiveView.centerX
+    let position = reactiveView.reactiveLayer.positionX
     self.position = position
 
     view.addGestureRecognizer(dragGesture)
@@ -75,14 +75,14 @@ class TossableStackedCard: Interaction {
     runtime.connect(drag.velocityOnReleaseStream(in: view).x(), to: attachment.initialVelocity)
     runtime.connect(destination, to: attachment.destination)
 
-    let draggable = drag.translation(addedTo: reactiveView.center, in: relativeView).x()
-    runtime.connect(draggable, to: reactiveView.centerX)
+    let draggable = drag.translation(addedTo: reactiveView.reactiveLayer.position, in: relativeView).x()
+    runtime.connect(draggable, to: reactiveView.reactiveLayer.positionX)
     runtime.connect(drag.atRest(), to: attachment.enabled)
-    runtime.add(attachment, to: reactiveView.centerX)
+    runtime.add(attachment, to: reactiveView.reactiveLayer.positionX)
 
     let radians = CGFloat(Double.pi / 180.0 * 15.0)
     let rotationStream =
-      reactiveView.centerX
+      reactiveView.reactiveLayer.positionX
         .offset(by: -relativeView.bounds.width / 2)
         .normalized(by: relativeView.bounds.width / 2)
         .scaled(by: radians)
