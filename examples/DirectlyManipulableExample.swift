@@ -24,13 +24,10 @@ class DirectlyManipulableExampleViewController: ExampleViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    runtime = MotionRuntime(containerView: view)
-
-    view.backgroundColor = .white
-
     let square = center(createExampleView(), within: view)
     view.addSubview(square)
 
+    runtime = MotionRuntime(containerView: view)
     runtime.add(DirectlyManipulable(), to: square)
   }
 

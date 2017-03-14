@@ -24,14 +24,14 @@ class DraggableReactiveConstraintExampleViewController: ExampleViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    runtime = MotionRuntime(containerView: view)
-
     let axisLine = UIView(frame: .init(x: view.bounds.midX - 8, y: 0, width: 16, height: view.bounds.height))
     axisLine.backgroundColor = .red
     view.addSubview(axisLine)
 
     let square = center(createExampleView(), within: view)
     view.addSubview(square)
+
+    runtime = MotionRuntime(containerView: view)
 
     let axisCenterX = runtime.get(axisLine.layer).position.x()
     runtime.add(Draggable(), to: square) { $0

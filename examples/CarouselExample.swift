@@ -17,15 +17,13 @@
 import UIKit
 import ReactiveMotion
 
-public class CarouselExampleViewController: UIViewController, UIScrollViewDelegate {
+class CarouselExampleViewController: ExampleViewController, UIScrollViewDelegate {
 
   var runtime: MotionRuntime!
-  public override func viewDidLoad() {
+  override func viewDidLoad() {
     super.viewDidLoad()
 
     automaticallyAdjustsScrollViewInsets = false
-
-    runtime = MotionRuntime(containerView: view)
 
     view.backgroundColor = UIColor(hexColor: 0xF8AA36)
 
@@ -49,6 +47,8 @@ public class CarouselExampleViewController: UIViewController, UIScrollViewDelega
       (title: "Purr purr", description: "Meow", image: UIImage(named: "sticker2")!),
     ]
 
+    runtime = MotionRuntime(containerView: view)
+
     let stream = runtime.get(scrollView)
     for (index, data) in datas.enumerated() {
       let page = CarouselPage(frame: view.bounds)
@@ -71,8 +71,13 @@ public class CarouselExampleViewController: UIViewController, UIScrollViewDelega
 
   var pager: UIPageControl!
 
-  public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+  func scrollViewDidScroll(_ scrollView: UIScrollView) {
     pager.currentPage = Int((scrollView.contentOffset.x + scrollView.bounds.width / 2) / scrollView.bounds.width)
+  }
+
+  override func exampleInformation() -> ExampleInfo {
+    return .init(title: type(of: self).catalogBreadcrumbs().last!,
+                 instructions: "Swipe betwen pages to see the scroll effects.")
   }
 }
 

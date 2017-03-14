@@ -24,11 +24,10 @@ class DraggableConstraintExampleViewController: ExampleViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    runtime = MotionRuntime(containerView: view)
-
     let square = center(createExampleView(), within: view)
     view.addSubview(square)
 
+    runtime = MotionRuntime(containerView: view)
     runtime.add(Draggable(), to: square) { $0.xLocked(to: square.layer.position.x) }
   }
 

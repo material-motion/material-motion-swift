@@ -34,6 +34,10 @@ extension DraggableReactiveConstraintExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["Draggable with reactive constraints"] }
 }
 
+extension DirectlyManipulableExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Directly manipulable"] }
+}
+
 @available(iOS 9.0, *)
 extension DragSourceExampleViewController {
   class func catalogBreadcrumbs() -> [String] {
@@ -97,11 +101,5 @@ extension SwipeExampleViewController {
 extension StickerPickerExampleViewController {
   class func catalogBreadcrumbs() -> [String] {
     return ["Sticker picker"]
-  }
-}
-
-extension DirectlyManipulableExampleViewController {
-  class func catalogBreadcrumbs() -> [String] {
-    return ["Directly manipulable"]
   }
 }

@@ -175,16 +175,14 @@
 			isa = PBXGroup;
 			children = (
 				664A5B761DD10D320082B5DF /* TableOfContents.swift */,
-				66DDFD0B1E71F0B300AA46B7 /* Draggable */,
-				66DDFD0E1E71F0F600AA46B7 /* Directly Manipulable */,
+				66DDFD0B1E71F0B300AA46B7 /* How to drag views */,
+				66DDFD231E788DC500AA46B7 /* How to apply constraints to an interaction */,
+				66DDFD0E1E71F0F600AA46B7 /* How to directly manipulate views */,
+				66DDFD221E788D1B00AA46B7 /* How to build a view controller transition */,
+				66DDFD211E788C1200AA46B7 /* How to react to scrolling */,
+				66DDFD241E788DD500AA46B7 /* How to create custom operators */,
 				667E94451E71EF0E005CAC78 /* ArcMoveExample.swift */,
-				667E94461E71EF0E005CAC78 /* CarouselExample.swift */,
-				667E94471E71EF0E005CAC78 /* ContextualTransitionExample.swift */,
 				667E94491E71EF0E005CAC78 /* DragSourceExample.swift */,
-				667E944A1E71EF0E005CAC78 /* FabTransitionExample.swift */,
-				667E944B1E71EF0E005CAC78 /* InteractivePushBackTransitionExample.swift */,
-				667E944C1E71EF0E005CAC78 /* ModalDialogExample.swift */,
-				667E944D1E71EF0E005CAC78 /* PushBackTransitionExample.swift */,
 				667E944E1E71EF0E005CAC78 /* StickerPickerExample.swift */,
 				667E94511E71EF0E005CAC78 /* SwipeExample.swift */,
 				667E944F1E71EF0E005CAC78 /* supplemental */,
@@ -265,23 +263,57 @@
 			path = ../../supplemental;
 			sourceTree = "<group>";
 		};
-		66DDFD0B1E71F0B300AA46B7 /* Draggable */ = {
+		66DDFD0B1E71F0B300AA46B7 /* How to drag views */ = {
 			isa = PBXGroup;
 			children = (
 				66DDFD0C1E71F0F100AA46B7 /* DraggableExample.swift */,
-				66DDFD0F1E71F32800AA46B7 /* DraggableConstraintExample.swift */,
-				66DDFD151E71F90F00AA46B7 /* DraggableReactiveConstraintExample.swift */,
-				66DDFD1F1E73281200AA46B7 /* DraggableCustomOperatorExample.swift */,
 			);
-			name = Draggable;
+			name = "How to drag views";
 			sourceTree = "<group>";
 		};
-		66DDFD0E1E71F0F600AA46B7 /* Directly Manipulable */ = {
+		66DDFD0E1E71F0F600AA46B7 /* How to directly manipulate views */ = {
 			isa = PBXGroup;
 			children = (
 				667E94481E71EF0E005CAC78 /* DirectlyManipulableExample.swift */,
 			);
-			name = "Directly Manipulable";
+			name = "How to directly manipulate views";
+			sourceTree = "<group>";
+		};
+		66DDFD211E788C1200AA46B7 /* How to react to scrolling */ = {
+			isa = PBXGroup;
+			children = (
+				667E94461E71EF0E005CAC78 /* CarouselExample.swift */,
+			);
+			name = "How to react to scrolling";
+			sourceTree = "<group>";
+		};
+		66DDFD221E788D1B00AA46B7 /* How to build a view controller transition */ = {
+			isa = PBXGroup;
+			children = (
+				667E944D1E71EF0E005CAC78 /* PushBackTransitionExample.swift */,
+				667E944B1E71EF0E005CAC78 /* InteractivePushBackTransitionExample.swift */,
+				667E94471E71EF0E005CAC78 /* ContextualTransitionExample.swift */,
+				667E944C1E71EF0E005CAC78 /* ModalDialogExample.swift */,
+				667E944A1E71EF0E005CAC78 /* FabTransitionExample.swift */,
+			);
+			name = "How to build a view controller transition";
+			sourceTree = "<group>";
+		};
+		66DDFD231E788DC500AA46B7 /* How to apply constraints to an interaction */ = {
+			isa = PBXGroup;
+			children = (
+				66DDFD0F1E71F32800AA46B7 /* DraggableConstraintExample.swift */,
+				66DDFD151E71F90F00AA46B7 /* DraggableReactiveConstraintExample.swift */,
+			);
+			name = "How to apply constraints to an interaction";
+			sourceTree = "<group>";
+		};
+		66DDFD241E788DD500AA46B7 /* How to create custom operators */ = {
+			isa = PBXGroup;
+			children = (
+				66DDFD1F1E73281200AA46B7 /* DraggableCustomOperatorExample.swift */,
+			);
+			name = "How to create custom operators";
 			sourceTree = "<group>";
 		};
 		8C6A745BCA20C3282C1419A7 /* Pods */ = {
