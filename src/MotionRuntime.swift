@@ -189,7 +189,12 @@ public final class MotionRuntime {
   private func get<T: AnyObject, U: AnyObject>(_ object: T, initializer: (T) -> U) -> U {
     let identifier = ObjectIdentifier(object)
     if let reactiveObject = reactiveObjects[identifier] {
-      return reactiveObject as! U
+      // If a UIPanGestureRecognizer is fetched using runtime.get while typed as a
+      // UIGestureRecognizer, the ReactiveUIGestureRecognizer instance will be created as a
+      // ReactiveUIGestureRecognizer<UIGestureRecognizer>, meaning we can't cast using as down to a
+      // ReactiveUIGestureRecognizer<UIPanGestureRecognizer>. We know this is safe to do within the
+      // context of the runtime, so we do a forced bit cast here instead of an `as` cast.
+      return unsafeBitCast(reactiveObject, to: U.self)
     }
     let reactiveObject = initializer(object)
     reactiveObjects[identifier] = reactiveObject as! AnyObject
