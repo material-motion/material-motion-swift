@@ -88,6 +88,7 @@
 		667E94511E71EF0E005CAC78 /* SwipeExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwipeExample.swift; path = ../../SwipeExample.swift; sourceTree = "<group>"; };
 		6686F01B1E77293100F97CC4 /* MotionRuntimeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionRuntimeTests.swift; sourceTree = "<group>"; };
 		6686F01D1E772F1700F97CC4 /* ExampleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleViewController.swift; sourceTree = "<group>"; };
+		6686F0201E79845E00F97CC4 /* ReactivePlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = ReactivePlayground.playground; sourceTree = "<group>"; };
 		669F80C91E41A20E00E46B38 /* Stickers.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Stickers.xcassets; sourceTree = SOURCE_ROOT; };
 		66DDFD0C1E71F0F100AA46B7 /* DraggableExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DraggableExample.swift; path = ../../DraggableExample.swift; sourceTree = "<group>"; };
 		66DDFD0F1E71F32800AA46B7 /* DraggableConstraintExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DraggableConstraintExample.swift; path = ../../DraggableConstraintExample.swift; sourceTree = "<group>"; };
@@ -175,7 +176,8 @@
 			isa = PBXGroup;
 			children = (
 				664A5B761DD10D320082B5DF /* TableOfContents.swift */,
-				66DDFD0B1E71F0B300AA46B7 /* How to drag views */,
+				6686F0201E79845E00F97CC4 /* ReactivePlayground.playground */,
+				66DDFD0B1E71F0B300AA46B7 /* How to drag a view */,
 				66DDFD231E788DC500AA46B7 /* How to apply constraints to an interaction */,
 				66DDFD0E1E71F0F600AA46B7 /* How to directly manipulate views */,
 				66DDFD221E788D1B00AA46B7 /* How to build a view controller transition */,
@@ -263,12 +265,12 @@
 			path = ../../supplemental;
 			sourceTree = "<group>";
 		};
-		66DDFD0B1E71F0B300AA46B7 /* How to drag views */ = {
+		66DDFD0B1E71F0B300AA46B7 /* How to drag a view */ = {
 			isa = PBXGroup;
 			children = (
 				66DDFD0C1E71F0F100AA46B7 /* DraggableExample.swift */,
 			);
-			name = "How to drag views";
+			name = "How to drag a view";
 			sourceTree = "<group>";
 		};
 		66DDFD0E1E71F0F600AA46B7 /* How to directly manipulate views */ = {

@@ -16,7 +16,7 @@
 
 // MARK: Catalog by convention
 
-import ReactiveMotion
+import Foundation
 
 extension DraggableExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["Draggable"] }
@@ -39,61 +39,41 @@ extension DirectlyManipulableExampleViewController {
 }
 
 extension DragSourceExampleViewController {
-  class func catalogBreadcrumbs() -> [String] {
-    return ["Drag source"]
-  }
+  class func catalogBreadcrumbs() -> [String] { return ["Drag source"] }
 }
 
 extension ArcMoveExampleViewController {
-  class func catalogBreadcrumbs() -> [String] {
-    return ["Arc move"]
-  }
+  class func catalogBreadcrumbs() -> [String] { return ["Arc move"] }
 }
 
 extension CarouselExampleViewController {
-  class func catalogBreadcrumbs() -> [String] {
-    return ["Carousel"]
-  }
+  class func catalogBreadcrumbs() -> [String] { return ["Carousel"] }
 }
 
 extension ModalDialogExampleViewController {
-  class func catalogBreadcrumbs() -> [String] {
-    return ["Modal dialog"]
-  }
+  class func catalogBreadcrumbs() -> [String] { return ["Modal dialog"] }
 }
 
 extension ContextualTransitionExampleViewController {
-  class func catalogBreadcrumbs() -> [String] {
-    return ["Contextual transition"]
-  }
+  class func catalogBreadcrumbs() -> [String] { return ["Contextual transition"] }
 }
 
 extension FabTransitionExampleViewController {
-  class func catalogBreadcrumbs() -> [String] {
-    return ["FAB transition"]
-  }
+  class func catalogBreadcrumbs() -> [String] { return ["FAB transition"] }
 }
 
 extension PushBackTransitionExampleViewController {
-  class func catalogBreadcrumbs() -> [String] {
-    return ["Push back transition"]
-  }
+  class func catalogBreadcrumbs() -> [String] { return ["Push back transition"] }
 }
 
 extension InteractivePushBackTransitionExampleViewController {
-  class func catalogBreadcrumbs() -> [String] {
-    return ["Push back transition (interactive)"]
-  }
+  class func catalogBreadcrumbs() -> [String] { return ["Push back transition (interactive)"] }
 }
 
 extension SwipeExampleViewController {
-  class func catalogBreadcrumbs() -> [String] {
-    return ["Swipe stack"]
-  }
+  class func catalogBreadcrumbs() -> [String] { return ["Swipe stack"] }
 }
 
 extension StickerPickerExampleViewController {
-  class func catalogBreadcrumbs() -> [String] {
-    return ["Sticker picker"]
-  }
+  class func catalogBreadcrumbs() -> [String] { return ["Sticker picker"] }
 }
