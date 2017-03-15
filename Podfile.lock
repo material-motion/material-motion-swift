@@ -3,10 +3,8 @@ PODS:
   - IndefiniteObservable (3.1.0):
     - IndefiniteObservable/lib (= 3.1.0)
   - IndefiniteObservable/lib (3.1.0)
-  - pop (1.0.9)
   - ReactiveMotion (1.0.0):
     - IndefiniteObservable (~> 3.0)
-    - pop
 
 DEPENDENCIES:
   - CatalogByConvention
@@ -19,8 +17,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   CatalogByConvention: be55c2263132e4f9f59299ac8a528ee8715b3275
   IndefiniteObservable: 2789d61f487d8d37fa2b9c3153cc44d4447ff744
-  pop: f667631a5108a2e60d9e8797c9b32ddaf2080bce
-  ReactiveMotion: ce310a701dbfaff6522cc58e4df00657bc120158
+  ReactiveMotion: e5e8e037068f0998b9c7cdc8bcd361db9d577e27
 
 PODFILE CHECKSUM: 3351385be5c3c7626c357a5568b15c5faa6997ab
 
