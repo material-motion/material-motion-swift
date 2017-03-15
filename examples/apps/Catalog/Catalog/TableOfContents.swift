@@ -50,6 +50,10 @@ extension DraggableExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Draggable"] }
 }
 
+extension RotatableExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Rotatable"] }
+}
+
 extension DirectlyManipulableExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Directly manipulable"] }
 }

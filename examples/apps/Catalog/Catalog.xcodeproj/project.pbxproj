@@ -11,6 +11,7 @@
 		66090B841E03715F00B1D598 /* PropertyObservation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66090B831E03715F00B1D598 /* PropertyObservation.swift */; };
 		66090B8A1E046CE600B1D598 /* Spring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66090B891E046CE600B1D598 /* Spring.swift */; };
 		660DA30A1E79D3F2008F7401 /* HexColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660DA3091E79D3F2008F7401 /* HexColor.swift */; };
+		660DA30F1E79EA62008F7401 /* RotatableExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660DA30E1E79EA62008F7401 /* RotatableExample.swift */; };
 		6627FC0E1DF7B1A2003DB567 /* MotionObservableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6627FC0D1DF7B1A2003DB567 /* MotionObservableTests.swift */; };
 		6627FC191DF7BC7D003DB567 /* _filterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6627FC161DF7BC7D003DB567 /* _filterTests.swift */; };
 		6627FC1A1DF7BC7D003DB567 /* _mapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6627FC171DF7BC7D003DB567 /* _mapTests.swift */; };
@@ -59,6 +60,7 @@
 		66090B831E03715F00B1D598 /* PropertyObservation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyObservation.swift; sourceTree = "<group>"; };
 		66090B891E046CE600B1D598 /* Spring.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spring.swift; sourceTree = "<group>"; };
 		660DA3091E79D3F2008F7401 /* HexColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HexColor.swift; sourceTree = "<group>"; };
+		660DA30E1E79EA62008F7401 /* RotatableExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RotatableExample.swift; path = ../../RotatableExample.swift; sourceTree = "<group>"; };
 		6627FC0D1DF7B1A2003DB567 /* MotionObservableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionObservableTests.swift; sourceTree = "<group>"; };
 		6627FC161DF7BC7D003DB567 /* _filterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = _filterTests.swift; sourceTree = "<group>"; };
 		6627FC171DF7BC7D003DB567 /* _mapTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = _mapTests.swift; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 			children = (
 				667E94451E71EF0E005CAC78 /* ArcMoveExample.swift */,
 				66DDFD0C1E71F0F100AA46B7 /* DraggableExample.swift */,
+				660DA30E1E79EA62008F7401 /* RotatableExample.swift */,
 				667E94481E71EF0E005CAC78 /* DirectlyManipulableExample.swift */,
 			);
 			name = Interactions;
@@ -513,6 +516,7 @@
 				667E945B1E71EF0E005CAC78 /* StickerPickerExample.swift in Sources */,
 				667E94551E71EF0E005CAC78 /* DirectlyManipulableExample.swift in Sources */,
 				666FAA841D384A6B000363DA /* AppDelegate.swift in Sources */,
+				660DA30F1E79EA62008F7401 /* RotatableExample.swift in Sources */,
 				667E94591E71EF0E005CAC78 /* ModalDialogExample.swift in Sources */,
 				664A5B771DD10D320082B5DF /* TableOfContents.swift in Sources */,
 				66DDFD141E71F3D600AA46B7 /* Layout.swift in Sources */,
