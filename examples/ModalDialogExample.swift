@@ -17,12 +17,10 @@
 import UIKit
 import ReactiveMotion
 
-public class ModalDialogExampleViewController: UIViewController {
+class ModalDialogExampleViewController: ExampleViewController {
 
-  override public func viewDidLoad() {
+  override func viewDidLoad() {
     super.viewDidLoad()
-
-    view.backgroundColor = .white
 
     view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTap)))
   }
@@ -34,6 +32,11 @@ public class ModalDialogExampleViewController: UIViewController {
 
   func tapToDismiss() {
     dismiss(animated: true)
+  }
+
+  override func exampleInformation() -> ExampleInfo {
+    return .init(title: type(of: self).catalogBreadcrumbs().last!,
+                 instructions: "Tap to present a modal dialog.")
   }
 }
 
@@ -54,7 +57,7 @@ class ModalDialogViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    view.backgroundColor = .blue
+    view.backgroundColor = .primaryColor
 
     view.layer.cornerRadius = 5
     view.layer.shadowColor = UIColor(white: 0, alpha: 0.4).cgColor

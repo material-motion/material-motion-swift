@@ -10,6 +10,7 @@
 		237F8136357F3FA9B6DFA82F /* Pods_UnitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B05E63B8F92D94A8819B0ABB /* Pods_UnitTests.framework */; };
 		66090B841E03715F00B1D598 /* PropertyObservation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66090B831E03715F00B1D598 /* PropertyObservation.swift */; };
 		66090B8A1E046CE600B1D598 /* Spring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66090B891E046CE600B1D598 /* Spring.swift */; };
+		660DA30A1E79D3F2008F7401 /* HexColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660DA3091E79D3F2008F7401 /* HexColor.swift */; };
 		6627FC0E1DF7B1A2003DB567 /* MotionObservableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6627FC0D1DF7B1A2003DB567 /* MotionObservableTests.swift */; };
 		6627FC191DF7BC7D003DB567 /* _filterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6627FC161DF7BC7D003DB567 /* _filterTests.swift */; };
 		6627FC1A1DF7BC7D003DB567 /* _mapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6627FC171DF7BC7D003DB567 /* _mapTests.swift */; };
@@ -32,13 +33,12 @@
 		667E945C1E71EF0E005CAC78 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E94501E71EF0E005CAC78 /* TimelineView.swift */; };
 		6686F01C1E77293100F97CC4 /* MotionRuntimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6686F01B1E77293100F97CC4 /* MotionRuntimeTests.swift */; };
 		6686F01E1E772F1700F97CC4 /* ExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6686F01D1E772F1700F97CC4 /* ExampleViewController.swift */; };
-		669F80CA1E41A20E00E46B38 /* Stickers.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 669F80C91E41A20E00E46B38 /* Stickers.xcassets */; };
 		66DDFD0D1E71F0F100AA46B7 /* DraggableExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD0C1E71F0F100AA46B7 /* DraggableExample.swift */; };
-		66DDFD101E71F32800AA46B7 /* DraggableConstraintExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD0F1E71F32800AA46B7 /* DraggableConstraintExample.swift */; };
+		66DDFD101E71F32800AA46B7 /* HowToUseConstraintsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD0F1E71F32800AA46B7 /* HowToUseConstraintsExample.swift */; };
 		66DDFD121E71F39700AA46B7 /* ExampleViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD111E71F39700AA46B7 /* ExampleViews.swift */; };
 		66DDFD141E71F3D600AA46B7 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD131E71F3D600AA46B7 /* Layout.swift */; };
-		66DDFD161E71F90F00AA46B7 /* DraggableReactiveConstraintExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD151E71F90F00AA46B7 /* DraggableReactiveConstraintExample.swift */; };
-		66DDFD201E73281200AA46B7 /* DraggableCustomOperatorExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD1F1E73281200AA46B7 /* DraggableCustomOperatorExample.swift */; };
+		66DDFD161E71F90F00AA46B7 /* HowToUseReactiveConstraintsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD151E71F90F00AA46B7 /* HowToUseReactiveConstraintsExample.swift */; };
+		66DDFD201E73281200AA46B7 /* HowToMakeACustomOperatorExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD1F1E73281200AA46B7 /* HowToMakeACustomOperatorExample.swift */; };
 		66E6F2371E3FC791003158D3 /* PhotoAlbum.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6F2361E3FC791003158D3 /* PhotoAlbum.xcassets */; };
 		C1F5E1D37D0DA71224EFC15E /* Pods_Catalog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E95CBDC1BABF9E6E385A124B /* Pods_Catalog.framework */; };
 /* End PBXBuildFile section */
@@ -58,6 +58,7 @@
 		1ED93D5A76FA3E96C6C84FF6 /* Pods-Catalog.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Catalog.release.xcconfig"; path = "../../../Pods/Target Support Files/Pods-Catalog/Pods-Catalog.release.xcconfig"; sourceTree = "<group>"; };
 		66090B831E03715F00B1D598 /* PropertyObservation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyObservation.swift; sourceTree = "<group>"; };
 		66090B891E046CE600B1D598 /* Spring.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spring.swift; sourceTree = "<group>"; };
+		660DA3091E79D3F2008F7401 /* HexColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HexColor.swift; sourceTree = "<group>"; };
 		6627FC0D1DF7B1A2003DB567 /* MotionObservableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionObservableTests.swift; sourceTree = "<group>"; };
 		6627FC161DF7BC7D003DB567 /* _filterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = _filterTests.swift; sourceTree = "<group>"; };
 		6627FC171DF7BC7D003DB567 /* _mapTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = _mapTests.swift; sourceTree = "<group>"; };
@@ -85,13 +86,12 @@
 		6686F01B1E77293100F97CC4 /* MotionRuntimeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionRuntimeTests.swift; sourceTree = "<group>"; };
 		6686F01D1E772F1700F97CC4 /* ExampleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleViewController.swift; sourceTree = "<group>"; };
 		6686F0201E79845E00F97CC4 /* ReactivePlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = ReactivePlayground.playground; sourceTree = "<group>"; };
-		669F80C91E41A20E00E46B38 /* Stickers.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Stickers.xcassets; sourceTree = SOURCE_ROOT; };
 		66DDFD0C1E71F0F100AA46B7 /* DraggableExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DraggableExample.swift; path = ../../DraggableExample.swift; sourceTree = "<group>"; };
-		66DDFD0F1E71F32800AA46B7 /* DraggableConstraintExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DraggableConstraintExample.swift; path = ../../DraggableConstraintExample.swift; sourceTree = "<group>"; };
+		66DDFD0F1E71F32800AA46B7 /* HowToUseConstraintsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HowToUseConstraintsExample.swift; path = ../../HowToUseConstraintsExample.swift; sourceTree = "<group>"; };
 		66DDFD111E71F39700AA46B7 /* ExampleViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleViews.swift; sourceTree = "<group>"; };
 		66DDFD131E71F3D600AA46B7 /* Layout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
-		66DDFD151E71F90F00AA46B7 /* DraggableReactiveConstraintExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DraggableReactiveConstraintExample.swift; path = ../../DraggableReactiveConstraintExample.swift; sourceTree = "<group>"; };
-		66DDFD1F1E73281200AA46B7 /* DraggableCustomOperatorExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DraggableCustomOperatorExample.swift; path = ../../DraggableCustomOperatorExample.swift; sourceTree = "<group>"; };
+		66DDFD151E71F90F00AA46B7 /* HowToUseReactiveConstraintsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HowToUseReactiveConstraintsExample.swift; path = ../../HowToUseReactiveConstraintsExample.swift; sourceTree = "<group>"; };
+		66DDFD1F1E73281200AA46B7 /* HowToMakeACustomOperatorExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HowToMakeACustomOperatorExample.swift; path = ../../HowToMakeACustomOperatorExample.swift; sourceTree = "<group>"; };
 		66E6F2361E3FC791003158D3 /* PhotoAlbum.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = PhotoAlbum.xcassets; sourceTree = SOURCE_ROOT; };
 		B05E63B8F92D94A8819B0ABB /* Pods_UnitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UnitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC5B661FDF1C5375A0D3B88E /* Pods-UnitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UnitTests.release.xcconfig"; path = "../../../Pods/Target Support Files/Pods-UnitTests/Pods-UnitTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -136,6 +136,36 @@
 			path = plans;
 			sourceTree = "<group>";
 		};
+		660DA30B1E79D7B7008F7401 /* Interactions */ = {
+			isa = PBXGroup;
+			children = (
+				667E94451E71EF0E005CAC78 /* ArcMoveExample.swift */,
+				66DDFD0C1E71F0F100AA46B7 /* DraggableExample.swift */,
+				667E94481E71EF0E005CAC78 /* DirectlyManipulableExample.swift */,
+			);
+			name = Interactions;
+			sourceTree = "<group>";
+		};
+		660DA30C1E79D7E7008F7401 /* Case studies */ = {
+			isa = PBXGroup;
+			children = (
+				667E94461E71EF0E005CAC78 /* CarouselExample.swift */,
+				667E944A1E71EF0E005CAC78 /* FabTransitionExample.swift */,
+				667E944E1E71EF0E005CAC78 /* StickerPickerExample.swift */,
+			);
+			name = "Case studies";
+			sourceTree = "<group>";
+		};
+		660DA30D1E79D807008F7401 /* How to... */ = {
+			isa = PBXGroup;
+			children = (
+				66DDFD1F1E73281200AA46B7 /* HowToMakeACustomOperatorExample.swift */,
+				66DDFD0F1E71F32800AA46B7 /* HowToUseConstraintsExample.swift */,
+				66DDFD151E71F90F00AA46B7 /* HowToUseReactiveConstraintsExample.swift */,
+			);
+			name = "How to...";
+			sourceTree = "<group>";
+		};
 		6627FC0C1DF7B1A2003DB567 /* unit */ = {
 			isa = PBXGroup;
 			children = (
@@ -173,14 +203,10 @@
 			children = (
 				664A5B761DD10D320082B5DF /* TableOfContents.swift */,
 				6686F0201E79845E00F97CC4 /* ReactivePlayground.playground */,
-				66DDFD0B1E71F0B300AA46B7 /* How to drag a view */,
-				66DDFD231E788DC500AA46B7 /* How to apply constraints to an interaction */,
-				66DDFD0E1E71F0F600AA46B7 /* How to directly manipulate views */,
-				66DDFD221E788D1B00AA46B7 /* How to build a view controller transition */,
-				66DDFD211E788C1200AA46B7 /* How to react to scrolling */,
-				66DDFD241E788DD500AA46B7 /* How to create custom operators */,
-				667D05C01E79B8A100996BE3 /* How to move along an arc */,
-				667D05BF1E79B88F00996BE3 /* Case studies */,
+				660DA30C1E79D7E7008F7401 /* Case studies */,
+				660DA30D1E79D807008F7401 /* How to... */,
+				660DA30B1E79D7B7008F7401 /* Interactions */,
+				66DDFD221E788D1B00AA46B7 /* Transitions */,
 				667E944F1E71EF0E005CAC78 /* supplemental */,
 				666FAAA61D384B77000363DA /* app */,
 				666FAA971D384A6B000363DA /* tests */,
@@ -203,7 +229,6 @@
 		666FAA821D384A6B000363DA /* resources */ = {
 			isa = PBXGroup;
 			children = (
-				669F80C91E41A20E00E46B38 /* Stickers.xcassets */,
 				66E6F2361E3FC791003158D3 /* PhotoAlbum.xcassets */,
 				666FAAA51D384B5B000363DA /* catalog */,
 				666FAAA41D384B52000363DA /* tests */,
@@ -247,85 +272,28 @@
 			name = app;
 			sourceTree = "<group>";
 		};
-		667D05BF1E79B88F00996BE3 /* Case studies */ = {
-			isa = PBXGroup;
-			children = (
-				667E944E1E71EF0E005CAC78 /* StickerPickerExample.swift */,
-			);
-			name = "Case studies";
-			sourceTree = "<group>";
-		};
-		667D05C01E79B8A100996BE3 /* How to move along an arc */ = {
-			isa = PBXGroup;
-			children = (
-				667E94451E71EF0E005CAC78 /* ArcMoveExample.swift */,
-			);
-			name = "How to move along an arc";
-			sourceTree = "<group>";
-		};
 		667E944F1E71EF0E005CAC78 /* supplemental */ = {
 			isa = PBXGroup;
 			children = (
-				667E94501E71EF0E005CAC78 /* TimelineView.swift */,
-				66DDFD111E71F39700AA46B7 /* ExampleViews.swift */,
-				66DDFD131E71F3D600AA46B7 /* Layout.swift */,
 				6686F01D1E772F1700F97CC4 /* ExampleViewController.swift */,
+				66DDFD111E71F39700AA46B7 /* ExampleViews.swift */,
+				660DA3091E79D3F2008F7401 /* HexColor.swift */,
+				66DDFD131E71F3D600AA46B7 /* Layout.swift */,
+				667E94501E71EF0E005CAC78 /* TimelineView.swift */,
 			);
 			name = supplemental;
 			path = ../../supplemental;
 			sourceTree = "<group>";
 		};
-		66DDFD0B1E71F0B300AA46B7 /* How to drag a view */ = {
+		66DDFD221E788D1B00AA46B7 /* Transitions */ = {
 			isa = PBXGroup;
 			children = (
-				66DDFD0C1E71F0F100AA46B7 /* DraggableExample.swift */,
-			);
-			name = "How to drag a view";
-			sourceTree = "<group>";
-		};
-		66DDFD0E1E71F0F600AA46B7 /* How to directly manipulate views */ = {
-			isa = PBXGroup;
-			children = (
-				667E94481E71EF0E005CAC78 /* DirectlyManipulableExample.swift */,
-			);
-			name = "How to directly manipulate views";
-			sourceTree = "<group>";
-		};
-		66DDFD211E788C1200AA46B7 /* How to react to scrolling */ = {
-			isa = PBXGroup;
-			children = (
-				667E94461E71EF0E005CAC78 /* CarouselExample.swift */,
-			);
-			name = "How to react to scrolling";
-			sourceTree = "<group>";
-		};
-		66DDFD221E788D1B00AA46B7 /* How to build a view controller transition */ = {
-			isa = PBXGroup;
-			children = (
-				667E944D1E71EF0E005CAC78 /* PushBackTransitionExample.swift */,
-				667E944B1E71EF0E005CAC78 /* InteractivePushBackTransitionExample.swift */,
 				667E94471E71EF0E005CAC78 /* ContextualTransitionExample.swift */,
 				667E944C1E71EF0E005CAC78 /* ModalDialogExample.swift */,
-				667E944A1E71EF0E005CAC78 /* FabTransitionExample.swift */,
+				667E944D1E71EF0E005CAC78 /* PushBackTransitionExample.swift */,
+				667E944B1E71EF0E005CAC78 /* InteractivePushBackTransitionExample.swift */,
 			);
-			name = "How to build a view controller transition";
-			sourceTree = "<group>";
-		};
-		66DDFD231E788DC500AA46B7 /* How to apply constraints to an interaction */ = {
-			isa = PBXGroup;
-			children = (
-				66DDFD0F1E71F32800AA46B7 /* DraggableConstraintExample.swift */,
-				66DDFD151E71F90F00AA46B7 /* DraggableReactiveConstraintExample.swift */,
-			);
-			name = "How to apply constraints to an interaction";
-			sourceTree = "<group>";
-		};
-		66DDFD241E788DD500AA46B7 /* How to create custom operators */ = {
-			isa = PBXGroup;
-			children = (
-				66DDFD1F1E73281200AA46B7 /* DraggableCustomOperatorExample.swift */,
-			);
-			name = "How to create custom operators";
+			name = Transitions;
 			sourceTree = "<group>";
 		};
 		8C6A745BCA20C3282C1419A7 /* Pods */ = {
@@ -395,6 +363,7 @@
 				TargetAttributes = {
 					666FAA7F1D384A6B000363DA = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = ZGWD8QJUPK;
 						LastSwiftMigration = 0800;
 					};
 					666FAA931D384A6B000363DA = {
@@ -429,7 +398,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				66E6F2371E3FC791003158D3 /* PhotoAlbum.xcassets in Resources */,
-				669F80CA1E41A20E00E46B38 /* Stickers.xcassets in Resources */,
 				666FAA8E1D384A6B000363DA /* LaunchScreen.storyboard in Resources */,
 				666FAA8B1D384A6B000363DA /* Assets.xcassets in Resources */,
 			);
@@ -553,14 +521,15 @@
 				667E94571E71EF0E005CAC78 /* FabTransitionExample.swift in Sources */,
 				667E94541E71EF0E005CAC78 /* ContextualTransitionExample.swift in Sources */,
 				6686F01E1E772F1700F97CC4 /* ExampleViewController.swift in Sources */,
-				66DDFD161E71F90F00AA46B7 /* DraggableReactiveConstraintExample.swift in Sources */,
-				66DDFD101E71F32800AA46B7 /* DraggableConstraintExample.swift in Sources */,
+				66DDFD161E71F90F00AA46B7 /* HowToUseReactiveConstraintsExample.swift in Sources */,
+				66DDFD101E71F32800AA46B7 /* HowToUseConstraintsExample.swift in Sources */,
 				667E94521E71EF0E005CAC78 /* ArcMoveExample.swift in Sources */,
 				667E945A1E71EF0E005CAC78 /* PushBackTransitionExample.swift in Sources */,
 				667E945C1E71EF0E005CAC78 /* TimelineView.swift in Sources */,
 				66DDFD0D1E71F0F100AA46B7 /* DraggableExample.swift in Sources */,
+				660DA30A1E79D3F2008F7401 /* HexColor.swift in Sources */,
 				66DDFD121E71F39700AA46B7 /* ExampleViews.swift in Sources */,
-				66DDFD201E73281200AA46B7 /* DraggableCustomOperatorExample.swift in Sources */,
+				66DDFD201E73281200AA46B7 /* HowToMakeACustomOperatorExample.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -692,6 +661,7 @@
 			baseConfigurationReference = 151ACFA24257B9AC82434343 /* Pods-Catalog.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = ZGWD8QJUPK;
 				INFOPLIST_FILE = Catalog/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.google.Catalog;
@@ -705,6 +675,7 @@
 			baseConfigurationReference = 1ED93D5A76FA3E96C6C84FF6 /* Pods-Catalog.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = ZGWD8QJUPK;
 				INFOPLIST_FILE = Catalog/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.google.Catalog;

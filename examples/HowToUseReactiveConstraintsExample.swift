@@ -17,25 +17,25 @@
 import UIKit
 import ReactiveMotion
 
-class DraggableReactiveConstraintExampleViewController: ExampleViewController {
+class HowToUseReactiveConstraintsExampleViewController: ExampleViewController {
 
   var runtime: MotionRuntime!
 
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    let axisLine = UIView(frame: .init(x: view.bounds.midX - 8, y: 0, width: 16, height: view.bounds.height))
-    axisLine.backgroundColor = .red
-    view.addSubview(axisLine)
+    let exampleView = center(createExampleView(), within: view)
+    view.addSubview(exampleView)
 
-    let square = center(createExampleView(), within: view)
-    view.addSubview(square)
+    let axisLine = UIView(frame: .init(x: view.bounds.midX - 8, y: 0, width: 16, height: view.bounds.height))
+    axisLine.backgroundColor = .secondaryColor
+    view.insertSubview(axisLine, belowSubview: exampleView)
 
     runtime = MotionRuntime(containerView: view)
 
     let axisCenterX = runtime.get(axisLine.layer).position.x()
-    runtime.add(Draggable(), to: square) { $0
-      .initialValue(square.layer.position)
+    runtime.add(Draggable(), to: exampleView) { $0
+      .initialValue(exampleView.layer.position)
       .xLocked(to: axisCenterX)
     }
 
@@ -44,6 +44,6 @@ class DraggableReactiveConstraintExampleViewController: ExampleViewController {
 
   override func exampleInformation() -> ExampleInfo {
     return .init(title: type(of: self).catalogBreadcrumbs().last!,
-                 instructions: "Drag the blue square to move it on the y axis.")
+                 instructions: "Drag the view to move it on the y axis.")
   }
 }

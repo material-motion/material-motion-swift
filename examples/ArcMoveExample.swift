@@ -17,7 +17,7 @@
 import UIKit
 import ReactiveMotion
 
-public class ArcMoveExampleViewController: UIViewController {
+class ArcMoveExampleViewController: ExampleViewController {
 
   var tapCircleLayer: CAShapeLayer!
   var blueSquare: UIView!
@@ -30,9 +30,8 @@ public class ArcMoveExampleViewController: UIViewController {
   var duration: MotionObservable<CGFloat>!
   var sliderValue: ReactiveProperty<CGFloat>!
 
-  public override func viewDidLoad() {
+  override func viewDidLoad() {
     super.viewDidLoad()
-    view.backgroundColor = .white
     self.createViews()
 
     timeline = Timeline()
@@ -67,21 +66,27 @@ public class ArcMoveExampleViewController: UIViewController {
     center.x -= 32
     center.y -= 32
 
-    blueSquare = UIView(frame: .init(x: center.x, y: center.y, width: 64, height: 64))
-    blueSquare.backgroundColor = UIColor(red: 51/255.0, green: 139/255.0, blue: 237/255.0, alpha: 1)
+    blueSquare = createExampleView()
+    blueSquare.frame = .init(x: 0, y: 0, width: blueSquare.bounds.width / 2, height: blueSquare.bounds.height / 2)
+    blueSquare.layer.cornerRadius = blueSquare.bounds.width / 2
     view.addSubview(blueSquare)
 
     tapCircleLayer = CAShapeLayer()
-    tapCircleLayer.frame = CGRect(x: center.x - 100, y: center.y - 200, width: 64, height: 64)
+    tapCircleLayer.frame = CGRect(x: center.x - 100, y: center.y - 200, width: blueSquare.bounds.width, height: blueSquare.bounds.height)
     tapCircleLayer.path = UIBezierPath(ovalIn: tapCircleLayer.bounds).cgPath
     tapCircleLayer.lineWidth = 1
     tapCircleLayer.fillColor = UIColor.clear.cgColor
-    tapCircleLayer.strokeColor = UIColor(red: 237/255.0, green: 0/255.0, blue: 141/255.0, alpha: 1).cgColor
+    tapCircleLayer.strokeColor = UIColor.primaryColor.cgColor
     view.layer.addSublayer(tapCircleLayer)
 
-    targetView = UIView(frame: .init(x: center.x, y: center.y, width: 64, height: 64))
+    targetView = UIView(frame: .init(x: center.x, y: center.y, width: blueSquare.bounds.width, height: blueSquare.bounds.height))
     targetView.layer.borderWidth = 1
-    targetView.layer.borderColor = UIColor.red.cgColor
+    targetView.layer.borderColor = UIColor.secondaryColor.cgColor
     view.addSubview(targetView)
+  }
+
+  override func exampleInformation() -> ExampleInfo {
+    return .init(title: type(of: self).catalogBreadcrumbs().last!,
+                 instructions: "Move the squares to change the arc movement.")
   }
 }

@@ -17,7 +17,7 @@
 import UIKit
 import ReactiveMotion
 
-class DraggableConstraintExampleViewController: ExampleViewController {
+class HowToMakeACustomOperatorExampleViewController: ExampleViewController {
 
   var runtime: MotionRuntime!
 
@@ -28,11 +28,20 @@ class DraggableConstraintExampleViewController: ExampleViewController {
     view.addSubview(square)
 
     runtime = MotionRuntime(containerView: view)
-    runtime.add(Draggable(), to: square) { $0.xLocked(to: square.layer.position.x) }
+    runtime.add(Draggable(), to: square) { $0.wobble(width: 100) }
   }
 
   override func exampleInformation() -> ExampleInfo {
     return .init(title: type(of: self).catalogBreadcrumbs().last!,
-                 instructions: "Drag the blue square to move it on the y axis.")
+                 instructions: "Drag up and down to wobble the square.")
+  }
+}
+
+extension MotionObservableConvertible where T == CGPoint {
+
+  fileprivate func wobble(width: CGFloat) -> MotionObservable<CGPoint> {
+    return _map(#function) {
+      .init(x: $0.x + sin($0.y / 50) * width, y: $0.y)
+    }
   }
 }

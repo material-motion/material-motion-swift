@@ -39,6 +39,6 @@ class DraggableExampleViewController: ExampleViewController {
 
   override func exampleInformation() -> ExampleInfo {
     return .init(title: type(of: self).catalogBreadcrumbs().last!,
-                 instructions: "Drag the blue square to move it.")
+                 instructions: "Drag the view to move it.")
   }
 }

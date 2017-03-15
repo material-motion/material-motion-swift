@@ -1,10 +1,15 @@
-# Material Motion streams for Apple devices
+# Reactive Motion (Swift)
 
 [![Build Status](https://travis-ci.org/material-motion/reactive-motion-swift.svg?branch=develop)](https://travis-ci.org/material-motion/reactive-motion-swift)
 [![codecov](https://codecov.io/gh/material-motion/reactive-motion-swift/branch/develop/graph/badge.svg)](https://codecov.io/gh/material-motion/reactive-motion-swift)
 [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/MaterialMotionStreams.svg)](https://cocoapods.org/pods/MaterialMotionStreams)
 [![Platform](https://img.shields.io/cocoapods/p/MaterialMotionStreams.svg)](http://cocoadocs.org/docsets/MaterialMotionStreams)
 [![Docs](https://img.shields.io/cocoapods/metrics/doc-percent/MaterialMotionStreams.svg)](http://cocoadocs.org/docsets/MaterialMotionStreams)
+
+Reactive Motion is a library for creating motion with [reactive programming](http://reactivex.io/)
+patterns.
+
+This library includes a variety of ready-to-use **interactions**.
 
 ## Installation
 

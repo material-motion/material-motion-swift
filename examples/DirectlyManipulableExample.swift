@@ -24,7 +24,7 @@ class DirectlyManipulableExampleViewController: ExampleViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    let square = center(createExampleView(), within: view)
+    let square = center(createExampleSquareView(), within: view)
     view.addSubview(square)
 
     runtime = MotionRuntime(containerView: view)

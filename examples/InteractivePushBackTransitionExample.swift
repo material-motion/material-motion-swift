@@ -17,12 +17,10 @@
 import UIKit
 import ReactiveMotion
 
-public class InteractivePushBackTransitionExampleViewController: UIViewController {
+class InteractivePushBackTransitionExampleViewController: ExampleViewController {
 
-  override public func viewDidLoad() {
+  override func viewDidLoad() {
     super.viewDidLoad()
-
-    view.backgroundColor = .white
 
     view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTap)))
   }
@@ -30,6 +28,11 @@ public class InteractivePushBackTransitionExampleViewController: UIViewControlle
   func didTap() {
     let vc = ModalViewController()
     present(vc, animated: true)
+  }
+
+  override func exampleInformation() -> ExampleInfo {
+    return .init(title: type(of: self).catalogBreadcrumbs().last!,
+                 instructions: "Tap to present a modal transition.")
   }
 }
 

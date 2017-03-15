@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     self.window = window
 
     let rootViewController = CBCNodeListViewController(node: CBCCreateNavigationTree())
-    rootViewController.title = "Reactive Motion examples"
+    rootViewController.title = "Reactive Motion Catalog"
     window.rootViewController = UINavigationController(rootViewController: rootViewController)
 
     window.makeKeyAndVisible()

@@ -26,7 +26,7 @@ class ExampleViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    view.backgroundColor = .white
+    view.backgroundColor = .backgroundColor
   }
 
   func exampleInformation() -> ExampleInfo {
@@ -38,7 +38,6 @@ class ExampleViewController: UIViewController {
 
     let info = exampleInformation()
     self.title = info.title
-    navigationItem.prompt = info.instructions
   }
 
   required init?(coder aDecoder: NSCoder) {

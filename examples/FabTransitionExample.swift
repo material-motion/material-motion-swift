@@ -17,16 +17,14 @@
 import UIKit
 import ReactiveMotion
 
-public class FabTransitionExampleViewController: UIViewController, TransitionContextViewRetriever {
+class FabTransitionExampleViewController: ExampleViewController, TransitionContextViewRetriever {
 
   var actionButton: UIButton!
-  override public func viewDidLoad() {
+  override func viewDidLoad() {
     super.viewDidLoad()
 
-    view.backgroundColor = .white
-
     actionButton = UIButton(type: .custom)
-    actionButton.backgroundColor = .green
+    actionButton.backgroundColor = .primaryColor
     actionButton.bounds = .init(x: 0, y: 0, width: 50, height: 50)
     actionButton.layer.cornerRadius = actionButton.bounds.width / 2
     actionButton.layer.position = .init(x: view.bounds.width - actionButton.bounds.width / 2 - 24,
@@ -47,8 +45,13 @@ public class FabTransitionExampleViewController: UIViewController, TransitionCon
     present(vc, animated: true)
   }
 
-  public func contextViewForTransition(foreViewController: UIViewController) -> UIView? {
+  func contextViewForTransition(foreViewController: UIViewController) -> UIView? {
     return actionButton
+  }
+
+  override func exampleInformation() -> ExampleInfo {
+    return .init(title: type(of: self).catalogBreadcrumbs().last!,
+                 instructions: "Tap the floating action button to start a transition.")
   }
 }
 

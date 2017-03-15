@@ -25,8 +25,6 @@ class CarouselExampleViewController: ExampleViewController, UIScrollViewDelegate
 
     automaticallyAdjustsScrollViewInsets = false
 
-    view.backgroundColor = UIColor(hexColor: 0xF8AA36)
-
     let scrollView = UIScrollView(frame: view.bounds)
     scrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     scrollView.isPagingEnabled = true
@@ -42,9 +40,9 @@ class CarouselExampleViewController: ExampleViewController, UIScrollViewDelegate
     view.addSubview(pager)
 
     let datas = [
-      (title: "Mr Catterson", description: "Such a cat", image: UIImage(named: "sticker0")!),
-      (title: "Bartholomew", description: "Cattest of cats", image: UIImage(named: "sticker1")!),
-      (title: "Purr purr", description: "Meow", image: UIImage(named: "sticker2")!),
+      (title: "Page 1", description: "Page 1 description", color: UIColor.white),
+      (title: "Page 2", description: "Page 2 description", color: .primaryColor),
+      (title: "Page 3", description: "Page 3 description", color: .secondaryColor),
     ]
 
     runtime = MotionRuntime(containerView: view)
@@ -55,7 +53,7 @@ class CarouselExampleViewController: ExampleViewController, UIScrollViewDelegate
       page.frame.origin.x = CGFloat(index) * view.bounds.width
       page.titleLabel.text = data.title
       page.descriptionLabel.text = data.description
-      page.imageView.image = data.image
+      page.iconView.backgroundColor = data.color
       scrollView.addSubview(page)
 
       let pageEdge = stream.x().offset(by: -page.frame.origin.x)
@@ -84,7 +82,7 @@ class CarouselExampleViewController: ExampleViewController, UIScrollViewDelegate
 private class CarouselPage: UIView {
   let titleLabel = UILabel()
   let descriptionLabel = UILabel()
-  let imageView = UIImageView()
+  let iconView = UIView()
 
   override init(frame: CGRect) {
     titleLabel.font = .boldSystemFont(ofSize: 24)
@@ -94,13 +92,11 @@ private class CarouselPage: UIView {
     descriptionLabel.numberOfLines = 0
     descriptionLabel.lineBreakMode = .byWordWrapping
 
-    imageView.contentMode = .center
-
     super.init(frame: frame)
 
     addSubview(titleLabel)
     addSubview(descriptionLabel)
-    addSubview(imageView)
+    addSubview(iconView)
   }
 
   required init?(coder aDecoder: NSCoder) {
@@ -116,20 +112,7 @@ private class CarouselPage: UIView {
     let titleSize = titleLabel.sizeThatFits(bounds.size)
     titleLabel.frame = .init(x: 16, y: descriptionLabel.frame.minY - descriptionSize.height - 24, width: bounds.width - 32, height: titleSize.height)
 
-    imageView.frame = .init(x: 0, y: 0, width: bounds.width, height: bounds.width)
-  }
-}
-
-extension UIColor {
-  private convenience init(red: Int, green: Int, blue: Int) {
-    assert(red >= 0 && red <= 255, "Invalid red component")
-    assert(green >= 0 && green <= 255, "Invalid green component")
-    assert(blue >= 0 && blue <= 255, "Invalid blue component")
-
-    self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
-  }
-
-  fileprivate convenience init(hexColor: Int) {
-    self.init(red: (hexColor >> 16) & 0xff, green: (hexColor >> 8) & 0xff, blue: hexColor & 0xff)
+    iconView.frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.width).insetBy(dx: 64, dy: 64)
+    iconView.layer.cornerRadius = iconView.bounds.width / 2
   }
 }

@@ -37,7 +37,7 @@ public class TimelineView: UIView {
 
     slider = UISlider(frame: .zero)
     slider.value = Float(sliderValue.value)
-    slider.tintColor = UIColor.black
+    slider.tintColor = .primaryColor
     slider.addTarget(self, action: #selector(didSlide), for: .valueChanged)
     self.addSubview(slider)
 

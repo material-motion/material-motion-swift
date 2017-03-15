@@ -18,54 +18,54 @@
 
 import Foundation
 
-extension DraggableExampleViewController {
-  class func catalogBreadcrumbs() -> [String] { return ["Draggable"] }
-}
-
-extension DraggableConstraintExampleViewController {
-  class func catalogBreadcrumbs() -> [String] { return ["Draggable with constraints"] }
-}
-
-extension DraggableCustomOperatorExampleViewController {
-  class func catalogBreadcrumbs() -> [String] { return ["Draggable with custom operator"] }
-}
-
-extension DraggableReactiveConstraintExampleViewController {
-  class func catalogBreadcrumbs() -> [String] { return ["Draggable with reactive constraints"] }
-}
-
-extension DirectlyManipulableExampleViewController {
-  class func catalogBreadcrumbs() -> [String] { return ["Directly manipulable"] }
-}
-
-extension ArcMoveExampleViewController {
-  class func catalogBreadcrumbs() -> [String] { return ["Arc move"] }
-}
-
 extension CarouselExampleViewController {
-  class func catalogBreadcrumbs() -> [String] { return ["Carousel"] }
-}
-
-extension ModalDialogExampleViewController {
-  class func catalogBreadcrumbs() -> [String] { return ["Modal dialog"] }
-}
-
-extension ContextualTransitionExampleViewController {
-  class func catalogBreadcrumbs() -> [String] { return ["Contextual transition"] }
+  class func catalogBreadcrumbs() -> [String] { return ["Case studies", "Carousel"] }
 }
 
 extension FabTransitionExampleViewController {
-  class func catalogBreadcrumbs() -> [String] { return ["FAB transition"] }
-}
-
-extension PushBackTransitionExampleViewController {
-  class func catalogBreadcrumbs() -> [String] { return ["Push back transition"] }
-}
-
-extension InteractivePushBackTransitionExampleViewController {
-  class func catalogBreadcrumbs() -> [String] { return ["Push back transition (interactive)"] }
+  class func catalogBreadcrumbs() -> [String] { return ["Case studies", "FAB transition"] }
 }
 
 extension StickerPickerExampleViewController {
-  class func catalogBreadcrumbs() -> [String] { return ["Sticker picker"] }
+  class func catalogBreadcrumbs() -> [String] { return ["Case studies", "Sticker picker"] }
+}
+
+extension HowToUseConstraintsExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["How to...", "Use constraints"] }
+}
+
+extension HowToUseReactiveConstraintsExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["How to...", "Use reactive constraints"] }
+}
+
+extension HowToMakeACustomOperatorExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["How to...", "Make a custom operator"] }
+}
+
+extension ArcMoveExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Arc move"] }
+}
+
+extension DraggableExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Draggable"] }
+}
+
+extension DirectlyManipulableExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Directly manipulable"] }
+}
+
+extension ModalDialogExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Transitions", "Modal dialog"] }
+}
+
+extension ContextualTransitionExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Transitions", "Contextual transition"] }
+}
+
+extension PushBackTransitionExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Transitions", "Push back transition"] }
+}
+
+extension InteractivePushBackTransitionExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Transitions", "Push back transition (interactive)"] }
 }

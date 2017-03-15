@@ -17,18 +17,29 @@
 import Foundation
 import ReactiveMotion
 
-public class StickerPickerExampleViewController: UIViewController, StickerListViewControllerDelegate {
+class StickerPickerExampleViewController: ExampleViewController, StickerListViewControllerDelegate {
 
   var runtime: MotionRuntime!
 
-  init() {
-    super.init(nibName: nil, bundle: nil)
+  override func viewDidLoad() {
+    super.viewDidLoad()
 
     navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTapAdd))
+
+    runtime = MotionRuntime(containerView: view)
   }
 
-  public required init?(coder aDecoder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
+  fileprivate func didPickSticker(_ sticker: Sticker) {
+    let stickerView = UIView(frame: .init(x: 0, y: 0, width: 100, height: 100))
+    stickerView.backgroundColor = sticker.color
+    stickerView.center = .init(x: view.bounds.midX, y: view.bounds.midY)
+    view.addSubview(stickerView)
+
+    let direction = createProperty(withInitialValue: TransitionContext.Direction.forward)
+    let spring = TransitionSpring(back: CGFloat(1.5), fore: 1, direction: direction, threshold: 0.1, system: coreAnimation)
+    runtime.add(spring, to: runtime.get(stickerView.layer).scale)
+
+    runtime.add(DirectlyManipulable(), to: stickerView)
   }
 
   func didTapAdd() {
@@ -37,64 +48,31 @@ public class StickerPickerExampleViewController: UIViewController, StickerListVi
     present(picker, animated: true)
   }
 
-  public override func viewDidLoad() {
-    super.viewDidLoad()
-
-    runtime = MotionRuntime(containerView: view)
-
-    view.backgroundColor = .white
-  }
-
-  fileprivate func didPickSticker(_ sticker: Sticker) {
-    let imageView = UIImageView(image: sticker.image)
-    imageView.sizeToFit()
-    imageView.center = .init(x: view.bounds.midX, y: view.bounds.midY)
-    view.addSubview(imageView)
-
-    imageView.layer.transform = CATransform3DMakeScale(1.5, 1.5, 1)
-    let spring = Spring<CGFloat>(threshold: 1, system: coreAnimation)
-    spring.destination.value = 1
-    runtime.add(spring, to: runtime.get(imageView.layer).scale)
-
-    runtime.add(DirectlyManipulable(), to: imageView)
+  override func exampleInformation() -> ExampleInfo {
+    return .init(title: type(of: self).catalogBreadcrumbs().last!,
+                 instructions: "Tap the plus to add a sticker.")
   }
 }
 
 private let numberOfStickers = 3
 
 private struct Sticker {
-  let name: String
-  let image: UIImage
+  let color: UIColor
   let uuid: String
 
-  fileprivate init(name: String) {
-    self.uuid = NSUUID().uuidString
-    self.name = name
+  fileprivate init(color: UIColor) {
+    self.color = color
 
-    // NOTE: In a real app you should never load images from disk on the UI thread like this.
-    // Instead, you should find some way to cache the thumbnails in memory and then asynchronously
-    // load the full-size photos from disk/network when needed. The photo library APIs provide
-    // exactly this sort of behavior (square thumbnails are accessible immediately on the UI thread
-    // while the full-sized photos need to be loaded asynchronously).
-    self.image = UIImage(named: "\(self.name).jpg")!
+    self.uuid = NSUUID().uuidString
   }
 }
 
 private class StickerAlbum {
-  let stickers: [Sticker]
-  let identifierToIndex: [String: Int]
-
-  init() {
-    var stickers: [Sticker] = []
-    var identifierToIndex: [String: Int] = [:]
-    for index in 0..<numberOfStickers {
-      let sticker = Sticker(name: "sticker\(index)")
-      stickers.append(sticker)
-      identifierToIndex[sticker.uuid] = index
-    }
-    self.stickers = stickers
-    self.identifierToIndex = identifierToIndex
-  }
+  let stickers = [
+    Sticker(color: .white),
+    Sticker(color: .primaryColor),
+    Sticker(color: .secondaryColor)
+  ]
 }
 
 private class StickerCollectionViewCell: UICollectionViewCell {
@@ -142,8 +120,8 @@ private class StickerListViewController: UICollectionViewController {
     super.viewDidLoad()
 
     collectionView!.backgroundColor = UIColor(white: 0, alpha: 0.25)
-    collectionView!.register(PhotoCollectionViewCell.self,
-                             forCellWithReuseIdentifier: photoCellIdentifier)
+    collectionView!.register(StickerViewCell.self,
+                             forCellWithReuseIdentifier: stickerCellIdentifier)
   }
 
   public override func viewDidLayoutSubviews() {
@@ -169,10 +147,10 @@ private class StickerListViewController: UICollectionViewController {
   }
 
   public override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: photoCellIdentifier,
-                                                  for: indexPath) as! PhotoCollectionViewCell
+    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: stickerCellIdentifier,
+                                                  for: indexPath) as! StickerViewCell
     let sticker = album.stickers[indexPath.row]
-    cell.imageView.image = sticker.image
+    cell.view.backgroundColor = sticker.color
     return cell
   }
 
@@ -180,6 +158,30 @@ private class StickerListViewController: UICollectionViewController {
     selectedSticker = album.stickers[indexPath.row]
     delegate?.didPickSticker(selectedSticker!)
     dismiss(animated: true)
+  }
+}
+
+let stickerCellIdentifier = "stickerCell"
+
+private class StickerViewCell: UICollectionViewCell {
+  let view = UIView()
+
+  override init(frame: CGRect) {
+    super.init(frame: frame)
+
+    view.frame = bounds.insetBy(dx: 8, dy: 8)
+
+    contentView.addSubview(view)
+  }
+
+  required init?(coder aDecoder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  override func layoutSubviews() {
+    super.layoutSubviews()
+
+    view.frame = bounds.insetBy(dx: 8, dy: 8)
   }
 }
 

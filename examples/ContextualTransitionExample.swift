@@ -55,9 +55,9 @@ class PhotoAlbum {
   }
 }
 
-let photoCellIdentifier = "photoCell"
+private let photoCellIdentifier = "photoCell"
 
-class PhotoCollectionViewCell: UICollectionViewCell {
+private class PhotoCollectionViewCell: UICollectionViewCell {
   let imageView = UIImageView()
 
   override init(frame: CGRect) {
@@ -188,7 +188,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 
     collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
     collectionView.isPagingEnabled = true
-    collectionView.backgroundColor = .white
+    collectionView.backgroundColor = .backgroundColor
     collectionView.showsHorizontalScrollIndicator = false
     collectionView.dataSource = self
     collectionView.delegate = self
