@@ -24,14 +24,12 @@
 		667E94531E71EF0E005CAC78 /* CarouselExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E94461E71EF0E005CAC78 /* CarouselExample.swift */; };
 		667E94541E71EF0E005CAC78 /* ContextualTransitionExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E94471E71EF0E005CAC78 /* ContextualTransitionExample.swift */; };
 		667E94551E71EF0E005CAC78 /* DirectlyManipulableExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E94481E71EF0E005CAC78 /* DirectlyManipulableExample.swift */; };
-		667E94561E71EF0E005CAC78 /* DragSourceExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E94491E71EF0E005CAC78 /* DragSourceExample.swift */; };
 		667E94571E71EF0E005CAC78 /* FabTransitionExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E944A1E71EF0E005CAC78 /* FabTransitionExample.swift */; };
 		667E94581E71EF0E005CAC78 /* InteractivePushBackTransitionExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E944B1E71EF0E005CAC78 /* InteractivePushBackTransitionExample.swift */; };
 		667E94591E71EF0E005CAC78 /* ModalDialogExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E944C1E71EF0E005CAC78 /* ModalDialogExample.swift */; };
 		667E945A1E71EF0E005CAC78 /* PushBackTransitionExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E944D1E71EF0E005CAC78 /* PushBackTransitionExample.swift */; };
 		667E945B1E71EF0E005CAC78 /* StickerPickerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E944E1E71EF0E005CAC78 /* StickerPickerExample.swift */; };
 		667E945C1E71EF0E005CAC78 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E94501E71EF0E005CAC78 /* TimelineView.swift */; };
-		667E945D1E71EF0E005CAC78 /* SwipeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667E94511E71EF0E005CAC78 /* SwipeExample.swift */; };
 		6686F01C1E77293100F97CC4 /* MotionRuntimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6686F01B1E77293100F97CC4 /* MotionRuntimeTests.swift */; };
 		6686F01E1E772F1700F97CC4 /* ExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6686F01D1E772F1700F97CC4 /* ExampleViewController.swift */; };
 		669F80CA1E41A20E00E46B38 /* Stickers.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 669F80C91E41A20E00E46B38 /* Stickers.xcassets */; };
@@ -78,14 +76,12 @@
 		667E94461E71EF0E005CAC78 /* CarouselExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CarouselExample.swift; path = ../../CarouselExample.swift; sourceTree = "<group>"; };
 		667E94471E71EF0E005CAC78 /* ContextualTransitionExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContextualTransitionExample.swift; path = ../../ContextualTransitionExample.swift; sourceTree = "<group>"; };
 		667E94481E71EF0E005CAC78 /* DirectlyManipulableExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DirectlyManipulableExample.swift; path = ../../DirectlyManipulableExample.swift; sourceTree = "<group>"; };
-		667E94491E71EF0E005CAC78 /* DragSourceExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DragSourceExample.swift; path = ../../DragSourceExample.swift; sourceTree = "<group>"; };
 		667E944A1E71EF0E005CAC78 /* FabTransitionExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FabTransitionExample.swift; path = ../../FabTransitionExample.swift; sourceTree = "<group>"; };
 		667E944B1E71EF0E005CAC78 /* InteractivePushBackTransitionExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InteractivePushBackTransitionExample.swift; path = ../../InteractivePushBackTransitionExample.swift; sourceTree = "<group>"; };
 		667E944C1E71EF0E005CAC78 /* ModalDialogExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModalDialogExample.swift; path = ../../ModalDialogExample.swift; sourceTree = "<group>"; };
 		667E944D1E71EF0E005CAC78 /* PushBackTransitionExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PushBackTransitionExample.swift; path = ../../PushBackTransitionExample.swift; sourceTree = "<group>"; };
 		667E944E1E71EF0E005CAC78 /* StickerPickerExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StickerPickerExample.swift; path = ../../StickerPickerExample.swift; sourceTree = "<group>"; };
 		667E94501E71EF0E005CAC78 /* TimelineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
-		667E94511E71EF0E005CAC78 /* SwipeExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwipeExample.swift; path = ../../SwipeExample.swift; sourceTree = "<group>"; };
 		6686F01B1E77293100F97CC4 /* MotionRuntimeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionRuntimeTests.swift; sourceTree = "<group>"; };
 		6686F01D1E772F1700F97CC4 /* ExampleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleViewController.swift; sourceTree = "<group>"; };
 		6686F0201E79845E00F97CC4 /* ReactivePlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = ReactivePlayground.playground; sourceTree = "<group>"; };
@@ -183,10 +179,8 @@
 				66DDFD221E788D1B00AA46B7 /* How to build a view controller transition */,
 				66DDFD211E788C1200AA46B7 /* How to react to scrolling */,
 				66DDFD241E788DD500AA46B7 /* How to create custom operators */,
-				667E94451E71EF0E005CAC78 /* ArcMoveExample.swift */,
-				667E94491E71EF0E005CAC78 /* DragSourceExample.swift */,
-				667E944E1E71EF0E005CAC78 /* StickerPickerExample.swift */,
-				667E94511E71EF0E005CAC78 /* SwipeExample.swift */,
+				667D05C01E79B8A100996BE3 /* How to move along an arc */,
+				667D05BF1E79B88F00996BE3 /* Case studies */,
 				667E944F1E71EF0E005CAC78 /* supplemental */,
 				666FAAA61D384B77000363DA /* app */,
 				666FAA971D384A6B000363DA /* tests */,
@@ -251,6 +245,22 @@
 				666FAA831D384A6B000363DA /* AppDelegate.swift */,
 			);
 			name = app;
+			sourceTree = "<group>";
+		};
+		667D05BF1E79B88F00996BE3 /* Case studies */ = {
+			isa = PBXGroup;
+			children = (
+				667E944E1E71EF0E005CAC78 /* StickerPickerExample.swift */,
+			);
+			name = "Case studies";
+			sourceTree = "<group>";
+		};
+		667D05C01E79B8A100996BE3 /* How to move along an arc */ = {
+			isa = PBXGroup;
+			children = (
+				667E94451E71EF0E005CAC78 /* ArcMoveExample.swift */,
+			);
+			name = "How to move along an arc";
 			sourceTree = "<group>";
 		};
 		667E944F1E71EF0E005CAC78 /* supplemental */ = {
@@ -540,14 +550,12 @@
 				66DDFD141E71F3D600AA46B7 /* Layout.swift in Sources */,
 				667E94531E71EF0E005CAC78 /* CarouselExample.swift in Sources */,
 				667E94581E71EF0E005CAC78 /* InteractivePushBackTransitionExample.swift in Sources */,
-				667E94561E71EF0E005CAC78 /* DragSourceExample.swift in Sources */,
 				667E94571E71EF0E005CAC78 /* FabTransitionExample.swift in Sources */,
 				667E94541E71EF0E005CAC78 /* ContextualTransitionExample.swift in Sources */,
 				6686F01E1E772F1700F97CC4 /* ExampleViewController.swift in Sources */,
 				66DDFD161E71F90F00AA46B7 /* DraggableReactiveConstraintExample.swift in Sources */,
 				66DDFD101E71F32800AA46B7 /* DraggableConstraintExample.swift in Sources */,
 				667E94521E71EF0E005CAC78 /* ArcMoveExample.swift in Sources */,
-				667E945D1E71EF0E005CAC78 /* SwipeExample.swift in Sources */,
 				667E945A1E71EF0E005CAC78 /* PushBackTransitionExample.swift in Sources */,
 				667E945C1E71EF0E005CAC78 /* TimelineView.swift in Sources */,
 				66DDFD0D1E71F0F100AA46B7 /* DraggableExample.swift in Sources */,

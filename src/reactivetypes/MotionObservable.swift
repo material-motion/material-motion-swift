@@ -125,8 +125,8 @@ public final class MotionObservable<T>: IndefiniteObservable<MotionObserver<T>> 
   /**
    The provided name is used to create this observable's Metadata information.
    */
-  public convenience init(_ name: String? = nil, connect: @escaping Connect<MotionObserver<T>>) {
-    self.init(Metadata(name), connect: connect)
+  public convenience init(_ name: String? = nil, args: [Any]? = nil, connect: @escaping Connect<MotionObserver<T>>) {
+    self.init(Metadata(name, args: args), connect: connect)
   }
 
   /**

@@ -38,10 +38,6 @@ extension DirectlyManipulableExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["Directly manipulable"] }
 }
 
-extension DragSourceExampleViewController {
-  class func catalogBreadcrumbs() -> [String] { return ["Drag source"] }
-}
-
 extension ArcMoveExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["Arc move"] }
 }
@@ -68,10 +64,6 @@ extension PushBackTransitionExampleViewController {
 
 extension InteractivePushBackTransitionExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["Push back transition (interactive)"] }
-}
-
-extension SwipeExampleViewController {
-  class func catalogBreadcrumbs() -> [String] { return ["Swipe stack"] }
 }
 
 extension StickerPickerExampleViewController {
