@@ -194,26 +194,24 @@ public func createCoreAnimationProperty<T>(_ name: String, initialValue: T, exte
         basicAnimation.isAdditive = true
       }
 
-      if #available(iOS 9.0, *) {
-        // Core Animation springs do not support multi-dimensional velocity, so we bear the burden
-        // of decomposing multi-dimensional springs here.
-        if let springAnimation = animation as? CASpringAnimation
-          , springAnimation.isAdditive
-          , let initialVelocity = info.initialVelocity as? CGPoint
-          , let delta = springAnimation.fromValue as? CGPoint {
-          let decomposed = decompose(springAnimation: springAnimation,
-                                     delta: delta,
-                                     initialVelocity: initialVelocity)
+      // Core Animation springs do not support multi-dimensional velocity, so we bear the burden
+      // of decomposing multi-dimensional springs here.
+      if let springAnimation = animation as? CASpringAnimation
+        , springAnimation.isAdditive
+        , let initialVelocity = info.initialVelocity as? CGPoint
+        , let delta = springAnimation.fromValue as? CGPoint {
+        let decomposed = decompose(springAnimation: springAnimation,
+                                   delta: delta,
+                                   initialVelocity: initialVelocity)
 
-          CATransaction.begin()
-          CATransaction.setCompletionBlock(info.onCompletion)
-          layer.add(decomposed.0, forKey: info.key + ".x")
-          layer.add(decomposed.1, forKey: info.key + ".y")
-          CATransaction.commit()
+        CATransaction.begin()
+        CATransaction.setCompletionBlock(info.onCompletion)
+        layer.add(decomposed.0, forKey: info.key + ".x")
+        layer.add(decomposed.1, forKey: info.key + ".y")
+        CATransaction.commit()
 
-          strongReactiveLayer.decomposedKeys.insert(info.key)
-          return
-        }
+        strongReactiveLayer.decomposedKeys.insert(info.key)
+        return
       }
 
       if let initialVelocity = info.initialVelocity {
@@ -272,7 +270,6 @@ public class ReactiveCAShapeLayer: ReactiveCALayer {
   }
 }
 
-@available(iOS 9.0, *)
 private func decompose(springAnimation: CASpringAnimation, delta: CGPoint, initialVelocity: CGPoint) -> (CASpringAnimation, CASpringAnimation) {
   let xAnimation = springAnimation.copy() as! CASpringAnimation
   let yAnimation = springAnimation.copy() as! CASpringAnimation
@@ -295,19 +292,17 @@ private func decompose(springAnimation: CASpringAnimation, delta: CGPoint, initi
 }
 
 private func applyInitialVelocity(_ initialVelocity: Any, to animation: CAPropertyAnimation) {
-  if #available(iOS 9.0, *) {
-    if let springAnimation = animation as? CASpringAnimation, springAnimation.isAdditive {
-      // Additive animations have a toValue of 0 and a fromValue of negative delta (where the model
-      // value came from).
-      guard let initialVelocity = initialVelocity as? CGFloat, let delta = springAnimation.fromValue as? CGFloat else {
-        // Unsupported velocity type.
-        return
-      }
-      if delta != 0 {
-        // CASpringAnimation's initialVelocity is proportional to the distance to travel, i.e. our
-        // delta.
-        springAnimation.initialVelocity = initialVelocity / -delta
-      }
+  if let springAnimation = animation as? CASpringAnimation, springAnimation.isAdditive {
+    // Additive animations have a toValue of 0 and a fromValue of negative delta (where the model
+    // value came from).
+    guard let initialVelocity = initialVelocity as? CGFloat, let delta = springAnimation.fromValue as? CGFloat else {
+      // Unsupported velocity type.
+      return
+    }
+    if delta != 0 {
+      // CASpringAnimation's initialVelocity is proportional to the distance to travel, i.e. our
+      // delta.
+      springAnimation.initialVelocity = initialVelocity / -delta
     }
   }
 }

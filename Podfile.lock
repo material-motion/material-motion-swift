@@ -20,7 +20,7 @@ SPEC CHECKSUMS:
   CatalogByConvention: be55c2263132e4f9f59299ac8a528ee8715b3275
   IndefiniteObservable: 2789d61f487d8d37fa2b9c3153cc44d4447ff744
   pop: f667631a5108a2e60d9e8797c9b32ddaf2080bce
-  ReactiveMotion: 9dd34c7c297f308fd09cf4ad6df4ab9924b372fe
+  ReactiveMotion: ce310a701dbfaff6522cc58e4df00657bc120158
 
 PODFILE CHECKSUM: 3351385be5c3c7626c357a5568b15c5faa6997ab
 

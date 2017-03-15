@@ -17,7 +17,6 @@
 import UIKit
 import ReactiveMotion
 
-@available(iOS 9.0, *)
 public class FabTransitionExampleViewController: UIViewController, TransitionContextViewRetriever {
 
   var actionButton: UIButton!
@@ -53,7 +52,6 @@ public class FabTransitionExampleViewController: UIViewController, TransitionCon
   }
 }
 
-@available(iOS 9.0, *)
 private class ModalViewController: UIViewController, UITableViewDataSource {
 
   override func viewDidLoad() {
@@ -84,7 +82,6 @@ private class ModalViewController: UIViewController, UITableViewDataSource {
 
 let floodFillOvershootRatio: CGFloat = 1.2
 
-@available(iOS 9.0, *)
 private class CircularRevealTransition: Transition {
 
   // TODO: Support for transient views.

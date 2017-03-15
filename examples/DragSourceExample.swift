@@ -17,7 +17,6 @@
 import UIKit
 import ReactiveMotion
 
-@available(iOS 9.0, *)
 public class DragSourceExampleViewController: UIViewController {
 
   var runtime: MotionRuntime!

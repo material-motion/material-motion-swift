@@ -17,7 +17,6 @@
 import UIKit
 import ReactiveMotion
 
-@available(iOS 9.0, *)
 public class InteractivePushBackTransitionExampleViewController: UIViewController {
 
   override public func viewDidLoad() {
@@ -34,7 +33,6 @@ public class InteractivePushBackTransitionExampleViewController: UIViewControlle
   }
 }
 
-@available(iOS 9.0, *)
 private class ModalViewController: UIViewController {
 
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -58,7 +56,6 @@ private class ModalViewController: UIViewController {
   }
 }
 
-@available(iOS 9.0, *)
 private class PushBackTransition: Transition {
 
   required init() {}

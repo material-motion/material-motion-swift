@@ -80,7 +80,6 @@ class PhotoCollectionViewCell: UICollectionViewCell {
   }
 }
 
-@available(iOS 9.0, *)
 public class ContextualTransitionExampleViewController: UICollectionViewController, TransitionContextViewRetriever {
 
   let album = PhotoAlbum()
@@ -154,7 +153,6 @@ public class ContextualTransitionExampleViewController: UICollectionViewControll
   }
 }
 
-@available(iOS 9.0, *)
 class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
   var collectionView: UICollectionView!
@@ -255,7 +253,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
   }
 }
 
-@available(iOS 9.0, *)
 private class PushBackTransition: Transition {
 
   required init() {}

@@ -42,11 +42,7 @@ class ModalDialogViewController: UIViewController {
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
     super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
-    if #available(iOS 9.0, *) {
-      transitionController.transitionType = ModalDialogTransition.self
-    } else {
-      // Fallback on earlier versions
-    }
+    transitionController.transitionType = ModalDialogTransition.self
 
     modalPresentationStyle = .overCurrentContext
   }
@@ -70,7 +66,6 @@ class ModalDialogViewController: UIViewController {
   }
 }
 
-@available(iOS 9.0, *)
 class ModalDialogTransition: SelfDismissingTransition {
 
   required init() {}

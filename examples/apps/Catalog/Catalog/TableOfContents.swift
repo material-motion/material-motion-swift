@@ -38,7 +38,6 @@ extension DirectlyManipulableExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["Directly manipulable"] }
 }
 
-@available(iOS 9.0, *)
 extension DragSourceExampleViewController {
   class func catalogBreadcrumbs() -> [String] {
     return ["Drag source"]
@@ -63,28 +62,24 @@ extension ModalDialogExampleViewController {
   }
 }
 
-@available(iOS 9.0, *)
 extension ContextualTransitionExampleViewController {
   class func catalogBreadcrumbs() -> [String] {
     return ["Contextual transition"]
   }
 }
 
-@available(iOS 9.0, *)
 extension FabTransitionExampleViewController {
   class func catalogBreadcrumbs() -> [String] {
     return ["FAB transition"]
   }
 }
 
-@available(iOS 9.0, *)
 extension PushBackTransitionExampleViewController {
   class func catalogBreadcrumbs() -> [String] {
     return ["Push back transition"]
   }
 }
 
-@available(iOS 9.0, *)
 extension InteractivePushBackTransitionExampleViewController {
   class func catalogBreadcrumbs() -> [String] {
     return ["Push back transition (interactive)"]
@@ -97,7 +92,6 @@ extension SwipeExampleViewController {
   }
 }
 
-@available(iOS 9.0, *)
 extension StickerPickerExampleViewController {
   class func catalogBreadcrumbs() -> [String] {
     return ["Sticker picker"]

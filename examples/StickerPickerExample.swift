@@ -17,7 +17,6 @@
 import Foundation
 import ReactiveMotion
 
-@available(iOS 9.0, *)
 public class StickerPickerExampleViewController: UIViewController, StickerListViewControllerDelegate {
 
   var runtime: MotionRuntime!
@@ -121,7 +120,6 @@ private class StickerCollectionViewCell: UICollectionViewCell {
   }
 }
 
-@available(iOS 9.0, *)
 private class StickerListViewController: UICollectionViewController {
 
   let album = StickerAlbum()
@@ -189,7 +187,6 @@ private protocol StickerListViewControllerDelegate: NSObjectProtocol {
   func didPickSticker(_ sticker: Sticker)
 }
 
-@available(iOS 9.0, *)
 private class ModalTransition: Transition {
 
   required init() {}
