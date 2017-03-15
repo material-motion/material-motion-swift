@@ -28,7 +28,13 @@ class DraggableExampleViewController: ExampleViewController {
     view.addSubview(square)
 
     runtime = MotionRuntime(containerView: view)
-    runtime.add(Draggable(), to: square)
+
+    let draggable = Draggable()
+    runtime.add(draggable, to: square)
+
+    runtime.whenAllAtRest([draggable]) {
+      print("Is now at rest")
+    }
   }
 
   override func exampleInformation() -> ExampleInfo {

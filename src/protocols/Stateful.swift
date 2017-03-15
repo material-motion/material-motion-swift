@@ -40,3 +40,34 @@ public enum MotionState {
    */
   case active
 }
+
+/**
+ Aggregates one or more MotionState streams into a single stream.
+
+ If any observed stream is active, then the aggregate is active. Otherwise, the aggregate is at
+ rest.
+ */
+class AggregateMotionState {
+
+  /**
+   Observe the provided MotionState reactive object.
+   */
+  func observe<O>(state: O, withRuntime runtime: MotionRuntime) where O: MotionObservableConvertible, O: AnyObject, O.T == MotionState {
+    let identifier = ObjectIdentifier(state)
+    runtime.connect(state.asStream().dedupe(), to: ReactiveProperty("Aggregate state", initialValue: .atRest) { state in
+      if state == .active {
+        self.activeStates.insert(identifier)
+      } else {
+        self.activeStates.remove(identifier)
+      }
+      self.state.value = self.activeStates.count == 0 ? .atRest : .active
+    })
+  }
+
+  func asStream() -> MotionObservable<MotionState> {
+    return state.asStream()
+  }
+
+  private let state = createProperty("state", withInitialValue: MotionState.atRest)
+  private var activeStates = Set<ObjectIdentifier>()
+}

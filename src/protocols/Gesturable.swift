@@ -103,5 +103,14 @@ public class Gesturable<T: UIGestureRecognizer> {
     return gestureRecognizer
   }
 
+  /**
+   The current state of the drag gesture.
+   */
+  public var state: MotionObservable<MotionState> {
+    return aggregateState.asStream()
+  }
+
+  let aggregateState = AggregateMotionState()
+
   private var _nextGestureRecognizer: T?
 }

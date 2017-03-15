@@ -32,14 +32,18 @@ import Foundation
  - `{ $0.xLocked(to: somePosition) }`
  - `{ $0.yLocked(to: somePosition) }`
  */
-public final class Draggable: Gesturable<UIPanGestureRecognizer>, Interaction {
+public final class Draggable: Gesturable<UIPanGestureRecognizer>, Interaction, Stateful {
   public func add(to view: UIView,
                   withRuntime runtime: MotionRuntime,
                   constraints applyConstraints: ConstraintApplicator<CGPoint>? = nil) {
     let reactiveView = runtime.get(view)
     let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView)
     let position = reactiveView.reactiveLayer.position
-    var stream = runtime.get(gestureRecognizer).translation(addedTo: position)
+
+    let reactiveGesture = runtime.get(gestureRecognizer)
+    aggregateState.observe(state: reactiveGesture.state, withRuntime: runtime)
+
+    var stream = reactiveGesture.translation(addedTo: position)
     if let applyConstraints = applyConstraints {
       stream = applyConstraints(stream)
     }

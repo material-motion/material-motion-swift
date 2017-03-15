@@ -24,7 +24,7 @@ import Foundation
 
  - `view.layer.position`
  */
-public final class ArcMove: Interaction {
+public final class ArcMove: Interaction, Togglable, Stateful {
 
   /**
    The initial position of the arc move animation.
@@ -51,6 +51,14 @@ public final class ArcMove: Interaction {
   public func add(to view: UIView, withRuntime runtime: MotionRuntime, constraints: Void?) {
     runtime.connect(arcMove(from: from, to: to), to: tween.path)
     runtime.add(tween, to: runtime.get(view.layer).position)
+  }
+
+  public var enabled: ReactiveProperty<Bool> {
+    return tween.enabled
+  }
+
+  public var state: MotionObservable<MotionState> {
+    return tween.state
   }
 
   public let metadata = Metadata("ArcMove")

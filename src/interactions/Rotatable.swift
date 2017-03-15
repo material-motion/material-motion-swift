@@ -36,7 +36,11 @@ public final class Rotatable: Gesturable<UIRotationGestureRecognizer>, Interacti
     let reactiveView = runtime.get(view)
     let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView)
     let rotation = reactiveView.reactiveLayer.rotation
-    var stream = runtime.get(gestureRecognizer).rotated(from: rotation)
+
+    let reactiveGesture = runtime.get(gestureRecognizer)
+    aggregateState.observe(state: reactiveGesture.state, withRuntime: runtime)
+
+    var stream = reactiveGesture.rotated(from: rotation)
     if let applyConstraints = applyConstraints {
       stream = applyConstraints(stream)
     }

@@ -35,7 +35,7 @@ import Foundation
  - `{ $0.xLocked(to: somePosition) }`
  - `{ $0.yLocked(to: somePosition) }`
  */
-public class Tossable: Interaction {
+public class Tossable: Interaction, Stateful {
 
   /**
    The interaction governing drag behaviors.
@@ -64,6 +64,9 @@ public class Tossable: Interaction {
 
     let gesture = runtime.get(draggable.nextGestureRecognizer)
 
+    aggregateState.observe(state: spring.state, withRuntime: runtime)
+    aggregateState.observe(state: draggable.state, withRuntime: runtime)
+
     // Order matters:
     //
     // 1. The spring's initial velocity must be set before it's re-enabled.
@@ -76,4 +79,13 @@ public class Tossable: Interaction {
 
     runtime.add(draggable, to: view, constraints: constraints)
   }
+
+  /**
+   The current state of the interaction.
+   */
+  public var state: MotionObservable<MotionState> {
+    return aggregateState.asStream()
+  }
+
+  let aggregateState = AggregateMotionState()
 }

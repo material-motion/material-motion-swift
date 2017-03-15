@@ -30,7 +30,7 @@ import Foundation
  delegate associated with it and the relevant delegate methods implemented to support simultaneous
  recognition that doesn't conflict with the other gesture recognizers.
  */
-public final class DirectlyManipulable: NSObject, Interaction {
+public final class DirectlyManipulable: NSObject, Interaction, Stateful {
   /**
    The interaction governing drag behaviors.
    */
@@ -71,10 +71,24 @@ public final class DirectlyManipulable: NSObject, Interaction {
     let adjustsAnchorPoint = AdjustsAnchorPoint(gestureRecognizers: [rotatable.nextGestureRecognizer,
                                                                      scalable.nextGestureRecognizer])
     runtime.add(adjustsAnchorPoint, to: view)
+
+    aggregateState.observe(state: draggable.state, withRuntime: runtime)
+    aggregateState.observe(state: rotatable.state, withRuntime: runtime)
+    aggregateState.observe(state: scalable.state, withRuntime: runtime)
+
     runtime.add(draggable, to: view)
     runtime.add(rotatable, to: view)
     runtime.add(scalable, to: view)
   }
+
+  /**
+   The current state of the interaction.
+   */
+  public var state: MotionObservable<MotionState> {
+    return aggregateState.asStream()
+  }
+
+  let aggregateState = AggregateMotionState()
 }
 
 extension DirectlyManipulable: UIGestureRecognizerDelegate {

@@ -36,7 +36,11 @@ public final class Scalable: Gesturable<UIPinchGestureRecognizer>, Interaction {
     let reactiveView = runtime.get(view)
     let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView)
     let scale = reactiveView.reactiveLayer.scale
-    var stream = runtime.get(gestureRecognizer).scaled(from: scale)
+
+    let reactiveGesture = runtime.get(gestureRecognizer)
+    aggregateState.observe(state: reactiveGesture.state, withRuntime: runtime)
+
+    var stream = reactiveGesture.scaled(from: scale)
     if let applyConstraints = applyConstraints {
       stream = applyConstraints(stream)
     }

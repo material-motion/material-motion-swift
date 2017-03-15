@@ -28,7 +28,13 @@ class DirectlyManipulableExampleViewController: ExampleViewController {
     view.addSubview(square)
 
     runtime = MotionRuntime(containerView: view)
-    runtime.add(DirectlyManipulable(), to: square)
+
+    let directlyManipulable = DirectlyManipulable()
+    runtime.add(directlyManipulable, to: square)
+
+    runtime.whenAllAtRest([directlyManipulable]) {
+      print("Is now at rest")
+    }
   }
 
   override func exampleInformation() -> ExampleInfo {
