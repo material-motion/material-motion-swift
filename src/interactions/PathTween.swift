@@ -60,7 +60,7 @@ public final class PathTween: Interaction, Togglable, Stateful {
   /**
    Initializes a path tween instance with its required properties.
    */
-  public init(duration: CGFloat, path: CGPath, system: @escaping PathTweenToStream<CGPoint>, timeline: Timeline? = nil) {
+  public init(duration: CGFloat, path: CGPath, system: @escaping PathTweenToStream<CGPoint> = coreAnimation, timeline: Timeline? = nil) {
     self.duration = createProperty("PathTween.duration", withInitialValue: CGFloat(duration))
     self.path = createProperty("PathTween.path", withInitialValue: path)
     self.system = system
@@ -73,7 +73,7 @@ public final class PathTween: Interaction, Togglable, Stateful {
    The duration and path should be modified after initialization in order to configure the
    animation.
    */
-  public init(system: @escaping PathTweenToStream<CGPoint>, timeline: Timeline? = nil) {
+  public init(system: @escaping PathTweenToStream<CGPoint> = coreAnimation, timeline: Timeline? = nil) {
     self.duration = createProperty("PathTween.duration", withInitialValue: CGFloat(0))
     self.path = createProperty("PathTween.path", withInitialValue: UIBezierPath().cgPath)
     self.system = system

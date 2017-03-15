@@ -50,7 +50,7 @@ public class ArcMoveExampleViewController: UIViewController {
     runtime.add(Draggable(), to: targetView)
     runtime.add(SetPositionOnTap(coordinateSpace: view), to: reactiveTapLayer.position)
 
-    let arcMove = ArcMove(tween: .init(system: coreAnimation, timeline: timeline))
+    let arcMove = ArcMove(tween: .init(timeline: timeline))
     runtime.connect(reactiveTapLayer.position, to: arcMove.from)
     runtime.connect(reactiveTargetLayer.position, to: arcMove.to)
     // The duration of the animation is based on the distance to the target

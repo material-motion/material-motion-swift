@@ -47,7 +47,7 @@ public class Tossable: Interaction, Stateful {
    */
   public let spring: Spring<CGPoint>
 
-  public init(system: @escaping SpringToStream<CGPoint>, draggable: Draggable = Draggable()) {
+  public init(system: @escaping SpringToStream<CGPoint> = coreAnimation, draggable: Draggable = Draggable()) {
     self.spring = Spring(threshold: 1, system: system)
     self.draggable = draggable
   }

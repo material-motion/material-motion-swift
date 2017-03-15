@@ -21,7 +21,7 @@ let runtime = MotionRuntime(containerView: canvas)
 
  This playground shows how to create a Tossable interaction with a reactive destination. Tappinng around will change the destination.
  */
-let tossable = Tossable(system: coreAnimation)
+let tossable = Tossable()
 let targetPosition = runtime.get(target.layer).position
 
 runtime.add(SetPositionOnTap(coordinateSpace: canvas), to: targetPosition)

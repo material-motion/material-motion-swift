@@ -161,7 +161,7 @@ private class CircularRevealTransition: Transition {
     } else {
       values = [fore, back]
     }
-    return Tween(duration: 0.4 * simulatorDragCoefficient(), values: values, system: coreAnimation)
+    return Tween(duration: 0.4 * simulatorDragCoefficient(), values: values)
   }
 }
 

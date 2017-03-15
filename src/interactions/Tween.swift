@@ -94,7 +94,7 @@ public final class Tween<T>: Interaction, Togglable, Stateful {
   /**
    Initializes a tween instance with its required properties.
    */
-  public init(duration: CGFloat, values: [T], system: @escaping TweenToStream<T>, timeline: Timeline? = nil) {
+  public init(duration: CGFloat, values: [T], system: @escaping TweenToStream<T> = coreAnimation, timeline: Timeline? = nil) {
     self.duration = createProperty("Tween.duration", withInitialValue: duration)
     self.values = createProperty("Tween.values", withInitialValue: values)
     self.system = system
