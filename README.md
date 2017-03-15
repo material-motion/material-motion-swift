@@ -1,7 +1,7 @@
 # Material Motion streams for Apple devices
 
-[![Build Status](https://travis-ci.org/material-motion/reactive-motion.svg?branch=develop)](https://travis-ci.org/material-motion/reactive-motion-swift)
-[![codecov](https://codecov.io/gh/material-motion/reactive-motion/branch/develop/graph/badge.svg)](https://codecov.io/gh/material-motion/reactive-motion-swift)
+[![Build Status](https://travis-ci.org/material-motion/reactive-motion-swift.svg?branch=develop)](https://travis-ci.org/material-motion/reactive-motion-swift)
+[![codecov](https://codecov.io/gh/material-motion/reactive-motion-swift/branch/develop/graph/badge.svg)](https://codecov.io/gh/material-motion/reactive-motion-swift)
 [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/MaterialMotionStreams.svg)](https://cocoapods.org/pods/MaterialMotionStreams)
 [![Platform](https://img.shields.io/cocoapods/p/MaterialMotionStreams.svg)](http://cocoadocs.org/docsets/MaterialMotionStreams)
 [![Docs](https://img.shields.io/cocoapods/metrics/doc-percent/MaterialMotionStreams.svg)](http://cocoadocs.org/docsets/MaterialMotionStreams)
@@ -38,8 +38,8 @@ You will now have access to all of the APIs.
 Check out a local copy of the repo to access the Catalog application by running the following
 commands:
 
-    git clone https://github.com/material-motion/reactive-motion.git
-    cd reactive-motion
+    git clone https://github.com/material-motion/reactive-motion-swift.git
+    cd reactive-motion-swift
     pod install
     open MaterialMotionStreams.xcworkspace
 
@@ -56,7 +56,7 @@ commands:
 
 We welcome contributions!
 
-Check out our [upcoming milestones](https://github.com/material-motion/reactive-motion/milestones).
+Check out our [upcoming milestones](https://github.com/material-motion/reactive-motion-swift/milestones).
 
 Learn more about [our team](https://material-motion.github.io/material-motion/team/),
 [our community](https://material-motion.github.io/material-motion/team/community/), and
