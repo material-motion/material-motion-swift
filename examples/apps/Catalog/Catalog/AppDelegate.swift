@@ -16,6 +16,7 @@
 
 import UIKit
 import CatalogByConvention
+import Fingertips
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -23,7 +24,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
-    let window = UIWindow(frame: UIScreen.main.bounds)
+    let window = MBFingerTipWindow(frame: UIScreen.main.bounds)
+    window.alwaysShowTouches = true
     self.window = window
 
     let rootViewController = CBCNodeListViewController(node: CBCCreateNavigationTree())

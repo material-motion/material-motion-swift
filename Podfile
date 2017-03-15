@@ -4,6 +4,7 @@ use_frameworks!
 target "MaterialMotionCatalog" do
   pod 'CatalogByConvention'
   pod 'MaterialMotion', :path => './'
+  pod 'Fingertips'
 
   project 'examples/apps/Catalog/MaterialMotionCatalog.xcodeproj'
 end

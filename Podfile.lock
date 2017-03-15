@@ -1,5 +1,6 @@
 PODS:
   - CatalogByConvention (2.0.0)
+  - Fingertips (0.5.0)
   - IndefiniteObservable (3.1.0):
     - IndefiniteObservable/lib (= 3.1.0)
   - IndefiniteObservable/lib (3.1.0)
@@ -8,6 +9,7 @@ PODS:
 
 DEPENDENCIES:
   - CatalogByConvention
+  - Fingertips
   - MaterialMotion (from `./`)
 
 EXTERNAL SOURCES:
@@ -16,9 +18,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   CatalogByConvention: be55c2263132e4f9f59299ac8a528ee8715b3275
+  Fingertips: 8e557eed25253fcb4bfa25ac4418f8e8add1ad9a
   IndefiniteObservable: 2789d61f487d8d37fa2b9c3153cc44d4447ff744
   MaterialMotion: 0b9377050341c28001d6b21e51d1a8ed8ea93c67
 
-PODFILE CHECKSUM: f503265a0d60526a0d28c96dd4bdcfb40fb562fc
+PODFILE CHECKSUM: 4a69b60649b781b542b2eeeab6f709ddef01c1f0
 
 COCOAPODS: 1.2.0
