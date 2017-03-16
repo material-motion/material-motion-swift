@@ -169,8 +169,8 @@
 				660DA3141E79F6A3008F7401 /* ScalableExample.swift */,
 				660DA3181E7A0572008F7401 /* SetPositionOnTapExample.swift */,
 				660DA31C1E7A07BC008F7401 /* SpringExample.swift */,
-				660DA3201E7A106D008F7401 /* TweenExample.swift */,
 				660DA3151E79F6A3008F7401 /* TossableExample.swift */,
+				660DA3201E7A106D008F7401 /* TweenExample.swift */,
 			);
 			name = Interactions;
 			sourceTree = "<group>";

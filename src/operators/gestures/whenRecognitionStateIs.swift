@@ -33,11 +33,20 @@ extension MotionObservableConvertible where T: UIGestureRecognizer {
   }
 
   public func asMotionState() -> MotionObservable<MotionState> {
-    return _map(#function) { value in
+    return _nextOperator(#function) { value, next in
       if value is UITapGestureRecognizer {
-        return (value.state == .recognized) ? .active : .atRest
+        if value.state == .recognized {
+          // Tap gestures are momentary, so we won't have another opportunity to send an .atRest event
+          // downstream. To ensure that taps can be used to drive animations we simulate the .atRest
+          // event by sending it immediately after the .active emission.
+          next(.active)
+          next(.atRest)
+        } else {
+          next(.atRest)
+        }
+
       } else {
-        return (value.state == .began || value.state == .changed) ? .active : .atRest
+        next((value.state == .began || value.state == .changed) ? .active : .atRest)
       }
     }
   }
