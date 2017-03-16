@@ -3,22 +3,20 @@
  */
 import MaterialMotion
 
-let canvas = createCanvas()
-
-let view = UIView(frame: .init(x: 0, y: 0, width: 100, height: 100))
-view.backgroundColor = .blue
+let view = createExampleView()
 canvas.addSubview(view)
 
-let target = UIView(frame: .init(x: 0, y: 0, width: 100, height: 100))
-target.backgroundColor = .white
-target.layer.borderColor = UIColor.red.cgColor
+let target = createExampleView()
+target.layer.borderColor = target.backgroundColor!.cgColor
 target.layer.borderWidth = 1
+target.backgroundColor = .white
 canvas.insertSubview(target, belowSubview: view)
 
 let runtime = MotionRuntime(containerView: canvas)
-/*:
- ---
 
+//: ---
+
+/*:
  This playground shows how to create a Tossable interaction with a reactive destination. Tappinng around will change the destination.
  */
 let tossable = Tossable()
@@ -28,7 +26,7 @@ runtime.add(SetPositionOnTap(coordinateSpace: canvas), to: targetPosition)
 runtime.connect(targetPosition, to: tossable.spring.destination)
 
 runtime.add(tossable, to: view) { $0.yLocked(to: 100) }
-/*:
- ---
- */
+
+//: ---
+
 visualize(graphviz: runtime.asGraphviz(), onCanvas: canvas)

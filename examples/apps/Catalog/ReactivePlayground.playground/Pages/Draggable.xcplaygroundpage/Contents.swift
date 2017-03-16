@@ -7,23 +7,24 @@
  */
 import MaterialMotion
 
-let canvas = createCanvas()
-
-let view = UIView(frame: .init(x: 0, y: 0, width: 100, height: 100))
-view.backgroundColor = .blue
+let view = createExampleView()
 canvas.addSubview(view)
 
-/*: --- */
+//: ---
 
 /*:
  A motion runtime associates motion with views and properties.
  */
 let runtime = MotionRuntime(containerView: canvas)
+
 /*:
  We make the view draggable by assocating an instance of Draggable with it.
  */
 runtime.add(Draggable(), to: view)
+
 /*:
  A runtime can generate a graphviz representation of itself at any time in order to visualize the flow of information.
  */
 visualize(graphviz: runtime.asGraphviz(), onCanvas: canvas)
+
+//: [Next](@next)
