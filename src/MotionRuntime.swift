@@ -213,7 +213,7 @@ public final class MotionRuntime {
       return unsafeBitCast(reactiveObject, to: U.self)
     }
     let reactiveObject = initializer(object)
-    reactiveObjects[identifier] = reactiveObject as! AnyObject
+    reactiveObjects[identifier] = reactiveObject
     return reactiveObject
   }
   private var reactiveObjects: [ObjectIdentifier: AnyObject] = [:]

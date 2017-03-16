@@ -22,7 +22,7 @@ public func coreAnimation(_ tween: PathTweenShadow) -> MotionObservable<CGPoint>
   return MotionObservable(Metadata("Core Animation Path Tween", args: [tween.duration, tween.delay, tween.path, tween.timeline as Any, tween.enabled, tween.state])) { observer in
 
     var subscriptions: [Subscription] = []
-    var key = NSUUID().uuidString
+    let key = NSUUID().uuidString
     var activeAnimations = Set<CAKeyframeAnimation>()
 
     let checkAndEmit = {

@@ -34,7 +34,7 @@ extension MotionObservableConvertible where T: UIGestureRecognizer {
 
   public func asMotionState() -> MotionObservable<MotionState> {
     return _map(#function) { value in
-      if let tap = value as? UITapGestureRecognizer {
+      if value is UITapGestureRecognizer {
         return (value.state == .recognized) ? .active : .atRest
       } else {
         return (value.state == .began || value.state == .changed) ? .active : .atRest
