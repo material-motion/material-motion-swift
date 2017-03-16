@@ -1,15 +1,12 @@
 # Material Motion (Swift)
 
-> A small, performant library for building reactive motion.
+> A small, performant library for building reactive motion. [Learn more about reactive programming](http://reactivex.io/).
 
 [![Build Status](https://travis-ci.org/material-motion/reactive-motion-swift.svg?branch=develop)](https://travis-ci.org/material-motion/reactive-motion-swift)
 [![codecov](https://codecov.io/gh/material-motion/reactive-motion-swift/branch/develop/graph/badge.svg)](https://codecov.io/gh/material-motion/reactive-motion-swift)
 [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/MaterialMotion.svg)](https://cocoapods.org/pods/MaterialMotion)
 [![Platform](https://img.shields.io/cocoapods/p/MaterialMotion.svg)](http://cocoadocs.org/docsets/MaterialMotion)
 [![Docs](https://img.shields.io/cocoapods/metrics/doc-percent/MaterialMotion.svg)](http://cocoadocs.org/docsets/MaterialMotion)
-
-Material Motion is a library for creating motion with [reactive programming](http://reactivex.io/)
-patterns.
 
 This library includes a variety of ready-to-use **interactions**. Interactions are registered to an
 instance of `MotionRuntime`:
