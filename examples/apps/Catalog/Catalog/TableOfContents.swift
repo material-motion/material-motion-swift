@@ -22,8 +22,24 @@ extension CarouselExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["Case studies", "Carousel"] }
 }
 
+extension ContextualTransitionExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Case studies", "Contextual transition"] }
+}
+
 extension FabTransitionExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["Case studies", "FAB transition"] }
+}
+
+extension ModalDialogExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Case studies", "Modal dialog"] }
+}
+
+extension PushBackTransitionExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Case studies", "Push back transition"] }
+}
+
+extension InteractivePushBackTransitionExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Case studies", "Push back transition (interactive)"] }
 }
 
 extension StickerPickerExampleViewController {
@@ -70,22 +86,10 @@ extension SpringExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Spring"] }
 }
 
+extension TweenExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Tween"] }
+}
+
 extension TossableExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Tossable"] }
-}
-
-extension ModalDialogExampleViewController {
-  class func catalogBreadcrumbs() -> [String] { return ["Transitions", "Modal dialog"] }
-}
-
-extension ContextualTransitionExampleViewController {
-  class func catalogBreadcrumbs() -> [String] { return ["Transitions", "Contextual transition"] }
-}
-
-extension PushBackTransitionExampleViewController {
-  class func catalogBreadcrumbs() -> [String] { return ["Transitions", "Push back transition"] }
-}
-
-extension InteractivePushBackTransitionExampleViewController {
-  class func catalogBreadcrumbs() -> [String] { return ["Transitions", "Push back transition (interactive)"] }
 }

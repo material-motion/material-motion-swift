@@ -55,31 +55,22 @@ class FabTransitionExampleViewController: ExampleViewController, TransitionConte
   }
 }
 
-private class ModalViewController: UIViewController, UITableViewDataSource {
+private class ModalViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    let tableView = UITableView(frame: view.bounds, style: .plain)
-    tableView.dataSource = self
-    tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-    view.addSubview(tableView)
+    view.backgroundColor = .primaryColor
+
+    let exampleView = center(createExampleView(), within: view)
+    exampleView.backgroundColor = .white
+    view.addSubview(exampleView)
 
     view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTap)))
   }
 
   func didTap() {
     dismiss(animated: true)
-  }
-
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 100
-  }
-
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-    cell.textLabel?.text = "\(indexPath)"
-    return cell
   }
 }
 

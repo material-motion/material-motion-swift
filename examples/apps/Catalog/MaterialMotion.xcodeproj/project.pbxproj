@@ -16,6 +16,7 @@
 		660DA3171E79F6A3008F7401 /* TossableExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660DA3151E79F6A3008F7401 /* TossableExample.swift */; };
 		660DA3191E7A0572008F7401 /* SetPositionOnTapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660DA3181E7A0572008F7401 /* SetPositionOnTapExample.swift */; };
 		660DA31D1E7A07BC008F7401 /* SpringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660DA31C1E7A07BC008F7401 /* SpringExample.swift */; };
+		660DA3211E7A106D008F7401 /* TweenExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660DA3201E7A106D008F7401 /* TweenExample.swift */; };
 		6627FC0E1DF7B1A2003DB567 /* MotionObservableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6627FC0D1DF7B1A2003DB567 /* MotionObservableTests.swift */; };
 		6627FC191DF7BC7D003DB567 /* _filterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6627FC161DF7BC7D003DB567 /* _filterTests.swift */; };
 		6627FC1A1DF7BC7D003DB567 /* _mapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6627FC171DF7BC7D003DB567 /* _mapTests.swift */; };
@@ -73,6 +74,7 @@
 		660DA3151E79F6A3008F7401 /* TossableExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TossableExample.swift; path = ../../TossableExample.swift; sourceTree = "<group>"; };
 		660DA3181E7A0572008F7401 /* SetPositionOnTapExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SetPositionOnTapExample.swift; path = ../../SetPositionOnTapExample.swift; sourceTree = "<group>"; };
 		660DA31C1E7A07BC008F7401 /* SpringExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SpringExample.swift; path = ../../SpringExample.swift; sourceTree = "<group>"; };
+		660DA3201E7A106D008F7401 /* TweenExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TweenExample.swift; path = ../../TweenExample.swift; sourceTree = "<group>"; };
 		6627FC0D1DF7B1A2003DB567 /* MotionObservableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionObservableTests.swift; sourceTree = "<group>"; };
 		6627FC161DF7BC7D003DB567 /* _filterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = _filterTests.swift; sourceTree = "<group>"; };
 		6627FC171DF7BC7D003DB567 /* _mapTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = _mapTests.swift; sourceTree = "<group>"; };
@@ -160,9 +162,10 @@
 				66DDFD0C1E71F0F100AA46B7 /* DraggableExample.swift */,
 				660DA30E1E79EA62008F7401 /* RotatableExample.swift */,
 				660DA3141E79F6A3008F7401 /* ScalableExample.swift */,
-				660DA3151E79F6A3008F7401 /* TossableExample.swift */,
 				660DA3181E7A0572008F7401 /* SetPositionOnTapExample.swift */,
 				660DA31C1E7A07BC008F7401 /* SpringExample.swift */,
+				660DA3201E7A106D008F7401 /* TweenExample.swift */,
+				660DA3151E79F6A3008F7401 /* TossableExample.swift */,
 			);
 			name = Interactions;
 			sourceTree = "<group>";
@@ -171,7 +174,11 @@
 			isa = PBXGroup;
 			children = (
 				667E94461E71EF0E005CAC78 /* CarouselExample.swift */,
+				667E94471E71EF0E005CAC78 /* ContextualTransitionExample.swift */,
 				667E944A1E71EF0E005CAC78 /* FabTransitionExample.swift */,
+				667E944C1E71EF0E005CAC78 /* ModalDialogExample.swift */,
+				667E944D1E71EF0E005CAC78 /* PushBackTransitionExample.swift */,
+				667E944B1E71EF0E005CAC78 /* InteractivePushBackTransitionExample.swift */,
 				667E944E1E71EF0E005CAC78 /* StickerPickerExample.swift */,
 			);
 			name = "Case studies";
@@ -227,7 +234,6 @@
 				660DA30C1E79D7E7008F7401 /* Case studies */,
 				660DA30D1E79D807008F7401 /* How to... */,
 				660DA30B1E79D7B7008F7401 /* Interactions */,
-				66DDFD221E788D1B00AA46B7 /* Transitions */,
 				667E944F1E71EF0E005CAC78 /* supplemental */,
 				666FAAA61D384B77000363DA /* app */,
 				666FAA971D384A6B000363DA /* tests */,
@@ -304,17 +310,6 @@
 			);
 			name = supplemental;
 			path = ../../supplemental;
-			sourceTree = "<group>";
-		};
-		66DDFD221E788D1B00AA46B7 /* Transitions */ = {
-			isa = PBXGroup;
-			children = (
-				667E94471E71EF0E005CAC78 /* ContextualTransitionExample.swift */,
-				667E944C1E71EF0E005CAC78 /* ModalDialogExample.swift */,
-				667E944D1E71EF0E005CAC78 /* PushBackTransitionExample.swift */,
-				667E944B1E71EF0E005CAC78 /* InteractivePushBackTransitionExample.swift */,
-			);
-			name = Transitions;
 			sourceTree = "<group>";
 		};
 		8C6A745BCA20C3282C1419A7 /* Pods */ = {
@@ -557,6 +552,7 @@
 				66DDFD0D1E71F0F100AA46B7 /* DraggableExample.swift in Sources */,
 				660DA30A1E79D3F2008F7401 /* HexColor.swift in Sources */,
 				66DDFD121E71F39700AA46B7 /* ExampleViews.swift in Sources */,
+				660DA3211E7A106D008F7401 /* TweenExample.swift in Sources */,
 				66DDFD201E73281200AA46B7 /* HowToMakeACustomOperatorExample.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

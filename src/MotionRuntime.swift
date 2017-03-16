@@ -78,6 +78,22 @@ public final class MotionRuntime {
   }
 
   /**
+   Creates a toggling association between one interaction's state and the other interaction's
+   enabling.
+
+   The provided interaction will be disabled when otherInteraction's state is active, and enabled
+   when otherInteraction's state is at rest.
+
+   This is most commonly used to disable a spring when a gestural interaction is active.
+   */
+  public func start(_ interaction: Togglable, whenActive otherInteraction: Stateful) {
+    let state = otherInteraction.state
+    interaction.enabled.value = false
+    connect(state.rewrite([.active: false]).log(), to: interaction.enabled)
+    connect(state.rewrite([.active: true]).log(), to: interaction.enabled)
+  }
+
+  /**
    Connects a stream's output to a reactive property.
 
    This method is primarily intended to be used by interactions and its presence in application
