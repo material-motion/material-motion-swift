@@ -2,8 +2,8 @@
 
 > A small, performant library for building reactive motion.
 
-[![Build Status](https://travis-ci.org/material-motion/reactive-motion-swift.svg?branch=develop)](https://travis-ci.org/material-motion/reactive-motion-swift)
-[![codecov](https://codecov.io/gh/material-motion/reactive-motion-swift/branch/develop/graph/badge.svg)](https://codecov.io/gh/material-motion/reactive-motion-swift)
+[![Build Status](https://travis-ci.org/material-motion/material-motion-swift.svg?branch=develop)](https://travis-ci.org/material-motion/material-motion-swift)
+[![codecov](https://codecov.io/gh/material-motion/material-motion-swift/branch/develop/graph/badge.svg)](https://codecov.io/gh/material-motion/material-motion-swift)
 [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/MaterialMotion.svg)](https://cocoapods.org/pods/MaterialMotion)
 [![Platform](https://img.shields.io/cocoapods/p/MaterialMotion.svg)](http://cocoadocs.org/docsets/MaterialMotion)
 [![Docs](https://img.shields.io/cocoapods/metrics/doc-percent/MaterialMotion.svg)](http://cocoadocs.org/docsets/MaterialMotion)
