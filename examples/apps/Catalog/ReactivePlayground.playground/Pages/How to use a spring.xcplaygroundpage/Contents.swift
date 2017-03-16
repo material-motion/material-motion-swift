@@ -8,22 +8,28 @@ let runtime = MotionRuntime(containerView: canvas)
 
 //: ---
 //:
-//: Spring interactions must be associated with **reactive properties** and are strongly-typed. The most common types of Spring you'll create are `Spring<CGFloat>` and `Spring<CGPoint>`.
+//: Spring interactions must be associated with **reactive properties**.
 //:
-//: In this example we'll animate the *position* of our example view, so let's create a `CGPoint` spring.
+//: A reactive property is like a traditional swift property, with an additional feature allowing other objects to **subscribe** to changes made to the property. We'll talk more about reactive properties in another page.
+//:
+//: In this example we'd like to animate the *position* of our example view, so let's retrieve that property.
+//:
+//: > `runtime.get` is the recommended way to create reactive properties for objects. This method can return reactive variants of `UIView`, `CALayer`, and `UIGestureRecognizer`.
+let position = runtime.get(view.layer).position
+
+//: Next we'll create our Spring interaction. We must specify the type of Spring we'd like to use because Spring is a generic type. In this case we want to animate a CGPoint, so we'll define that here:
 let spring = Spring<CGPoint>(threshold: 1, system: coreAnimation)
 
-//: Our spring has to be added to a reactive property of type `CGPoint`.
-//: > `runtime.get` is the recommended way to create reactive properties for objects. This method can return reactive variants of `UIView`, `CALayer`, and `UIGestureRecognizer`.
-//:
-//: Let's animate the view's layer position:
-runtime.add(spring, to: runtime.get(view.layer).position)
+//: Starting the spring animation is now a simple matter of adding it to the property:
+runtime.add(spring, to: position)
 
 //: A spring's destination is zero by default. We can see that this is the case because the view is centered on the top left corner of our canvas.
 //:
-//: Interactions often expose their own reactive properties. This lets us use interactions to control other interactions' behavior. Let's try adding a `SetPositionOnTap` interaction to our spring's destination:
+//: Interactions often expose their own reactive properties. This lets us use interactions to control other interactions' behavior. In this case, Spring exposes a `destination` property.
+//:
+//: Let's try adding a `SetPositionOnTap` interaction to our spring's destination:
 runtime.add(SetPositionOnTap(coordinateSpace: canvas), to: spring.destination)
 
-//: Try tapping anywhere on the canvas to move the view.
+//: We can now tap anywhere on the canvas to move the view.
 
 //: [Next](@next)
