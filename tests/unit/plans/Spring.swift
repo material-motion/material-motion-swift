@@ -16,7 +16,7 @@
 
 import XCTest
 import CoreGraphics
-import ReactiveMotion
+import MaterialMotion
 
 class SpringTests: XCTestCase {
 

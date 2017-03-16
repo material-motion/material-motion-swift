@@ -15,7 +15,7 @@
  */
 
 import XCTest
-@testable import ReactiveMotion
+@testable import MaterialMotion
 
 class ReactivePropertyTests: XCTestCase {
 

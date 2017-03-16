@@ -117,7 +117,7 @@ public class Metadata: CustomDebugStringConvertible {
       }
     }
 
-    return description.joined(separator: "\n").replacingOccurrences(of: "ReactiveMotion.", with: "")
+    return description.joined(separator: "\n").replacingOccurrences(of: "MaterialMotion.", with: "")
   }
 }
 

@@ -15,7 +15,7 @@
  */
 
 import UIKit
-import ReactiveMotion
+import MaterialMotion
 
 struct ExampleInfo {
   let title: String

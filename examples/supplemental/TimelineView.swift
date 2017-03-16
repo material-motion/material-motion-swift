@@ -15,7 +15,7 @@
  */
 
 import UIKit
-import ReactiveMotion
+import MaterialMotion
 
 public class TimelineView: UIView {
 

@@ -15,7 +15,7 @@
  */
 
 import Foundation
-import ReactiveMotion
+import MaterialMotion
 
 class StickerPickerExampleViewController: ExampleViewController, StickerListViewControllerDelegate {
 

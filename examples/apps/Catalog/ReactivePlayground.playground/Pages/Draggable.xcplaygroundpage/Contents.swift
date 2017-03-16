@@ -5,7 +5,7 @@
 
  The primary unit of motion is the Interaction, an instantiable object that can be associated with views or properties. In this example we'll make a view draggable by associating a Draggable interaction with it.
  */
-import ReactiveMotion
+import MaterialMotion
 
 let canvas = createCanvas()
 

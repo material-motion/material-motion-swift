@@ -15,7 +15,7 @@
  */
 
 import UIKit
-import ReactiveMotion
+import MaterialMotion
 
 let numberOfImageAssets = 10
 let numberOfPhotosInAlbum = 30

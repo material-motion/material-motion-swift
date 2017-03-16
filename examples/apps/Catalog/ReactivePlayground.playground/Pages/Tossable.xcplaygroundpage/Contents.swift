@@ -1,7 +1,7 @@
 /*:
  ## Reactive Motion tossable playground
  */
-import ReactiveMotion
+import MaterialMotion
 
 let canvas = createCanvas()
 

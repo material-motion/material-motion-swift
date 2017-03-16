@@ -68,7 +68,7 @@
 		6627FC1D1DF7BF59003DB567 /* ReactivePropertyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReactivePropertyTests.swift; sourceTree = "<group>"; };
 		6627FC2E1DFFAEB7003DB567 /* CGPointTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGPointTests.swift; sourceTree = "<group>"; };
 		664A5B761DD10D320082B5DF /* TableOfContents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TableOfContents.swift; path = Catalog/TableOfContents.swift; sourceTree = "<group>"; };
-		666FAA801D384A6B000363DA /* Catalog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Catalog.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		666FAA801D384A6B000363DA /* MaterialMotion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MaterialMotion.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		666FAA831D384A6B000363DA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Catalog/AppDelegate.swift; sourceTree = "<group>"; };
 		666FAA8A1D384A6B000363DA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		666FAA8D1D384A6B000363DA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -223,7 +223,7 @@
 		666FAA811D384A6B000363DA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				666FAA801D384A6B000363DA /* Catalog.app */,
+				666FAA801D384A6B000363DA /* MaterialMotion.app */,
 				666FAA941D384A6B000363DA /* UnitTests.xctest */,
 			);
 			name = Products;
@@ -313,9 +313,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		666FAA7F1D384A6B000363DA /* Catalog */ = {
+		666FAA7F1D384A6B000363DA /* MaterialMotion */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 666FAA9D1D384A6B000363DA /* Build configuration list for PBXNativeTarget "Catalog" */;
+			buildConfigurationList = 666FAA9D1D384A6B000363DA /* Build configuration list for PBXNativeTarget "MaterialMotion" */;
 			buildPhases = (
 				D3964710E4A0BF0CAB650C97 /* [CP] Check Pods Manifest.lock */,
 				666FAA7C1D384A6B000363DA /* Sources */,
@@ -328,9 +328,9 @@
 			);
 			dependencies = (
 			);
-			name = Catalog;
+			name = MaterialMotion;
 			productName = Catalog;
-			productReference = 666FAA801D384A6B000363DA /* Catalog.app */;
+			productReference = 666FAA801D384A6B000363DA /* MaterialMotion.app */;
 			productType = "com.apple.product-type.application";
 		};
 		666FAA931D384A6B000363DA /* UnitTests */ = {
@@ -376,7 +376,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 666FAA7B1D384A6B000363DA /* Build configuration list for PBXProject "Catalog" */;
+			buildConfigurationList = 666FAA7B1D384A6B000363DA /* Build configuration list for PBXProject "MaterialMotion" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -389,7 +389,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				666FAA7F1D384A6B000363DA /* Catalog */,
+				666FAA7F1D384A6B000363DA /* MaterialMotion */,
 				666FAA931D384A6B000363DA /* UnitTests */,
 			);
 		};
@@ -558,7 +558,7 @@
 /* Begin PBXTargetDependency section */
 		666FAA961D384A6B000363DA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 666FAA7F1D384A6B000363DA /* Catalog */;
+			target = 666FAA7F1D384A6B000363DA /* MaterialMotion */;
 			targetProxy = 666FAA951D384A6B000363DA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -668,7 +668,7 @@
 				DEVELOPMENT_TEAM = ZGWD8QJUPK;
 				INFOPLIST_FILE = Catalog/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.google.Catalog;
+				PRODUCT_BUNDLE_IDENTIFIER = com.google.MaterialMotion;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -682,7 +682,7 @@
 				DEVELOPMENT_TEAM = ZGWD8QJUPK;
 				INFOPLIST_FILE = Catalog/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.google.Catalog;
+				PRODUCT_BUNDLE_IDENTIFIER = com.google.MaterialMotion;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
@@ -701,7 +701,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Catalog.app/Catalog";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MaterialMotion.app/MaterialMotion";
 			};
 			name = Debug;
 		};
@@ -717,14 +717,14 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Catalog.app/Catalog";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MaterialMotion.app/MaterialMotion";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		666FAA7B1D384A6B000363DA /* Build configuration list for PBXProject "Catalog" */ = {
+		666FAA7B1D384A6B000363DA /* Build configuration list for PBXProject "MaterialMotion" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				666FAA9B1D384A6B000363DA /* Debug */,
@@ -733,7 +733,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		666FAA9D1D384A6B000363DA /* Build configuration list for PBXNativeTarget "Catalog" */ = {
+		666FAA9D1D384A6B000363DA /* Build configuration list for PBXNativeTarget "MaterialMotion" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				666FAA9E1D384A6B000363DA /* Debug */,

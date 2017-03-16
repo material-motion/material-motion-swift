@@ -19,7 +19,7 @@
                BlueprintIdentifier = "666FAA931D384A6B000363DA"
                BuildableName = "UnitTests.xctest"
                BlueprintName = "UnitTests"
-               ReferencedContainer = "container:Catalog.xcodeproj">
+               ReferencedContainer = "container:MaterialMotion.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>

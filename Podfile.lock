@@ -3,22 +3,22 @@ PODS:
   - IndefiniteObservable (3.1.0):
     - IndefiniteObservable/lib (= 3.1.0)
   - IndefiniteObservable/lib (3.1.0)
-  - ReactiveMotion (1.0.0):
+  - MaterialMotion (1.0.0):
     - IndefiniteObservable (~> 3.0)
 
 DEPENDENCIES:
   - CatalogByConvention
-  - ReactiveMotion (from `./`)
+  - MaterialMotion (from `./`)
 
 EXTERNAL SOURCES:
-  ReactiveMotion:
+  MaterialMotion:
     :path: "./"
 
 SPEC CHECKSUMS:
   CatalogByConvention: be55c2263132e4f9f59299ac8a528ee8715b3275
   IndefiniteObservable: 2789d61f487d8d37fa2b9c3153cc44d4447ff744
-  ReactiveMotion: e5e8e037068f0998b9c7cdc8bcd361db9d577e27
+  MaterialMotion: 0b9377050341c28001d6b21e51d1a8ed8ea93c67
 
-PODFILE CHECKSUM: 3351385be5c3c7626c357a5568b15c5faa6997ab
+PODFILE CHECKSUM: 8b80d5767c4c4181060dd01592435697ca5d7f14
 
 COCOAPODS: 1.2.0

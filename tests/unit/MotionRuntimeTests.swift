@@ -15,7 +15,7 @@
  */
 
 import XCTest
-import ReactiveMotion
+import MaterialMotion
 
 class MotionRuntimeTests: XCTestCase {
 

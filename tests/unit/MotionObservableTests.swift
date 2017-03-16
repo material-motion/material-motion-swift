@@ -17,7 +17,7 @@
 import XCTest
 import CoreGraphics
 import IndefiniteObservable
-import ReactiveMotion
+import MaterialMotion
 
 // These tests aren't functionally exhaustive because we're depending on IndefiniteObservable's
 // tests to be more comprehensive.

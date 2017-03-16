@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "666FAA7F1D384A6B000363DA"
-               BuildableName = "Catalog.app"
-               BlueprintName = "Catalog"
-               ReferencedContainer = "container:Catalog.xcodeproj">
+               BuildableName = "MaterialMotion.app"
+               BlueprintName = "MaterialMotion"
+               ReferencedContainer = "container:MaterialMotion.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -36,7 +36,7 @@
                BlueprintIdentifier = "666FAA931D384A6B000363DA"
                BuildableName = "UnitTests.xctest"
                BlueprintName = "UnitTests"
-               ReferencedContainer = "container:Catalog.xcodeproj">
+               ReferencedContainer = "container:MaterialMotion.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -44,9 +44,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "666FAA7F1D384A6B000363DA"
-            BuildableName = "Catalog.app"
-            BlueprintName = "Catalog"
-            ReferencedContainer = "container:Catalog.xcodeproj">
+            BuildableName = "MaterialMotion.app"
+            BlueprintName = "MaterialMotion"
+            ReferencedContainer = "container:MaterialMotion.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -67,9 +67,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "666FAA7F1D384A6B000363DA"
-            BuildableName = "Catalog.app"
-            BlueprintName = "Catalog"
-            ReferencedContainer = "container:Catalog.xcodeproj">
+            BuildableName = "MaterialMotion.app"
+            BlueprintName = "MaterialMotion"
+            ReferencedContainer = "container:MaterialMotion.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -86,9 +86,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "666FAA7F1D384A6B000363DA"
-            BuildableName = "Catalog.app"
-            BlueprintName = "Catalog"
-            ReferencedContainer = "container:Catalog.xcodeproj">
+            BuildableName = "MaterialMotion.app"
+            BlueprintName = "MaterialMotion"
+            ReferencedContainer = "container:MaterialMotion.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
