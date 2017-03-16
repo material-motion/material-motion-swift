@@ -51,7 +51,7 @@ private class ModalViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    view.backgroundColor = .blue
+    view.backgroundColor = .primaryColor
 
     let pan = UIPanGestureRecognizer()
     transitionController.dismisser.dismissWhenGestureRecognizerBegins(pan)
