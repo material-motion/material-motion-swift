@@ -115,6 +115,14 @@ commands:
 
 ## Case studies
 
+### Carousel
+
+<img src="assets/carousel.gif" />
+
+A carousel with pages that scale in and fade out in reaction to their scroll position.
+
+[View the source](examples/CarouselExample.swift).
+
 ### Contextual transition
 
 <img src="assets/contextualtransition.gif" />
