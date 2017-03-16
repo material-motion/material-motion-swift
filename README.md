@@ -116,6 +116,16 @@ commands:
 
 ## Case studies
 
+### Case studies
+
+<img src="assets/contextualtransition.gif" />
+
+A contextual view can be used to create continuity during transitions between view controllers. In
+this case study the selected photo is the contextual view. It's  possible to flick the view to
+dismiss it using the tossable interaction.
+
+Makes use of: `Draggable`, `Tossable`, `TransitionSpring`, `Tween`.
+
 ### Sticker picker
 
 <img src="assets/stickerpicker.gif" />
@@ -123,14 +133,7 @@ commands:
 Each sticker is individually **directly manipulable**, meaning they can be dragged, rotated, and
 scaled using multitouch gestures.
 
-```swift
-let directlyManipulable = DirectlyManipulable()
-runtime.add(directlyManipulable, to: <#stickerView#>)
-
-runtime.whenAllAtRest([directlyManipulable]) {
-  // Store the layer's transform + position
-}
-```
+Makes use of: `DirectlyManipulable`.
 
 ## Contributing
 
