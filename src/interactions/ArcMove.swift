@@ -44,7 +44,7 @@ public final class ArcMove: Interaction, Togglable, Stateful {
   /**
    Initializes an arc move instance with its required properties.
    */
-  public init(tween: PathTween) {
+  public init(tween: PathTween = PathTween()) {
     self.tween = tween
   }
 
