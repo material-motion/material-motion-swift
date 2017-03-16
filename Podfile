@@ -1,17 +1,17 @@
 workspace 'MaterialMotion.xcworkspace'
 use_frameworks!
 
-target "MaterialMotion" do
+target "MaterialMotionCatalog" do
   pod 'CatalogByConvention'
   pod 'MaterialMotion', :path => './'
 
-  project 'examples/apps/Catalog/MaterialMotion.xcodeproj'
+  project 'examples/apps/Catalog/MaterialMotionCatalog.xcodeproj'
 end
 
 target "UnitTests" do
   pod 'MaterialMotion', :path => './'
 
-  project 'examples/apps/Catalog/MaterialMotion.xcodeproj'
+  project 'examples/apps/Catalog/MaterialMotionCatalog.xcodeproj'
 end
 
 post_install do |installer|

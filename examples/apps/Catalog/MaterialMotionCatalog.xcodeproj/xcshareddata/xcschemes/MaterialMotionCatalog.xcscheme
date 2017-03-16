@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0800"
+   LastUpgradeVersion = "0820"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "666FAA7F1D384A6B000363DA"
-               BuildableName = "MaterialMotion.app"
-               BlueprintName = "MaterialMotion"
-               ReferencedContainer = "container:MaterialMotion.xcodeproj">
+               BuildableName = "MaterialMotionCatalog.app"
+               BlueprintName = "MaterialMotionCatalog"
+               ReferencedContainer = "container:MaterialMotionCatalog.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -26,8 +26,7 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES"
-      codeCoverageEnabled = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -36,7 +35,7 @@
                BlueprintIdentifier = "666FAA931D384A6B000363DA"
                BuildableName = "UnitTests.xctest"
                BlueprintName = "UnitTests"
-               ReferencedContainer = "container:MaterialMotion.xcodeproj">
+               ReferencedContainer = "container:MaterialMotionCatalog.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -44,9 +43,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "666FAA7F1D384A6B000363DA"
-            BuildableName = "MaterialMotion.app"
-            BlueprintName = "MaterialMotion"
-            ReferencedContainer = "container:MaterialMotion.xcodeproj">
+            BuildableName = "MaterialMotionCatalog.app"
+            BlueprintName = "MaterialMotionCatalog"
+            ReferencedContainer = "container:MaterialMotionCatalog.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -67,9 +66,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "666FAA7F1D384A6B000363DA"
-            BuildableName = "MaterialMotion.app"
-            BlueprintName = "MaterialMotion"
-            ReferencedContainer = "container:MaterialMotion.xcodeproj">
+            BuildableName = "MaterialMotionCatalog.app"
+            BlueprintName = "MaterialMotionCatalog"
+            ReferencedContainer = "container:MaterialMotionCatalog.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -86,9 +85,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "666FAA7F1D384A6B000363DA"
-            BuildableName = "MaterialMotion.app"
-            BlueprintName = "MaterialMotion"
-            ReferencedContainer = "container:MaterialMotion.xcodeproj">
+            BuildableName = "MaterialMotionCatalog.app"
+            BlueprintName = "MaterialMotionCatalog"
+            ReferencedContainer = "container:MaterialMotionCatalog.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

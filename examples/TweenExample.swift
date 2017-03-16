@@ -15,7 +15,7 @@
  */
 
 import UIKit
-import ReactiveMotion
+import MaterialMotion
 
 class TweenExampleViewController: ExampleViewController {
 

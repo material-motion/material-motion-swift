@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 import MaterialMotion
 
 class StickerPickerExampleViewController: ExampleViewController, StickerListViewControllerDelegate {
