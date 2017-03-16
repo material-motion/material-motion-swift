@@ -115,7 +115,7 @@ commands:
 
 ## Case studies
 
-### Case studies
+### Contextual transition
 
 <img src="assets/contextualtransition.gif" />
 
@@ -123,7 +123,16 @@ A contextual view can be used to create continuity during transitions between vi
 this case study the selected photo is the contextual view. It's  possible to flick the view to
 dismiss it using the tossable interaction.
 
-Makes use of: `Draggable`, `Tossable`, `TransitionSpring`, `Tween`.
+Makes use of: `Draggable`, `Tossable`, `Transition`, `TransitionSpring`, `Tween`.
+
+### Floating action button transition
+
+<img src="assets/fabtransition.gif" />
+
+A floating action button transition is a type of contextual transition that animates a mask outward
+from a floating button.
+
+Makes use of: `Transition` and `Tween`.
 
 ### Sticker picker
 
