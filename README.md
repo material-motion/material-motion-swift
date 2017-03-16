@@ -2,9 +2,9 @@
 
 [![Build Status](https://travis-ci.org/material-motion/reactive-motion-swift.svg?branch=develop)](https://travis-ci.org/material-motion/reactive-motion-swift)
 [![codecov](https://codecov.io/gh/material-motion/reactive-motion-swift/branch/develop/graph/badge.svg)](https://codecov.io/gh/material-motion/reactive-motion-swift)
-[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/MaterialMotionStreams.svg)](https://cocoapods.org/pods/MaterialMotionStreams)
-[![Platform](https://img.shields.io/cocoapods/p/MaterialMotionStreams.svg)](http://cocoadocs.org/docsets/MaterialMotionStreams)
-[![Docs](https://img.shields.io/cocoapods/metrics/doc-percent/MaterialMotionStreams.svg)](http://cocoadocs.org/docsets/MaterialMotionStreams)
+[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/ReactiveMotion.svg)](https://cocoapods.org/pods/ReactiveMotion)
+[![Platform](https://img.shields.io/cocoapods/p/ReactiveMotion.svg)](http://cocoadocs.org/docsets/ReactiveMotion)
+[![Docs](https://img.shields.io/cocoapods/metrics/doc-percent/ReactiveMotion.svg)](http://cocoadocs.org/docsets/ReactiveMotion)
 
 Reactive Motion is a library for creating motion with [reactive programming](http://reactivex.io/)
 patterns.
@@ -88,9 +88,9 @@ runtime.add(tossable, to: <#view#>)</code></pre></td>
 >
 >     gem install cocoapods
 
-Add `MaterialMotionStreams` to your `Podfile`:
+Add `ReactiveMotion` to your `Podfile`:
 
-    pod 'MaterialMotionStreams'
+    pod 'ReactiveMotion'
 
 Then run the following command:
 
@@ -100,7 +100,7 @@ Then run the following command:
 
 Import the framework:
 
-    @import MaterialMotionStreams;
+    @import ReactiveMotion;
 
 You will now have access to all of the APIs.
 
@@ -112,7 +112,7 @@ commands:
     git clone https://github.com/material-motion/reactive-motion-swift.git
     cd reactive-motion-swift
     pod install
-    open MaterialMotionStreams.xcworkspace
+    open ReactiveMotion.xcworkspace
 
 ## Guides
 
