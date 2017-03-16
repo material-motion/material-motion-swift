@@ -82,7 +82,7 @@ class CarouselExampleViewController: ExampleViewController, UIScrollViewDelegate
 private class CarouselPage: UIView {
   let titleLabel = UILabel()
   let descriptionLabel = UILabel()
-  let iconView = UIView()
+  let iconView = createExampleView()
 
   override init(frame: CGRect) {
     titleLabel.font = .boldSystemFont(ofSize: 24)
@@ -107,12 +107,16 @@ private class CarouselPage: UIView {
     super.layoutSubviews()
 
     let descriptionSize = descriptionLabel.sizeThatFits(bounds.size)
-    descriptionLabel.frame = .init(x: 16, y: bounds.height - descriptionSize.height - 48, width: bounds.width - 32, height: descriptionSize.height)
+
 
     let titleSize = titleLabel.sizeThatFits(bounds.size)
-    titleLabel.frame = .init(x: 16, y: descriptionLabel.frame.minY - descriptionSize.height - 24, width: bounds.width - 32, height: titleSize.height)
 
-    iconView.frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.width).insetBy(dx: 64, dy: 64)
+    let x = (bounds.width - iconView.bounds.width) / 2
+    let y = (bounds.height - iconView.bounds.height) / 2
+    iconView.frame = CGRect(origin: .init(x: x, y: y), size: iconView.bounds.size).offsetBy(dx: 0, dy: -descriptionSize.height - titleSize.height)
     iconView.layer.cornerRadius = iconView.bounds.width / 2
+    titleLabel.frame = .init(x: 16, y: iconView.frame.maxY + 12, width: bounds.width - 32, height: titleSize.height)
+    descriptionLabel.frame = .init(x: 16, y: titleLabel.frame.maxY, width: bounds.width - 32, height: descriptionSize.height)
+
   }
 }
