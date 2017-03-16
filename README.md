@@ -125,6 +125,8 @@ dismiss it using the tossable interaction.
 
 Makes use of: `Draggable`, `Tossable`, `Transition`, `TransitionSpring`, `Tween`.
 
+[View the source](examples/ContextualTransitionExample.swift).
+
 ### Floating action button transition
 
 <img src="assets/fabtransition.gif" />
@@ -134,6 +136,18 @@ from a floating button.
 
 Makes use of: `Transition` and `Tween`.
 
+[View the source](examples/FabTransitionExample.swift).
+
+### Modal dialog
+
+<img src="assets/modaldialog.gif" />
+
+A modal dialog that's presented over the existing context and is dismissable using gestures.
+
+Makes use of: `Tossable` and `TransitionSpring`.
+
+[View the source](examples/ModalDialogExample.swift).
+
 ### Sticker picker
 
 <img src="assets/stickerpicker.gif" />
@@ -142,6 +156,8 @@ Each sticker is individually **directly manipulable**, meaning they can be dragg
 scaled using multitouch gestures.
 
 Makes use of: `DirectlyManipulable`.
+
+[View the source](examples/StickerPickerExample.swift).
 
 ## Contributing
 
