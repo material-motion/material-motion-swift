@@ -28,7 +28,7 @@ class FabTransitionExampleViewController: ExampleViewController, TransitionConte
     actionButton.bounds = .init(x: 0, y: 0, width: 50, height: 50)
     actionButton.layer.cornerRadius = actionButton.bounds.width / 2
     actionButton.layer.position = .init(x: view.bounds.width - actionButton.bounds.width / 2 - 24,
-                                        y: view.bounds.height - actionButton.bounds.height / 2 - 24)
+                                        y: view.bounds.height / 2 + view.bounds.width / 2 - actionButton.bounds.height / 2 - 24)
     actionButton.autoresizingMask = [.flexibleLeftMargin, .flexibleTopMargin]
     actionButton.layer.shadowOpacity = 0.5
     actionButton.layer.shadowOffset = .init(width: 0, height: 3)
@@ -105,7 +105,7 @@ private class CircularRevealTransition: Transition {
     ctx.containerView().addSubview(floodFillView)
 
     let maskLayer = CAShapeLayer()
-    let maskPathBounds = floodFillView.frame.insetBy(dx: 1, dy: 1)
+    let maskPathBounds = floodFillView.frame.insetBy(dx: 2, dy: 2)
     maskLayer.path = UIBezierPath(ovalIn: maskPathBounds).cgPath
     ctx.fore.view.layer.mask = maskLayer
 
@@ -141,6 +141,7 @@ private class CircularRevealTransition: Transition {
                                 width: outerRadius * 2,
                                 height: outerRadius * 2)
     let maskReveal = tween(back: maskLayer.path!, fore: UIBezierPath(ovalIn: foreMaskBounds).cgPath, ctx: ctx)
+    maskReveal.timingFunctions
     runtime.add(maskReveal, to: runtime.get(maskLayer).path)
 
     runtime.add(Hidden(), to: contextView)
