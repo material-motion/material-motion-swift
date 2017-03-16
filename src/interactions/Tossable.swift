@@ -64,20 +64,24 @@ public class Tossable: Interaction, Stateful {
 
     let gesture = runtime.get(draggable.nextGestureRecognizer)
 
-    aggregateState.observe(state: spring.state, withRuntime: runtime)
-    aggregateState.observe(state: draggable.state, withRuntime: runtime)
-
     // Order matters:
     //
-    // 1. The spring's initial velocity must be set before it's re-enabled.
-    // 2. The spring must be registered before draggable in case draggable's gesture is already
+    // 1. When we hand off from the gesture to the spring we want Tossable's state to still be
+    //    "active", so we observe the spring's state first and observe draggable's state last; this
+    //    ensures that the spring interaction is active before the draggable interaction is at rest.
+    // 2. The spring's initial velocity must be set before it's re-enabled.
+    // 3. The spring must be registered before draggable in case draggable's gesture is already
     //    active and will want to immediately read the current state of the position property.
+
+    aggregateState.observe(state: spring.state, withRuntime: runtime)
 
     runtime.connect(gesture.velocityOnReleaseStream(in: runtime.containerView), to: spring.initialVelocity)
     runtime.disable(spring, whenActive: gesture)
     runtime.add(spring, to: position, constraints: constraints)
 
     runtime.add(draggable, to: view, constraints: constraints)
+
+    aggregateState.observe(state: draggable.state, withRuntime: runtime)
   }
 
   /**

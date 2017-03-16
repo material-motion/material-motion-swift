@@ -46,6 +46,10 @@ extension ArcMoveExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Arc move"] }
 }
 
+extension DirectlyManipulableExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Directly manipulable"] }
+}
+
 extension DraggableExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Draggable"] }
 }
@@ -54,8 +58,20 @@ extension RotatableExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Rotatable"] }
 }
 
-extension DirectlyManipulableExampleViewController {
-  class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Directly manipulable"] }
+extension ScalableExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Scalable"] }
+}
+
+extension SetPositionOnTapExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Set position on tap"] }
+}
+
+extension SpringExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Spring"] }
+}
+
+extension TossableExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Tossable"] }
 }
 
 extension ModalDialogExampleViewController {

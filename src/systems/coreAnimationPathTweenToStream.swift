@@ -59,7 +59,7 @@ public func coreAnimation(_ tween: PathTweenShadow) -> MotionObservable<CGPoint>
         brushLayer.strokeEnd = 1
         brushLayer.lineCap = kCALineJoinRound
         brushLayer.fillColor = UIColor.white.withAlphaComponent(0).cgColor
-        brushLayer.strokeColor = UIColor(red: 22/255.0, green: 149/255.0, blue: 242/255.0, alpha: 1).cgColor
+        brushLayer.strokeColor = UIColor(red: 0xC5/255.0, green: 0x11/255.0, blue: 0x62/255.0, alpha: 1).cgColor
         brushLayer.path = pathValue
 
         if let timeline = tween.timeline {
