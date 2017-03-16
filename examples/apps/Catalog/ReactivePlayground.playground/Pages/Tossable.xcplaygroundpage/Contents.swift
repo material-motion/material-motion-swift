@@ -1,6 +1,5 @@
-/*:
- ## Reactive Motion tossable playground
- */
+//: [Previous](@previous)
+
 import MaterialMotion
 
 let view = createExampleView()
