@@ -8,7 +8,7 @@
 [![Platform](https://img.shields.io/cocoapods/p/MaterialMotion.svg)](http://cocoadocs.org/docsets/MaterialMotion)
 [![Docs](https://img.shields.io/cocoapods/metrics/doc-percent/MaterialMotion.svg)](http://cocoadocs.org/docsets/MaterialMotion)
 
-Reactive Motion is a library for creating motion with [reactive programming](http://reactivex.io/)
+Material Motion is a library for creating motion with [reactive programming](http://reactivex.io/)
 patterns.
 
 This library includes a variety of ready-to-use **interactions**. Interactions are registered to an
@@ -111,8 +111,8 @@ You will now have access to all of the APIs.
 Check out a local copy of the repo to access the Catalog application by running the following
 commands:
 
-    git clone https://github.com/material-motion/reactive-motion-swift.git
-    cd reactive-motion-swift
+    git clone https://github.com/material-motion/material-motion-swift.git
+    cd material-motion-swift
     pod install
     open MaterialMotion.xcworkspace
 
@@ -141,7 +141,7 @@ Makes use of: `DirectlyManipulable`.
 
 We welcome contributions!
 
-Check out our [upcoming milestones](https://github.com/material-motion/reactive-motion-swift/milestones).
+Check out our [upcoming milestones](https://github.com/material-motion/material-motion-swift/milestones).
 
 Learn more about [our team](https://material-motion.github.io/material-motion/team/),
 [our community](https://material-motion.github.io/material-motion/team/community/), and
