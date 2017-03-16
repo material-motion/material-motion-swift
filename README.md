@@ -9,8 +9,8 @@
 Reactive Motion is a library for creating motion with [reactive programming](http://reactivex.io/)
 patterns.
 
-This library includes a variety of ready-to-use **interactions**. Start by creating and storing a
-`MotionRuntime` instance:
+This library includes a variety of ready-to-use **interactions**. Interactions can be used by
+creating and a `MotionRuntime` instance:
 
 ```swift
 // Store me for as long as the interactions should take effect.
