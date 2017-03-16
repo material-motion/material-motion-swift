@@ -9,8 +9,8 @@
 Reactive Motion is a library for creating motion with [reactive programming](http://reactivex.io/)
 patterns.
 
-This library includes a variety of ready-to-use **interactions**. Interactions can be used by
-creating and a `MotionRuntime` instance:
+This library includes a variety of ready-to-use **interactions**. Interactions are registered to an
+instance of `MotionRuntime`:
 
 ```swift
 // Store me for as long as the interactions should take effect.
@@ -114,14 +114,23 @@ commands:
     pod install
     open ReactiveMotion.xcworkspace
 
-## Guides
+## Case studies
 
-1. [Architecture](#architecture)
-2. [How to ...](#how-to-...)
+### Sticker picker
 
-### Architecture
+<img src="assets/stickerpicker.gif" />
 
-### How to ...
+Each sticker is individually **directly manipulable**, meaning they can be dragged, rotated, and
+scaled using multitouch gestures.
+
+```swift
+let directlyManipulable = DirectlyManipulable()
+runtime.add(directlyManipulable, to: <#stickerView#>)
+
+runtime.whenAllAtRest([directlyManipulable]) {
+  // Store the layer's transform + position
+}
+```
 
 ## Contributing
 
