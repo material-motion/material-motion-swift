@@ -61,11 +61,11 @@ public class Metadata: CustomDebugStringConvertible {
   private var style: String {
     switch type {
     case .constraint:
-      return "style=filled, fillcolor=\"#DB4437\""
+      return "style=filled, fillcolor=\"#FF80AB\""
     case .node:
       return "style=filled, fillcolor=\"#FFFFFF\""
     case .property:
-      return "style=filled, fillcolor=\"#0F9D58\""
+      return "style=filled, fillcolor=\"#C51162\""
     case .constant:
       return "style=filled, color=white fillcolor=\"#111111\""
     }
