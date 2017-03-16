@@ -100,7 +100,7 @@ Then run the following command:
 
 Import the framework:
 
-    @import ReactiveMotion;
+    import ReactiveMotion
 
 You will now have access to all of the APIs.
 
