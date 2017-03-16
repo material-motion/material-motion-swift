@@ -1,6 +1,6 @@
 # Material Motion (Swift)
 
-> A small, performant library for building reactive motion. [Learn more about reactive programming](http://reactivex.io/).
+> A small, performant library for building reactive motion.
 
 [![Build Status](https://travis-ci.org/material-motion/reactive-motion-swift.svg?branch=develop)](https://travis-ci.org/material-motion/reactive-motion-swift)
 [![codecov](https://codecov.io/gh/material-motion/reactive-motion-swift/branch/develop/graph/badge.svg)](https://codecov.io/gh/material-motion/reactive-motion-swift)
