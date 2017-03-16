@@ -181,9 +181,9 @@
 				667E94461E71EF0E005CAC78 /* CarouselExample.swift */,
 				667E94471E71EF0E005CAC78 /* ContextualTransitionExample.swift */,
 				667E944A1E71EF0E005CAC78 /* FabTransitionExample.swift */,
+				667E944B1E71EF0E005CAC78 /* InteractivePushBackTransitionExample.swift */,
 				667E944C1E71EF0E005CAC78 /* ModalDialogExample.swift */,
 				667E944D1E71EF0E005CAC78 /* PushBackTransitionExample.swift */,
-				667E944B1E71EF0E005CAC78 /* InteractivePushBackTransitionExample.swift */,
 				667E944E1E71EF0E005CAC78 /* StickerPickerExample.swift */,
 			);
 			name = "Case studies";
