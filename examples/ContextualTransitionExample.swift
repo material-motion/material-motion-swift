@@ -296,7 +296,7 @@ private class PushBackTransition: Transition {
     runtime.add(tossable, to: replicaView)
 
     let size = spring(back: contextView.bounds.size, fore: fitSize, threshold: 1, ctx: ctx)
-    runtime.disable(size, whenActive: gesture)
+    runtime.toggle(size, inReactionTo: draggable)
     runtime.add(size, to: runtime.get(replicaView).reactiveLayer.size)
 
     let opacity = spring(back: CGFloat(0), fore: CGFloat(1), threshold: 0.01, ctx: ctx)

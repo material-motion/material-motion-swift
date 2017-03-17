@@ -73,7 +73,7 @@ public final class MotionRuntime {
 
    This is most commonly used to disable a spring when a gestural interaction is active.
    */
-  public func disable(_ interaction: Togglable, whenActive otherInteraction: Stateful) {
+  public func toggle(_ interaction: Togglable, inReactionTo otherInteraction: Stateful) {
     connect(otherInteraction.state.rewrite([.atRest: true, .active: false]), to: interaction.enabled)
   }
 

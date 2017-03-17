@@ -76,7 +76,7 @@ public class Tossable: Interaction, Stateful {
     aggregateState.observe(state: spring.state, withRuntime: runtime)
 
     runtime.connect(gesture.velocityOnReleaseStream(in: runtime.containerView), to: spring.initialVelocity)
-    runtime.disable(spring, whenActive: gesture)
+    runtime.toggle(spring, inReactionTo: draggable)
     runtime.add(spring, to: position, constraints: constraints)
 
     runtime.add(draggable, to: view, constraints: constraints)
