@@ -33,6 +33,15 @@ import Foundation
  - `{ $0.yLocked(to: somePosition) }`
  */
 public final class Draggable: Gesturable<UIPanGestureRecognizer>, Interaction, Stateful {
+  /**
+   A sub-interaction for writing the next gesture recognizer's final velocity to a property.
+
+   Most commonly used to add final velocity to a spring's initial velocity.
+   */
+  public var finalVelocity: DraggableFinalVelocity {
+    return DraggableFinalVelocity(gestureRecognizer: nextGestureRecognizer)
+  }
+
   public func add(to view: UIView,
                   withRuntime runtime: MotionRuntime,
                   constraints applyConstraints: ConstraintApplicator<CGPoint>? = nil) {
@@ -49,4 +58,29 @@ public final class Draggable: Gesturable<UIPanGestureRecognizer>, Interaction, S
     }
     runtime.connect(stream, to: position)
   }
+}
+
+/**
+ A sub-interaction of Draggable for extracting the final velocity and writing it to a property.
+
+ Not directly instantiable. Use Draggable's `finalVelocity` property instead.
+
+ **Constraints**
+
+ CGPoint constraints may be applied to this interaction.
+ */
+public final class DraggableFinalVelocity: Interaction {
+  fileprivate init(gestureRecognizer: UIPanGestureRecognizer) {
+    self.gestureRecognizer = gestureRecognizer
+  }
+
+  public func add(to target: ReactiveProperty<CGPoint>,
+                  withRuntime runtime: MotionRuntime,
+                  constraints applyConstraints: ConstraintApplicator<CGPoint>? = nil) {
+    let gesture = runtime.get(gestureRecognizer)
+    runtime.connect(gesture.velocityOnReleaseStream(in: runtime.containerView),
+                    to: target)
+  }
+
+  let gestureRecognizer: UIPanGestureRecognizer
 }

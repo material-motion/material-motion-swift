@@ -62,8 +62,6 @@ public class Tossable: Interaction, Stateful {
                   constraints: ConstraintApplicator<CGPoint>? = nil) {
     let position = runtime.get(view.layer).position
 
-    let gesture = runtime.get(draggable.nextGestureRecognizer)
-
     // Order matters:
     //
     // 1. When we hand off from the gesture to the spring we want Tossable's state to still be
@@ -75,10 +73,10 @@ public class Tossable: Interaction, Stateful {
 
     aggregateState.observe(state: spring.state, withRuntime: runtime)
 
-    runtime.connect(gesture.velocityOnReleaseStream(in: runtime.containerView), to: spring.initialVelocity)
+    runtime.add(draggable.finalVelocity, to: spring.initialVelocity)
     runtime.toggle(spring, inReactionTo: draggable)
-    runtime.add(spring, to: position, constraints: constraints)
 
+    runtime.add(spring, to: position, constraints: constraints)
     runtime.add(draggable, to: view, constraints: constraints)
 
     aggregateState.observe(state: draggable.state, withRuntime: runtime)
