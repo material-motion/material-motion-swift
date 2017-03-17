@@ -59,7 +59,7 @@ public final class DirectlyManipulable: NSObject, Interaction, Stateful {
     self.scalable = scalable
   }
 
-  public func add(to view: UIView, withRuntime runtime: MotionRuntime, constraints: Void?) {
+  public func add(to view: UIView, withRuntime runtime: MotionRuntime, constraints: NoConstraints) {
     for gestureRecognizer in [draggable.nextGestureRecognizer,
                               rotatable.nextGestureRecognizer,
                               scalable.nextGestureRecognizer] {

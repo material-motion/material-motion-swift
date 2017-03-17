@@ -34,7 +34,8 @@ public protocol Interaction {
 
    The conforming type defines the target and optional constraints types via this signature.
 
-   Use Void? as the constraints type to indicate that the interaction does not support constraints.
+   Use NoConstraints as the constraints type to indicate that the interaction does not support
+   constraints.
    */
   func add(to target: Target, withRuntime runtime: MotionRuntime, constraints: Constraints?)
 }
@@ -43,3 +44,8 @@ public protocol Interaction {
  A typical constraint shape for an interaction.
  */
 public typealias ConstraintApplicator<T> = (MotionObservable<T>) -> MotionObservable<T>
+
+/**
+ Interactions that do not support constraints should use this type for their constraints signature.
+ */
+public typealias NoConstraints = Void?

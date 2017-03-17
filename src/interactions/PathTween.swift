@@ -80,7 +80,7 @@ public final class PathTween: Interaction, Togglable, Stateful {
     self.timeline = timeline
   }
 
-  public func add(to property: ReactiveProperty<CGPoint>, withRuntime runtime: MotionRuntime, constraints: Void?) {
+  public func add(to property: ReactiveProperty<CGPoint>, withRuntime runtime: MotionRuntime, constraints: NoConstraints) {
     runtime.connect(asStream(), to: property)
   }
 

@@ -48,7 +48,7 @@ public final class ArcMove: Interaction, Togglable, Stateful {
     self.tween = tween
   }
 
-  public func add(to view: UIView, withRuntime runtime: MotionRuntime, constraints: Void?) {
+  public func add(to view: UIView, withRuntime runtime: MotionRuntime, constraints: NoConstraints) {
     runtime.connect(arcMove(from: from, to: to), to: tween.path)
     runtime.add(tween, to: runtime.get(view.layer).position)
   }
