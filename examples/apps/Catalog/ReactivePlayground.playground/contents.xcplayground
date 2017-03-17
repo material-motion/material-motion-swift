@@ -5,6 +5,7 @@
         <page name='How to use springs'/>
         <page name='How to combine interactions'/>
         <page name='How to create new interactions'/>
+        <page name='How to apply constraints'/>
         <page name='Visualizing the runtime'/>
     </pages>
 </playground>
