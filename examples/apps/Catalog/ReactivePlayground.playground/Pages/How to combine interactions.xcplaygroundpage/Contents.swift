@@ -2,7 +2,7 @@
  ## How to combine interactions
 
  Interactions are building blocks for complex motion. We can create new interactions by combining interactions in interesting ways. For example, *Tossable* is a combination of `Spring` and `Draggable`. Let's see how we might build Tossable from scratch.
- 
+
  > This page includes many independent examples that need to be pasted into the playground in order to take effect.
  */
 import MaterialMotion
@@ -74,4 +74,3 @@ runtime.add(SetPositionOnTap(coordinateSpace: canvas),
 //: We've now created the parts necessary for a `Tossable` interaction. We certainly don't want to have to remember to build these pieces every time we want an interaction like this, so on the next page we'll learn how to create new Interaction types.
 //:
 //: [Previous](@previous) - [Next](@next)
-
