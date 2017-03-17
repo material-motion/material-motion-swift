@@ -1,7 +1,7 @@
 /*:
  ## How to combine interactions
 
- Interactions are building blocks for complex motion. We can create new interactions by combining interactions in interesting ways. For example, *Tossable* is a combination of `Spring` and `Draggable`. Let's see how we might build Tossable from scratch.
+ Interactions are the building block of complex motion. We can create new interactions by combining interactions in interesting ways. For example, *Tossable* is a combination of `Spring` and `Draggable`. Let's see how we might build Tossable from scratch.
 
  > This page includes many independent examples that need to be pasted into the playground in order to take effect.
  */
