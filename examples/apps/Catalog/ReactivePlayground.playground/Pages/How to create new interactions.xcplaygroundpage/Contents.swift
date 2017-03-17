@@ -27,7 +27,7 @@ final class MyTossable: Interaction {
     self.draggable = draggable
   }
 
-//: The Interaction protocol requires that we implement a single method: `add`. This method defines two generic types: the interaction's **value type** and the optional **constraint type**. This method will be invoked by the runtime when we call `runtime.add` with an instance of this interaction.
+//: The Interaction protocol requires that we implement a single method: `add`. This method defines two generic types: the interaction's **target type** and the optional **constraint type**. This method will be invoked by the runtime when we call `runtime.add` with an instance of this interaction.
 //:
 //: In this case we want our interaction to be registered to instances of UIView and we won't support any constraints.
   func add(to target: UIView, withRuntime runtime: MotionRuntime, constraints: NoConstraints) {
