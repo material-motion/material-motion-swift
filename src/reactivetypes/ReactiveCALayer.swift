@@ -209,6 +209,10 @@ public func createCoreAnimationProperty<T>(_ name: String, initialValue: T, exte
         basicAnimation.fromValue = makeAdditive(basicAnimation.fromValue!, basicAnimation.toValue!)
         basicAnimation.toValue = makeAdditive(basicAnimation.toValue!, basicAnimation.toValue!)
         basicAnimation.isAdditive = true
+      } else if let makeAdditive = info.makeAdditive, let keyframeAnimation = animation as? CAKeyframeAnimation {
+        let lastValue = keyframeAnimation.values!.last!
+        keyframeAnimation.values = keyframeAnimation.values!.map { makeAdditive($0, lastValue) }
+        keyframeAnimation.isAdditive = true
       }
 
       // Core Animation springs do not support multi-dimensional velocity, so we bear the burden

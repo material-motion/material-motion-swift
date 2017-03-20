@@ -19,6 +19,21 @@ import IndefiniteObservable
 
 /** Create a core animation tween system for a Tween plan. */
 public func coreAnimation<T>(_ tween: TweenShadow<T>) -> MotionObservable<T> {
+  return streamFromTween(tween) { $0 }
+}
+
+/** Create an additive core animation tween system for a Tween plan. */
+public func coreAnimation<T>(_ tween: TweenShadow<T>) -> MotionObservable<T> where T: Subtractable {
+  return streamFromTween(tween) {
+    var event = $0
+    event.makeAdditive = { from, to in
+      return (from as! T) - (to as! T)
+    }
+    return event
+  }
+}
+
+private func streamFromTween<T>(_ tween: TweenShadow<T>, configureEvent: @escaping (CoreAnimationChannelAdd) -> CoreAnimationChannelAdd) -> MotionObservable<T> {
   return MotionObservable(Metadata("Core Animation Tween", args: [tween])) { observer in
 
     var animationKeys: [String] = []
@@ -59,6 +74,7 @@ public func coreAnimation<T>(_ tween: TweenShadow<T>) -> MotionObservable<T> {
           tween.state.value = .atRest
         }
       })
+      info = configureEvent(info)
       info.timeline = tween.timeline
       observer.coreAnimation?(.add(info))
       animationKeys.append(key)
