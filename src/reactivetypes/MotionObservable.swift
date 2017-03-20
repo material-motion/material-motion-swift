@@ -86,9 +86,10 @@ public struct CoreAnimationChannelAdd {
    A method that transforms an absolute animation's from/to values into a relative animation's
    from/to values.
 
-   The method accepts (from, to) and must return (from - to, zero).
+   The method accepts (presentationValue, modelValue) and must return
+   presentationValue - modelValue.
    */
-  public var makeAdditive: ((Any, Any) -> (Any, Any))?
+  public var makeAdditive: ((Any, Any) -> Any)?
 
   /**
    The timeline associated with this animation.

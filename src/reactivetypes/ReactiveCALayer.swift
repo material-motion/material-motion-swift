@@ -206,9 +206,8 @@ public func createCoreAnimationProperty<T>(_ name: String, initialValue: T, exte
       animation.keyPath = keyPath
 
       if let makeAdditive = info.makeAdditive, let basicAnimation = animation as? CABasicAnimation {
-        let (fromValue, toValue) = makeAdditive(basicAnimation.fromValue!, basicAnimation.toValue!)
-        basicAnimation.fromValue = fromValue
-        basicAnimation.toValue = toValue
+        basicAnimation.fromValue = makeAdditive(basicAnimation.fromValue!, basicAnimation.toValue!)
+        basicAnimation.toValue = makeAdditive(basicAnimation.toValue!, basicAnimation.toValue!)
         basicAnimation.isAdditive = true
       }
 
