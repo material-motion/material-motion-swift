@@ -74,6 +74,24 @@ public class ReactiveCALayer {
                                        reactiveLayer: self)
   }()
 
+  public lazy var width: ReactiveProperty<CGFloat> = {
+    let size = self.size
+    return createCoreAnimationProperty(#function,
+                                       initialValue: size.value.width,
+                                       externalWrite: { var dimensions = size.value; dimensions.width = $0; size.value = dimensions },
+                                       keyPath: "bounds.size.width",
+                                       reactiveLayer: self)
+  }()
+
+  public lazy var height: ReactiveProperty<CGFloat> = {
+    let size = self.size
+    return createCoreAnimationProperty(#function,
+                                       initialValue: size.value.height,
+                                       externalWrite: { var dimensions = size.value; dimensions.height = $0; size.value = dimensions },
+                                       keyPath: "bounds.size.height",
+                                       reactiveLayer: self)
+  }()
+
   public lazy var anchorPoint: ReactiveProperty<CGPoint> = {
     let layer = self.layer
     return createCoreAnimationProperty(#function,
