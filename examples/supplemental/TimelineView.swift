@@ -15,20 +15,28 @@
  */
 
 import UIKit
+import IndefiniteObservable
 import MaterialMotion
 
-public class TimelineView: UIView {
+protocol TimelineViewDelegate: NSObjectProtocol {
+  func timelineView(_ timelineView: TimelineView, didChangeSliderValue sliderValue: CGFloat)
+  func timelineViewDidTogglePause(_ timelineView: TimelineView)
+}
 
-  public let timeline: Timeline!
-  public let sliderValue: ReactiveProperty<CGFloat>!
+class TimelineView: UIView {
 
-  private var bgView: UIView!
-  private var slider: UISlider!
-  private var toggle: UIButton!
+  weak var delegate: TimelineViewDelegate?
 
-  public init(timeline: Timeline, frame: CGRect) {
-    self.timeline = timeline
-    sliderValue = createProperty("TimelineView.sliderValue", withInitialValue: CGFloat(0.5))
+  var timeline: Timeline? {
+    didSet {
+      pausedSubscription = timeline?.paused.subscribeToValue { [weak self] paused in
+        self?.toggle.setTitle(paused ? "▶" : "❙❙", for: .normal)
+      }
+    }
+  }
+  private var pausedSubscription: Subscription?
+
+   override init(frame: CGRect) {
     super.init(frame: frame)
 
     bgView = UIView(frame: .zero)
@@ -36,7 +44,6 @@ public class TimelineView: UIView {
     self.addSubview(bgView)
 
     slider = UISlider(frame: .zero)
-    slider.value = Float(sliderValue.value)
     slider.tintColor = .primaryColor
     slider.addTarget(self, action: #selector(didSlide), for: .valueChanged)
     self.addSubview(slider)
@@ -48,21 +55,17 @@ public class TimelineView: UIView {
     self.addSubview(toggle)
   }
 
-  public required override init(frame: CGRect) {
-    fatalError("init(frame:) has not been implemented")
-  }
-
-  public required init?(coder aDecoder: NSCoder) {
+  required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
-  override public func layoutSubviews() {
+  override func layoutSubviews() {
     super.layoutSubviews()
 
     bgView.frame = .init(x: 0, y: 20, width: bounds.size.width, height: bounds.size.height - 20)
 
     let center = CGPoint(x: bounds.size.width / 2.0, y: bounds.size.height / 2.0)
-    slider.frame = .init(x: 0, y: 0, width: frame.width, height: 40)
+    slider.frame = .init(x: 16, y: 0, width: frame.width - 32, height: 40)
     toggle.frame = .init(x: center.x - 16, y: center.y - 16 + 12, width: 32, height: 32)
   }
 
@@ -71,11 +74,14 @@ public class TimelineView: UIView {
   }
 
   func didSlide(_ slider: UISlider) {
-    sliderValue.value = CGFloat(slider.value)
+    delegate?.timelineView(self, didChangeSliderValue: CGFloat(slider.value))
   }
 
   func didToggle(_ button: UIButton) {
-    timeline.paused.value = !timeline.paused.value
-    button.setTitle(timeline.paused.value ? "▶" : "❙❙", for: .normal)
+    delegate?.timelineViewDidTogglePause(self)
   }
+
+  private var bgView: UIView!
+  private var slider: UISlider!
+  private var toggle: UIButton!
 }

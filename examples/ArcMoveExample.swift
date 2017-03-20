@@ -17,72 +17,67 @@
 import UIKit
 import MaterialMotion
 
-class ArcMoveExampleViewController: ExampleViewController {
-
-  var tapCircleLayer: CAShapeLayer!
-  var blueSquare: UIView!
-  var targetView: UIView!
-
-  var timelineView: TimelineView!
+class ArcMoveExampleViewController: ExampleViewController, TimelineViewDelegate {
 
   var runtime: MotionRuntime!
   var timeline: Timeline!
-  var duration: MotionObservable<CGFloat>!
-  var sliderValue: ReactiveProperty<CGFloat>!
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.createViews()
 
-    timeline = Timeline()
-    timelineView = TimelineView(timeline: timeline, frame: .zero)
-    let size = timelineView.sizeThatFits(view.bounds.size)
-    timelineView.frame = .init(x: 0, y: view.bounds.height - size.height, width: size.width, height: size.height)
-    view.addSubview(timelineView)
-
-    runtime = MotionRuntime(containerView: view)
-    runtime.shouldVisualizeMotion = true
-
-    let reactiveTapLayer = runtime.get(tapCircleLayer)
-    let reactiveTargetLayer = runtime.get(targetView).reactiveLayer
-
-    runtime.add(Draggable(), to: targetView)
-    runtime.add(SetPositionOnTap(coordinateSpace: view), to: reactiveTapLayer.position)
-
-    let arcMove = ArcMove(tween: .init(timeline: timeline))
-    runtime.connect(reactiveTapLayer.position, to: arcMove.from)
-    runtime.connect(reactiveTargetLayer.position, to: arcMove.to)
-    // The duration of the animation is based on the distance to the target
-    duration = reactiveTapLayer.position.distance(from: reactiveTargetLayer.position).normalized(by: 600)
-    runtime.connect(duration, to: arcMove.tween.duration)
-
-    runtime.connect(duration.scaled(by: timelineView.sliderValue.asStream()), to: timeline.timeOffset)
-    timeline.paused.value = true
-    runtime.add(arcMove, to: blueSquare)
-  }
-
-  func createViews() {
     var center = view.center
     center.x -= 32
     center.y -= 32
 
-    blueSquare = createExampleView()
+    let blueSquare = createExampleView()
     blueSquare.frame = .init(x: 0, y: 0, width: blueSquare.bounds.width / 2, height: blueSquare.bounds.height / 2)
     blueSquare.layer.cornerRadius = blueSquare.bounds.width / 2
     view.addSubview(blueSquare)
 
-    tapCircleLayer = CAShapeLayer()
-    tapCircleLayer.frame = CGRect(x: center.x - 100, y: center.y - 200, width: blueSquare.bounds.width, height: blueSquare.bounds.height)
-    tapCircleLayer.path = UIBezierPath(ovalIn: tapCircleLayer.bounds).cgPath
-    tapCircleLayer.lineWidth = 1
-    tapCircleLayer.fillColor = UIColor.clear.cgColor
-    tapCircleLayer.strokeColor = UIColor.primaryColor.cgColor
-    view.layer.addSublayer(tapCircleLayer)
+    let circle = UIView()
+    circle.frame = CGRect(x: center.x - 100, y: center.y - 200, width: blueSquare.bounds.width, height: blueSquare.bounds.height)
+    circle.layer.cornerRadius = circle.bounds.width / 2
+    circle.layer.borderColor = UIColor.primaryColor.cgColor
+    circle.layer.borderWidth = 1
+    view.addSubview(circle)
 
-    targetView = UIView(frame: .init(x: center.x, y: center.y, width: blueSquare.bounds.width, height: blueSquare.bounds.height))
+    let targetView = UIView(frame: .init(x: center.x, y: center.y, width: blueSquare.bounds.width, height: blueSquare.bounds.height))
     targetView.layer.borderWidth = 1
     targetView.layer.borderColor = UIColor.secondaryColor.cgColor
     view.addSubview(targetView)
+
+    let timelineView = TimelineView()
+    timelineView.delegate = self
+    let size = timelineView.sizeThatFits(view.bounds.size)
+    timelineView.frame = .init(x: 0, y: view.bounds.height - size.height, width: size.width, height: size.height)
+    view.addSubview(timelineView)
+
+    timeline = Timeline()
+
+    timelineView.timeline = timeline
+
+    runtime = MotionRuntime(containerView: view)
+    runtime.shouldVisualizeMotion = true
+
+    runtime.add(Draggable(), to: circle)
+    runtime.add(Draggable(), to: targetView)
+
+    let arcMove = ArcMove(tween: .init(timeline: timeline))
+    arcMove.tween.duration.value = 0.4
+    runtime.connect(runtime.get(circle.layer).position, to: arcMove.from)
+    runtime.connect(runtime.get(targetView.layer).position, to: arcMove.to)
+
+    timeline.paused.value = true
+
+    runtime.add(arcMove, to: blueSquare)
+  }
+
+  func timelineView(_ timelineView: TimelineView, didChangeSliderValue sliderValue: CGFloat) {
+    timeline.timeOffset.value = sliderValue * 0.4
+  }
+
+  func timelineViewDidTogglePause(_ timelineView: TimelineView) {
+    timeline.paused.value = !timeline.paused.value
   }
 
   override func exampleInformation() -> ExampleInfo {
