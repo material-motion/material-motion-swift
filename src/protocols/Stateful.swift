@@ -47,7 +47,7 @@ public enum MotionState {
  If any observed stream is active, then the aggregate is active. Otherwise, the aggregate is at
  rest.
  */
-class AggregateMotionState {
+final class AggregateMotionState {
 
   /**
    Observe the provided MotionState reactive object.

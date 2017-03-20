@@ -35,7 +35,7 @@ import Foundation
  - `{ $0.xLocked(to: somePosition) }`
  - `{ $0.yLocked(to: somePosition) }`
  */
-public class Tossable: Interaction, Stateful {
+public final class Tossable: Interaction, Stateful {
 
   /**
    The interaction governing drag behaviors.

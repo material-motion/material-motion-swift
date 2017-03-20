@@ -40,7 +40,7 @@ import Foundation
 
  T-value constraints may be applied to this interaction.
  */
-public class TransitionSpring<T: Zeroable>: Spring<T> {
+public final class TransitionSpring<T: Zeroable>: Spring<T> {
 
   /**
    The destination when the transition is moving backward.

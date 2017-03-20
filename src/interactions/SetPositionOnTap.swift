@@ -48,7 +48,7 @@ public enum SetPositionOnTapConfiguration {
 
  CGPoint constraints may be applied to this interaction.
  */
-public class SetPositionOnTap: Interaction {
+public final class SetPositionOnTap: Interaction {
   /**
    Creates a new instance with a given configuration and coordinate space.
 

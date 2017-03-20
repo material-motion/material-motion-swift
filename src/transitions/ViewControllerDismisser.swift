@@ -16,7 +16,7 @@
 
 import Foundation
 
-public class ViewControllerDismisser: NSObject {
+public final class ViewControllerDismisser: NSObject {
 
   public func dismissWhenGestureRecognizerBegins(_ gestureRecognizer: UIGestureRecognizer) {
     gestureRecognizer.addTarget(self, action: #selector(gestureRecognizerDidChange))

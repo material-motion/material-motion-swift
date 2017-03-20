@@ -18,7 +18,7 @@ import Foundation
 import IndefiniteObservable
 
 /** A Transition represents the essential state for a UIViewController transition. */
-public class TransitionContext: NSObject {
+public final class TransitionContext: NSObject {
 
   /** The default duration for a view controller transition. */
   public static let defaultDuration: TimeInterval = 0.35

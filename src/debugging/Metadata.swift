@@ -20,7 +20,7 @@ public protocol Inspectable {
   var metadata: Metadata { get }
 }
 
-public class Metadata: CustomDebugStringConvertible {
+public final class Metadata: CustomDebugStringConvertible {
   enum Metatype {
     case node
     case constraint

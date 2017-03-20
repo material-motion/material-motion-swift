@@ -17,7 +17,7 @@
 import Foundation
 
 /** A transition window represents a reversible interval of time in a bi-directional transition. */
-public class TransitionTimeWindow {
+public final class TransitionTimeWindow {
 
   /** The transition window's duration in time. */
   public let duration: TimeInterval

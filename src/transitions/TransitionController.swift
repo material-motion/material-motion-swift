@@ -52,7 +52,7 @@ extension UIViewController {
 
  This class is not meant to be instantiated directly.
  */
-public class TransitionController: NSObject {
+public final class TransitionController: NSObject {
 
   /**
    An instance of the directorClass will be created to describe the motion for this transition

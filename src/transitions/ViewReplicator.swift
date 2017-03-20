@@ -16,7 +16,7 @@
 
 import Foundation
 
-public class ViewReplicator {
+public final class ViewReplicator {
 
   deinit {
     replicatedViews.forEach { $0.isHidden = false }
