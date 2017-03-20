@@ -46,10 +46,6 @@ extension StickerPickerExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["Case studies", "Sticker picker"] }
 }
 
-extension HowToUseConstraintsExampleViewController {
-  class func catalogBreadcrumbs() -> [String] { return ["How to...", "Use constraints"] }
-}
-
 extension HowToUseReactiveConstraintsExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["How to...", "Use reactive constraints"] }
 }
