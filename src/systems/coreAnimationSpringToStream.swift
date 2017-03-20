@@ -21,7 +21,7 @@ import Foundation
 
  Only works with Subtractable types due to use of additive animations.
  */
-public func coreAnimation<T>(_ spring: SpringShadow<T>) -> (MotionObservable<T>) where T: Subtractable, T: Zeroable, T: Equatable {
+public func coreAnimation<T>(_ spring: SpringShadow<T>) -> (MotionObservable<T>) where T: Subtractable, T: Zeroable {
   let initialVelocityStream = spring.initialVelocity.asStream()
   return MotionObservable(Metadata("Core Animation Spring", args: [spring.enabled, spring.state, spring.initialValue, spring.initialVelocity, spring.destination, spring.tension, spring.friction, spring.mass, spring.suggestedDuration, spring.threshold])) { observer in
     var animationKeys: [String] = []
