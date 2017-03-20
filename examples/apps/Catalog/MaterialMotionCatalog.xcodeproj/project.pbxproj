@@ -40,7 +40,6 @@
 		6686F01C1E77293100F97CC4 /* MotionRuntimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6686F01B1E77293100F97CC4 /* MotionRuntimeTests.swift */; };
 		6686F01E1E772F1700F97CC4 /* ExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6686F01D1E772F1700F97CC4 /* ExampleViewController.swift */; };
 		66DDFD0D1E71F0F100AA46B7 /* DraggableExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD0C1E71F0F100AA46B7 /* DraggableExample.swift */; };
-		66DDFD101E71F32800AA46B7 /* HowToUseConstraintsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD0F1E71F32800AA46B7 /* HowToUseConstraintsExample.swift */; };
 		66DDFD121E71F39700AA46B7 /* ExampleViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD111E71F39700AA46B7 /* ExampleViews.swift */; };
 		66DDFD141E71F3D600AA46B7 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD131E71F3D600AA46B7 /* Layout.swift */; };
 		66DDFD161E71F90F00AA46B7 /* HowToUseReactiveConstraintsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD151E71F90F00AA46B7 /* HowToUseReactiveConstraintsExample.swift */; };
@@ -100,7 +99,6 @@
 		6686F01D1E772F1700F97CC4 /* ExampleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleViewController.swift; sourceTree = "<group>"; };
 		6686F0201E79845E00F97CC4 /* ReactivePlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = ReactivePlayground.playground; sourceTree = "<group>"; };
 		66DDFD0C1E71F0F100AA46B7 /* DraggableExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DraggableExample.swift; path = ../../DraggableExample.swift; sourceTree = "<group>"; };
-		66DDFD0F1E71F32800AA46B7 /* HowToUseConstraintsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HowToUseConstraintsExample.swift; path = ../../HowToUseConstraintsExample.swift; sourceTree = "<group>"; };
 		66DDFD111E71F39700AA46B7 /* ExampleViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleViews.swift; sourceTree = "<group>"; };
 		66DDFD131E71F3D600AA46B7 /* Layout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
 		66DDFD151E71F90F00AA46B7 /* HowToUseReactiveConstraintsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HowToUseReactiveConstraintsExample.swift; path = ../../HowToUseReactiveConstraintsExample.swift; sourceTree = "<group>"; };
@@ -193,7 +191,6 @@
 			isa = PBXGroup;
 			children = (
 				66DDFD1F1E73281200AA46B7 /* HowToMakeACustomOperatorExample.swift */,
-				66DDFD0F1E71F32800AA46B7 /* HowToUseConstraintsExample.swift */,
 				66DDFD151E71F90F00AA46B7 /* HowToUseReactiveConstraintsExample.swift */,
 			);
 			name = "How to...";
@@ -536,7 +533,6 @@
 				6686F01E1E772F1700F97CC4 /* ExampleViewController.swift in Sources */,
 				66DDFD161E71F90F00AA46B7 /* HowToUseReactiveConstraintsExample.swift in Sources */,
 				660DA3191E7A0572008F7401 /* SetPositionOnTapExample.swift in Sources */,
-				66DDFD101E71F32800AA46B7 /* HowToUseConstraintsExample.swift in Sources */,
 				667E94521E71EF0E005CAC78 /* ArcMoveExample.swift in Sources */,
 				667E945A1E71EF0E005CAC78 /* PushBackTransitionExample.swift in Sources */,
 				667E945C1E71EF0E005CAC78 /* TimelineView.swift in Sources */,
