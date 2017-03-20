@@ -30,6 +30,10 @@ extension FabTransitionExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["Case studies", "FAB transition"] }
 }
 
+extension MaterialExpansionExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Case studies", "Material expansion"] }
+}
+
 extension ModalDialogExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["Case studies", "Modal dialog"] }
 }
