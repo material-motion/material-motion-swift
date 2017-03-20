@@ -152,6 +152,16 @@ Makes use of: `Transition` and `Tween`.
 
 [View the source](examples/FabTransitionExample.swift).
 
+### Material expansion
+
+<img src="assets/materialexpansion.gif" />
+
+A Material Design transition using assymetric transformations.
+
+Makes use of: `Tween`.
+
+[View the source](examples/MaterialExpansionExample.swift).
+
 ### Modal dialog
 
 <img src="assets/modaldialog.gif" />
