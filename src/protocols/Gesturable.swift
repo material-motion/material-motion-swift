@@ -48,12 +48,25 @@ public enum GesturableConfiguration <T: UIGestureRecognizer> {
  */
 public class Gesturable<T: UIGestureRecognizer> {
   public let config: GesturableConfiguration<T>
-  public init() {
-    self.config = .registerNewRecognizerToTargetView
+
+  // Due to a bug in Xcode 8.2.1 we can't use a default argument in our init method, so we provide
+  // this convenience initializer instead.
+  public convenience init() {
+    self.init(.registerNewRecognizerToTargetView)
   }
 
   public init(_ config: GesturableConfiguration<T>) {
     self.config = config
+
+    let initialState: MotionState
+    switch self.config {
+    case .withExistingRecognizer(let recognizer):
+      initialState = (recognizer.state == .began || recognizer.state == .changed) ? .active : .atRest
+    default: ()
+      initialState = .atRest
+    }
+
+    self.aggregateState = AggregateMotionState(initialState: initialState)
   }
 
   /**
@@ -110,7 +123,7 @@ public class Gesturable<T: UIGestureRecognizer> {
     return aggregateState.asStream()
   }
 
-  let aggregateState = AggregateMotionState()
+  let aggregateState: AggregateMotionState
 
   private var _nextGestureRecognizer: T?
 }

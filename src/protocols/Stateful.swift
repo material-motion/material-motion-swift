@@ -49,6 +49,10 @@ public enum MotionState {
  */
 final class AggregateMotionState {
 
+  init(initialState: MotionState = .atRest) {
+    state.value = initialState
+  }
+
   /**
    Observe the provided MotionState reactive object.
    */
