@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import IndefiniteObservable
 
 extension MotionObservableConvertible {
 
@@ -22,9 +23,21 @@ extension MotionObservableConvertible {
    Emits values from upstream after the specified delay.
    */
   public func delay(by duration: CGFloat) -> MotionObservable<T> {
-    return _nextOperator(#function) { value, next in
-      DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(duration * 1000))) {
-        next(value)
+    return MotionObservable(self.metadata.createChild(Metadata(#function, type: .constraint, args: [duration]))) { observer in
+      var subscription: Subscription?
+
+      subscription = self.asStream().subscribeAndForward(to: observer) { value in
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(duration * 1000))) {
+          guard subscription != nil else {
+            return
+          }
+          observer.next(value)
+        }
+      }
+
+      return {
+        subscription?.unsubscribe()
+        subscription = nil
       }
     }
   }
