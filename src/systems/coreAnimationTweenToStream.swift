@@ -85,6 +85,20 @@ private func streamFromTween<T>(_ tween: TweenShadow<T>, configureEvent: @escapi
       animationKeys.append(key)
     }
 
+    // To avoid excessive animation re-emissions, we subscribe to active before any of the
+    // configuration stream subscriptions so that checkAndEmit will bail out early.
+    let activeSubscription = tween.enabled.dedupe().subscribeToValue { enabled in
+      if enabled {
+        checkAndEmit()
+
+      } else {
+        animationKeys.forEach { observer.coreAnimation?(.remove($0)) }
+        activeAnimations.removeAll()
+        animationKeys.removeAll()
+        tween.state.value = .atRest
+      }
+    }
+
     let valuesSubscription = tween.values.subscribeToValue { values in
       lastValues = values
       checkAndEmit()
@@ -93,17 +107,6 @@ private func streamFromTween<T>(_ tween: TweenShadow<T>, configureEvent: @escapi
     let keyPositionsSubscription = tween.keyPositions.subscribeToValue { keyPositions in
       lastKeyPositions = keyPositions
       checkAndEmit()
-    }
-
-    let activeSubscription = tween.enabled.dedupe().subscribeToValue { enabled in
-      if enabled {
-        checkAndEmit()
-      } else {
-        animationKeys.forEach { observer.coreAnimation?(.remove($0)) }
-        activeAnimations.removeAll()
-        animationKeys.removeAll()
-        tween.state.value = .atRest
-      }
     }
 
     return {
