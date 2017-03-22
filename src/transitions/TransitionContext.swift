@@ -200,3 +200,9 @@ extension TransitionContext {
 protocol TransitionDelegate: NSObjectProtocol {
   func transitionDidComplete(withContext ctx: TransitionContext)
 }
+
+extension TransitionContext.Direction: Invertible {
+  public func inverted() -> TransitionContext.Direction {
+    return self == .forward ? .backward : .forward
+  }
+}
