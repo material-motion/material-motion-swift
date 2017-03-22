@@ -20,6 +20,14 @@ let runtime = MotionRuntime(containerView: <#view#>)
   <thead><tr><th></th><th>Interaction</th><th>Snippet</th></tr></thead>
   <tbody>
     <tr>
+      <td align="center"><img src="assets/arcmove.gif" /></td>
+      <td><pre><code class="language-swift">ArcMove</code></pre></td>
+      <td><pre><code class="language-swift">let arcMove = ArcMove()
+arcMove.from.value = <#from#>
+arcMove.to.value = <#to#>
+runtime.add(arcMove, to: <#view#>)</code></pre></td>
+    </tr>
+    <tr>
       <td align="center"><img src="assets/directlymanipulable.gif" /></td>
       <td><pre><code class="language-swift">DirectlyManipulable</code></pre></td>
       <td><pre><code class="language-swift">runtime.add(DirectlyManipulable(), to: <#view#>)</code></pre></td>
@@ -64,20 +72,6 @@ runtime.add(tossable, to: <#view#>)</code></pre></td>
       <td><pre><code class="language-swift">Tween</code></pre></td>
       <td><pre><code class="language-swift">runtime.add(Tween(duration: 0.5, values: [1, 0]),
             to: runtime.get(<#view#>.layer).opacity)</code></pre></td>
-    </tr>
-  </tbody>
-</table>
-
-<table>
-  <thead><tr><th></th><th>Material Design Interactions</th><th>Snippet</th></tr></thead>
-  <tbody>
-    <tr>
-      <td align="center"><img src="assets/arcmove.gif" /></td>
-      <td><pre><code class="language-swift">ArcMove</code></pre></td>
-      <td><pre><code class="language-swift">let arcMove = ArcMove()
-arcMove.from.value = <#from#>
-arcMove.to.value = <#to#>
-runtime.add(arcMove, to: <#view#>)</code></pre></td>
     </tr>
   </tbody>
 </table>
