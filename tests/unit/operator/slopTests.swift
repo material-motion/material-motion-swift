@@ -15,8 +15,6 @@
  */
 
 import XCTest
-import CoreGraphics
-import IndefiniteObservable
 import MaterialMotion
 
 class slopTests: XCTestCase {

@@ -171,11 +171,12 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		66090B881E046CE600B1D598 /* plans */ = {
+		66090B881E046CE600B1D598 /* interactions */ = {
 			isa = PBXGroup;
 			children = (
 				66090B891E046CE600B1D598 /* Spring.swift */,
 			);
+			name = interactions;
 			path = plans;
 			sourceTree = "<group>";
 		};
@@ -223,7 +224,7 @@
 			isa = PBXGroup;
 			children = (
 				6627FC151DF7BC7D003DB567 /* operators */,
-				66090B881E046CE600B1D598 /* plans */,
+				66090B881E046CE600B1D598 /* interactions */,
 				6627FC1F1DF7C76C003DB567 /* properties */,
 				669512701E82E62500D8868D /* protocols */,
 				6627FC0D1DF7B1A2003DB567 /* MotionObservableTests.swift */,

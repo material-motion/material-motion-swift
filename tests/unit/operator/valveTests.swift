@@ -15,7 +15,6 @@
  */
 
 import XCTest
-import CoreGraphics
 import MaterialMotion
 
 class valveTests: XCTestCase {
