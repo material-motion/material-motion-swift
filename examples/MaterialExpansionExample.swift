@@ -30,34 +30,29 @@ class MaterialExpansionExampleViewController: ExampleViewController {
 
     runtime = MotionRuntime(containerView: view)
 
-    let tap = UITapGestureRecognizer()
-    tap.addTarget(self, action: #selector(didTap))
-    view.addGestureRecognizer(tap)
-  }
+    let direction = createProperty(withInitialValue: TransitionContext.Direction.backward)
 
-  // TODO: This should be implemented using a TransitionTween and a toggling tap gesture.
-  var expanded = false
-  func didTap() {
-    if !expanded {
-      let widthExpansion = Tween(duration: 0.375, values: [square.bounds.width, square.bounds.width * 2], system: coreAnimation)
-      let heightExpansion = Tween(duration: 0.375, values: [square.bounds.height, square.bounds.height * 2], system: coreAnimation)
+    let tap = runtime.get(UITapGestureRecognizer())
+    runtime.connect(tap.whenRecognitionState(is: .recognized).rewriteTo(direction).inverted(), to: direction)
 
-      widthExpansion.keyPositions.value  = [0, 0.87]
-      heightExpansion.keyPositions.value = [0.13, 1.0]
+    let widthExpansion = TransitionTween(duration: 0.375,
+                                         forwardValues: [square.bounds.width, square.bounds.width * 2],
+                                         direction: direction,
+                                         forwardKeyPositions: [0, 0.87],
+                                         system: coreAnimation)
+    let heightExpansion = TransitionTween(duration: 0.375,
+                                          forwardValues: [square.bounds.height, square.bounds.height * 2],
+                                          direction: direction,
+                                          forwardKeyPositions: [0.13, 1.0],
+                                          system: coreAnimation)
 
-      runtime.add(widthExpansion, to: runtime.get(square.layer).width)
-      runtime.add(heightExpansion, to: runtime.get(square.layer).height)
-    } else {
-      let widthExpansion = Tween(duration: 0.375, values: [square.bounds.width, square.bounds.width / 2], system: coreAnimation)
-      let heightExpansion = Tween(duration: 0.375, values: [square.bounds.height, square.bounds.height / 2], system: coreAnimation)
+    widthExpansion.enabled.value = false
+    heightExpansion.enabled.value = false
+    runtime.connect(tap.whenRecognitionState(is: .recognized).rewriteTo(true), to: widthExpansion.enabled)
+    runtime.connect(tap.whenRecognitionState(is: .recognized).rewriteTo(true), to: heightExpansion.enabled)
 
-      widthExpansion.keyPositions.value  = [0.13, 1.0]
-      heightExpansion.keyPositions.value = [0, 0.87]
-
-      runtime.add(widthExpansion, to: runtime.get(square.layer).width)
-      runtime.add(heightExpansion, to: runtime.get(square.layer).height)
-    }
-    expanded = !expanded
+    runtime.add(widthExpansion, to: runtime.get(square.layer).width)
+    runtime.add(heightExpansion, to: runtime.get(square.layer).height)
   }
 
   override func exampleInformation() -> ExampleInfo {

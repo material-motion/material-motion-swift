@@ -24,7 +24,7 @@ import Foundation
 
  T-value constraints may be applied to this interaction.
  */
-public final class Tween<T>: Interaction, Togglable, Stateful {
+public class Tween<T>: Interaction, Togglable, Stateful {
 
   /**
    The duration of the animation in seconds.
