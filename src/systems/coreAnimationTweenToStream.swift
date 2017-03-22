@@ -38,23 +38,28 @@ private func streamFromTween<T>(_ tween: TweenShadow<T>, configureEvent: @escapi
 
     var animationKeys: [String] = []
     var activeAnimations = Set<String>()
+    var lastValues: [T]?
+    var lastKeyPositions: [CGFloat]?
 
     let checkAndEmit = {
+      guard let values = lastValues, let keyPositions = lastKeyPositions, tween.enabled.value else {
+        return
+      }
       let animation: CAPropertyAnimation
       let timingFunctions = tween.timingFunctions
-      if tween.values.value.count > 1 {
+      if values.count > 1 {
         let keyframeAnimation = CAKeyframeAnimation()
-        keyframeAnimation.values = tween.values.value
-        keyframeAnimation.keyTimes = tween.keyPositions.value.map { NSNumber(value: Double($0)) }
+        keyframeAnimation.values = values
+        keyframeAnimation.keyTimes = keyPositions.map { NSNumber(value: Double($0)) }
         keyframeAnimation.timingFunctions = timingFunctions.value
         animation = keyframeAnimation
       } else {
         let basicAnimation = CABasicAnimation()
-        basicAnimation.toValue = tween.values.value.last
+        basicAnimation.toValue = values.last
         basicAnimation.timingFunction = timingFunctions.value.first
         animation = basicAnimation
       }
-      observer.next(tween.values.value.last!)
+      observer.next(values.last!)
 
       guard let duration = tween.duration._read() else {
         return
@@ -80,6 +85,16 @@ private func streamFromTween<T>(_ tween: TweenShadow<T>, configureEvent: @escapi
       animationKeys.append(key)
     }
 
+    let valuesSubscription = tween.values.subscribeToValue { values in
+      lastValues = values
+      checkAndEmit()
+    }
+
+    let keyPositionsSubscription = tween.keyPositions.subscribeToValue { keyPositions in
+      lastKeyPositions = keyPositions
+      checkAndEmit()
+    }
+
     let activeSubscription = tween.enabled.dedupe().subscribeToValue { enabled in
       if enabled {
         checkAndEmit()
@@ -93,7 +108,14 @@ private func streamFromTween<T>(_ tween: TweenShadow<T>, configureEvent: @escapi
 
     return {
       animationKeys.forEach { observer.coreAnimation?(.remove($0)) }
+      animationKeys.removeAll()
+      activeAnimations.removeAll()
+
+      lastValues = nil
+      lastKeyPositions = nil
       activeSubscription.unsubscribe()
+      valuesSubscription.unsubscribe()
+      keyPositionsSubscription.unsubscribe()
     }
   }
 }
