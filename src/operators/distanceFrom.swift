@@ -45,11 +45,33 @@ extension MotionObservableConvertible where T == CGPoint {
    Emits the distance between the incoming value and the current value of location.
    */
   public func distance<O: MotionObservableConvertible>(from location: O) -> MotionObservable<CGFloat> where O.T == CGPoint {
-    return _map(#function, args: [location]) {
-      let locationValue = location._read()!
-      let xDelta = $0.x - locationValue.x
-      let yDelta = $0.y - locationValue.y
-      return sqrt(xDelta * xDelta + yDelta * yDelta)
+    var lastLocation: CGPoint?
+    var lastValue: CGPoint?
+    return MotionObservable(self.metadata.createChild(Metadata(#function, type: .constraint, args: [location]))) { observer in
+
+      let checkAndEmit = {
+        guard let location = lastLocation, let value = lastValue else {
+          return
+        }
+        let xDelta = value.x - location.x
+        let yDelta = value.y - location.y
+        observer.next(sqrt(xDelta * xDelta + yDelta * yDelta))
+      }
+
+      let locationSubscription = location.subscribeToValue { value in
+        lastLocation = value
+        checkAndEmit()
+      }
+
+      let upstreamSubscription = self.subscribeAndForward(to: observer) { value in
+        lastValue = value
+        checkAndEmit()
+      }
+
+      return {
+        locationSubscription.unsubscribe()
+        upstreamSubscription.unsubscribe()
+      }
     }
   }
 }

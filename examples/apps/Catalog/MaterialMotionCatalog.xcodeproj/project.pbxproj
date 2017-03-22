@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		19940C71B8C97EDA48552251 /* Pods_MaterialMotionCatalog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16DDCA39C49FF5C091B2AF6C /* Pods_MaterialMotionCatalog.framework */; };
+		6605044E1E83146C009EDB8A /* distanceFromTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6605044D1E83146C009EDB8A /* distanceFromTests.swift */; };
 		66090B841E03715F00B1D598 /* PropertyObservation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66090B831E03715F00B1D598 /* PropertyObservation.swift */; };
 		66090B8A1E046CE600B1D598 /* Spring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66090B891E046CE600B1D598 /* Spring.swift */; };
 		660DA30A1E79D3F2008F7401 /* HexColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660DA3091E79D3F2008F7401 /* HexColor.swift */; };
@@ -74,6 +75,7 @@
 		1486CD16AAF554D1E8B5BBB3 /* Pods-UnitTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UnitTests.debug.xcconfig"; path = "../../../Pods/Target Support Files/Pods-UnitTests/Pods-UnitTests.debug.xcconfig"; sourceTree = "<group>"; };
 		16DDCA39C49FF5C091B2AF6C /* Pods_MaterialMotionCatalog.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MaterialMotionCatalog.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F2DC52F25787C67CDBB6189 /* Pods-UnitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UnitTests.release.xcconfig"; path = "../../../Pods/Target Support Files/Pods-UnitTests/Pods-UnitTests.release.xcconfig"; sourceTree = "<group>"; };
+		6605044D1E83146C009EDB8A /* distanceFromTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = distanceFromTests.swift; sourceTree = "<group>"; };
 		66090B831E03715F00B1D598 /* PropertyObservation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyObservation.swift; sourceTree = "<group>"; };
 		66090B891E046CE600B1D598 /* Spring.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spring.swift; sourceTree = "<group>"; };
 		660DA3091E79D3F2008F7401 /* HexColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HexColor.swift; sourceTree = "<group>"; };
@@ -241,6 +243,7 @@
 			children = (
 				669512921E8301D100D8868D /* dedupeTests.swift */,
 				669512961E8305AC00D8868D /* delayTests.swift */,
+				6605044D1E83146C009EDB8A /* distanceFromTests.swift */,
 				669512A01E830E1900D8868D /* initialValueTests.swift */,
 				6695129A1E830AE500D8868D /* lowerBoundTests.swift */,
 				6695128E1E82ED0900D8868D /* slopTests.swift */,
@@ -623,6 +626,7 @@
 				669512971E8305AC00D8868D /* delayTests.swift in Sources */,
 				66090B841E03715F00B1D598 /* PropertyObservation.swift in Sources */,
 				6695128F1E82ED0900D8868D /* slopTests.swift in Sources */,
+				6605044E1E83146C009EDB8A /* distanceFromTests.swift in Sources */,
 				6695129D1E830B6E00D8868D /* upperBoundTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
