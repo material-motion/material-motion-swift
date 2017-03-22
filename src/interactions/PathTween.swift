@@ -29,7 +29,7 @@ public final class PathTween: Interaction, Togglable, Stateful {
   /**
    The delay of the animation in seconds.
    */
-  public let delay = createProperty("PathTween.delay", withInitialValue: CGFloat(0))
+  public let delay = createProperty("PathTween.delay", withInitialValue: 0)
 
   /**
    The path this animation will follow.
@@ -61,7 +61,7 @@ public final class PathTween: Interaction, Togglable, Stateful {
    Initializes a path tween instance with its required properties.
    */
   public init(duration: CGFloat, path: CGPath, system: @escaping PathTweenToStream<CGPoint> = coreAnimation, timeline: Timeline? = nil) {
-    self.duration = createProperty("PathTween.duration", withInitialValue: CGFloat(duration))
+    self.duration = createProperty("PathTween.duration", withInitialValue: duration)
     self.path = createProperty("PathTween.path", withInitialValue: path)
     self.system = system
     self.timeline = timeline
@@ -74,7 +74,7 @@ public final class PathTween: Interaction, Togglable, Stateful {
    animation.
    */
   public init(system: @escaping PathTweenToStream<CGPoint> = coreAnimation, timeline: Timeline? = nil) {
-    self.duration = createProperty("PathTween.duration", withInitialValue: CGFloat(0))
+    self.duration = createProperty("PathTween.duration", withInitialValue: 0)
     self.path = createProperty("PathTween.path", withInitialValue: UIBezierPath().cgPath)
     self.system = system
     self.timeline = timeline

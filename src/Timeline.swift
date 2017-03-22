@@ -47,7 +47,7 @@ public final class Timeline {
 
    Only affects associated interactions if the timeline is paused.
    */
-  public let timeOffset = createProperty("Timeline.timeOffset", withInitialValue: CGFloat(0))
+  public let timeOffset = createProperty("Timeline.timeOffset", withInitialValue: 0)
 
   public let metadata = Metadata("Timeline")
 }

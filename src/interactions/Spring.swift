@@ -98,7 +98,7 @@ public class Spring<T: Zeroable>: Interaction, Togglable, Stateful {
 
    A value of 0 means this property will be ignored.
    */
-  public let suggestedDuration = createProperty("Spring.suggestedDuration", withInitialValue: TimeInterval(0))
+  public let suggestedDuration = createProperty("Spring.suggestedDuration", withInitialValue: 0)
 
   /**
    The value used when determining completion of the spring simulation.
@@ -148,7 +148,7 @@ public struct SpringShadow<T: Zeroable>: Hashable {
   public let tension: ReactiveProperty<CGFloat>
   public let friction: ReactiveProperty<CGFloat>
   public let mass: ReactiveProperty<CGFloat>
-  public let suggestedDuration: ReactiveProperty<TimeInterval>
+  public let suggestedDuration: ReactiveProperty<CGFloat>
   public let threshold: ReactiveProperty<CGFloat>
 
   init(of spring: Spring<T>, initialValue: ReactiveProperty<T>) {

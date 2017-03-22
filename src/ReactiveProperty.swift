@@ -25,10 +25,26 @@ public func createProperty<T>(_ name: String? = nil) -> ReactiveProperty<T> wher
 }
 
 /**
+ Creates a CGFloat property with an initial value of zero.
+ */
+public func createProperty(_ name: String? = nil) -> ReactiveProperty<CGFloat> {
+  return ReactiveProperty(name, initialValue: 0)
+}
+
+/**
  Creates a property with a given initial value.
  */
 public func createProperty<T>(_ name: String? = nil, withInitialValue initialValue: T) -> ReactiveProperty<T> {
   return ReactiveProperty(name, initialValue: initialValue)
+}
+
+/**
+ Creates a CGFloat property with a given initial Int value.
+
+ If you need a ReactiveProperty<Int> instance, use ReactiveProperty's initializer instead.
+ */
+public func createProperty(_ name: String? = nil, withInitialValue initialValue: Int) -> ReactiveProperty<CGFloat> {
+  return ReactiveProperty(name, initialValue: CGFloat(initialValue))
 }
 
 /**

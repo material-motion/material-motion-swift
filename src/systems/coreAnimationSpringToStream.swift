@@ -48,7 +48,7 @@ public func coreAnimation<T>(_ spring: SpringShadow<T>) -> (MotionObservable<T>)
       animation.toValue = to
 
       if spring.suggestedDuration.value != 0 {
-        animation.duration = spring.suggestedDuration.value
+        animation.duration = TimeInterval(spring.suggestedDuration.value)
       } else {
         animation.duration = animation.settlingDuration
       }

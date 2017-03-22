@@ -34,7 +34,7 @@ public class Tween<T>: Interaction, Togglable, Stateful {
   /**
    The delay of the animation in seconds.
    */
-  public let delay = createProperty("Tween.delay", withInitialValue: CGFloat(0))
+  public let delay = createProperty("Tween.delay", withInitialValue: 0)
 
   /**
    An array of objects providing the value of the animation for each keyframe.
