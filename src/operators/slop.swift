@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import IndefiniteObservable
 
 /**
  A slop event is emitted by the slop operator.
@@ -39,9 +40,16 @@ extension MotionObservableConvertible where T == CGFloat {
    The slop region is centered around 0 and has the given size. This operator will not emit any
    events until the upstream value exits this slop region, at which point the onExit event will be
    emitted. If the upstream returns to the slop region then onReturn will be emitted.
+
+   To exit the slop region the value must be either less than -size or greater than size.
+
+   - parameter size: The size of the slop region. A negative size will be treated as a positive
+                     size.
    */
   public func slop(size: CGFloat) -> MotionObservable<SlopEvent> {
     let didLeaveSlopRegion = createProperty("slop.didLeaveSlopRegion", withInitialValue: false)
+
+    let size = abs(size)
 
     return MotionObservable(self.metadata.createChild(Metadata(#function, type: .constraint, args: [size]))) { observer in
       let upstreamSubscription = self
