@@ -58,6 +58,7 @@
 		66DDFD161E71F90F00AA46B7 /* HowToUseReactiveConstraintsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD151E71F90F00AA46B7 /* HowToUseReactiveConstraintsExample.swift */; };
 		66DDFD201E73281200AA46B7 /* HowToMakeACustomOperatorExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD1F1E73281200AA46B7 /* HowToMakeACustomOperatorExample.swift */; };
 		66E6F2371E3FC791003158D3 /* PhotoAlbum.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6F2361E3FC791003158D3 /* PhotoAlbum.xcassets */; };
+		66F2C3C91E83245800DD9728 /* invertedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F2C3C81E83245800DD9728 /* invertedTests.swift */; };
 		D3F169473691C7D44E72DEED /* Pods_UnitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D89BD1C45FD980DEF396AB66 /* Pods_UnitTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -130,6 +131,7 @@
 		66DDFD151E71F90F00AA46B7 /* HowToUseReactiveConstraintsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HowToUseReactiveConstraintsExample.swift; path = ../../HowToUseReactiveConstraintsExample.swift; sourceTree = "<group>"; };
 		66DDFD1F1E73281200AA46B7 /* HowToMakeACustomOperatorExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HowToMakeACustomOperatorExample.swift; path = ../../HowToMakeACustomOperatorExample.swift; sourceTree = "<group>"; };
 		66E6F2361E3FC791003158D3 /* PhotoAlbum.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = PhotoAlbum.xcassets; sourceTree = SOURCE_ROOT; };
+		66F2C3C81E83245800DD9728 /* invertedTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = invertedTests.swift; sourceTree = "<group>"; };
 		773711C342E83B1FF1F9C8BB /* Pods-MaterialMotionCatalog.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MaterialMotionCatalog.debug.xcconfig"; path = "../../../Pods/Target Support Files/Pods-MaterialMotionCatalog/Pods-MaterialMotionCatalog.debug.xcconfig"; sourceTree = "<group>"; };
 		800852A3E58C3B077D36E8DD /* Pods-MaterialMotionCatalog.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MaterialMotionCatalog.release.xcconfig"; path = "../../../Pods/Target Support Files/Pods-MaterialMotionCatalog/Pods-MaterialMotionCatalog.release.xcconfig"; sourceTree = "<group>"; };
 		D89BD1C45FD980DEF396AB66 /* Pods_UnitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UnitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -245,6 +247,7 @@
 				669512961E8305AC00D8868D /* delayTests.swift */,
 				6605044D1E83146C009EDB8A /* distanceFromTests.swift */,
 				669512A01E830E1900D8868D /* initialValueTests.swift */,
+				66F2C3C81E83245800DD9728 /* invertedTests.swift */,
 				6695129A1E830AE500D8868D /* lowerBoundTests.swift */,
 				6695128E1E82ED0900D8868D /* slopTests.swift */,
 				6695129C1E830B6E00D8868D /* upperBoundTests.swift */,
@@ -627,6 +630,7 @@
 				66090B841E03715F00B1D598 /* PropertyObservation.swift in Sources */,
 				6695128F1E82ED0900D8868D /* slopTests.swift in Sources */,
 				6605044E1E83146C009EDB8A /* distanceFromTests.swift in Sources */,
+				66F2C3C91E83245800DD9728 /* invertedTests.swift in Sources */,
 				6695129D1E830B6E00D8868D /* upperBoundTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
