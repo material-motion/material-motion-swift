@@ -17,14 +17,14 @@
 import XCTest
 import CoreGraphics
 import IndefiniteObservable
-@testable import MaterialMotion
+import MaterialMotion
 
-class CGPointTests: XCTestCase {
+class xTests: XCTestCase {
 
-  func testXSubscription() {
+  func testSubscription() {
     let value: CGFloat = 10
 
-    let observable = MotionObservable<CGPoint>(Metadata("")) { observer in
+    let observable = MotionObservable<CGPoint> { observer in
       observer.next(.init(x: value, y: value * 2))
       return noopDisconnect
     }
@@ -32,24 +32,6 @@ class CGPointTests: XCTestCase {
     let valueReceived = expectation(description: "Value was received")
     let _ = observable.x().subscribeToValue {
       if $0 == value {
-        valueReceived.fulfill()
-      }
-    }
-
-    waitForExpectations(timeout: 0)
-  }
-
-  func testYSubscription() {
-    let value: CGFloat = 10
-
-    let observable = MotionObservable<CGPoint>(Metadata("")) { observer in
-      observer.next(.init(x: value, y: value * 2))
-      return noopDisconnect
-    }
-
-    let valueReceived = expectation(description: "Value was received")
-    let _ = observable.y().subscribeToValue {
-      if $0 == value * 2 {
         valueReceived.fulfill()
       }
     }

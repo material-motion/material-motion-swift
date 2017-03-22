@@ -17,7 +17,7 @@
 import XCTest
 import CoreGraphics
 import IndefiniteObservable
-@testable import MaterialMotion
+import MaterialMotion
 
 class _rememberTests: XCTestCase {
 

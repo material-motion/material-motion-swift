@@ -17,14 +17,14 @@
 import XCTest
 import CoreGraphics
 import IndefiniteObservable
-@testable import MaterialMotion
+import MaterialMotion
 
 class _filterTests: XCTestCase {
 
   func testSubscription() {
     let value = 10
 
-    let observable = MotionObservable<Int>(Metadata("")) { observer in
+    let observable = MotionObservable<Int> { observer in
       observer.next(value - 1)
       observer.next(value)
       observer.next(value + 1)
