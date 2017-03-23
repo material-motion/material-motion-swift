@@ -40,7 +40,7 @@ class normalizeTests: XCTestCase {
     let property = createProperty(withInitialValue: CGPoint.zero)
 
     var values: [CGPoint] = []
-    let subscription = property.normalized(by: CGSize(width: 100, height: 100)).subscribeToValue { value in
+    let subscription = property.normalized(by: CGSize(width: 100, height: 50)).subscribeToValue { value in
       values.append(value)
     }
 
@@ -49,9 +49,9 @@ class normalizeTests: XCTestCase {
     property.value = .init(x: -50, y: -20)
 
     XCTAssertEqual(values, [.init(x: 0, y: 0),
-                            .init(x: 0.5, y: 0.5),
-                            .init(x: 1, y: 0.2),
-                            .init(x: -0.5, y: -0.2)])
+                            .init(x: 0.5, y: 1.0),
+                            .init(x: 1, y: 0.4),
+                            .init(x: -0.5, y: -0.4)])
 
     subscription.unsubscribe()
   }
