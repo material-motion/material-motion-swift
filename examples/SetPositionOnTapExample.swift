@@ -29,7 +29,7 @@ class SetPositionOnTapExampleViewController: ExampleViewController {
 
     runtime = MotionRuntime(containerView: view)
 
-    runtime.add(SetPositionOnTap(coordinateSpace: view), to: runtime.get(square.layer).position)
+    runtime.add(SetPositionOnTap(), to: runtime.get(square.layer).position)
   }
 
   override func exampleInformation() -> ExampleInfo {

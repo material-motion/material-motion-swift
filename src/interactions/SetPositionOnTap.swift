@@ -55,18 +55,9 @@ public final class SetPositionOnTap: Interaction {
    - parameter config: Affects how gesture recognizer instances are handled when this interaction is registered to the runtime.
    - parameter coordinateSpace: Defines the coordinate space to which the position is relative.
    */
-  public init(_ config: SetPositionOnTapConfiguration, coordinateSpace: UIView) {
+  public init(_ config: SetPositionOnTapConfiguration = .registerNewRecognizerToContainerView, coordinateSpace: UIView? = nil) {
     self.config = config
     self.coordinateSpace = coordinateSpace
-  }
-  /**
-   Creates a new instance with a given coordinate space and default config set to
-   .registerNewRecognizerToContainerView.
-
-   - parameter coordinateSpace: Defines the coordinate space to which the position is relative.
-   */
-  public convenience init(coordinateSpace: UIView) {
-    self.init(.registerNewRecognizerToContainerView, coordinateSpace: coordinateSpace)
   }
 
   /**
@@ -77,7 +68,7 @@ public final class SetPositionOnTap: Interaction {
   /**
    The position will be relative to this coordinate space.
    */
-  public let coordinateSpace: UIView
+  public let coordinateSpace: UIView?
 
   public func add(to property: ReactiveProperty<CGPoint>,
                   withRuntime runtime: MotionRuntime,
@@ -96,6 +87,8 @@ public final class SetPositionOnTap: Interaction {
     case .withExistingRecognizer(let existingGestureRecognizer):
       gestureRecognizer = existingGestureRecognizer
     }
+
+    let coordinateSpace = self.coordinateSpace ?? runtime.containerView
 
     var stream = runtime.get(gestureRecognizer).centroidOnRecognition(in: coordinateSpace)
     if let applyConstraints = applyConstraints {

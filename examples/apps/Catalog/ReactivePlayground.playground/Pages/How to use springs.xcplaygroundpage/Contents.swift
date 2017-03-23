@@ -31,7 +31,7 @@ runtime.add(spring, to: position)
 //: Interactions often expose their own reactive properties. This lets us use interactions to control other interactions' behavior. In this case, Spring exposes a `destination` property.
 //:
 //: Let's try adding a `SetPositionOnTap` interaction to our spring's destination:
-runtime.add(SetPositionOnTap(coordinateSpace: canvas), to: spring.destination)
+runtime.add(SetPositionOnTap(), to: spring.destination)
 
 //: We can now tap anywhere on the canvas to move the view.
 

@@ -54,8 +54,7 @@ let position = runtime.get(view.layer).position
 //: > The default destination will always be the top-left corner of our canvas, so recall that we can use `SetPositionOnTap` to easily change the destination.
 //:
 
-runtime.add(SetPositionOnTap(coordinateSpace: canvas),
-            to: spring.destination)
+runtime.add(SetPositionOnTap(), to: spring.destination)
 
 //:
 //: You may have noticed that if you release while quickly dragging that the view doesn't appear to respect the final velocity of your gesture. Let's make this interaction more believable by connecting our draggable gesture's final velocity to our spring's **initial velocity**.

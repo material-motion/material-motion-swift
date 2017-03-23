@@ -49,7 +49,6 @@ final class MyTossable: Interaction {
 let tossable = MyTossable(spring: .init(threshold: 1, system: coreAnimation))
 runtime.add(tossable, to: view)
 
-runtime.add(SetPositionOnTap(coordinateSpace: canvas),
-            to: tossable.spring.destination)
+runtime.add(SetPositionOnTap(), to: tossable.spring.destination)
 
 //: [Previous](@previous) - [Next](@next)
