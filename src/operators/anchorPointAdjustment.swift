@@ -37,6 +37,6 @@ extension MotionObservableConvertible where T == CGPoint {
  A representation of an anchor point and position adjustment for a CALayer.
  */
 public struct AnchorPointAdjustment {
-  let anchorPoint: CGPoint
-  let position: CGPoint
+  public let anchorPoint: CGPoint
+  public let position: CGPoint
 }
