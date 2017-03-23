@@ -60,11 +60,11 @@ private func rubberBand(value: CGFloat, min: CGFloat, max: CGFloat, bandLength: 
     return bandLength * (1 - 1 / demoninator)
   }
   if (value > max) {
-    return band(value - max) + max;
+    return band(value - max) + max
 
   } else if (value < min) {
-    return min - band(min - value);
+    return min - band(min - value)
   }
 
-  return value;
+  return value
 }
