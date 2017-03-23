@@ -36,7 +36,7 @@ class StickerPickerExampleViewController: ExampleViewController, StickerListView
     stickerView.center = .init(x: view.bounds.midX, y: view.bounds.midY)
     view.addSubview(stickerView)
 
-    let direction = createProperty(withInitialValue: TransitionContext.Direction.forward)
+    let direction = createProperty(withInitialValue: TransitionDirection.forward)
     let spring = TransitionSpring(back: CGFloat(1.5), fore: 1, direction: direction, threshold: 0.1, system: coreAnimation)
     runtime.add(spring, to: runtime.get(stickerView.layer).scale)
 

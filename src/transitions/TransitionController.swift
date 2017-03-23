@@ -88,7 +88,7 @@ extension TransitionController {
   func prepareForTransition(withSource: UIViewController,
                             back: UIViewController,
                             fore: UIViewController,
-                            direction: TransitionContext.Direction) {
+                            direction: TransitionDirection) {
     // It's possible for a backward transition to be initiated while a forward transition is active.
     // We prefer the most recent transition in this case by blowing away the existing transition.
     if direction == .backward {

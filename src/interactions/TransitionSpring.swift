@@ -63,7 +63,7 @@ public final class TransitionSpring<T: Zeroable>: Spring<T> {
    */
   public init(back backwardDestination: T,
               fore forwardDestination: T,
-              direction: ReactiveProperty<TransitionContext.Direction>,
+              direction: ReactiveProperty<TransitionDirection>,
               threshold: CGFloat,
               system: @escaping SpringToStream<T>) {
     self.backwardDestination = backwardDestination

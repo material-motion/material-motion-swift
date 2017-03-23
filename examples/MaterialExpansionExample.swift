@@ -30,7 +30,7 @@ class MaterialExpansionExampleViewController: ExampleViewController {
 
     runtime = MotionRuntime(containerView: view)
 
-    let direction = createProperty(withInitialValue: TransitionContext.Direction.backward)
+    let direction = createProperty(withInitialValue: TransitionDirection.backward)
 
     let tap = runtime.get(UITapGestureRecognizer())
     runtime.connect(tap.whenRecognitionState(is: .recognized).rewriteTo(direction).inverted(), to: direction)

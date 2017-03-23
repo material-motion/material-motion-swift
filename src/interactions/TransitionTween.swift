@@ -55,7 +55,7 @@ public final class TransitionTween<T>: Tween<T> {
    */
   public init(duration: CGFloat,
               forwardValues: [T],
-              direction: ReactiveProperty<TransitionContext.Direction>,
+              direction: ReactiveProperty<TransitionDirection>,
               forwardKeyPositions: [CGFloat] = [],
               system: @escaping TweenToStream<T> = coreAnimation,
               timeline: Timeline? = nil) {
@@ -89,7 +89,7 @@ public final class TransitionTween<T>: Tween<T> {
     runtime.connect(direction.rewriteTo(true), to: unlocked)
   }
 
-  private let direction: ReactiveProperty<TransitionContext.Direction>
+  private let direction: ReactiveProperty<TransitionDirection>
   private let toggledValues: MotionObservable<[T]>
   private let toggledKeyPositions: MotionObservable<[CGFloat]>
 }

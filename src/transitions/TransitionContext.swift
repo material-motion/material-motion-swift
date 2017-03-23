@@ -17,23 +17,29 @@
 import Foundation
 import IndefiniteObservable
 
+/**
+ The possible directions of a transition.
+ */
+public enum TransitionDirection {
+  /**
+   The fore view controller is being presented.
+   */
+  case forward
+
+  /**
+   The fore view controller is being dismissed.
+   */
+  case backward
+}
+
 /** A Transition represents the essential state for a UIViewController transition. */
 public final class TransitionContext: NSObject {
 
   /** The default duration for a view controller transition. */
   public static let defaultDuration: TimeInterval = 0.35
 
-  /** The possible directions of a transition. */
-  public enum Direction {
-    /** The fore view controller is being presented. */
-    case forward
-
-    /** The fore view controller is being dismissed. */
-    case backward
-  }
-
   /** The direction this transition is moving in. */
-  public let direction: ReactiveProperty<Direction>
+  public let direction: ReactiveProperty<TransitionDirection>
 
   /** The transition window for this transition. */
   public let window: TransitionTimeWindow
@@ -90,7 +96,7 @@ public final class TransitionContext: NSObject {
   weak var delegate: TransitionDelegate?
 
   init(transitionType: Transition.Type,
-       direction: Direction,
+       direction: TransitionDirection,
        back: UIViewController,
        fore: UIViewController,
        dismisser: ViewControllerDismisser) {
@@ -108,7 +114,7 @@ public final class TransitionContext: NSObject {
     super.init()
   }
 
-  fileprivate let initialDirection: Direction
+  fileprivate let initialDirection: TransitionDirection
   fileprivate var transition: Transition!
   fileprivate var context: UIViewControllerContextTransitioning!
   fileprivate let dismisser: ViewControllerDismisser
@@ -201,8 +207,8 @@ protocol TransitionDelegate: NSObjectProtocol {
   func transitionDidComplete(withContext ctx: TransitionContext)
 }
 
-extension TransitionContext.Direction: Invertible {
-  public func inverted() -> TransitionContext.Direction {
+extension TransitionDirection: Invertible {
+  public func inverted() -> TransitionDirection {
     return self == .forward ? .backward : .forward
   }
 }
