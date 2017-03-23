@@ -22,7 +22,7 @@ class thresholdTests: XCTestCase {
   func testEvents() {
     let property = createProperty()
 
-    var values: [ThresholdEvent] = []
+    var values: [ThresholdSide] = []
     let subscription = property.threshold(10).subscribeToValue { event in
       values.append(event)
     }
@@ -33,12 +33,12 @@ class thresholdTests: XCTestCase {
     property.value = -15
     property.value = -5
 
-    XCTAssertEqual(values, [.whenBelow,
-                            .whenWithin,
-                            .whenAbove,
-                            .whenBelow,
-                            .whenBelow,
-                            .whenBelow])
+    XCTAssertEqual(values, [.below,
+                            .within,
+                            .above,
+                            .below,
+                            .below,
+                            .below])
 
     subscription.unsubscribe()
   }

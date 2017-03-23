@@ -17,23 +17,23 @@
 import Foundation
 
 /**
- A threshold event is emitted by the threshold operator.
+ A threshold side is emitted by the threshold operator.
  */
-public enum ThresholdEvent {
+public enum ThresholdSide {
   /**
    Emitted if the value is less than the threshold.
    */
-  case whenBelow
+  case below
 
   /**
    Emitted if the value is equal to or within the threshold.
    */
-  case whenWithin
+  case within
 
   /**
    Emitted if the value is greater than the threshold.
    */
-  case whenAbove
+  case above
 }
 
 extension MotionObservableConvertible where T: Comparable {
@@ -43,16 +43,16 @@ extension MotionObservableConvertible where T: Comparable {
 
    - paramater threshold: The position of the threshold.
    */
-  public func threshold(_ threshold: T) -> MotionObservable<ThresholdEvent> {
+  public func threshold(_ threshold: T) -> MotionObservable<ThresholdSide> {
     return _nextOperator(#function, args: [threshold]) { value, next in
       if value < threshold {
-        next(.whenBelow)
+        next(.below)
 
       } else if value > threshold {
-        next(.whenAbove)
+        next(.above)
 
       } else {
-        next(.whenWithin)
+        next(.within)
       }
     }
   }

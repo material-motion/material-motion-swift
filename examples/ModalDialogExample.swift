@@ -103,10 +103,10 @@ class ModalDialogTransition: SelfDismissingTransition {
       .thresholdRange(min: -100, max: 100)
       // If one of rewrite's target values is a stream, then all the target values must be
       // streams.
-      .rewrite([.whenBelow: createProperty(withInitialValue: .forward).asStream(),
-                .whenWithin: position.y().threshold(centerY).rewrite([.whenBelow: .forward,
-                                                                      .whenAbove: .backward]),
-                .whenAbove: createProperty(withInitialValue: .backward).asStream()]),
+      .rewrite([.below: createProperty(withInitialValue: .forward).asStream(),
+                .within: position.y().threshold(centerY).rewrite([.below: .forward,
+                                                                      .above: .backward]),
+                .above: createProperty(withInitialValue: .backward).asStream()]),
                 to: ctx.direction)
 
     let movement = TransitionSpring(back: backPosition,

@@ -24,16 +24,16 @@ extension MotionObservableConvertible where T: Comparable {
    - paramater min: The minimum threshold.
    - paramater max: The maximum threshold.
    */
-  public func thresholdRange(min: T, max: T) -> MotionObservable<ThresholdEvent> {
+  public func thresholdRange(min: T, max: T) -> MotionObservable<ThresholdSide> {
     return _nextOperator(#function, args: [min, max]) { value, next in
       if value < min {
-        next(.whenBelow)
+        next(.below)
 
       } else if value > max {
-        next(.whenAbove)
+        next(.above)
 
       } else {
-        next(.whenWithin)
+        next(.within)
       }
     }
   }

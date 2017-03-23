@@ -77,9 +77,9 @@ private class PushBackTransition: Transition {
       .velocityOnReleaseStream()
       .y()
       .thresholdRange(min: -100, max: 100)
-      .rewrite([.whenBelow: .forward,
-                .whenWithin: ctx.direction.value,
-                .whenAbove: .backward]),
+      .rewrite([.below: .forward,
+                .within: ctx.direction.value,
+                .above: .backward]),
                 to: ctx.direction)
 
     let bounds = ctx.containerView().bounds

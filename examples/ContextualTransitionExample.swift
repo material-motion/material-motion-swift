@@ -288,7 +288,7 @@ private class PushBackTransition: Transition {
       .velocityOnReleaseStream()
       .y()
       .thresholdRange(min: -100, max: 100)
-      .rewrite([.whenBelow: .backward, .whenAbove: .backward]),
+      .rewrite([.below: .backward, .above: .backward]),
                 to: ctx.direction)
 
     let movement = spring(back: contextView, fore: foreImageView, ctx: ctx)
