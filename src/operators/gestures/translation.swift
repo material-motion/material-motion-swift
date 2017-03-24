@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 extension MotionObservableConvertible where T: UIPanGestureRecognizer {
 

@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 /**
  Create a core animation spring system for a Spring plan.

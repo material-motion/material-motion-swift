@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 /**
  A subtractable type is able to subtract another instance of its type from itself.

@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 /**
  Allows a view to be directly manipulated with a combination of drag, rotation, and scale gestures.

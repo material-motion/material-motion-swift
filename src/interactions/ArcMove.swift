@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 /**
  Calculates an arc path between two points and uses a PathTween interaction to move between the two

@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 /**
  A lerpable type is capable of calculating a linear interpolation from one vector to another.

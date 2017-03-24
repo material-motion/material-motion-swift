@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 /**
  A gesture-to-stream function creates a MotionObservable from a gesture recognizer.

@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 /**
  Allows a view to be dragged by a gesture recognizer.

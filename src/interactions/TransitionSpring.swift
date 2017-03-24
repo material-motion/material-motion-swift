@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 /**
  A transition spring pulls a value from one side of a transition to another.

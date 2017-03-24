@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 /**
  Creates a scroll source backed by KVO on a UIScrollView.

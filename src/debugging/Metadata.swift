@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 public protocol Inspectable {
   var metadata: Metadata { get }

@@ -14,6 +14,9 @@
  limitations under the License.
  */
 
+import Foundation
+import UIKit
+
 extension MotionObservableConvertible where T == CGPoint {
 
   /**

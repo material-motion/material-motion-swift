@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 public protocol TransitionContextViewRetriever {
   func contextViewForTransition(foreViewController: UIViewController) -> UIView?

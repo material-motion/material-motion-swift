@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 /**
  The possible configurations of a "set position on tap" interaction.

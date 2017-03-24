@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 /**
  A type that is able to instantiate a zero representation of itself.

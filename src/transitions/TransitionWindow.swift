@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 /** A transition window represents a reversible interval of time in a bi-directional transition. */
 public final class TransitionTimeWindow {

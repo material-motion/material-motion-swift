@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 /**
  A path tween is an interpolation along a two-dimensional path.

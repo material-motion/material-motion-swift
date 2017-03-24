@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 /**
  An addable type is able to add another instance of its type to itself.

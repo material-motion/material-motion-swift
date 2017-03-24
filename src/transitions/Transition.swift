@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 /**
  A transition is responsible for describing the motion that will occur during a UIViewController

@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 /**
  Allows a view to be tossed by a gesture recognizer and animated to a destination using a spring.

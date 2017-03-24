@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 /** Create a gesture source that will connect to the provided gesture recognizer. */
 func gestureToStream<T: UIGestureRecognizer>(_ gesture: T) -> MotionObservable<T> {

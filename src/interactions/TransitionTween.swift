@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 /**
  A transition tween animates a property between two states of a transition using a Tween.

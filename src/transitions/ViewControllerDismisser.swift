@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 public final class ViewControllerDismisser: NSObject {
 

@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 /**
  Modifies the anchor point of a view when any of the provided gesture recognizers begin.

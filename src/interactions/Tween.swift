@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 /**
  A tween is an interpolation between two or more values, often making use of a non-linear timing

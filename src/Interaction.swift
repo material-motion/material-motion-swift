@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 /**
  An interaction is responsible for associating motion with a given target.
