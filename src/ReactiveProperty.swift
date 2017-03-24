@@ -112,6 +112,10 @@ public final class ReactiveProperty<T> {
    */
   func coreAnimation(_ event: CoreAnimationChannelEvent) {
     _coreAnimation?(event)
+
+    for observer in observers {
+      observer.coreAnimation?(event)
+    }
   }
 
   /**
