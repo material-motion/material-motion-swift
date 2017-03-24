@@ -197,6 +197,8 @@ public func createCoreAnimationProperty<T>(_ name: String, initialValue: T, exte
 
       let animation = info.animation.copy() as! CAPropertyAnimation
 
+      animation.duration *= TimeInterval(simulatorDragCoefficient())
+
       if layer.speed == 0, let lastTimelineState = strongReactiveLayer.lastTimelineState {
         animation.beginTime = TimeInterval(lastTimelineState.beginTime) + animation.beginTime
       } else {
