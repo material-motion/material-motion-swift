@@ -20,39 +20,75 @@ import MaterialMotion
 class MaterialExpansionExampleViewController: ExampleViewController {
 
   var runtime: MotionRuntime!
-  var square: UIView!
 
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    square = center(createExampleSquareView(), within: view)
+    let square = center(createExampleSquareView(), within: view)
+    square.clipsToBounds = true
     view.addSubview(square)
+
+    let maskView = UIView(frame: view.bounds)
+    maskView.isUserInteractionEnabled = false
+    let mask = CALayer()
+    mask.backgroundColor = UIColor.black.cgColor
+    mask.frame = square.frame
+    maskView.layer.mask = mask
+    view.addSubview(maskView)
+
+    let flood = UIView(frame: square.bounds.insetBy(dx: -square.bounds.width, dy: -square.bounds.height))
+    flood.layer.cornerRadius = flood.bounds.width / 2
+    flood.backgroundColor = .white
+    maskView.addSubview(flood)
 
     runtime = MotionRuntime(containerView: view)
 
     let direction = createProperty(withInitialValue: TransitionDirection.backward)
 
     let tap = runtime.get(UITapGestureRecognizer())
-    runtime.connect(tap.whenRecognitionState(is: .recognized).rewriteTo(direction).inverted(), to: direction)
 
     let widthExpansion = TransitionTween(duration: 0.375,
                                          forwardValues: [square.bounds.width, square.bounds.width * 2],
                                          direction: direction,
-                                         forwardKeyPositions: [0, 0.87],
+                                         forwardKeyPositions: [0, 0.8],
                                          system: coreAnimation)
     let heightExpansion = TransitionTween(duration: 0.375,
                                           forwardValues: [square.bounds.height, square.bounds.height * 2],
                                           direction: direction,
-                                          forwardKeyPositions: [0.13, 1.0],
+                                          forwardKeyPositions: [0.2, 1.0],
                                           system: coreAnimation)
 
-    widthExpansion.enabled.value = false
-    heightExpansion.enabled.value = false
-    runtime.connect(tap.whenRecognitionState(is: .recognized).rewriteTo(true), to: widthExpansion.enabled)
-    runtime.connect(tap.whenRecognitionState(is: .recognized).rewriteTo(true), to: heightExpansion.enabled)
+    let floodExpansion = Tween<CGFloat>(duration: 0.375, values: [0, 1])
+    floodExpansion.timingFunctions.value = [CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)]
+    let fadeOut = Tween<CGFloat>(duration: 0.375, values: [0.75, 0])
+    fadeOut.keyPositions.value = [0.2, 1]
+
+    runtime.add(SetPositionOnTap(.withExistingRecognizer(tap.gestureRecognizer)),
+                to: runtime.get(flood.layer).position)
+    runtime.add(floodExpansion, to: runtime.get(flood.layer).scale)
+    runtime.add(fadeOut, to: runtime.get(flood.layer).opacity)
+
+    for interaction in [floodExpansion, fadeOut] {
+      runtime.start(interaction, whenActive: tap)
+    }
+
+    runtime.connect(tap.whenRecognitionState(is: .recognized).rewriteTo(direction).inverted(), to: direction)
+
+    // Interactions are enabled by default, but in this case we don't want our transition to start
+    // until the first tap. Without this setup the runtime would immediately perform a backward
+    // transition.
+    let startTransition = createProperty(withInitialValue: false)
+    for interaction in [widthExpansion, heightExpansion] {
+      runtime.connect(startTransition, to: interaction.enabled)
+    }
+    runtime.connect(tap.whenRecognitionState(is: .recognized).rewriteTo(true), to: startTransition)
 
     runtime.add(widthExpansion, to: runtime.get(square.layer).width)
     runtime.add(heightExpansion, to: runtime.get(square.layer).height)
+
+    // Ensure that our mask always tracks the square.
+    runtime.connect(runtime.get(square.layer).width, to: runtime.get(mask).width)
+    runtime.connect(runtime.get(square.layer).height, to: runtime.get(mask).height)
   }
 
   override func exampleInformation() -> ExampleInfo {
