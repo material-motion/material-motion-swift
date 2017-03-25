@@ -1,6 +1,6 @@
 # Material Motion
 
-> A library for building reactive motion driven with Core Animation.
+> Reactive motion driven by Core Animation.
 
 ![Swift 3.1.x](https://img.shields.io/badge/Swift-3.1.x-orange.svg)
 ![iOS 9.0+](https://img.shields.io/badge/iOS-9.0+-orange.svg)
