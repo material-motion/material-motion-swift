@@ -15,7 +15,7 @@
  */
 
 import Foundation
-import CoreGraphics
+import UIKit
 import IndefiniteObservable
 
 /** Create a core animation tween system for a Tween plan. */
