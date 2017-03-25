@@ -1,6 +1,6 @@
 # Material Motion (Swift)
 
-> A small, performant library for building reactive motion.
+> A library for building reactive motion driven with Core Animation.
 
 [![Build Status](https://travis-ci.org/material-motion/material-motion-swift.svg?branch=develop)](https://travis-ci.org/material-motion/material-motion-swift)
 [![codecov](https://codecov.io/gh/material-motion/material-motion-swift/branch/develop/graph/badge.svg)](https://codecov.io/gh/material-motion/material-motion-swift)
