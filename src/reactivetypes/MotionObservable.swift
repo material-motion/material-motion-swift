@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 import IndefiniteObservable
 
 // Channels are functions that pass values down a stream.
