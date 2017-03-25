@@ -2,13 +2,13 @@
 
 > A library for building reactive motion driven with Core Animation.
 
+![Swift 3.1.x](https://img.shields.io/badge/Swift-3.1.x-orange.svg)
+![iOS 9.0+](https://img.shields.io/badge/iOS-9.0+-orange.svg)
 [![Build Status](https://travis-ci.org/material-motion/material-motion-swift.svg?branch=develop)](https://travis-ci.org/material-motion/material-motion-swift)
 [![codecov](https://codecov.io/gh/material-motion/material-motion-swift/branch/develop/graph/badge.svg)](https://codecov.io/gh/material-motion/material-motion-swift)
 [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/MaterialMotion.svg)](https://cocoapods.org/pods/MaterialMotion)
 [![Platform](https://img.shields.io/cocoapods/p/MaterialMotion.svg)](http://cocoadocs.org/docsets/MaterialMotion)
 [![Docs](https://img.shields.io/cocoapods/metrics/doc-percent/MaterialMotion.svg)](http://cocoadocs.org/docsets/MaterialMotion)
-![Swift 3.1.x](https://img.shields.io/badge/Swift-3.1.x-orange.svg)
-![iOS 9.0+](https://img.shields.io/badge/iOS-9.0+-orange.svg)
 
 This library includes a variety of ready-to-use **interactions**. Interactions are registered to an
 instance of `MotionRuntime`:
