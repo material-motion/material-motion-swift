@@ -9,17 +9,18 @@
   ],
   "arcanist_configuration": "HookConphig",
   "phabricator.uri": "http://codereview.cc/",
+  "repository.callsign": "REACTIVEMOTIONSWIFT",
   "arc.land.onto.default": "develop",
   "arc.feature.start.default": "origin/develop",
   "unit.xcode": {
     "build": {
-      "workspace": "MaterialMotionStreams.xcworkspace",
+      "workspace": "MaterialMotion.xcworkspace",
       "scheme": "UnitTests",
       "configuration": "Debug",
       "destination": "platform=iOS Simulator,name=iPhone 6s"
     },
     "coverage": {
-      "product": "MaterialMotionStreams.framework/MaterialMotionStreams"
+      "product": "MaterialMotion.framework/MaterialMotion"
     },
     "pre-build": "pod install"
   }

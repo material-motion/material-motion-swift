@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     self.window = window
 
     let rootViewController = CBCNodeListViewController(node: CBCCreateNavigationTree())
-    rootViewController.title = "Material Motion streams for Apple devices"
+    rootViewController.title = "Material Motion Catalog"
     window.rootViewController = UINavigationController(rootViewController: rootViewController)
 
     window.makeKeyAndVisible()

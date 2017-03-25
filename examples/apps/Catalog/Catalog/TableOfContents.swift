@@ -16,8 +16,80 @@
 
 // MARK: Catalog by convention
 
-extension ExampleViewController {
-  class func catalogBreadcrumbs() -> [String] {
-    return ["Example"]
-  }
+import Foundation
+
+extension CarouselExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Case studies", "Carousel"] }
+}
+
+extension ContextualTransitionExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Case studies", "Contextual transition"] }
+}
+
+extension FabTransitionExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Case studies", "FAB transition"] }
+}
+
+extension MaterialExpansionExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Case studies", "Material expansion"] }
+}
+
+extension ModalDialogExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Case studies", "Modal dialog"] }
+}
+
+extension PushBackTransitionExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Case studies", "Push back transition"] }
+}
+
+extension InteractivePushBackTransitionExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Case studies", "Push back transition (interactive)"] }
+}
+
+extension StickerPickerExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Case studies", "Sticker picker"] }
+}
+
+extension HowToUseReactiveConstraintsExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["How to...", "Use reactive constraints"] }
+}
+
+extension HowToMakeACustomOperatorExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["How to...", "Make a custom operator"] }
+}
+
+extension ArcMoveExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Arc move"] }
+}
+
+extension DirectlyManipulableExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Directly manipulable"] }
+}
+
+extension DraggableExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Draggable"] }
+}
+
+extension RotatableExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Rotatable"] }
+}
+
+extension ScalableExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Scalable"] }
+}
+
+extension SetPositionOnTapExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Set position on tap"] }
+}
+
+extension SpringExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Spring"] }
+}
+
+extension TweenExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Tween"] }
+}
+
+extension TossableExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Tossable"] }
 }
