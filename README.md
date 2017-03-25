@@ -1,4 +1,4 @@
-# Material Motion (Swift)
+# Material Motion
 
 > A library for building reactive motion driven with Core Animation.
 
