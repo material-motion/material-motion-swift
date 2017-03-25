@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "MaterialMotion"
-  s.summary      = "Material Motion: a small, performant library for building reactive motion."
+  s.summary      = "Reactive motion driven by Core Animation."
   s.version      = "1.0.0"
   s.authors      = "The Material Motion Authors"
   s.license      = "Apache 2.0"
