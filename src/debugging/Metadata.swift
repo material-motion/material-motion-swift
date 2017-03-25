@@ -21,10 +21,11 @@ public protocol Inspectable {
   var metadata: Metadata { get }
 }
 
-public final class Metadata: CustomDebugStringConvertible {
+public final class Metadata: CustomDebugStringConvertible, Hashable {
   enum Metatype {
     case node
     case constraint
+    case interaction
     case property
     case constant
   }
@@ -62,7 +63,9 @@ public final class Metadata: CustomDebugStringConvertible {
   private var style: String {
     switch type {
     case .constraint:
-      return "style=filled, fillcolor=\"#FF80AB\""
+      return "style=filled, fillcolor=\"#C51162\""
+    case .interaction:
+      return "style=filled, fillcolor=\"#C51162\""
     case .node:
       return "style=filled, fillcolor=\"#FFFFFF\""
     case .property:
@@ -119,6 +122,14 @@ public final class Metadata: CustomDebugStringConvertible {
     }
 
     return description.joined(separator: "\n").replacingOccurrences(of: "MaterialMotion.", with: "")
+  }
+
+  public var hashValue: Int {
+    return name.hashValue
+  }
+
+  static public func ==(lhs: Metadata, rhs: Metadata) -> Bool {
+    return lhs.name == rhs.name
   }
 }
 

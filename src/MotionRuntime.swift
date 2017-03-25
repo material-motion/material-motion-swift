@@ -37,6 +37,9 @@ public final class MotionRuntime {
    */
   public init(containerView: UIView) {
     self.containerView = containerView
+
+    let longpress = UILongPressGestureRecognizer(target: self, action: #selector(didLongPress))
+    self.containerView.addGestureRecognizer(longpress)
   }
 
   /**
@@ -61,8 +64,10 @@ public final class MotionRuntime {
    runtime.
    */
   public func add<I: Interaction>(_ interaction: I, to target: I.Target, constraints: I.Constraints? = nil) {
+    interactionStack.append(Metadata("\(type(of: interaction))", type: .interaction, args: [target]))
     interaction.add(to: target, withRuntime: self, constraints: constraints)
     interactions.append(interaction)
+    interactionStack.removeLast()
   }
 
   /**
@@ -187,7 +192,88 @@ public final class MotionRuntime {
     return lines.joined(separator: "\n")
   }
 
+  private class InteractionNode {
+    var this: Metadata
+    init(_ metadata: Metadata = Metadata("Runtime", type: .interaction)) {
+      self.this = metadata
+    }
+    var properties: [Metadata] = []
+    var children: [Metadata: InteractionNode] = [:]
+
+    func sortedChildren() -> [Metadata] {
+      if let sortedChildren = _sortedChildren {
+        return sortedChildren
+      }
+
+      let sorted = children.keys.sorted(by: { $0.name < $1.name })
+      _sortedChildren = sorted
+      return sorted
+    }
+    private var _sortedChildren: [Metadata]?
+  }
+  private var interactionTree = InteractionNode()
+  private var interactionStack: [Metadata] = []
+
+  public func dumpTree() {
+    dump(interactionTree)
+  }
+
+  @objc private func didLongPress(_ gesture: UILongPressGestureRecognizer) {
+    let view = DebugView(frame: .init(origin: .init(x: 0, y: containerView.bounds.height * 2 / 3), size: .init(width: containerView.bounds.width, height: containerView.bounds.height / 3)), tree: interactionTree)
+    view.autoresizingMask = [.flexibleTopMargin, .flexibleWidth]
+    containerView.addSubview(view)
+  }
+
+  private class DebugView: UIView, UITableViewDataSource {
+    let tree: InteractionNode
+
+    init(frame: CGRect, tree: InteractionNode) {
+      self.tree = tree
+
+      super.init(frame: frame)
+
+      backgroundColor = .white
+
+      let tableView = UITableView(frame: bounds, style: .grouped)
+      tableView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+      tableView.dataSource = self
+      tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+      addSubview(tableView)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+      fatalError("init(coder:) has not been implemented")
+    }
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+      return 1
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+      return tree.children.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+      let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+      cell.textLabel?.text = tree.sortedChildren()[indexPath.row].label
+      return cell
+    }
+  }
+
   private func write<O: MotionObservableConvertible, T>(_ stream: O, to property: ReactiveProperty<T>) where O.T == T {
+    var node: InteractionNode = interactionTree
+    for interaction in interactionStack {
+      if let child = node.children[interaction] {
+        node = child
+      } else {
+        let child = InteractionNode(interaction)
+        node.children[interaction] = child
+        node = child
+      }
+    }
+    // TODO: Extract all properties that are backing this stream and add them to this interaction.
+    // Need to walk up the stream's metadata recursively.
+
     metadata.append(stream.metadata.createChild(property.metadata))
     subscriptions.append(stream.subscribe(next: { property.value = $0 },
                                           coreAnimation: property.coreAnimation,

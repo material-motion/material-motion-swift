@@ -89,6 +89,8 @@ class MaterialExpansionExampleViewController: ExampleViewController {
     // Ensure that our mask always tracks the square.
     runtime.connect(runtime.get(square.layer).width, to: runtime.get(mask).width)
     runtime.connect(runtime.get(square.layer).height, to: runtime.get(mask).height)
+
+    runtime.dumpTree()
   }
 
   override func exampleInformation() -> ExampleInfo {
