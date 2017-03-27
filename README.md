@@ -93,6 +93,19 @@ Add `MaterialMotion` to your `Podfile`:
 
     pod 'MaterialMotion'
 
+You will need to add `use_frameworks!` to your Podfile in order use Material Motion in your swift
+app.
+
+A simple Podfile might look like so:
+
+    project 'MyApp/MyApp.xcodeproj'
+
+    use_frameworks!
+
+    target 'MyApp' do
+      pod 'MaterialMotion'
+    end
+
 Then run the following command:
 
     pod install
