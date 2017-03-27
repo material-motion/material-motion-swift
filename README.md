@@ -91,30 +91,38 @@ runtime.add(tossable, to: <#view#>)</code></pre></td>
 
 Add `MaterialMotion` to your `Podfile`:
 
-    pod 'MaterialMotion'
+```ruby
+pod 'MaterialMotion'
+```
 
 You will need to add `use_frameworks!` to your Podfile in order use Material Motion in your swift
 app.
 
 A simple Podfile might look like so:
 
-    project 'MyApp/MyApp.xcodeproj'
+```ruby
+project 'MyApp/MyApp.xcodeproj'
 
-    use_frameworks!
+use_frameworks!
 
-    target 'MyApp' do
-      pod 'MaterialMotion'
-    end
+target 'MyApp' do
+  pod 'MaterialMotion'
+end
+```
 
 Then run the following command:
 
-    pod install
+```bash
+pod install
+```
 
 ### Usage
 
 Import the framework:
 
-    import MaterialMotion
+```swift
+import MaterialMotion
+```
 
 You will now have access to all of the APIs.
 
@@ -123,10 +131,12 @@ You will now have access to all of the APIs.
 Check out a local copy of the repo to access the Catalog application by running the following
 commands:
 
-    git clone https://github.com/material-motion/material-motion-swift.git
-    cd material-motion-swift
-    pod install
-    open MaterialMotion.xcworkspace
+```bash
+git clone https://github.com/material-motion/material-motion-swift.git
+cd material-motion-swift
+pod install
+open MaterialMotion.xcworkspace
+```
 
 ## Case studies
 
