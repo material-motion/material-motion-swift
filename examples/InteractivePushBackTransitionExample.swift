@@ -85,11 +85,10 @@ private class PushBackTransition: Transition {
     let bounds = ctx.containerView().bounds
     let backPosition = CGPoint(x: bounds.midX, y: bounds.maxY + ctx.fore.view.bounds.height / 2)
     let forePosition = CGPoint(x: bounds.midX, y: bounds.midY)
-    let movement = spring(back: backPosition,
-                          fore: forePosition,
-                          threshold: 1,
-                          ctx: ctx)
-    let scaleSpring = spring(back: CGFloat(1), fore: CGFloat(0.95), threshold: 0.005, ctx: ctx)
+    let movement = TransitionSpring(back: backPosition,
+                                    fore: forePosition,
+                                    direction: ctx.direction)
+    let scaleSpring = TransitionSpring<CGFloat>(back: 1, fore: 0.95, direction: ctx.direction)
 
     let scale = runtime.get(ctx.back.view.layer).scale
     runtime.connect(runtime.get(ctx.fore.view.layer).position.y()
@@ -113,14 +112,5 @@ private class PushBackTransition: Transition {
     runtime.add(scaleSpring, to: scale)
 
     return [tossable.spring, scaleSpring, gesture]
-  }
-
-  private func spring<T>(back: T, fore: T, threshold: CGFloat, ctx: TransitionContext) -> TransitionSpring<T> where T: Subtractable, T: Zeroable, T: Equatable {
-    let spring = TransitionSpring(back: back, fore: fore, direction: ctx.direction, threshold: threshold, system: coreAnimation)
-    spring.friction.value = 500
-    spring.tension.value = 1000
-    spring.mass.value = 3
-    spring.suggestedDuration.value = 0.5
-    return spring
   }
 }

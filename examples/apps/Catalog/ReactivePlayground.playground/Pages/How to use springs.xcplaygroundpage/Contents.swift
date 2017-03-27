@@ -21,7 +21,7 @@ let runtime = MotionRuntime(containerView: canvas)
 let position = runtime.get(view.layer).position
 
 //: Next we'll create our Spring interaction. We must specify the type of Spring we'd like to use because Spring is a [generic type](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/Generics.html). In this case we want to animate a CGPoint, so we'll define that here:
-let spring = Spring<CGPoint>(threshold: 1, system: coreAnimation)
+let spring = Spring<CGPoint>()
 
 //: Starting the spring animation is now a simple matter of adding it to the property:
 runtime.add(spring, to: position)

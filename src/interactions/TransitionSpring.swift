@@ -61,7 +61,7 @@ public let defaultTransitionSpringSuggestedDuration: CGFloat = 0.5
 
  T-value constraints may be applied to this interaction.
  */
-public final class TransitionSpring<T: Zeroable>: Spring<T> {
+public final class TransitionSpring<T>: Spring<T> where T: Zeroable, T: Subtractable {
 
   /**
    The destination when the transition is moving backward.
@@ -79,14 +79,14 @@ public final class TransitionSpring<T: Zeroable>: Spring<T> {
    - parameter back: The destination to which the spring will pull the view when transitioning backward.
    - parameter fore: The destination to which the spring will pull the view when transitioning forward.
    - parameter direction: The spring will change its destination in reaction to this property's changes.
-   - parameter threshold: The threshold of movement defining the completion of the spring simulation.
-   - parameter system: Often coreAnimation. Can be another system if a system support library is available.
+   - parameter threshold: The threshold of movement defining the completion of the spring simulation. This parameter is not used by the Core Animation system and can be left as a default value.
+   - parameter system: The system that should be used to drive this spring.
    */
   public init(back backwardDestination: T,
               fore forwardDestination: T,
               direction: ReactiveProperty<TransitionDirection>,
-              threshold: CGFloat,
-              system: @escaping SpringToStream<T>) {
+              threshold: CGFloat = 1,
+              system: @escaping SpringToStream<T> = coreAnimation) {
     self.backwardDestination = backwardDestination
     self.forwardDestination = forwardDestination
     self.initialValue = direction == .forward ? backwardDestination : forwardDestination

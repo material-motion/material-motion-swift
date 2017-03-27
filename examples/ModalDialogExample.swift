@@ -111,9 +111,7 @@ class ModalDialogTransition: SelfDismissingTransition {
 
     let movement = TransitionSpring(back: backPosition,
                                     fore: forePosition,
-                                    direction: ctx.direction,
-                                    threshold: 1,
-                                    system: coreAnimation)
+                                    direction: ctx.direction)
     let tossable = Tossable(spring: movement, draggable: draggable)
     runtime.add(tossable, to: ctx.fore.view)
 

@@ -37,6 +37,12 @@ public typealias ScrollViewToStream = (UIScrollView) -> MotionObservable<CGPoint
 public typealias TweenToStream<T> = (TweenShadow<T>) -> MotionObservable<T>
 
 /**
+ Swift 3.1 does not allow generic typealiases to use protocol lists, so we define this composite
+ type instead.
+ */
+public protocol ZeroableAndSubtractable: Zeroable, Subtractable {}
+
+/**
  A spring-to-stream function creates a MotionObservable from a Spring and initial value stream.
  */
-public typealias SpringToStream<T: Zeroable> = (SpringShadow<T>) -> MotionObservable<T>
+public typealias SpringToStream<T: ZeroableAndSubtractable> = (SpringShadow<T>) -> MotionObservable<T>

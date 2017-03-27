@@ -37,7 +37,7 @@ class StickerPickerExampleViewController: ExampleViewController, StickerListView
     view.addSubview(stickerView)
 
     let direction = createProperty(withInitialValue: TransitionDirection.forward)
-    let spring = TransitionSpring(back: CGFloat(1.5), fore: 1, direction: direction, threshold: 0.1, system: coreAnimation)
+    let spring = TransitionSpring(back: CGFloat(1.5), fore: 1, direction: direction)
     runtime.add(spring, to: runtime.get(stickerView.layer).scale)
 
     runtime.add(DirectlyManipulable(), to: stickerView)
@@ -201,11 +201,7 @@ private class ModalTransition: Transition {
       ctx.fore.view.bounds = CGRect(origin: .zero, size: size)
     }
 
-    let spring = TransitionSpring(back: CGFloat(0),
-                                  fore: CGFloat(1),
-                                  direction: ctx.direction,
-                                  threshold: 0.01,
-                                  system: coreAnimation)
+    let spring = TransitionSpring<CGFloat>(back: 0, fore: 1, direction: ctx.direction)
     runtime.add(spring, to: runtime.get(ctx.fore.view.layer).opacity)
 
     return [spring]
