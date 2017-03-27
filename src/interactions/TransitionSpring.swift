@@ -18,6 +18,26 @@ import Foundation
 import UIKit
 
 /**
+ The default transition spring tension configuration.
+ */
+public let defaultTransitionSpringTension: CGFloat = 500
+
+/**
+ The default transition spring friction configuration.
+ */
+public let defaultTransitionSpringFriction: CGFloat = 1000
+
+/**
+ The default transition spring mass configuration.
+ */
+public let defaultTransitionSpringMass: CGFloat = 3
+
+/**
+ The default transition spring suggested duration.
+ */
+public let defaultTransitionSpringSuggestedDuration: CGFloat = 0.5
+
+/**
  A transition spring pulls a value from one side of a transition to another.
 
  A transition spring can be associated with many properties. Each property receives its own distinct
@@ -73,6 +93,12 @@ public final class TransitionSpring<T: Zeroable>: Spring<T> {
 
     self.toggledDestination = direction.rewrite([.backward: backwardDestination, .forward: forwardDestination])
     super.init(threshold: threshold, system: system)
+
+    // Apply Core Animation transition spring defaults.
+    friction.value = defaultTransitionSpringTension
+    tension.value = defaultTransitionSpringFriction
+    mass.value = defaultTransitionSpringMass
+    suggestedDuration.value = defaultTransitionSpringSuggestedDuration
   }
 
   public override func add(to property: ReactiveProperty<T>,
