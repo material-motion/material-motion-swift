@@ -71,6 +71,7 @@
 		66DDFD161E71F90F00AA46B7 /* HowToUseReactiveConstraintsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD151E71F90F00AA46B7 /* HowToUseReactiveConstraintsExample.swift */; };
 		66DDFD201E73281200AA46B7 /* HowToMakeACustomOperatorExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DDFD1F1E73281200AA46B7 /* HowToMakeACustomOperatorExample.swift */; };
 		66E6F2371E3FC791003158D3 /* PhotoAlbum.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6F2361E3FC791003158D3 /* PhotoAlbum.xcassets */; };
+		66F09E511E88B7EF00FC8D1B /* ChangeDirectionOnReleaseExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F09E501E88B7EF00FC8D1B /* ChangeDirectionOnReleaseExample.swift */; };
 		66F2C3C91E83245800DD9728 /* invertedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F2C3C81E83245800DD9728 /* invertedTests.swift */; };
 		D3F169473691C7D44E72DEED /* Pods_UnitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D89BD1C45FD980DEF396AB66 /* Pods_UnitTests.framework */; };
 /* End PBXBuildFile section */
@@ -157,6 +158,7 @@
 		66DDFD151E71F90F00AA46B7 /* HowToUseReactiveConstraintsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HowToUseReactiveConstraintsExample.swift; path = ../../HowToUseReactiveConstraintsExample.swift; sourceTree = "<group>"; };
 		66DDFD1F1E73281200AA46B7 /* HowToMakeACustomOperatorExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HowToMakeACustomOperatorExample.swift; path = ../../HowToMakeACustomOperatorExample.swift; sourceTree = "<group>"; };
 		66E6F2361E3FC791003158D3 /* PhotoAlbum.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = PhotoAlbum.xcassets; sourceTree = SOURCE_ROOT; };
+		66F09E501E88B7EF00FC8D1B /* ChangeDirectionOnReleaseExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChangeDirectionOnReleaseExample.swift; path = ../../ChangeDirectionOnReleaseExample.swift; sourceTree = "<group>"; };
 		66F2C3C81E83245800DD9728 /* invertedTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = invertedTests.swift; sourceTree = "<group>"; };
 		773711C342E83B1FF1F9C8BB /* Pods-MaterialMotionCatalog.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MaterialMotionCatalog.debug.xcconfig"; path = "../../../Pods/Target Support Files/Pods-MaterialMotionCatalog/Pods-MaterialMotionCatalog.debug.xcconfig"; sourceTree = "<group>"; };
 		800852A3E58C3B077D36E8DD /* Pods-MaterialMotionCatalog.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MaterialMotionCatalog.release.xcconfig"; path = "../../../Pods/Target Support Files/Pods-MaterialMotionCatalog/Pods-MaterialMotionCatalog.release.xcconfig"; sourceTree = "<group>"; };
@@ -224,6 +226,7 @@
 				660DA31C1E7A07BC008F7401 /* SpringExample.swift */,
 				660DA3151E79F6A3008F7401 /* TossableExample.swift */,
 				660DA3201E7A106D008F7401 /* TweenExample.swift */,
+				66F09E501E88B7EF00FC8D1B /* ChangeDirectionOnReleaseExample.swift */,
 			);
 			name = Interactions;
 			sourceTree = "<group>";
@@ -618,6 +621,7 @@
 			files = (
 				667E945B1E71EF0E005CAC78 /* StickerPickerExample.swift in Sources */,
 				667E94551E71EF0E005CAC78 /* DirectlyManipulableExample.swift in Sources */,
+				66F09E511E88B7EF00FC8D1B /* ChangeDirectionOnReleaseExample.swift in Sources */,
 				666FAA841D384A6B000363DA /* AppDelegate.swift in Sources */,
 				660DA3171E79F6A3008F7401 /* TossableExample.swift in Sources */,
 				660DA30F1E79EA62008F7401 /* RotatableExample.swift in Sources */,

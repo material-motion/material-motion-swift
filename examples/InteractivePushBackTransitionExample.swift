@@ -72,14 +72,7 @@ private class PushBackTransition: Transition {
       draggable = Draggable()
     }
 
-    let gesture = runtime.get(draggable.nextGestureRecognizer)
-    runtime.connect(gesture
-      .velocityOnReleaseStream()
-      .y()
-      .thresholdRange(min: -100, max: 100)
-      .rewrite([.below: .forward,
-                .within: ctx.direction.value,
-                .above: .backward]),
+    runtime.add(ChangeDirectionOnRelease(of: draggable.nextGestureRecognizer, whenNegative: .forward),
                 to: ctx.direction)
 
     let bounds = ctx.containerView().bounds
@@ -91,6 +84,8 @@ private class PushBackTransition: Transition {
     let scaleSpring = TransitionSpring<CGFloat>(back: 1, fore: 0.95, direction: ctx.direction)
 
     let scale = runtime.get(ctx.back.view.layer).scale
+
+    let gesture = runtime.get(draggable.nextGestureRecognizer)
     runtime.connect(runtime.get(ctx.fore.view.layer).position.y()
       // The position's final value gets written to by Core Animation when the gesture ends and the
       // movement spring engages. Because we're connecting position to the scale here, this would

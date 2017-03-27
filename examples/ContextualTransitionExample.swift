@@ -284,12 +284,8 @@ private class PushBackTransition: Transition {
       .slop(size: 100)
       .rewrite([.onExit: .backward, .onReturn: .forward]),
                 to: ctx.direction)
-    runtime.connect(gesture
-      .velocityOnReleaseStream()
-      .y()
-      .thresholdRange(min: -100, max: 100)
-      .rewrite([.below: .backward, .above: .backward]),
-                to: ctx.direction)
+
+    runtime.add(ChangeDirectionOnRelease(of: draggable.nextGestureRecognizer), to: ctx.direction)
 
     let backPosition = contextView.superview!.convert(contextView.layer.position, to: ctx.containerView())
     let forePosition = foreImageView.superview!.convert(foreImageView.layer.position, to: ctx.containerView())

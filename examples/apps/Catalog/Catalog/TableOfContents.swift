@@ -62,6 +62,10 @@ extension ArcMoveExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Arc move"] }
 }
 
+extension ChangeDirectionOnReleaseExampleViewController {
+  class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Change direction on release"] }
+}
+
 extension DirectlyManipulableExampleViewController {
   class func catalogBreadcrumbs() -> [String] { return ["Interactions", "Directly manipulable"] }
 }
