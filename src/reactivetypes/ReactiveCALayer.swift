@@ -256,7 +256,7 @@ public func createCoreAnimationProperty<T>(_ name: String, initialValue: T, exte
 
       CATransaction.begin()
       CATransaction.setCompletionBlock(info.onCompletion)
-      layer.add(animation, forKey: info.key)
+      layer.add(animation, forKey: info.key + "." + keyPath)
       CATransaction.commit()
 
     case .remove(let key):
@@ -269,7 +269,7 @@ public func createCoreAnimationProperty<T>(_ name: String, initialValue: T, exte
         strongReactiveLayer.decomposedKeys.remove(key)
 
       } else {
-        layer.removeAnimation(forKey: key)
+        layer.removeAnimation(forKey: key + "." + keyPath)
       }
     }
   })
