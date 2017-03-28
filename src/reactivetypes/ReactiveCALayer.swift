@@ -207,14 +207,27 @@ public func createCoreAnimationProperty<T>(_ name: String, initialValue: T, exte
 
       animation.keyPath = keyPath
 
-      if let makeAdditive = info.makeAdditive, let basicAnimation = animation as? CABasicAnimation {
-        basicAnimation.fromValue = makeAdditive(basicAnimation.fromValue!, basicAnimation.toValue!)
-        basicAnimation.toValue = makeAdditive(basicAnimation.toValue!, basicAnimation.toValue!)
-        basicAnimation.isAdditive = true
-      } else if let makeAdditive = info.makeAdditive, let keyframeAnimation = animation as? CAKeyframeAnimation {
-        let lastValue = keyframeAnimation.values!.last!
-        keyframeAnimation.values = keyframeAnimation.values!.map { makeAdditive($0, lastValue) }
-        keyframeAnimation.isAdditive = true
+      if let unsafeMakeAdditive = info.makeAdditive {
+        let makeAdditive: ((Any, Any) -> Any) = { from, to in
+          // When mapping properties to properties it's possible for the values to get implicitly
+          // wrapped in an NSNumber instance. This may cause the generic makeAdditive
+          // implementation to fail to cast to T, so we unbox the type here instead.
+          if let from = from as? NSNumber, let to = to as? NSNumber {
+            return from.doubleValue - to.doubleValue
+          }
+          return unsafeMakeAdditive(from, to)
+        }
+
+        if let basicAnimation = animation as? CABasicAnimation {
+          basicAnimation.fromValue = makeAdditive(basicAnimation.fromValue!, basicAnimation.toValue!)
+          basicAnimation.toValue = makeAdditive(basicAnimation.toValue!, basicAnimation.toValue!)
+          basicAnimation.isAdditive = true
+
+        } else if let keyframeAnimation = animation as? CAKeyframeAnimation {
+          let lastValue = keyframeAnimation.values!.last!
+          keyframeAnimation.values = keyframeAnimation.values!.map { makeAdditive($0, lastValue) }
+          keyframeAnimation.isAdditive = true
+        }
       }
 
       // Core Animation springs do not support multi-dimensional velocity, so we bear the burden
