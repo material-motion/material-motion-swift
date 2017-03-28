@@ -84,16 +84,10 @@ class ModalDialogTransition: SelfDismissingTransition {
     let backPosition = CGPoint(x: bounds.midX, y: bounds.maxY + size.height * 3 / 4)
     let forePosition = CGPoint(x: bounds.midX, y: bounds.midY)
 
-    let firstPan = ctx.gestureRecognizers.first { $0 is UIPanGestureRecognizer }
-    let draggable: Draggable
-    if let firstPan = firstPan as? UIPanGestureRecognizer {
-      draggable = Draggable(.withExistingRecognizer(firstPan))
-    } else {
-      draggable = Draggable()
-    }
-
     let reactiveForeLayer = runtime.get(ctx.fore.view.layer)
     let position = reactiveForeLayer.position
+
+    let draggable = Draggable(withFirstGestureIn: ctx.gestureRecognizers)
 
     let gesture = runtime.get(draggable.nextGestureRecognizer)
     let centerY = ctx.containerView().bounds.height / 2.0

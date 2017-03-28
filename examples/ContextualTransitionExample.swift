@@ -269,13 +269,7 @@ private class PushBackTransition: Transition {
                        foreImageView.bounds.height / imageSize.height)
     let fitSize = CGSize(width: fitScale * imageSize.width, height: fitScale * imageSize.height)
 
-    let firstPan = ctx.gestureRecognizers.first { $0 is UIPanGestureRecognizer }
-    let draggable: Draggable
-    if let firstPan = firstPan as? UIPanGestureRecognizer {
-      draggable = Draggable(.withExistingRecognizer(firstPan))
-    } else {
-      draggable = Draggable()
-    }
+    let draggable = Draggable(withFirstGestureIn: ctx.gestureRecognizers)
 
     let gesture = runtime.get(draggable.nextGestureRecognizer)
     runtime.connect(gesture

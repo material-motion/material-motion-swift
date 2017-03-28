@@ -56,6 +56,25 @@ public class Gesturable<T: UIGestureRecognizer> {
     self.init(.registerNewRecognizerToTargetView)
   }
 
+  /**
+   Initializes the interaction with the first gesture recognizer that matches the interaction's T
+   type.
+   */
+  public convenience init<O>(withFirstGestureIn gestures: O) where O: Sequence, O.Iterator.Element == UIGestureRecognizer {
+    var first: T? = nil
+    for gesture in gestures {
+      if let gesture = gesture as? T {
+        first = gesture
+        break
+      }
+    }
+    if let first = first {
+      self.init(.withExistingRecognizer(first))
+    } else {
+      self.init()
+    }
+  }
+
   public init(_ config: GesturableConfiguration<T>) {
     self.config = config
 
