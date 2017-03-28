@@ -36,7 +36,7 @@ class InteractivePushBackTransitionExampleViewController: ExampleViewController 
   }
 }
 
-private class ModalViewController: UIViewController {
+private class ModalViewController: UIViewController, UIGestureRecognizerDelegate {
 
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
     super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -48,13 +48,20 @@ private class ModalViewController: UIViewController {
     fatalError("init(coder:) has not been implemented")
   }
 
+  var scrollView: UIScrollView!
   override func viewDidLoad() {
     super.viewDidLoad()
 
     view.backgroundColor = .primaryColor
 
+    scrollView = UIScrollView(frame: view.bounds)
+    scrollView.contentSize = .init(width: view.bounds.width, height: view.bounds.height * 10)
+    view.addSubview(scrollView)
+
     let pan = UIPanGestureRecognizer()
+    pan.delegate = transitionController.dismisser.topEdgeDismisserDelegate(for: scrollView)
     transitionController.dismisser.dismissWhenGestureRecognizerBegins(pan)
+    scrollView.panGestureRecognizer.require(toFail: pan)
     view.addGestureRecognizer(pan)
   }
 }
@@ -87,7 +94,7 @@ private class PushBackTransition: Transition {
                     destinationEnd: 0.95),
                     to: scale)
 
-    runtime.add(tossable, to: ctx.fore.view) { $0.xLocked(to: ctx.fore.view.layer.position.x) }
+    runtime.add(tossable, to: ctx.fore.view) { $0.xLocked(to: bounds.midX) }
 
     return [tossable]
   }

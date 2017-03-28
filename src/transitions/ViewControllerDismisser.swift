@@ -33,6 +33,24 @@ public final class ViewControllerDismisser: NSObject {
     soloGestureRecognizers.insert(gestureRecognizer)
   }
 
+  /**
+   Returns a gesture recognizer delegate that will allow the gesture recognizer to begin only if the
+   provided scroll view is scrolled to the top of its content.
+
+   The returned delegate implements gestureRecognizerShouldBegin.
+   */
+  public func topEdgeDismisserDelegate(for scrollView: UIScrollView) -> UIGestureRecognizerDelegate {
+    for delegate in scrollViewTopEdgeDismisserDelegates {
+      if delegate.scrollView == scrollView {
+        return delegate
+      }
+    }
+    let delegate = ScrollViewTopEdgeDismisserDelegate()
+    delegate.scrollView = scrollView
+    scrollViewTopEdgeDismisserDelegates.append(delegate)
+    return delegate
+  }
+
   @objc func gestureRecognizerDidChange(_ gestureRecognizer: UIGestureRecognizer) {
     if gestureRecognizer.state == .began || gestureRecognizer.state == .recognized {
       delegate?.dismiss()
@@ -42,6 +60,20 @@ public final class ViewControllerDismisser: NSObject {
   weak var delegate: ViewControllerDismisserDelegate?
   private(set) var gestureRecognizers = Set<UIGestureRecognizer>()
   fileprivate var soloGestureRecognizers = Set<UIGestureRecognizer>()
+
+  private var scrollViewTopEdgeDismisserDelegates: [ScrollViewTopEdgeDismisserDelegate] = []
+}
+
+private final class ScrollViewTopEdgeDismisserDelegate: NSObject, UIGestureRecognizerDelegate {
+  func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    if let pan = gestureRecognizer as? UIPanGestureRecognizer, let scrollView = scrollView {
+      return pan.translation(in: pan.view).y > 0
+        && scrollView.contentOffset.y <= -scrollView.contentInset.top
+    }
+    return false
+  }
+
+  weak var scrollView: UIScrollView?
 }
 
 extension ViewControllerDismisser: UIGestureRecognizerDelegate {
