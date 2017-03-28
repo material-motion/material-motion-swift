@@ -81,31 +81,20 @@ private class PushBackTransition: Transition {
     let movement = TransitionSpring(back: backPosition,
                                     fore: forePosition,
                                     direction: ctx.direction)
-    let scaleSpring = TransitionSpring<CGFloat>(back: 1, fore: 0.95, direction: ctx.direction)
 
     let scale = runtime.get(ctx.back.view.layer).scale
 
-    let gesture = runtime.get(draggable.nextGestureRecognizer)
+    let tossable = Tossable(spring: movement, draggable: draggable)
+
     runtime.connect(runtime.get(ctx.fore.view.layer).position.y()
-      // The position's final value gets written to by Core Animation when the gesture ends and the
-      // movement spring engages. Because we're connecting position to the scale here, this would
-      // also cause scale to jump to its destination as well (without animating, unfortunately).
-      // To ensure that we don't receive this information, we valve the stream based on the gesture
-      // activity and ensure that we register this valve *before* committing Tossable to the
-      // runtime.
-      .valve(openWhenTrue: gesture.active())
       .rewriteRange(start: movement.backwardDestination.y,
                     end: movement.forwardDestination.y,
-                    destinationStart: scaleSpring.backwardDestination,
-                    destinationEnd: scaleSpring.forwardDestination),
-                to: scale)
+                    destinationStart: 1,
+                    destinationEnd: 0.95),
+                    to: scale)
 
-    let tossable = Tossable(spring: movement, draggable: draggable)
     runtime.add(tossable, to: ctx.fore.view) { $0.xLocked(to: ctx.fore.view.layer.position.x) }
 
-    runtime.toggle(scaleSpring, inReactionTo: draggable)
-    runtime.add(scaleSpring, to: scale)
-
-    return [tossable.spring, scaleSpring, gesture]
+    return [tossable]
   }
 }
