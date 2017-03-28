@@ -31,7 +31,7 @@ import UIKit
 
  Either the x or y axis can be selected. The default axis is y.
  */
-public final class ChangeDirectionOnRelease: Interaction {
+public final class ChangeDirection: Interaction {
   /**
    The gesture recognizer that will be observed by this interaction.
    */
@@ -57,7 +57,7 @@ public final class ChangeDirectionOnRelease: Interaction {
   /**
    - parameter minimumVelocity: The minimum absolute velocity required to change the transition's direction.
    */
-  public init(of gesture: UIPanGestureRecognizer, minimumVelocity: CGFloat = 100, whenNegative: TransitionDirection = .backward, whenPositive: TransitionDirection = .backward) {
+  public init(withVelocityOf gesture: UIPanGestureRecognizer, minimumVelocity: CGFloat = 100, whenNegative: TransitionDirection = .backward, whenPositive: TransitionDirection = .backward) {
     self.gesture = gesture
     self.minimumVelocity = minimumVelocity
     self.whenNegative = whenNegative

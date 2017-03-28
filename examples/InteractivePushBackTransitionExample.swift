@@ -72,7 +72,7 @@ private class PushBackTransition: Transition {
       draggable = Draggable()
     }
 
-    runtime.add(ChangeDirectionOnRelease(of: draggable.nextGestureRecognizer, whenNegative: .forward),
+    runtime.add(ChangeDirection(withVelocityOf: draggable.nextGestureRecognizer, whenNegative: .forward),
                 to: ctx.direction)
 
     let bounds = ctx.containerView().bounds

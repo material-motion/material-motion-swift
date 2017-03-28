@@ -41,7 +41,7 @@ class ChangeDirectionOnReleaseExampleViewController: ExampleViewController {
                                           fore: CGPoint(x: view.bounds.midX, y: view.bounds.height * 6 / 10),
                                           direction: direction)
     let tossable = Tossable(spring: positionSpring)
-    runtime.add(ChangeDirectionOnRelease(of: tossable.draggable.nextGestureRecognizer,
+    runtime.add(ChangeDirection(withVelocityOf: tossable.draggable.nextGestureRecognizer,
                                          whenNegative: .backward,
                                          whenPositive: .forward),
                 to: direction)

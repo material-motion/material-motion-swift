@@ -98,7 +98,7 @@ class ModalDialogTransition: SelfDismissingTransition {
     let gesture = runtime.get(draggable.nextGestureRecognizer)
     let centerY = ctx.containerView().bounds.height / 2.0
 
-    runtime.add(ChangeDirectionOnRelease(of: draggable.nextGestureRecognizer, whenNegative: .forward),
+    runtime.add(ChangeDirection(withVelocityOf: draggable.nextGestureRecognizer, whenNegative: .forward),
                 to: ctx.direction)
 
     runtime.connect(gesture
