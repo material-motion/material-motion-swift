@@ -271,14 +271,7 @@ private class PushBackTransition: Transition {
 
     let draggable = Draggable(withFirstGestureIn: ctx.gestureRecognizers)
 
-    let gesture = runtime.get(draggable.nextGestureRecognizer)
-    runtime.connect(gesture
-      .translation(in: runtime.containerView)
-      .y()
-      .slop(size: 100)
-      .rewrite([.onExit: .backward, .onReturn: .forward]),
-                to: ctx.direction)
-
+    runtime.add(SlopRegion(withTranslationOf: draggable.nextGestureRecognizer, size: 100), to: ctx.direction)
     runtime.add(ChangeDirection(withVelocityOf: draggable.nextGestureRecognizer), to: ctx.direction)
 
     let backPosition = contextView.superview!.convert(contextView.layer.position, to: ctx.containerView())
@@ -296,7 +289,7 @@ private class PushBackTransition: Transition {
 
     runtime.add(Hidden(), to: foreImageView)
 
-    return [tossable.spring, gesture, size, opacity]
+    return [tossable, size, opacity]
   }
 }
 
