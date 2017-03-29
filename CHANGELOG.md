@@ -75,7 +75,7 @@ Affects `Draggable`, `Rotatable`, and `Scalable`.
 | From: | `public init(spring: Spring<CGPoint>, draggable: Draggable = Draggable())` |
 | To: | `public init(spring: Spring<CGPoint> = Spring(), draggable: Draggable = Draggable())` |
 
-TODO: Revert this change: *removed* method: `init(system:draggable:)` in `Tossable`
+*deprecated* method: `init(system:draggable:)` in `Tossable`. Use `init(spring:draggable:)` instead.
 
 #### TransitionSpring
 
