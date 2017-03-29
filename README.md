@@ -191,6 +191,16 @@ Makes use of: `Tossable` and `TransitionSpring`.
 
 [View the source](examples/ModalDialogExample.swift).
 
+### Pull down to dismiss
+
+<img src="assets/pulldowntodismiss.gif" />
+
+A modal scroll view controller that can be dismissed with a drag gesture.
+
+Makes use of: `Tossable` and `TransitionSpring`.
+
+[View the source](examples/InteractivePushBackTransitionExample.swift).
+
 ### Sticker picker
 
 <img src="assets/stickerpicker.gif" />
