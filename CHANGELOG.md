@@ -47,8 +47,6 @@ pan.delegate = transitionController.dismisser.topEdgeDismisserDelegate(for: scro
 * [Add ChangeDirectionOnRelease interaction.](https://github.com/material-motion/material-motion-swift/commit/bdee45533c68f2c98e7b543acf9e3589a783eb46) (Jeff Verkoeyen)
 * [Make TransitionSpring and Spring T type conform to Subtractable so that coreAnimation can be set as the default system.](https://github.com/material-motion/material-motion-swift/commit/419327972893b92a4317e903ad933550d096a76f) (Jeff Verkoeyen)
 * [TransitionSpring configuration now defaults to Core Animation configuration defaults.](https://github.com/material-motion/material-motion-swift/commit/295d64556048429a5ec6d7859a0ce8922b84a4fd) (Jeff Verkoeyen)
-* [Revert "WIP of tracer."](https://github.com/material-motion/material-motion-swift/commit/7197cb6b10f799e1689bf0d36e76f3a5f53d9021) (Jeff Verkoeyen)
-* [WIP of tracer.](https://github.com/material-motion/material-motion-swift/commit/cbe6365985b3a6563cc9410e178ccef1ecea2f0d) (Jeff Verkoeyen)
 
 ## API changes
 
