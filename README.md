@@ -181,7 +181,7 @@ Makes use of: `Transition` and `Tween`.
 
 <img src="assets/materialexpansion.gif" />
 
-A Material Design transition using assymetric transformations.
+A Material Design transition using asymetric transformations.
 
 Makes use of: `Tween`.
 
