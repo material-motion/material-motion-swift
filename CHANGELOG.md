@@ -4,10 +4,6 @@ This is our first minor release. It includes two new interactions and improvemen
 
 <img src="assets/changedirection.gif" /><img src="assets/pulldowntodismiss.gif" />
 
-## Breaking changes
-
-No known breaking changes.
-
 ## Behavioral changes
 
 - TransitionSpring's configuration now defaults to Core Animation's default values. If you prefer to continue using the original Spring defaults you can use the following snippet:
