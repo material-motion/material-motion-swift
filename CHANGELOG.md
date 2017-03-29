@@ -2,6 +2,8 @@
 
 This is our first minor release. It includes two new interactions and improvements to APIs for the common cases.
 
+<img src="assets/changedirection.gif" /><img src="assets/pulldowntodismiss.gif" />
+
 ## Breaking changes
 
 No known breaking changes.
