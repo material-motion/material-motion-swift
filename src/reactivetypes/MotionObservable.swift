@@ -74,7 +74,7 @@ public struct CoreAnimationChannelAdd {
   /**
    A completion handler, fired once Core Animation reports that the animation has completed.
    */
-  public let onCompletion: () -> Void
+  public var onCompletion: (() -> Void)?
 
   /**
    The initial velocity of the animation, if relevant.
