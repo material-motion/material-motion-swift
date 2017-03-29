@@ -133,7 +133,6 @@ Affects `Draggable`, `Rotatable`, and `Scalable`.
 
 ## Non-source changes
 
-* [Automatic changelog preparation for release.](https://github.com/material-motion/material-motion-swift/commit/a7e274a4f2603ea67bd6ee6ccb8fd573da7b3078) (Jeff Verkoeyen)
 * [Modify the PushBackTransition example to use connected properties instead of multiple springs.](https://github.com/material-motion/material-motion-swift/commit/71f06c23ec9ef8f460ad48de6f6af540f1eec4c9) (Jeff Verkoeyen)
 * [Simplify the interactive push back transition example.](https://github.com/material-motion/material-motion-swift/commit/b8620649aae2eadf93ec66c82b164759a067931d) (Jeff Verkoeyen)
 * [Add syntax highlighting languages to the README.](https://github.com/material-motion/material-motion-swift/commit/486cff7dc497a66c5479f8117a599cf778fa575a) (Jeff Verkoeyen)
