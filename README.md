@@ -30,6 +30,12 @@ arcMove.to.value = <#to#>
 runtime.add(arcMove, to: <#view#>)</code></pre></td>
     </tr>
     <tr>
+      <td align="center"><img src="assets/changedirection.gif" /></td>
+      <td><pre><code class="language-swift">ChangeDirection</code></pre></td>
+      <td><pre><code class="language-swift">runtime.add(ChangeDirection(withVelocityOf: gesture),
+            to: <#view#>)</code></pre></td>
+    </tr>
+    <tr>
       <td align="center"><img src="assets/directlymanipulable.gif" /></td>
       <td><pre><code class="language-swift">DirectlyManipulable</code></pre></td>
       <td><pre><code class="language-swift">runtime.add(DirectlyManipulable(), to: <#view#>)</code></pre></td>
