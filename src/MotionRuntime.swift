@@ -61,8 +61,8 @@ public final class MotionRuntime {
    runtime.
    */
   public func add<I: Interaction>(_ interaction: I, to target: I.Target, constraints: I.Constraints? = nil) {
-    interaction.add(to: target, withRuntime: self, constraints: constraints)
     interactions.append(interaction)
+    interaction.add(to: target, withRuntime: self, constraints: constraints)
   }
 
   /**

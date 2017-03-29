@@ -269,62 +269,27 @@ private class PushBackTransition: Transition {
                        foreImageView.bounds.height / imageSize.height)
     let fitSize = CGSize(width: fitScale * imageSize.width, height: fitScale * imageSize.height)
 
-    let firstPan = ctx.gestureRecognizers.first { $0 is UIPanGestureRecognizer }
-    let draggable: Draggable
-    if let firstPan = firstPan as? UIPanGestureRecognizer {
-      draggable = Draggable(.withExistingRecognizer(firstPan))
-    } else {
-      draggable = Draggable()
-    }
+    let draggable = Draggable(withFirstGestureIn: ctx.gestureRecognizers)
 
-    let gesture = runtime.get(draggable.nextGestureRecognizer)
-    runtime.connect(gesture
-      .translation(in: runtime.containerView)
-      .y()
-      .slop(size: 100)
-      .rewrite([.onExit: .backward, .onReturn: .forward]),
-                to: ctx.direction)
-    runtime.connect(gesture
-      .velocityOnReleaseStream()
-      .y()
-      .thresholdRange(min: -100, max: 100)
-      .rewrite([.below: .backward, .above: .backward]),
-                to: ctx.direction)
+    runtime.add(SlopRegion(withTranslationOf: draggable.nextGestureRecognizer, size: 100), to: ctx.direction)
+    runtime.add(ChangeDirection(withVelocityOf: draggable.nextGestureRecognizer), to: ctx.direction)
 
-    let movement = spring(back: contextView, fore: foreImageView, ctx: ctx)
+    let backPosition = contextView.superview!.convert(contextView.layer.position, to: ctx.containerView())
+    let forePosition = foreImageView.superview!.convert(foreImageView.layer.position, to: ctx.containerView())
+    let movement = TransitionSpring(back: backPosition, fore: forePosition, direction: ctx.direction)
     let tossable = Tossable(spring: movement, draggable: draggable)
     runtime.add(tossable, to: replicaView)
 
-    let size = spring(back: contextView.bounds.size, fore: fitSize, threshold: 1, ctx: ctx)
+    let size = TransitionSpring(back: contextView.bounds.size, fore: fitSize, direction: ctx.direction)
     runtime.toggle(size, inReactionTo: draggable)
     runtime.add(size, to: runtime.get(replicaView).reactiveLayer.size)
 
-    let opacity = spring(back: CGFloat(0), fore: CGFloat(1), threshold: 0.01, ctx: ctx)
+    let opacity = TransitionSpring<CGFloat>(back: 0, fore: 1, direction: ctx.direction)
     runtime.add(opacity, to: runtime.get(ctx.fore.view.layer).opacity)
 
     runtime.add(Hidden(), to: foreImageView)
 
-    return [tossable.spring, gesture, size, opacity]
-  }
-
-  private func spring<T>(back: T, fore: T, threshold: CGFloat, ctx: TransitionContext) -> TransitionSpring<T> where T: Subtractable, T: Zeroable, T: Equatable {
-    let spring = TransitionSpring(back: back, fore: fore, direction: ctx.direction, threshold: threshold, system: coreAnimation)
-    spring.friction.value = 500
-    spring.tension.value = 1000
-    spring.mass.value = 3
-    spring.suggestedDuration.value = 0.5
-    return spring
-  }
-
-  private func spring(back: UIView, fore: UIView, ctx: TransitionContext) -> TransitionSpring<CGPoint> {
-    let backPosition = back.superview!.convert(back.layer.position, to: ctx.containerView())
-    let forePosition = fore.superview!.convert(fore.layer.position, to: ctx.containerView())
-    let spring = TransitionSpring(back: backPosition, fore: forePosition, direction: ctx.direction, threshold: 1, system: coreAnimation)
-    spring.friction.value = 500
-    spring.tension.value = 1000
-    spring.mass.value = 3
-    spring.suggestedDuration.value = 0.5
-    return spring
+    return [tossable, size, opacity]
   }
 }
 

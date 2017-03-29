@@ -48,12 +48,7 @@ public final class Tossable: Interaction, Stateful {
    */
   public let spring: Spring<CGPoint>
 
-  public init(system: @escaping SpringToStream<CGPoint> = coreAnimation, draggable: Draggable = Draggable()) {
-    self.spring = Spring(threshold: 1, system: system)
-    self.draggable = draggable
-  }
-
-  public init(spring: Spring<CGPoint>, draggable: Draggable = Draggable()) {
+  public init(spring: Spring<CGPoint> = Spring(), draggable: Draggable = Draggable()) {
     self.spring = spring
     self.draggable = draggable
   }
@@ -91,4 +86,9 @@ public final class Tossable: Interaction, Stateful {
   }
 
   let aggregateState = AggregateMotionState()
+
+  @available(*, deprecated, message: "Use init(spring:draggable:) instead.")
+  public convenience init(system: @escaping SpringToStream<CGPoint>, draggable: Draggable = Draggable()) {
+    self.init(spring: Spring(threshold: 1, system: system), draggable: draggable)
+  }
 }

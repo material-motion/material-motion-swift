@@ -113,8 +113,19 @@ public final class ReactiveProperty<T> {
   func coreAnimation(_ event: CoreAnimationChannelEvent) {
     _coreAnimation?(event)
 
+    let transformedEvent: CoreAnimationChannelEvent
+    switch event {
+    case .add(var info):
+      // This is a hack-fix to ensure that animations don't over-complete they're connected to other
+      // properties.
+      // Related to https://github.com/material-motion/material-motion-swift/issues/65
+      info.onCompletion = nil
+      transformedEvent = .add(info)
+    default:
+      transformedEvent = event
+    }
     for observer in observers {
-      observer.coreAnimation?(event)
+      observer.coreAnimation?(transformedEvent)
     }
   }
 

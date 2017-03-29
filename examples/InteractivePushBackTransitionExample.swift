@@ -36,7 +36,7 @@ class InteractivePushBackTransitionExampleViewController: ExampleViewController 
   }
 }
 
-private class ModalViewController: UIViewController {
+private class ModalViewController: UIViewController, UIGestureRecognizerDelegate {
 
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
     super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -48,13 +48,20 @@ private class ModalViewController: UIViewController {
     fatalError("init(coder:) has not been implemented")
   }
 
+  var scrollView: UIScrollView!
   override func viewDidLoad() {
     super.viewDidLoad()
 
     view.backgroundColor = .primaryColor
 
+    scrollView = UIScrollView(frame: view.bounds)
+    scrollView.contentSize = .init(width: view.bounds.width, height: view.bounds.height * 10)
+    view.addSubview(scrollView)
+
     let pan = UIPanGestureRecognizer()
+    pan.delegate = transitionController.dismisser.topEdgeDismisserDelegate(for: scrollView)
     transitionController.dismisser.dismissWhenGestureRecognizerBegins(pan)
+    scrollView.panGestureRecognizer.require(toFail: pan)
     view.addGestureRecognizer(pan)
   }
 }
@@ -64,63 +71,31 @@ private class PushBackTransition: Transition {
   required init() {}
 
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
-    let firstPan = ctx.gestureRecognizers.first { $0 is UIPanGestureRecognizer }
-    let draggable: Draggable
-    if let firstPan = firstPan as? UIPanGestureRecognizer {
-      draggable = Draggable(.withExistingRecognizer(firstPan))
-    } else {
-      draggable = Draggable()
-    }
+    let draggable = Draggable(withFirstGestureIn: ctx.gestureRecognizers)
 
-    let gesture = runtime.get(draggable.nextGestureRecognizer)
-    runtime.connect(gesture
-      .velocityOnReleaseStream()
-      .y()
-      .thresholdRange(min: -100, max: 100)
-      .rewrite([.below: .forward,
-                .within: ctx.direction.value,
-                .above: .backward]),
+    runtime.add(ChangeDirection(withVelocityOf: draggable.nextGestureRecognizer, whenNegative: .forward),
                 to: ctx.direction)
 
     let bounds = ctx.containerView().bounds
     let backPosition = CGPoint(x: bounds.midX, y: bounds.maxY + ctx.fore.view.bounds.height / 2)
     let forePosition = CGPoint(x: bounds.midX, y: bounds.midY)
-    let movement = spring(back: backPosition,
-                          fore: forePosition,
-                          threshold: 1,
-                          ctx: ctx)
-    let scaleSpring = spring(back: CGFloat(1), fore: CGFloat(0.95), threshold: 0.005, ctx: ctx)
+    let movement = TransitionSpring(back: backPosition,
+                                    fore: forePosition,
+                                    direction: ctx.direction)
 
     let scale = runtime.get(ctx.back.view.layer).scale
-    runtime.connect(runtime.get(ctx.fore.view.layer).position.y()
-      // The position's final value gets written to by Core Animation when the gesture ends and the
-      // movement spring engages. Because we're connecting position to the scale here, this would
-      // also cause scale to jump to its destination as well (without animating, unfortunately).
-      // To ensure that we don't receive this information, we valve the stream based on the gesture
-      // activity and ensure that we register this valve *before* committing Tossable to the
-      // runtime.
-      .valve(openWhenTrue: gesture.active())
-      .rewriteRange(start: movement.backwardDestination.y,
-                    end: movement.forwardDestination.y,
-                    destinationStart: scaleSpring.backwardDestination,
-                    destinationEnd: scaleSpring.forwardDestination),
-                to: scale)
 
     let tossable = Tossable(spring: movement, draggable: draggable)
-    runtime.add(tossable, to: ctx.fore.view) { $0.xLocked(to: ctx.fore.view.layer.position.x) }
 
-    runtime.toggle(scaleSpring, inReactionTo: draggable)
-    runtime.add(scaleSpring, to: scale)
+    runtime.connect(runtime.get(ctx.fore.view.layer).position.y()
+      .rewriteRange(start: movement.backwardDestination.y,
+                    end: movement.forwardDestination.y,
+                    destinationStart: 1,
+                    destinationEnd: 0.95),
+                    to: scale)
 
-    return [tossable.spring, scaleSpring, gesture]
-  }
+    runtime.add(tossable, to: ctx.fore.view) { $0.xLocked(to: bounds.midX) }
 
-  private func spring<T>(back: T, fore: T, threshold: CGFloat, ctx: TransitionContext) -> TransitionSpring<T> where T: Subtractable, T: Zeroable, T: Equatable {
-    let spring = TransitionSpring(back: back, fore: fore, direction: ctx.direction, threshold: threshold, system: coreAnimation)
-    spring.friction.value = 500
-    spring.tension.value = 1000
-    spring.mass.value = 3
-    spring.suggestedDuration.value = 0.5
-    return spring
+    return [tossable]
   }
 }

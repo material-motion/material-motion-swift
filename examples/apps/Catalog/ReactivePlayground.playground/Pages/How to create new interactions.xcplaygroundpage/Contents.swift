@@ -22,7 +22,7 @@ final class MyTossable: Interaction {
   let draggable: Draggable
   let spring: Spring<CGPoint>
 
-  init(spring: Spring<CGPoint>, draggable: Draggable = Draggable()) {
+  init(spring: Spring<CGPoint> = Spring(), draggable: Draggable = Draggable()) {
     self.spring = spring
     self.draggable = draggable
   }
@@ -46,7 +46,7 @@ final class MyTossable: Interaction {
 
 //: Using our new interaction is a matter of instantiating it and associating it with a view:
 
-let tossable = MyTossable(spring: .init(threshold: 1, system: coreAnimation))
+let tossable = MyTossable()
 runtime.add(tossable, to: view)
 
 runtime.add(SetPositionOnTap(), to: tossable.spring.destination)

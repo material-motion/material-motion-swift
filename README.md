@@ -30,6 +30,12 @@ arcMove.to.value = <#to#>
 runtime.add(arcMove, to: <#view#>)</code></pre></td>
     </tr>
     <tr>
+      <td align="center"><img src="assets/changedirection.gif" /></td>
+      <td><pre><code class="language-swift">ChangeDirection</code></pre></td>
+      <td><pre><code class="language-swift">runtime.add(ChangeDirection(withVelocityOf: gesture),
+            to: <#view#>)</code></pre></td>
+    </tr>
+    <tr>
       <td align="center"><img src="assets/directlymanipulable.gif" /></td>
       <td><pre><code class="language-swift">DirectlyManipulable</code></pre></td>
       <td><pre><code class="language-swift">runtime.add(DirectlyManipulable(), to: <#view#>)</code></pre></td>
@@ -91,17 +97,38 @@ runtime.add(tossable, to: <#view#>)</code></pre></td>
 
 Add `MaterialMotion` to your `Podfile`:
 
-    pod 'MaterialMotion'
+```ruby
+pod 'MaterialMotion'
+```
+
+You will need to add `use_frameworks!` to your Podfile in order use Material Motion in your swift
+app.
+
+A simple Podfile might look like so:
+
+```ruby
+project 'MyApp/MyApp.xcodeproj'
+
+use_frameworks!
+
+target 'MyApp' do
+  pod 'MaterialMotion'
+end
+```
 
 Then run the following command:
 
-    pod install
+```bash
+pod install
+```
 
 ### Usage
 
 Import the framework:
 
-    import MaterialMotion
+```swift
+import MaterialMotion
+```
 
 You will now have access to all of the APIs.
 
@@ -110,10 +137,12 @@ You will now have access to all of the APIs.
 Check out a local copy of the repo to access the Catalog application by running the following
 commands:
 
-    git clone https://github.com/material-motion/material-motion-swift.git
-    cd material-motion-swift
-    pod install
-    open MaterialMotion.xcworkspace
+```bash
+git clone https://github.com/material-motion/material-motion-swift.git
+cd material-motion-swift
+pod install
+open MaterialMotion.xcworkspace
+```
 
 ## Case studies
 
@@ -167,6 +196,16 @@ A modal dialog that's presented over the existing context and is dismissable usi
 Makes use of: `Tossable` and `TransitionSpring`.
 
 [View the source](examples/ModalDialogExample.swift).
+
+### Pull down to dismiss
+
+<img src="assets/pulldowntodismiss.gif" />
+
+A modal scroll view controller that can be dismissed with a drag gesture.
+
+Makes use of: `Tossable` and `TransitionSpring`.
+
+[View the source](examples/InteractivePushBackTransitionExample.swift).
 
 ### Sticker picker
 

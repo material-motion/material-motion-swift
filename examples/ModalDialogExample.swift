@@ -84,36 +84,28 @@ class ModalDialogTransition: SelfDismissingTransition {
     let backPosition = CGPoint(x: bounds.midX, y: bounds.maxY + size.height * 3 / 4)
     let forePosition = CGPoint(x: bounds.midX, y: bounds.midY)
 
-    let firstPan = ctx.gestureRecognizers.first { $0 is UIPanGestureRecognizer }
-    let draggable: Draggable
-    if let firstPan = firstPan as? UIPanGestureRecognizer {
-      draggable = Draggable(.withExistingRecognizer(firstPan))
-    } else {
-      draggable = Draggable()
-    }
-
     let reactiveForeLayer = runtime.get(ctx.fore.view.layer)
     let position = reactiveForeLayer.position
 
+    let draggable = Draggable(withFirstGestureIn: ctx.gestureRecognizers)
+
     let gesture = runtime.get(draggable.nextGestureRecognizer)
     let centerY = ctx.containerView().bounds.height / 2.0
+
+    runtime.add(ChangeDirection(withVelocityOf: draggable.nextGestureRecognizer, whenNegative: .forward),
+                to: ctx.direction)
+
     runtime.connect(gesture
       .velocityOnReleaseStream()
       .y()
       .thresholdRange(min: -100, max: 100)
-      // If one of rewrite's target values is a stream, then all the target values must be
-      // streams.
-      .rewrite([.below: createProperty(withInitialValue: .forward).asStream(),
-                .within: position.y().threshold(centerY).rewrite([.below: .forward,
-                                                                      .above: .backward]),
-                .above: createProperty(withInitialValue: .backward).asStream()]),
+      .rewrite([.within: position.y().threshold(centerY).rewrite([.below: .forward,
+                                                                  .above: .backward])]),
                 to: ctx.direction)
 
     let movement = TransitionSpring(back: backPosition,
                                     fore: forePosition,
-                                    direction: ctx.direction,
-                                    threshold: 1,
-                                    system: coreAnimation)
+                                    direction: ctx.direction)
     let tossable = Tossable(spring: movement, draggable: draggable)
     runtime.add(tossable, to: ctx.fore.view)
 

@@ -45,14 +45,14 @@ public let defaultSpringMass: CGFloat = 1
 
  T-value constraints may be applied to this interaction.
  */
-public class Spring<T: Zeroable>: Interaction, Togglable, Stateful {
+public class Spring<T>: Interaction, Togglable, Stateful where T: Zeroable, T: Subtractable {
   /**
    Creates a spring with a given threshold and system.
 
-   - parameter threshold: The threshold of movement defining the completion of the spring simulation.
-   - parameter system: Often coreAnimation. Can be another system if a system support library is available.
+   - parameter threshold: The threshold of movement defining the completion of the spring simulation. This parameter is not used by the Core Animation system and can be left as a default value.
+   - parameter system: The system that should be used to drive this spring.
    */
-  public init(threshold: CGFloat, system: @escaping SpringToStream<T>) {
+  public init(threshold: CGFloat = 1, system: @escaping SpringToStream<T> = coreAnimation) {
     self.threshold = createProperty("Spring.threshold", withInitialValue: threshold)
     self.system = system
   }
@@ -140,7 +140,7 @@ public class Spring<T: Zeroable>: Interaction, Togglable, Stateful {
   private var activeSprings = Set<SpringShadow<T>>()
 }
 
-public struct SpringShadow<T: Zeroable>: Hashable {
+public struct SpringShadow<T>: Hashable where T: Zeroable, T: Subtractable {
   public let enabled: ReactiveProperty<Bool>
   public let state = createProperty(withInitialValue: MotionState.atRest)
   public let initialValue: ReactiveProperty<T>

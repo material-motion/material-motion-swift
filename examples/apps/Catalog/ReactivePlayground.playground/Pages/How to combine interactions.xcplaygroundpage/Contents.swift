@@ -14,7 +14,7 @@ let runtime = MotionRuntime(containerView: canvas)
 //: ---
 //:
 //: First we create the interactions we know we'll need: Spring and Draggable.
-let spring = Spring<CGPoint>(threshold: 1, system: coreAnimation)
+let spring = Spring<CGPoint>()
 let draggable = Draggable()
 
 //: Inspecting Draggable's documentation reveals that it will affect the view's layer position (Option-Click Draggable), so let's make sure we use the same property for our spring:

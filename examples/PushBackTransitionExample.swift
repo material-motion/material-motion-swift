@@ -66,24 +66,22 @@ private class PushBackTransition: Transition {
   required init() {}
 
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
-    let position = spring(back: ctx.containerView().bounds.height + ctx.fore.view.layer.bounds.height / 2,
-                          fore: ctx.containerView().bounds.midY,
-                          threshold: 1,
-                          ctx: ctx)
-    let scale = spring(back: 1, fore: 0.95, threshold: 0.005, ctx: ctx)
+    let bounds = ctx.containerView().bounds
+    let backPosition = bounds.maxY + ctx.fore.view.bounds.height / 2
+    let forePosition = bounds.midY
 
-    runtime.add(position, to: runtime.get(ctx.fore.view.layer).positionY)
-    runtime.add(scale, to: runtime.get(ctx.back.view.layer).scale)
+    let movement = TransitionSpring(back: backPosition, fore: forePosition, direction: ctx.direction)
 
-    return [position, scale]
-  }
+    let yPosition = runtime.get(ctx.fore.view.layer).positionY
 
-  private func spring(back: CGFloat, fore: CGFloat, threshold: CGFloat, ctx: TransitionContext) -> TransitionSpring<CGFloat> {
-    let spring = TransitionSpring(back: back, fore: fore, direction: ctx.direction, threshold: threshold, system: coreAnimation)
-    spring.friction.value = 500
-    spring.tension.value = 1000
-    spring.mass.value = 3
-    spring.suggestedDuration.value = 0.5
-    return spring
+    runtime.connect(yPosition.rewriteRange(start: movement.backwardDestination,
+                                           end: movement.forwardDestination,
+                                           destinationStart: CGFloat(1),
+                                           destinationEnd: CGFloat(0.95)),
+                    to: runtime.get(ctx.back.view.layer).scale)
+
+    runtime.add(movement, to: yPosition)
+
+    return [movement]
   }
 }
