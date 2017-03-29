@@ -1,10 +1,40 @@
 # 1.1.0
 
+This is our first minor release. It includes two new interactions and improvements to APIs for the common cases.
+
 ## Breaking changes
+
+No known breaking changes.
+
+## Behavioral changes
+
+- TransitionSpring's configuration now defaults to Core Animation's default values. If you prefer to continue using the original Spring defaults you can use the following snippet:
+
+```swift
+spring.tension.value = defaultSpringTension
+spring.friction.value = defaultSpringFriction
+spring.mass.value = defaultSpringMass
+spring.suggestedDuration.value = 0
+```
 
 ## New deprecations
 
+- Tossable's `init(system:draggable:)` is deprecated in favor of `init(spring:draggable:)`.
+
 ## New features
+
+New interactions: `ChangeDirection` and `SlopRegion`.
+
+Gesturable interactions can now be initialized with a sequence of gesture recognizers. This makes it easier to create gesturable interactions in transitions where the gesture recognizers are provided as a set.
+
+Spring's system now defaults to Core Animation.
+
+There is a new API for getting a gesture recognizer delegate that's able to coordinate a "drag to dismiss" transition with a vertical scroll view.
+
+```swift
+let pan = UIPanGestureRecognizer()
+pan.delegate = transitionController.dismisser.topEdgeDismisserDelegate(for: scrollView)
+```
 
 ## Source changes
 
