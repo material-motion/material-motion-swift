@@ -35,7 +35,7 @@ class HowToUseReactiveConstraintsExampleViewController: ExampleViewController {
 
     let axisCenterX = runtime.get(axisLine.layer).position.x()
     runtime.add(Draggable(), to: exampleView) { $0
-      .initialValue(exampleView.layer.position)
+      .startWith(exampleView.layer.position)
       .xLocked(to: axisCenterX)
     }
 

@@ -19,11 +19,19 @@ import Foundation
 extension MotionObservableConvertible {
 
   /**
-   Emits the provided value and then subscribes upstream and emits all subsequent values with no
-   modification.
+   Emits the provided value and then emits the values emitted by the upstream.
 
-   Helpful for priming a stream with an initial value.
+   The returned stream will cache the last value received and immediately emit it on subscription.
+   The returned stream is therefor guaranteed to always immediately emit a value upon subscription.
    */
+  public func startWith(_ value: T) -> MotionObservable<T> {
+    return MotionObservable(self.metadata.createChild(Metadata(#function, type: .constraint, args: [value]))) { observer in
+      observer.next(value)
+      return self.asStream().subscribeAndForward(to: observer).unsubscribe
+    }._remember()
+  }
+
+  @available(*, deprecated, message: "Use startWith() instead.")
   public func initialValue(_ value: T) -> MotionObservable<T> {
     return MotionObservable(self.metadata.createChild(Metadata(#function, type: .constraint, args: [value]))) { observer in
       observer.next(value)
