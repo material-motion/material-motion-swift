@@ -6,7 +6,7 @@ This minor release introduces a new operator, `startWith`, which is meant to rep
 
 ### startWith operator
 
-The new `startWith` operator replaces `initialValue` and behaves slightly differently: `startWith` returns a [memory stream](https://github.com/staltz/xstream#memorystream), which is a stream that stores the last value it received and emits it upon subscription. What this means is that the provided initial value will only be emitted once once, ever, and that the resulting stream is guaranteed to emit a value on subscription.
+The new `startWith` operator replaces `initialValue` and behaves slightly differently: `startWith` returns a [memory stream](https://github.com/staltz/xstream#memorystream), which is a stream that stores the last value it received and emits it upon subscription. What this means is that the provided initial value will only be emitted once, ever, and that the resulting stream is guaranteed to emit a value on subscription.
 
 You can use startWith to turn a stream that may not initially emit values (like a gesture stream) and prime it with an initial value. For example, we use startWith in the "How to use reactive constraints" example in order to ensure that our axis line property is primed with a value.
 
