@@ -3,7 +3,7 @@ PODS:
   - IndefiniteObservable (3.1.0):
     - IndefiniteObservable/lib (= 3.1.0)
   - IndefiniteObservable/lib (3.1.0)
-  - MaterialMotion (1.1.0):
+  - MaterialMotion (1.2.0):
     - IndefiniteObservable (~> 3.0)
 
 DEPENDENCIES:
@@ -17,7 +17,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   CatalogByConvention: be55c2263132e4f9f59299ac8a528ee8715b3275
   IndefiniteObservable: 2789d61f487d8d37fa2b9c3153cc44d4447ff744
-  MaterialMotion: 6ee4d44d39b074686d603c26c20a5816afdb50cd
+  MaterialMotion: 4a4f155a35fce5e1dad7cc838719ef1c9c590dc6
 
 PODFILE CHECKSUM: f503265a0d60526a0d28c96dd4bdcfb40fb562fc
 
