@@ -33,7 +33,7 @@ runtime.add(arcMove, to: <#view#>)</code></pre></td>
       <td align="center"><img src="assets/changedirection.gif" /></td>
       <td><pre><code class="language-swift">ChangeDirection</code></pre></td>
       <td><pre><code class="language-swift">runtime.add(ChangeDirection(withVelocityOf: gesture),
-            to: <#view#>)</code></pre></td>
+            to: <#direction#>)</code></pre></td>
     </tr>
     <tr>
       <td align="center"><img src="assets/directlymanipulable.gif" /></td>
@@ -181,7 +181,7 @@ Makes use of: `Transition` and `Tween`.
 
 <img src="assets/materialexpansion.gif" />
 
-A Material Design transition using assymetric transformations.
+A Material Design transition using asymetric transformations.
 
 Makes use of: `Tween`.
 
