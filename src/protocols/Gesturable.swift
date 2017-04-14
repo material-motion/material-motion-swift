@@ -132,6 +132,7 @@ public class Gesturable<T: UIGestureRecognizer> {
     }
 
     gestureRecognizer.view?.isUserInteractionEnabled = true
+    gestureRecognizer.isEnabled = enabled.value
 
     return gestureRecognizer
   }
@@ -142,6 +143,8 @@ public class Gesturable<T: UIGestureRecognizer> {
   public var state: MotionObservable<MotionState> {
     return aggregateState.asStream()
   }
+
+  public let enabled = createProperty(withInitialValue: true)
 
   let aggregateState: AggregateMotionState
 

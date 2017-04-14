@@ -38,6 +38,10 @@ public final class Scalable: Gesturable<UIPinchGestureRecognizer>, Interaction, 
     let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView)
     let scale = reactiveView.reactiveLayer.scale
 
+    runtime.connect(enabled, to: ReactiveProperty(initialValue: gestureRecognizer.isEnabled) { enabled in
+      gestureRecognizer.isEnabled = enabled
+    })
+
     let reactiveGesture = runtime.get(gestureRecognizer)
     aggregateState.observe(state: reactiveGesture.state, withRuntime: runtime)
 
