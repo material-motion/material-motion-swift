@@ -1,7 +1,10 @@
-# #develop#
+# 1.2.1
 
- TODO: Enumerate changes.
+This is a patch release resolving a crashing bug when `runtime.shouldVisualizeMotion` was enabled and an `ArcMove` interaction was added to a view without a parent.
 
+## Source changes
+
+* [Use a reasonable fallback when adding visualization views to the runtime container view.](https://github.com/material-motion/reactive-motion-swift/commit/efc790a13783f54ff583296a2a7245597c2dbee2) (Jeff Verkoeyen)
 
 # 1.2.0
 
