@@ -1,3 +1,8 @@
+# #develop#
+
+ TODO: Enumerate changes.
+
+
 # 1.2.0
 
 This minor release introduces a new operator, `startWith`, which is meant to replace the `initialValue` operator.
