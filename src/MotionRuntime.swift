@@ -32,6 +32,10 @@ import IndefiniteObservable
  */
 public final class MotionRuntime {
 
+  deinit {
+    visualizationView?.removeFromSuperview()
+  }
+
   /**
    Creates a motion runtime instance with the provided container view.
    */
@@ -98,6 +102,50 @@ public final class MotionRuntime {
   public func connect<O: MotionObservableConvertible>(_ stream: O, to property: ReactiveProperty<O.T>) {
     write(stream.asStream(), to: property)
   }
+
+  /**
+   Visualizes changes to the given stream on the runtime's container view in a non-interactive
+   overlay.
+   */
+  public func visualize<O: MotionObservableConvertible>(_ labelText: String? = nil, stream: () -> O) {
+    if visualizationView == nil {
+      let view = UIView(frame: .init(x: 0, y: containerView.bounds.maxY, width: containerView.bounds.width, height: 0))
+      view.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
+      view.isUserInteractionEnabled = false
+      view.backgroundColor = UIColor(white: 0, alpha: 0.1)
+      containerView.addSubview(view)
+      visualizationView = view
+    }
+
+    let view = visualizationView!
+    let label = UILabel()
+    let highlight = UIView()
+    highlight.backgroundColor = .white
+    highlight.alpha = 0
+    write(stream().asStream().toString().dedupe(), to: ReactiveProperty(labelText, initialValue: "", externalWrite: { value in
+      label.text = (labelText ?? "") + value
+
+      highlight.alpha = 1
+      UIView.animate(withDuration: 0.3) {
+        highlight.alpha = 0
+      }
+    }))
+    let topEdge: CGFloat
+    if let lastView = view.subviews.last {
+      topEdge = lastView.frame.maxY
+    } else {
+      topEdge = 0
+    }
+    label.frame = .init(x: 0, y: topEdge, width: view.bounds.width, height: label.font.lineHeight)
+    highlight.frame = label.frame
+    var frame = view.frame
+    frame.size.height += label.frame.height
+    frame.origin.y -= label.frame.height
+    view.frame = frame
+    view.addSubview(highlight)
+    view.addSubview(label)
+  }
+  private var visualizationView: UIView?
 
   // MARK: Reactive object storage
 
