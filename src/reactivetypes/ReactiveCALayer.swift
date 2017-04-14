@@ -279,7 +279,11 @@ public func createCoreAnimationProperty<T>(_ name: String, initialValue: T, exte
       lastView.removeFromSuperview()
     }
     view.isUserInteractionEnabled = false
-    view.frame = layer.superlayer!.convert(layer.superlayer!.bounds, to: containerView.layer)
+    if let superlayer = layer.superlayer {
+      view.frame = superlayer.convert(superlayer.bounds, to: containerView.layer)
+    } else {
+      view.frame = containerView.bounds
+    }
     containerView.addSubview(view)
     lastView = view
   }
