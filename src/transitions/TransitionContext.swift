@@ -204,7 +204,7 @@ extension TransitionContext {
   }
 }
 
-protocol TransitionDelegate: NSObjectProtocol {
+protocol TransitionDelegate: class {
   func transitionDidComplete(withContext ctx: TransitionContext)
 }
 

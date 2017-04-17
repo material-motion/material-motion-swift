@@ -86,6 +86,6 @@ extension ViewControllerDismisser: UIGestureRecognizerDelegate {
   }
 }
 
-protocol ViewControllerDismisserDelegate: NSObjectProtocol {
+protocol ViewControllerDismisserDelegate: class {
   func dismiss()
 }
