@@ -84,6 +84,8 @@ public final class TransitionContext: NSObject {
    */
   public let fore: UIViewController
 
+  public let foreAlignmentEdge: CGRectEdge?
+
   /** The set of gesture recognizers associated with this transition. */
   public let gestureRecognizers: Set<UIGestureRecognizer>
 
@@ -96,12 +98,14 @@ public final class TransitionContext: NSObject {
        direction: TransitionDirection,
        back: UIViewController,
        fore: UIViewController,
-       gestureRecognizers: Set<UIGestureRecognizer>) {
+       gestureRecognizers: Set<UIGestureRecognizer>,
+       foreAlignmentEdge: CGRectEdge?) {
     self.direction = createProperty("Transition.direction", withInitialValue: direction)
     self.initialDirection = direction
     self.back = back
     self.fore = fore
     self.gestureRecognizers = gestureRecognizers
+    self.foreAlignmentEdge = foreAlignmentEdge
     self.window = TransitionTimeWindow(duration: TransitionContext.defaultDuration)
 
     // TODO: Create a Timeline.
@@ -140,6 +144,30 @@ extension TransitionContext: UIViewControllerInteractiveTransitioning {
   }
 }
 
+private func preferredFrame(for viewController: UIViewController,
+                            inBounds bounds: CGRect,
+                            alignmentEdge: CGRectEdge?) -> CGRect? {
+  guard viewController.preferredContentSize != .zero() else {
+    return nil
+  }
+
+  let size = viewController.preferredContentSize
+  let origin: CGPoint
+  switch alignmentEdge {
+  case nil: // Centered
+    origin = .init(x: bounds.midX - size.width / 2, y: bounds.midY - size.height / 2)
+  case .minXEdge?:
+    origin = .init(x: bounds.minX, y: bounds.midY - size.height / 2)
+  case .minYEdge?:
+    origin = .init(x: bounds.midX - size.width / 2, y: bounds.minY)
+  case .maxXEdge?:
+    origin = .init(x: bounds.maxX - size.width, y: bounds.midY - size.height / 2)
+  case .maxYEdge?:
+    origin = .init(x: bounds.midX - size.width / 2, y: bounds.maxY - size.height)
+  }
+  return .init(origin: origin, size: size)
+}
+
 extension TransitionContext {
   fileprivate func initiateTransition() {
     if let from = context.viewController(forKey: .from) {
@@ -150,7 +178,15 @@ extension TransitionContext {
     }
 
     if let to = context.viewController(forKey: .to) {
-      let finalFrame = context.finalFrame(for: to)
+      let finalFrame: CGRect
+
+      if let preferredFrame = preferredFrame(for: to,
+                                             inBounds: context.containerView.bounds,
+                                             alignmentEdge: (direction.value == .forward) ? foreAlignmentEdge : nil) {
+        finalFrame = preferredFrame
+      } else {
+        finalFrame = context.finalFrame(for: to)
+      }
       if !finalFrame.isEmpty {
         to.view.frame = finalFrame
       }

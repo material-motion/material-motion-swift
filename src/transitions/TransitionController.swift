@@ -109,6 +109,11 @@ public final class TransitionController {
     get { return _transitioningDelegate.gestureDelegate.gestureRecognizers }
   }
 
+  public var foreAlignmentEdge: CGRectEdge? {
+    set { _transitioningDelegate.foreAlignmentEdge = newValue }
+    get { return _transitioningDelegate.foreAlignmentEdge }
+  }
+
   /**
    The transitioning delegate managed by this controller.
 
@@ -152,6 +157,7 @@ private final class TransitioningDelegate: NSObject, UIViewControllerTransitioni
     self.dismisser.delegate = self
   }
 
+  var foreAlignmentEdge: CGRectEdge?
   var ctx: TransitionContext?
   var transitionType: Transition.Type?
 
@@ -180,7 +186,8 @@ private final class TransitioningDelegate: NSObject, UIViewControllerTransitioni
                               direction: direction,
                               back: back,
                               fore: fore,
-                              gestureRecognizers: gestureDelegate.gestureRecognizers)
+                              gestureRecognizers: gestureDelegate.gestureRecognizers,
+                              foreAlignmentEdge: foreAlignmentEdge)
       ctx?.delegate = self
     }
   }
