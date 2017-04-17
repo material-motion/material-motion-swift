@@ -79,6 +79,11 @@ public final class TransitionController {
     return _transitioningDelegate.dismisser
   }
 
+  public var gestureRecognizers: Set<UIGestureRecognizer> {
+    set { _transitioningDelegate.gestureRecognizers = newValue }
+    get { return _transitioningDelegate.gestureRecognizers }
+  }
+
   /**
    The transitioning delegate managed by this controller.
 
@@ -107,6 +112,7 @@ private final class TransitioningDelegate: NSObject, UIViewControllerTransitioni
     self.dismisser.delegate = self
   }
 
+  var gestureRecognizers = Set<UIGestureRecognizer>()
   var ctx: TransitionContext?
   var transitionType: Transition.Type?
   let dismisser: ViewControllerDismisser
@@ -133,7 +139,8 @@ private final class TransitioningDelegate: NSObject, UIViewControllerTransitioni
                               direction: direction,
                               back: back,
                               fore: fore,
-                              dismisser: dismisser)
+                              dismisser: dismisser,
+                              gestureRecognizers: gestureRecognizers)
       ctx?.delegate = self
     }
   }
@@ -184,7 +191,7 @@ private final class TransitioningDelegate: NSObject, UIViewControllerTransitioni
   }
 
   func isInteractive() -> Bool {
-    return dismisser.gestureRecognizers.count > 0
+    return gestureRecognizers.union(dismisser.gestureRecognizers).count > 0
   }
 }
 
