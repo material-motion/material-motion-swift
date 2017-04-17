@@ -64,9 +64,28 @@ public final class MotionRuntime {
    Invokes the interaction's add method and stores the interaction instance for the lifetime of the
    runtime.
    */
-  public func add<I: Interaction>(_ interaction: I, to target: I.Target, constraints: I.Constraints? = nil) {
+  public func add<I: Interaction>(_ interaction: I, to target: I.Target, constraints: I.Constraints? = nil) where I.Target: AnyObject {
     interactions.append(interaction)
     interaction.add(to: target, withRuntime: self, constraints: constraints)
+
+    let identifier = ObjectIdentifier(target)
+    var targetInteractions = targets[identifier] ?? []
+    targetInteractions.append(interaction)
+    targets[identifier] = targetInteractions
+  }
+
+  /**
+   Returns all interactions added to the given target.
+
+   Example usage:
+
+       let draggables = runtime.interactions(for: view) { $0 as? Draggable }
+   */
+  public func interactions<I>(for target: I.Target, filter: (Any) -> I?) -> [I] where I: Interaction, I.Target: AnyObject {
+    guard let interactions = targets[ObjectIdentifier(target)] else {
+      return []
+    }
+    return interactions.flatMap(filter)
   }
 
   /**
@@ -242,6 +261,7 @@ public final class MotionRuntime {
     return reactiveObject
   }
   private var reactiveObjects: [ObjectIdentifier: AnyObject] = [:]
+  private var targets: [ObjectIdentifier: [Any]] = [:]
 
   private var metadata: [Metadata] = []
   private var subscriptions: [Subscription] = []
