@@ -53,12 +53,13 @@ extension MotionObservableConvertible {
 
       let subscription = self.asStream().subscribeAndForward(to: observer) { value in
         let stringValue = String(describing: value)
-        if label.text == stringValue {
+        let labelText = (prefix ?? "") + stringValue
+        if label.text == labelText {
           observer.next(value)
           return
         }
 
-        label.text = (prefix ?? "") + stringValue
+        label.text = labelText
 
         highlight.alpha = 1
         UIView.animate(withDuration: 0.3) {
