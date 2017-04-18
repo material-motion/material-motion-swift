@@ -85,11 +85,7 @@ public final class TransitionContext: NSObject {
   public let fore: UIViewController
 
   /** The set of gesture recognizers associated with this transition. */
-  public var gestureRecognizers: Set<UIGestureRecognizer> {
-    get {
-      return dismisser.gestureRecognizers
-    }
-  }
+  public let gestureRecognizers: Set<UIGestureRecognizer>
 
   /** The runtime to which motion should be registered. */
   fileprivate var runtime: MotionRuntime!
@@ -100,12 +96,12 @@ public final class TransitionContext: NSObject {
        direction: TransitionDirection,
        back: UIViewController,
        fore: UIViewController,
-       dismisser: ViewControllerDismisser) {
+       gestureRecognizers: Set<UIGestureRecognizer>) {
     self.direction = createProperty("Transition.direction", withInitialValue: direction)
     self.initialDirection = direction
     self.back = back
     self.fore = fore
-    self.dismisser = dismisser
+    self.gestureRecognizers = gestureRecognizers
     self.window = TransitionTimeWindow(duration: TransitionContext.defaultDuration)
 
     // TODO: Create a Timeline.
@@ -118,7 +114,6 @@ public final class TransitionContext: NSObject {
   fileprivate let initialDirection: TransitionDirection
   fileprivate var transition: Transition!
   fileprivate var context: UIViewControllerContextTransitioning!
-  fileprivate let dismisser: ViewControllerDismisser
   fileprivate var didRegisterTerminator = false
 }
 
