@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import CoreGraphics
 
 extension DispatchTimeInterval {
   func toSeconds() -> CGFloat {
