@@ -29,7 +29,6 @@ extension MotionObservableConvertible {
       return self.subscribe(next: {
         return operation($0, observer.next)
       }, coreAnimation: { _ in
-        assertionFailure("Core animation is not supported by this operator.")
       }, visualization: { view in observer.visualization?(view) }).unsubscribe
     }
   }

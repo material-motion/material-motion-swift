@@ -17,20 +17,34 @@
 import Foundation
 import UIKit
 
-public final class ViewControllerDismisser: NSObject {
+/**
+ A view controller dismisser is responsible for initiating a view controller dismiss transition in
+ reaction to a gesture recognizer entering its began or recognized state.
 
+ Gesture recognizers provided to a dismisser will be made available to the transition instance via
+ the TransitionContext's `gestureRecognizers` property.
+ */
+public final class ViewControllerDismisser {
+
+  /**
+   Start a dismiss transition when the given gesture recognizer enters its began or recognized
+   state.
+
+   The provided gesture recognizer will be made available to the transition instance via the
+   TransitionContext's `gestureRecognizers` property.
+   */
   public func dismissWhenGestureRecognizerBegins(_ gestureRecognizer: UIGestureRecognizer) {
     gestureRecognizer.addTarget(self, action: #selector(gestureRecognizerDidChange))
 
     if gestureRecognizer.delegate == nil {
-      gestureRecognizer.delegate = self
+      gestureRecognizer.delegate = gestureDelegate
     }
 
-    gestureRecognizers.insert(gestureRecognizer)
+    gestureDelegate.gestureRecognizers.insert(gestureRecognizer)
   }
 
   public func disableSimultaneousRecognition(of gestureRecognizer: UIGestureRecognizer) {
-    soloGestureRecognizers.insert(gestureRecognizer)
+    gestureDelegate.soloGestureRecognizers.insert(gestureRecognizer)
   }
 
   /**
@@ -58,9 +72,12 @@ public final class ViewControllerDismisser: NSObject {
   }
 
   weak var delegate: ViewControllerDismisserDelegate?
-  private(set) var gestureRecognizers = Set<UIGestureRecognizer>()
-  fileprivate var soloGestureRecognizers = Set<UIGestureRecognizer>()
 
+  public var gestureRecognizers: Set<UIGestureRecognizer> {
+    return gestureDelegate.gestureRecognizers
+  }
+
+  private var gestureDelegate = GestureDelegate()
   private var scrollViewTopEdgeDismisserDelegates: [ScrollViewTopEdgeDismisserDelegate] = []
 }
 
@@ -76,7 +93,10 @@ private final class ScrollViewTopEdgeDismisserDelegate: NSObject, UIGestureRecog
   weak var scrollView: UIScrollView?
 }
 
-extension ViewControllerDismisser: UIGestureRecognizerDelegate {
+private final class GestureDelegate: NSObject, UIGestureRecognizerDelegate {
+  fileprivate var gestureRecognizers = Set<UIGestureRecognizer>()
+  fileprivate var soloGestureRecognizers = Set<UIGestureRecognizer>()
+
   public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
     if soloGestureRecognizers.contains(gestureRecognizer) || soloGestureRecognizers.contains(otherGestureRecognizer) {
       return false
@@ -86,6 +106,6 @@ extension ViewControllerDismisser: UIGestureRecognizerDelegate {
   }
 }
 
-protocol ViewControllerDismisserDelegate: NSObjectProtocol {
+protocol ViewControllerDismisserDelegate: class {
   func dismiss()
 }

@@ -33,7 +33,7 @@ import UIKit
  - `{ $0.xLocked(to: somePosition) }`
  - `{ $0.yLocked(to: somePosition) }`
  */
-public final class Draggable: Gesturable<UIPanGestureRecognizer>, Interaction, Stateful {
+public final class Draggable: Gesturable<UIPanGestureRecognizer>, Interaction, Togglable, Stateful {
   /**
    A sub-interaction for writing the next gesture recognizer's final velocity to a property.
 
@@ -49,6 +49,10 @@ public final class Draggable: Gesturable<UIPanGestureRecognizer>, Interaction, S
     let reactiveView = runtime.get(view)
     let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView)
     let position = reactiveView.reactiveLayer.position
+
+    runtime.connect(enabled, to: ReactiveProperty(initialValue: gestureRecognizer.isEnabled) { enabled in
+      gestureRecognizer.isEnabled = enabled
+    })
 
     let reactiveGesture = runtime.get(gestureRecognizer)
     aggregateState.observe(state: reactiveGesture.state, withRuntime: runtime)

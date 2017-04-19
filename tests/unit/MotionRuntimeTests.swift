@@ -30,4 +30,22 @@ class MotionRuntimeTests: XCTestCase {
 
     XCTAssertTrue(reactiveShapeLayer === reactiveCastedLayer)
   }
+
+  func testInteractionsReturnsEmptyArrayWithoutAnyAddedInteractions() {
+    let runtime = MotionRuntime(containerView: UIView())
+
+    let results = runtime.interactions(for: UIView()) { $0 as? Draggable }
+    XCTAssertEqual(results.count, 0)
+  }
+
+  func testOnlyReturnsInteractionsOfTheCorrectType() {
+    let runtime = MotionRuntime(containerView: UIView())
+
+    let view = UIView()
+    runtime.add(Draggable(), to: view)
+    runtime.add(Rotatable(), to: view)
+
+    let results = runtime.interactions(for: view) { $0 as? Draggable }
+    XCTAssertEqual(results.count, 1)
+  }
 }

@@ -32,6 +32,10 @@ import IndefiniteObservable
  */
 public final class MotionRuntime {
 
+  deinit {
+    _visualizationView?.removeFromSuperview()
+  }
+
   /**
    Creates a motion runtime instance with the provided container view.
    */
@@ -60,9 +64,28 @@ public final class MotionRuntime {
    Invokes the interaction's add method and stores the interaction instance for the lifetime of the
    runtime.
    */
-  public func add<I: Interaction>(_ interaction: I, to target: I.Target, constraints: I.Constraints? = nil) {
+  public func add<I: Interaction>(_ interaction: I, to target: I.Target, constraints: I.Constraints? = nil) where I.Target: AnyObject {
     interactions.append(interaction)
     interaction.add(to: target, withRuntime: self, constraints: constraints)
+
+    let identifier = ObjectIdentifier(target)
+    var targetInteractions = targets[identifier] ?? []
+    targetInteractions.append(interaction)
+    targets[identifier] = targetInteractions
+  }
+
+  /**
+   Returns all interactions added to the given target.
+
+   Example usage:
+
+       let draggables = runtime.interactions(for: view) { $0 as? Draggable }
+   */
+  public func interactions<I>(for target: I.Target, filter: (Any) -> I?) -> [I] where I: Interaction, I.Target: AnyObject {
+    guard let interactions = targets[ObjectIdentifier(target)] else {
+      return []
+    }
+    return interactions.flatMap(filter)
   }
 
   /**
@@ -98,6 +121,31 @@ public final class MotionRuntime {
   public func connect<O: MotionObservableConvertible>(_ stream: O, to property: ReactiveProperty<O.T>) {
     write(stream.asStream(), to: property)
   }
+
+  /**
+   The view to which visualization elements should be registered.
+
+   This view will be added as an overlay to the runtime's container view.
+
+   Use this view like so:
+
+       runtime.add(tossable, to: view) { $0.visualize(in: runtime.visualizationView) }
+   */
+  public var visualizationView: UIView {
+    if let visualizationView = _visualizationView {
+      return visualizationView
+    }
+
+    let view = UIView(frame: .init(x: 0, y: containerView.bounds.maxY, width: containerView.bounds.width, height: 0))
+    view.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
+    view.isUserInteractionEnabled = false
+    view.backgroundColor = UIColor(white: 0, alpha: 0.1)
+    containerView.addSubview(view)
+    _visualizationView = view
+
+    return view
+  }
+  private var _visualizationView: UIView?
 
   // MARK: Reactive object storage
 
@@ -213,6 +261,7 @@ public final class MotionRuntime {
     return reactiveObject
   }
   private var reactiveObjects: [ObjectIdentifier: AnyObject] = [:]
+  private var targets: [ObjectIdentifier: [Any]] = [:]
 
   private var metadata: [Metadata] = []
   private var subscriptions: [Subscription] = []

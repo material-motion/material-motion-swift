@@ -20,12 +20,12 @@ import UIKit
 /**
  The default transition spring tension configuration.
  */
-public let defaultTransitionSpringTension: CGFloat = 500
+public let defaultTransitionSpringTension: CGFloat = 1000
 
 /**
  The default transition spring friction configuration.
  */
-public let defaultTransitionSpringFriction: CGFloat = 1000
+public let defaultTransitionSpringFriction: CGFloat = 500
 
 /**
  The default transition spring mass configuration.
@@ -95,8 +95,8 @@ public final class TransitionSpring<T>: Spring<T> where T: Zeroable, T: Subtract
     super.init(threshold: threshold, system: system)
 
     // Apply Core Animation transition spring defaults.
-    friction.value = defaultTransitionSpringTension
-    tension.value = defaultTransitionSpringFriction
+    friction.value = defaultTransitionSpringFriction
+    tension.value = defaultTransitionSpringTension
     mass.value = defaultTransitionSpringMass
     suggestedDuration.value = defaultTransitionSpringSuggestedDuration
   }
