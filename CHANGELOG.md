@@ -1,3 +1,200 @@
+# 1.3.0
+
+Highlights:
+
+- First contribution from [Eric Tang](https://github.com/randcode-generator) adding support for `DispatchTimeInterval` initialization of time-based interactions and operators.
+- New visualization tools for streams.
+- All gestural interactions can now be reactively enabled and disabled.
+- Transitions APIs are evolving as we begin work on [components](https://github.com/material-motion/material-motion-components-swift). View the [roadmap](https://material-motion.github.io/material-motion/roadmap/core-team) for more details.
+
+## Behavioral changes
+
+• `defaultTransitionSpringTension` and `defaultTransitionSpringFriction`'s values have been swapped to match the actual default values for tension and friction. These values were previously incorrectly reversed.
+
+• Operators that do not support Core Animation will no longer throw runtime assertions when receiving Core Animation events. We have an [open issue](https://github.com/material-motion/material-motion-swift/issues/41) to explore nicer handling of operators and properties that do not support Core Animation.
+
+## New features
+
+### Runtime
+
+• MotionRuntime now allows you to retrieve interactions associated with a given target with the new `interactions(for:filter:)` API.
+
+Example usage:
+
+```swift
+let draggables = runtime.interactions(for: view) { $0 as? Draggable }
+```
+
+### Interactions
+
+• `PathTween`, `Tween`, `TransitionTween` each have a new convenience initializer that accepts the `DispatchTimeInterval` enum, making it possible to specify explicit time units. Contributed by [Eric Tang](https://github.com/randcode-generator).
+
+Example usage:
+
+```swift
+let tween = Tween<CGFloat>(duration: .milliseconds(300), values: [1, 0])
+```
+
+• `Draggable`, `Rotatable`, `Scalable`, and `DirectlyManipulable` now all conform to the `Togglable` type, meaning they can be reactively enabled and disabled.
+
+Example usage:
+
+```swift
+draggable.enabled.value = false // Disables the interaction
+```
+
+### Operators
+
+• `delay(by:)` now accepts a `DispatchTimeInterval` enum, making it possible to specify explicit time units. Contributed by [Eric Tang](https://github.com/randcode-generator).
+
+```swift
+let delayedStream = stream.delay(by: .seconds(1))
+```
+
+• `toString()` transforms any stream into a string representation. This is part of our [Reactive Controls milestone](https://github.com/material-motion/material-motion-swift/milestone/2).
+
+```swift
+let stringStream = stream.toStream()
+```
+
+• `visualize(in:)` allows you to display a stream's values and changes in your app with a new visualization overlay that appears atop your runtime's container view.
+
+Example usage:
+
+```swift
+runtime.add(tossable, to: view) { $0.visualize(in: runtime.visualizationView) }
+```
+
+![](assets/visualize-operator.gif)
+
+## API changes
+
+### Runtime
+
+• MotionRuntime's `add` method now requires that targets conform to AnyObject. This will not affect any of the existing Interactions included with Material Motion. What this change means is that you can no longer build interactions that target non-object types.
+
+### Transitions
+
+• TransitionController is now a pure Swift class type. This means TransitionController is no longer visible to Objective-C code. See https://github.com/material-motion/material-motion-swift/issues/108 for our discussion on Objective-C support.
+
+• `TransitionController` now exposes a `transitioningDelegate` property. `TransitionController` no longer conforms to `UIViewControllerTransitioningDelegate`.
+
+```swift
+// Before
+viewController.transitioningDelegate = viewController.transitionController
+
+// After
+viewController.transitioningDelegate = viewController.transitionController.transitioningDelegate
+```
+
+## Source changes
+
+* [Added convenience constructor that takes DispatchTimeInterval for duration (#107)](https://github.com/material-motion/material-motion-swift/commit/ab44321b3906998a72a3a6b544061441179331dd) (Eric Tang)
+* [Make ViewControllerDismisser a pure Swift class.](https://github.com/material-motion/material-motion-swift/commit/c0c67c3ffbcc791bf8295b7ddc5ef5c55fe9caa1) (Jeff Verkoeyen)
+* [Make TransitionController a pure Swift class.](https://github.com/material-motion/material-motion-swift/commit/d49e2807a43bcb91063f0bd42f77ba820dd3262e) (Jeff Verkoeyen)
+* [Add runtime.interactions(for:) API for fetching interactions associated with a given target.](https://github.com/material-motion/material-motion-swift/commit/a34f9942111b9d958efb9c9da01b2722fbf063ec) (Jeff Verkoeyen)
+* [Properly compare visualize's label text against the prefixed value string.](https://github.com/material-motion/material-motion-swift/commit/39a23b8866162925f36e5e3059f8ef9d7cd4a1c6) (Jeff Verkoeyen)
+* [Add visualize operator and remove runtime.visualize.](https://github.com/material-motion/material-motion-swift/commit/1d0b055bc3de355bbf6fd9e41fb8ea80aa4a56e1) (Jeff Verkoeyen)
+* [Make all gestural interactions conform to Togglable.](https://github.com/material-motion/material-motion-swift/commit/e9a0b9b7965c4ba5a0abc8244caa5c73ce125d27) (Jeff Verkoeyen)
+* [Use a reasonable fallback when adding visualization views to the runtime container view.](https://github.com/material-motion/material-motion-swift/commit/2e5cf23a5caf67b6ffd6530c7a897c075c695d11) (Jeff Verkoeyen)
+* [Add runtime.visualize for visualizing values emitted by streams.](https://github.com/material-motion/material-motion-swift/commit/688644a9a4545bed72cebae66d514a26e71f0cb9) (Jeff Verkoeyen)
+* [Remove runtime assertion when core animation events are sent to operators that don't support them.](https://github.com/material-motion/material-motion-swift/commit/b4854cb30e714f88fbfa56b3ef8deeb2174a90fc) (Jeff Verkoeyen)
+* [Add toString operator.](https://github.com/material-motion/material-motion-swift/commit/e26425df855d806789c75962d41a0da0a7d84c5e) (Jeff Verkoeyen)
+* [Swap the default transition tension/friction values to match the proper variable names.](https://github.com/material-motion/material-motion-swift/commit/11d8ef6bf4b07c8b2902743a41ce8a0cc93f13d1) (Jeff Verkoeyen)
+
+## API changes
+
+Auto-generated by running:
+
+    apidiff origin/stable release-candidate swift MaterialMotion.xcworkspace MaterialMotion
+
+### MotionRuntime
+
+*new* method: `interactions(for:filter:)` in `MotionRuntime`
+
+*modified* method: `add(_:to:constraints:)` in `MotionRuntime`: targets must now conform to AnyObject.
+
+*new* var: `visualizationView` in `MotionRuntime`
+
+### New operators
+
+*new* method: `delay(by:)` in `MotionObservableConvertible`
+
+*new* method: `toString()` in `MotionObservableConvertible`
+
+*new* method: `visualize(_:in:)` in `MotionObservableConvertible`
+
+### Interactions
+
+#### DirectlyManipulable
+
+*modified* class: `DirectlyManipulable`
+
+| Type of change: | Declaration |
+|---|---|
+| From: | `public final class DirectlyManipulable : NSObject, Interaction, Stateful` |
+| To: | `public final class DirectlyManipulable : NSObject, Interaction, Togglable, Stateful` |
+
+#### Draggable
+
+*modified* class: `Draggable`
+
+| Type of change: | Declaration |
+|---|---|
+| From: | `public final class Draggable : Gesturable<UIPanGestureRecognizer>, Interaction, Stateful` |
+| To: | `public final class Draggable : Gesturable<UIPanGestureRecognizer>, Interaction, Togglable, Stateful` |
+
+#### Gesturable
+
+*new* var: `enabled` in `Gesturable`
+
+#### PathTween
+
+*new* method: `init(duration:path:system:timeline:)` in `PathTween`
+
+#### Rotatable
+
+*modified* class: `Rotatable`
+
+| Type of change: | Declaration |
+|---|---|
+| From: | `public final class Rotatable : Gesturable<UIRotationGestureRecognizer>, Interaction, Stateful` |
+| To: | `public final class Rotatable : Gesturable<UIRotationGestureRecognizer>, Interaction, Togglable, Stateful` |
+
+#### Scalable
+
+*modified* class: `Scalable`
+
+| Type of change: | Declaration |
+|---|---|
+| From: | `public final class Scalable : Gesturable<UIPinchGestureRecognizer>, Interaction, Stateful` |
+| To: | `public final class Scalable : Gesturable<UIPinchGestureRecognizer>, Interaction, Togglable, Stateful` |
+
+#### Tween
+
+*new* method: `init(duration:values:system:timeline:)` in `Tween`
+
+#### TransitionTween
+
+*new* method: `init(duration:forwardValues:direction:forwardKeyPositions:system:timeline:)` in `TransitionTween`
+
+### Transitions
+
+#### TransitionController
+
+*modified* class: `TransitionController`
+
+| Type of change: | Declaration |
+|---|---|
+| From: | `public final class TransitionController : NSObject` |
+| To: | `public final class TransitionController` |
+
+*new* var: `transitioningDelegate` in `TransitionController`
+
+#### ViewControllerDismisser
+
+*new* var: `gestureRecognizers` in `ViewControllerDismisser`
+
 # 1.2.1
 
 This is a patch release resolving a crashing bug when `runtime.shouldVisualizeMotion` was enabled and an `ArcMove` interaction was added to a view without a parent.

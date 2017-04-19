@@ -2,7 +2,7 @@
  ## Visualizing the runtime
 
  The motion runtime represents all of its interactions as **connected streams**, making it possible to visualize the internal state of the runtime as a directed graph. Use `runtime.asGraphviz()` to get a graphviz-compatible string for visualizing the runtime.
- 
+
  In this page we'll use webgraphviz.com to visualize the runtime in our playground in real time.
  */
 import MaterialMotion
