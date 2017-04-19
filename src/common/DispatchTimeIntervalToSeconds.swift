@@ -14,6 +14,8 @@
  limitations under the License.
  */
 
+import Foundation
+
 extension DispatchTimeInterval {
   func toSeconds() -> CGFloat {
     let seconds: CGFloat
