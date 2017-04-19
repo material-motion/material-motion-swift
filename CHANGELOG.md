@@ -1,4 +1,17 @@
-# #develop#
+# 1.3.0
+
+Highlights:
+
+- First contribution from [Eric Tang](https://github.com/randcode-generator) adding support for `DispatchTimeInterval` initialization of time-based interactions and operators.
+- New visualization tools for streams.
+- All gestural interactions can now be reactively enabled and disabled.
+- Transitions APIs are evolving as we begin work on [components](https://github.com/material-motion/material-motion-components-swift). View the [roadmap](https://material-motion.github.io/material-motion/roadmap/core-team) for more details.
+
+## Behavioral changes
+
+• `defaultTransitionSpringTension` and `defaultTransitionSpringFriction`'s values have been swapped to match the actual default values for tension and friction. These values were previously incorrectly reversed.
+
+• Operators that do not support Core Animation will no longer throw runtime assertions when receiving Core Animation events. We have an [open issue](https://github.com/material-motion/material-motion-swift/issues/41) to explore nicer handling of operators and properties that do not support Core Animation.
 
 ## New features
 
@@ -11,16 +24,6 @@ Example usage:
 ```swift
 let draggables = runtime.interactions(for: view) { $0 as? Draggable }
 ```
-
-• The new `visualize(in:)` operator allows you to visualize a stream's values and changes in your app with a new visualization overlay that appears atop your runtime's container view.
-
-Example usage:
-
-```swift
-runtime.add(tossable, to: view) { $0.visualize(in: runtime.visualizationView) }
-```
-
-![](assets/visualize-operator.gif)
 
 ### Interactions
 
@@ -48,7 +51,21 @@ draggable.enabled.value = false // Disables the interaction
 let delayedStream = stream.delay(by: .seconds(1))
 ```
 
-## New deprecations
+• `toString()` transforms any stream into a string representation. This is part of our [Reactive Controls milestone](https://github.com/material-motion/material-motion-swift/milestone/2).
+
+```swift
+let stringStream = stream.toStream()
+```
+
+• `visualize(in:)` allows you to display a stream's values and changes in your app with a new visualization overlay that appears atop your runtime's container view.
+
+Example usage:
+
+```swift
+runtime.add(tossable, to: view) { $0.visualize(in: runtime.visualizationView) }
+```
+
+![](assets/visualize-operator.gif)
 
 ## API changes
 
