@@ -73,7 +73,7 @@ runtime.add(tossable, to: view) { $0.visualize(in: runtime.visualizationView) }
 
 • MotionRuntime's `add` method now requires that targets conform to AnyObject. This will not affect any of the existing Interactions included with Material Motion. What this change means is that you can no longer build interactions that target non-object types.
 
-### Transitions 
+### Transitions
 
 • TransitionController is now a pure Swift class type. This means TransitionController is no longer visible to Objective-C code. See https://github.com/material-motion/material-motion-swift/issues/108 for our discussion on Objective-C support.
 

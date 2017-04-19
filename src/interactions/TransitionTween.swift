@@ -75,7 +75,7 @@ public final class TransitionTween<T>: Tween<T> {
 
   /**
    Creates a transition tween.
-   
+
    - parameter system: Often coreAnimation. Can be another system if a system support library is available.
    */
   convenience public init(duration: DispatchTimeInterval,
@@ -87,7 +87,7 @@ public final class TransitionTween<T>: Tween<T> {
     let durationInSeconds = duration.toSeconds()
     self.init(duration: durationInSeconds, forwardValues: forwardValues, direction: direction, forwardKeyPositions: forwardKeyPositions, system: system, timeline: timeline)
   }
-  
+
   public override func add(to property: ReactiveProperty<T>,
                            withRuntime runtime: MotionRuntime,
                            constraints: ConstraintApplicator<T>? = nil) {
