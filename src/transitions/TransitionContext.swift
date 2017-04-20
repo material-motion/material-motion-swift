@@ -165,7 +165,7 @@ private func preferredFrame(for viewController: UIViewController,
   case .maxYEdge?:
     origin = .init(x: bounds.midX - size.width / 2, y: bounds.maxY - size.height)
   }
-  return .init(origin: origin, size: size)
+  return CGRect(origin: origin, size: size)
 }
 
 extension TransitionContext {
