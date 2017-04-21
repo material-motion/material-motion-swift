@@ -35,7 +35,9 @@ public final class Rotatable: Gesturable<UIRotationGestureRecognizer>, Interacti
                   withRuntime runtime: MotionRuntime,
                   constraints applyConstraints: ConstraintApplicator<CGFloat>? = nil) {
     let reactiveView = runtime.get(view)
-    let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView)
+    guard let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView) else {
+      return
+    }
     let rotation = reactiveView.reactiveLayer.rotation
 
     runtime.connect(enabled, to: ReactiveProperty(initialValue: gestureRecognizer.isEnabled) { enabled in

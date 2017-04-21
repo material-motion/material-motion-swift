@@ -35,7 +35,7 @@ public final class ChangeDirection: Interaction {
   /**
    The gesture recognizer that will be observed by this interaction.
    */
-  public let gesture: UIPanGestureRecognizer
+  public let gesture: UIPanGestureRecognizer?
 
   /**
    The minimum absolute velocity required change the transition's direction.
@@ -57,7 +57,7 @@ public final class ChangeDirection: Interaction {
   /**
    - parameter minimumVelocity: The minimum absolute velocity required to change the transition's direction.
    */
-  public init(withVelocityOf gesture: UIPanGestureRecognizer, minimumVelocity: CGFloat = 100, whenNegative: TransitionDirection = .backward, whenPositive: TransitionDirection = .backward) {
+  public init(withVelocityOf gesture: UIPanGestureRecognizer?, minimumVelocity: CGFloat = 100, whenNegative: TransitionDirection = .backward, whenPositive: TransitionDirection = .backward) {
     self.gesture = gesture
     self.minimumVelocity = minimumVelocity
     self.whenNegative = whenNegative
@@ -80,6 +80,9 @@ public final class ChangeDirection: Interaction {
   }
 
   public func add(to direction: ReactiveProperty<TransitionDirection>, withRuntime runtime: MotionRuntime, constraints axis: Axis?) {
+    guard let gesture = gesture else {
+      return
+    }
     let axis = axis ?? .y
     let chooseAxis: (MotionObservable<CGPoint>) -> MotionObservable<CGFloat>
     switch axis {

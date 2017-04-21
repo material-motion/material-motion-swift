@@ -35,7 +35,9 @@ public final class Scalable: Gesturable<UIPinchGestureRecognizer>, Interaction, 
                   withRuntime runtime: MotionRuntime,
                   constraints applyConstraints: ConstraintApplicator<CGFloat>? = nil) {
     let reactiveView = runtime.get(view)
-    let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView)
+    guard let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView) else {
+      return
+    }
     let scale = reactiveView.reactiveLayer.scale
 
     runtime.connect(enabled, to: ReactiveProperty(initialValue: gestureRecognizer.isEnabled) { enabled in

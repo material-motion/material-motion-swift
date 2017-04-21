@@ -29,14 +29,14 @@ public final class SlopRegion: Interaction {
   /**
    The gesture recognizer that will be observed by this interaction.
    */
-  public let gesture: UIPanGestureRecognizer
+  public let gesture: UIPanGestureRecognizer?
 
   /**
    The size of the slop region.
    */
   public let size: CGFloat
 
-  public init(withTranslationOf gesture: UIPanGestureRecognizer, size: CGFloat) {
+  public init(withTranslationOf gesture: UIPanGestureRecognizer?, size: CGFloat) {
     self.gesture = gesture
     self.size = size
   }
@@ -57,6 +57,9 @@ public final class SlopRegion: Interaction {
   }
 
   public func add(to direction: ReactiveProperty<TransitionDirection>, withRuntime runtime: MotionRuntime, constraints axis: Axis?) {
+    guard let gesture = gesture else {
+      return
+    }
     let axis = axis ?? .y
     let chooseAxis: (MotionObservable<CGPoint>) -> MotionObservable<CGFloat>
     switch axis {

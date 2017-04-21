@@ -47,7 +47,9 @@ public final class Draggable: Gesturable<UIPanGestureRecognizer>, Interaction, T
                   withRuntime runtime: MotionRuntime,
                   constraints applyConstraints: ConstraintApplicator<CGPoint>? = nil) {
     let reactiveView = runtime.get(view)
-    let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView)
+    guard let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView) else {
+      return
+    }
     let position = reactiveView.reactiveLayer.position
 
     runtime.connect(enabled, to: ReactiveProperty(initialValue: gestureRecognizer.isEnabled) { enabled in
@@ -75,17 +77,20 @@ public final class Draggable: Gesturable<UIPanGestureRecognizer>, Interaction, T
  CGPoint constraints may be applied to this interaction.
  */
 public final class DraggableFinalVelocity: Interaction {
-  fileprivate init(gestureRecognizer: UIPanGestureRecognizer) {
+  fileprivate init(gestureRecognizer: UIPanGestureRecognizer?) {
     self.gestureRecognizer = gestureRecognizer
   }
 
   public func add(to target: ReactiveProperty<CGPoint>,
                   withRuntime runtime: MotionRuntime,
                   constraints applyConstraints: ConstraintApplicator<CGPoint>? = nil) {
+    guard let gestureRecognizer = gestureRecognizer else {
+      return
+    }
     let gesture = runtime.get(gestureRecognizer)
     runtime.connect(gesture.velocityOnReleaseStream(in: runtime.containerView),
                     to: target)
   }
 
-  let gestureRecognizer: UIPanGestureRecognizer
+  let gestureRecognizer: UIPanGestureRecognizer?
 }

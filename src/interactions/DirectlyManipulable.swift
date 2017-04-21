@@ -64,8 +64,8 @@ public final class DirectlyManipulable: NSObject, Interaction, Togglable, Statef
     for gestureRecognizer in [draggable.nextGestureRecognizer,
                               rotatable.nextGestureRecognizer,
                               scalable.nextGestureRecognizer] {
-                                if gestureRecognizer.delegate == nil {
-                                  gestureRecognizer.delegate = self
+                                if gestureRecognizer?.delegate == nil {
+                                  gestureRecognizer?.delegate = self
                                 }
     }
 
@@ -73,8 +73,8 @@ public final class DirectlyManipulable: NSObject, Interaction, Togglable, Statef
     runtime.connect(enabled, to: rotatable.enabled)
     runtime.connect(enabled, to: scalable.enabled)
 
-    let adjustsAnchorPoint = AdjustsAnchorPoint(gestureRecognizers: [rotatable.nextGestureRecognizer,
-                                                                     scalable.nextGestureRecognizer])
+    let anchorPointRecognizers = [rotatable.nextGestureRecognizer, scalable.nextGestureRecognizer].flatMap { $0 }
+    let adjustsAnchorPoint = AdjustsAnchorPoint(gestureRecognizers: anchorPointRecognizers)
     runtime.add(adjustsAnchorPoint, to: view)
 
     aggregateState.observe(state: draggable.state, withRuntime: runtime)
