@@ -23,7 +23,7 @@ extension MotionObservableConvertible where T == CGPoint {
    Extract the y value from a CGPoint.
    */
   public func y() -> MotionObservable<CGFloat> {
-    return _map(#function) {
+    return _map(#function, transformVelocity: true) {
       $0.y
     }
   }
