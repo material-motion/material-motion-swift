@@ -33,7 +33,7 @@ import UIKit
  - `{ $0.xLocked(to: somePosition) }`
  - `{ $0.yLocked(to: somePosition) }`
  */
-public final class Draggable: Gesturable<UIPanGestureRecognizer>, Interaction, Togglable, Stateful {
+public final class Draggable: Gesturable<UIPanGestureRecognizer>, Interaction, Togglable, Manipulation {
   /**
    A sub-interaction for writing the next gesture recognizer's final velocity to a property.
 

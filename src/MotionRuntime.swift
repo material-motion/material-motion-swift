@@ -68,6 +68,10 @@ public final class MotionRuntime {
     interactions.append(interaction)
     interaction.add(to: target, withRuntime: self, constraints: constraints)
 
+    if let manipulation = interaction as? Manipulation {
+      aggregateManipulationState.observe(state: manipulation.state, withRuntime: self)
+    }
+
     let identifier = ObjectIdentifier(target)
     var targetInteractions = targets[identifier] ?? []
     targetInteractions.append(interaction)
@@ -234,6 +238,15 @@ public final class MotionRuntime {
     lines.append("}")
     return lines.joined(separator: "\n")
   }
+
+  /**
+   A Boolean stream indicating whether the runtime is currently being directly manipulated by the
+   user.
+   */
+  public var isBeingManipulated: MotionObservable<Bool> {
+    return aggregateManipulationState.asStream().rewrite([.active: true, .atRest: false])
+  }
+  private let aggregateManipulationState = AggregateMotionState()
 
   private func write<O: MotionObservableConvertible, T>(_ stream: O, to property: ReactiveProperty<T>) where O.T == T {
     metadata.append(stream.metadata.createChild(property.metadata))

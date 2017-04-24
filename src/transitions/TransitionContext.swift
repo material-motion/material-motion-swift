@@ -119,6 +119,8 @@ public final class TransitionContext: NSObject {
   fileprivate var transition: Transition!
   fileprivate var context: UIViewControllerContextTransitioning!
   fileprivate var didRegisterTerminator = false
+  fileprivate var interactiveSubscription: Subscription?
+  fileprivate var isBeingManipulated = false
 }
 
 extension TransitionContext: UIViewControllerAnimatedTransitioning {
@@ -212,6 +214,8 @@ extension TransitionContext {
     runtime.whenAllAtRest(terminators) { [weak self] in
       self?.terminate()
     }
+
+    observeInteractiveState()
   }
 
   // UIKit transitions will not animate any of the system animations (status bar changes, notably)
@@ -228,6 +232,35 @@ extension TransitionContext {
     })
   }
 
+  // UIKit view controller transitions are either animated or interactive and we must inform UIKit
+  // when this state changes. Certain system animations (status bar) will not be initiated until
+  // interactivity has completed. We consider an "interactive transition" to be one that has one or
+  // more active Manipulation types.
+  private func observeInteractiveState() {
+    interactiveSubscription = runtime.isBeingManipulated.dedupe().subscribeToValue { [weak self] isBeingManipulated in
+      guard let strongSelf = self else {
+        return
+      }
+      strongSelf.isBeingManipulated = isBeingManipulated
+
+      // Becoming interactive
+      if !strongSelf.context.isInteractive && isBeingManipulated {
+        if #available(iOS 10.0, *) {
+          strongSelf.context.pauseInteractiveTransition()
+        }
+
+      // Becoming non-interactive
+      } else if strongSelf.context.isInteractive && !isBeingManipulated {
+        let completedInOriginalDirection = strongSelf.direction.value == strongSelf.initialDirection
+        if completedInOriginalDirection {
+          strongSelf.context.finishInteractiveTransition()
+        } else {
+          strongSelf.context.cancelInteractiveTransition()
+        }
+      }
+    }
+  }
+
   private func terminate() {
     guard runtime != nil else { return }
     let completedInOriginalDirection = direction.value == initialDirection
@@ -235,12 +268,14 @@ extension TransitionContext {
     // UIKit container view controllers will replay their transition animation if the transition
     // percentage is exactly 0 or 1, so we fake being super close to these values in order to avoid
     // this flickering animation.
-    if completedInOriginalDirection {
-      context.updateInteractiveTransition(0.999)
-      context.finishInteractiveTransition()
-    } else {
-      context.updateInteractiveTransition(0.001)
-      context.cancelInteractiveTransition()
+    if context.isInteractive {
+      if completedInOriginalDirection {
+        context.updateInteractiveTransition(0.999)
+        context.finishInteractiveTransition()
+      } else {
+        context.updateInteractiveTransition(0.001)
+        context.cancelInteractiveTransition()
+      }
     }
     context.completeTransition(completedInOriginalDirection)
 

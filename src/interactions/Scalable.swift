@@ -30,7 +30,7 @@ import UIKit
 
  CGFloat constraints may be applied to this interaction.
  */
-public final class Scalable: Gesturable<UIPinchGestureRecognizer>, Interaction, Togglable, Stateful {
+public final class Scalable: Gesturable<UIPinchGestureRecognizer>, Interaction, Togglable, Manipulation {
   public func add(to view: UIView,
                   withRuntime runtime: MotionRuntime,
                   constraints applyConstraints: ConstraintApplicator<CGFloat>? = nil) {

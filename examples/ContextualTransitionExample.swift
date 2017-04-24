@@ -226,6 +226,10 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
   }
 
+  override var preferredStatusBarStyle: UIStatusBarStyle {
+    return .lightContent
+  }
+
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return album.photos.count
   }
