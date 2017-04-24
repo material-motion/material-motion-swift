@@ -64,6 +64,10 @@ private class ModalViewController: UIViewController, UIGestureRecognizerDelegate
     scrollView.panGestureRecognizer.require(toFail: pan)
     view.addGestureRecognizer(pan)
   }
+
+  override var preferredStatusBarStyle: UIStatusBarStyle {
+    return .lightContent
+  }
 }
 
 private class PushBackTransition: Transition {

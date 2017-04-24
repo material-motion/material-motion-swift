@@ -59,6 +59,10 @@ private class ModalViewController: UIViewController {
   func didTap() {
     dismiss(animated: true)
   }
+
+  override var preferredStatusBarStyle: UIStatusBarStyle {
+    return .lightContent
+  }
 }
 
 private class PushBackTransition: Transition {
