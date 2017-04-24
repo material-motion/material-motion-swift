@@ -34,6 +34,25 @@ import UIKit
  - `{ $0.yLocked(to: somePosition) }`
  */
 public final class Draggable: Gesturable<UIPanGestureRecognizer>, Interaction, Togglable, Manipulation {
+
+  /**
+   When a non-null resistance perimiter is provided, dragging beyond the perimeter will result in
+   resistance being applied to the position until the max length is reached.
+   */
+  public let resistance = (
+    /**
+     The region beyond which resistance should take effect, in absolute coordinates.
+
+     If .null, no resistance will be applied to the drag position.
+     */
+    perimeter: createProperty(withInitialValue: CGRect.null),
+
+    /**
+     The maximum distance the drag position is able to move beyond the perimeter.
+     */
+    maxLength: createProperty(withInitialValue: 48)
+  )
+
   /**
    A sub-interaction for writing the next gesture recognizer's final velocity to a property.
 
@@ -63,6 +82,8 @@ public final class Draggable: Gesturable<UIPanGestureRecognizer>, Interaction, T
     if let applyConstraints = applyConstraints {
       stream = applyConstraints(stream)
     }
+    stream = stream.rubberBanded(outsideOf: resistance.perimeter,
+                                 maxLength: resistance.maxLength)
     runtime.connect(stream, to: position)
   }
 }
