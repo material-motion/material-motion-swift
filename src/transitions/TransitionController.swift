@@ -238,7 +238,7 @@ private final class TransitioningDelegate: NSObject, UIViewControllerTransitioni
   }
 
   func isInteractive() -> Bool {
-    return dismisser.gestureRecognizers.count > 0
+    return gestureDelegate.gestureRecognizers.filter { $0.state == .began || $0.state == .changed }.count > 0
   }
 }
 
