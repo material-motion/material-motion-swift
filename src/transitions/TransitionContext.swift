@@ -206,10 +206,26 @@ extension TransitionContext {
     self.runtime = MotionRuntime(containerView: containerView())
     self.replicator.containerView = containerView()
 
+    pokeSystemAnimations()
+
     let terminators = transition.willBeginTransition(withContext: self, runtime: self.runtime)
     runtime.whenAllAtRest(terminators) { [weak self] in
       self?.terminate()
     }
+  }
+
+  // UIKit transitions will not animate any of the system animations (status bar changes, notably)
+  // unless we have at least one implicit UIView animation. Material Motion doesn't use implicit
+  // animations out of the box, so to ensure that system animations still occur we create an
+  // invisible throwaway view and apply an animation to it.
+  private func pokeSystemAnimations() {
+    let throwawayView = UIView()
+    containerView().addSubview(throwawayView)
+    UIView.animate(withDuration: transitionDuration(using: context), animations: {
+      throwawayView.frame = throwawayView.frame.offsetBy(dx: 1, dy: 0)
+    }, completion: { didComplete in
+      throwawayView.removeFromSuperview()
+    })
   }
 
   private func terminate() {
