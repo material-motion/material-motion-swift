@@ -34,7 +34,7 @@ class MotionRuntimeTests: XCTestCase {
   func testInteractionsReturnsEmptyArrayWithoutAnyAddedInteractions() {
     let runtime = MotionRuntime(containerView: UIView())
 
-    let results = runtime.interactions(for: UIView()) { $0 as? Draggable }
+    let results = runtime.interactions(for: UIView(), ofType: Draggable.self)
     XCTAssertEqual(results.count, 0)
   }
 
@@ -45,7 +45,7 @@ class MotionRuntimeTests: XCTestCase {
     runtime.add(Draggable(), to: view)
     runtime.add(Rotatable(), to: view)
 
-    let results = runtime.interactions(for: view) { $0 as? Draggable }
+    let results = runtime.interactions(for: view, ofType: Draggable.self)
     XCTAssertEqual(results.count, 1)
   }
 }

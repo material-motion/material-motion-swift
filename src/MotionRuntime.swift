@@ -83,13 +83,21 @@ public final class MotionRuntime {
 
    Example usage:
 
-       let draggables = runtime.interactions(for: view) { $0 as? Draggable }
+       let draggables = runtime.interactions(for: view, type: Draggable.self)
    */
+  public func interactions<I>(for target: I.Target, ofType: I.Type) -> [I] where I: Interaction, I.Target: AnyObject {
+    guard let interactions = targets[ObjectIdentifier(target)] else {
+      return []
+    }
+    return interactions.flatMap { $0 as? I }
+  }
+
+  @available(*, deprecated, message: "Use interactions(for:ofType:) instead.")
   public func interactions<I>(for target: I.Target, filter: (Any) -> I?) -> [I] where I: Interaction, I.Target: AnyObject {
     guard let interactions = targets[ObjectIdentifier(target)] else {
       return []
     }
-    return interactions.flatMap(filter)
+    return interactions.flatMap { $0 as? I }
   }
 
   /**
