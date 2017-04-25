@@ -67,6 +67,9 @@ private func streamFromTween<T>(_ tween: TweenShadow<T>, configureEvent: @escapi
       }
       animation.beginTime = CFTimeInterval(tween.delay.value)
       animation.duration = CFTimeInterval(duration)
+      animation.repeatCount = Float(tween.repeatCount.value)
+      animation.repeatDuration = CFTimeInterval(tween.repeatDuration.value)
+      animation.autoreverses = tween.autoreverses.value
 
       let key = NSUUID().uuidString
       activeAnimations.insert(key)

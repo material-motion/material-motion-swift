@@ -33,6 +33,33 @@ public class Tween<T>: Interaction, Togglable, Stateful {
   public let duration: ReactiveProperty<CGFloat>
 
   /**
+   The number of times the animation will repeat.
+
+   If the repeatCount is 0, it is ignored. If both repeatDuration and repeatCount are specified the behavior is undefined.
+
+   Setting this property to greatestFiniteMagnitude will cause the animation to repeat forever.
+
+   See https://developer.apple.com/reference/quartzcore/camediatiming/1427666-repeatcount for more information.
+   */
+  public let repeatCount: ReactiveProperty<CGFloat> = createProperty("Tween.repeatCount", withInitialValue: 0)
+
+  /**
+   The number of seconds the animation will repeat for.
+
+   If the repeatDuration is 0, it is ignored. If both repeatDuration and repeatCount are specified the behavior is undefined.
+
+   See https://developer.apple.com/reference/quartzcore/camediatiming/1427643-repeatduration for more information.
+   */
+  public let repeatDuration: ReactiveProperty<CGFloat> = createProperty("Tween.repeatDuration", withInitialValue: 0)
+
+  /**
+   Will the animation play in the reverse upon completion.
+
+   See https://developer.apple.com/reference/quartzcore/camediatiming/1427645-autoreverses for more information.
+   */
+  public let autoreverses: ReactiveProperty<Bool> = createProperty("Tween.autoreverses", withInitialValue: false)
+
+  /**
    The delay of the animation in seconds.
    */
   public let delay = createProperty("Tween.delay", withInitialValue: 0)
@@ -137,6 +164,9 @@ public struct TweenShadow<T> {
   public let state: ReactiveProperty<MotionState>
   public let duration: ReactiveProperty<CGFloat>
   public let delay: ReactiveProperty<CGFloat>
+  public let repeatCount: ReactiveProperty<CGFloat>
+  public let repeatDuration: ReactiveProperty<CGFloat>
+  public let autoreverses: ReactiveProperty<Bool>
   public let values: ReactiveProperty<[T]>
   public let keyPositions: ReactiveProperty<[CGFloat]>
   public let timingFunctions: ReactiveProperty<[CAMediaTimingFunction]>
@@ -146,6 +176,9 @@ public struct TweenShadow<T> {
     self.enabled = tween.enabled
     self.state = tween._state
     self.duration = tween.duration
+    self.repeatCount = tween.repeatCount
+    self.repeatDuration = tween.repeatDuration
+    self.autoreverses = tween.autoreverses
     self.delay = tween.delay
     self.values = tween.values
     self.keyPositions = tween.keyPositions
