@@ -28,7 +28,7 @@ class MotionRuntimeTests: XCTestCase {
     let reactiveShapeLayer = runtime.get(shapeLayer)
     let reactiveCastedLayer = runtime.get(castedLayer)
 
-    XCTAssertTrue(reactiveShapeLayer === reactiveCastedLayer)
+    XCTAssertTrue(reactiveShapeLayer._properties === reactiveCastedLayer._properties)
   }
 
   func testInteractionsReturnsEmptyArrayWithoutAnyAddedInteractions() {

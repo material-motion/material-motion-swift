@@ -124,14 +124,14 @@ private class CircularRevealTransition: Transition {
     let foreShadowPath = CGRect(origin: .zero(), size: expandedSize)
     let shadowPath = tween(back: floodFillView.layer.shadowPath!, fore: UIBezierPath(ovalIn: foreShadowPath).cgPath, ctx: ctx)
 
-    let floodLayer = runtime.get(floodFillView).reactiveLayer
+    let floodLayer = runtime.get(floodFillView).layer
     runtime.add(expansion, to: floodLayer.size)
     runtime.add(fadeOut, to: floodLayer.opacity)
     runtime.add(radius, to: floodLayer.cornerRadius)
     runtime.add(shadowPath, to: floodLayer.shadowPath)
 
     let shiftIn = tween(back: ctx.fore.view.layer.position.y + 40, fore: ctx.fore.view.layer.position.y, ctx: ctx)
-    runtime.add(shiftIn, to: runtime.get(ctx.fore.view).reactiveLayer.positionY)
+    runtime.add(shiftIn, to: runtime.get(ctx.fore.view).layer.positionY)
 
     let maskShiftIn = tween(back: CGFloat(-40), fore: CGFloat(0), ctx: ctx)
     runtime.add(maskShiftIn, to: runtime.get(maskLayer).positionY)

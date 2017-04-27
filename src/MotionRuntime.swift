@@ -170,24 +170,24 @@ public final class MotionRuntime {
   // MARK: Reactive object storage
 
   /**
-   Returns a reactive version of the given object and caches the returned result for future access.
+   Returns a reactive version of the given object.
    */
-  public func get(_ view: UIView) -> ReactiveUIView {
-    return get(view) { .init($0, runtime: self) }
+  public func get(_ view: UIView) -> Reactive<UIView> {
+    return Reactive(view)
   }
 
   /**
-   Returns a reactive version of the given object and caches the returned result for future access.
+   Returns a reactive version of the given object.
    */
-  public func get(_ layer: CALayer) -> ReactiveCALayer {
-    return get(layer) { .init($0) }
+  public func get(_ layer: CALayer) -> Reactive<CALayer> {
+    return Reactive(layer)
   }
 
   /**
-   Returns a reactive version of the given object and caches the returned result for future access.
+   Returns a reactive version of the given object.
    */
-  public func get(_ layer: CAShapeLayer) -> ReactiveCAShapeLayer {
-    return get(layer) { .init($0) }
+  public func get(_ layer: CAShapeLayer) -> Reactive<CAShapeLayer> {
+    return Reactive(layer)
   }
 
   /**

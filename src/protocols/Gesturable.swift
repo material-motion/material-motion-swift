@@ -124,13 +124,13 @@ public class Gesturable<T: UIGestureRecognizer> {
   /**
    Prepares and returns the gesture recognizer that should be used to drive this interaction.
    */
-  func dequeueGestureRecognizer(withReactiveView reactiveView: ReactiveUIView) -> T? {
+  func dequeueGestureRecognizer(withReactiveView reactiveView: Reactive<UIView>) -> T? {
     let gestureRecognizer = self.nextGestureRecognizer
     _nextGestureRecognizer = nil
 
     switch config {
     case .registerNewRecognizerToTargetView:
-      reactiveView.view.addGestureRecognizer(gestureRecognizer!)
+      reactiveView._object.addGestureRecognizer(gestureRecognizer!)
     default: ()
     }
 

@@ -69,7 +69,7 @@ public final class Draggable: Gesturable<UIPanGestureRecognizer>, Interaction, T
     guard let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView) else {
       return
     }
-    let position = reactiveView.reactiveLayer.position
+    let position = reactiveView.layer.position
 
     runtime.connect(enabled, to: ReactiveProperty(initialValue: gestureRecognizer.isEnabled) { enabled in
       gestureRecognizer.isEnabled = enabled

@@ -285,7 +285,7 @@ private class PushBackTransition: Transition {
 
     let size = TransitionSpring(back: contextView.bounds.size, fore: fitSize, direction: ctx.direction)
     runtime.toggle(size, inReactionTo: draggable)
-    runtime.add(size, to: runtime.get(replicaView).reactiveLayer.size)
+    runtime.add(size, to: runtime.get(replicaView).layer.size)
 
     let opacity = TransitionSpring<CGFloat>(back: 0, fore: 1, direction: ctx.direction)
     runtime.add(opacity, to: runtime.get(ctx.fore.view.layer).opacity)
