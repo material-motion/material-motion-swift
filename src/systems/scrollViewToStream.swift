@@ -22,7 +22,7 @@ import UIKit
 
  This scroll source will not emit state updates.
  */
-func scrollViewToStream(_ scrollView: UIScrollView) -> MotionObservable<CGPoint> {
+public func scrollViewToStream(_ scrollView: UIScrollView) -> MotionObservable<CGPoint> {
   return MotionObservable(Metadata("Scroll View", args: [scrollView])) { observer in
     return ScrollViewConnection(subscribedTo: scrollView, observer: observer).disconnect
   }

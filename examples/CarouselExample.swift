@@ -19,7 +19,8 @@ import MaterialMotion
 
 class CarouselExampleViewController: ExampleViewController, UIScrollViewDelegate {
 
-  var runtime: MotionRuntime!
+  var scrollable: ReactiveScroll!
+
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -45,9 +46,8 @@ class CarouselExampleViewController: ExampleViewController, UIScrollViewDelegate
       (title: "Page 3", description: "Page 3 description", color: .secondaryColor),
     ]
 
-    runtime = MotionRuntime(containerView: view)
+    scrollable = ReactiveScroll(scrollView)
 
-    let stream = runtime.get(scrollView)
     for (index, data) in datas.enumerated() {
       let page = CarouselPage(frame: view.bounds)
       page.frame.origin.x = CGFloat(index) * view.bounds.width
@@ -56,14 +56,14 @@ class CarouselExampleViewController: ExampleViewController, UIScrollViewDelegate
       page.iconView.backgroundColor = data.color
       scrollView.addSubview(page)
 
-      let pageEdge = stream.x().offset(by: -page.frame.origin.x)
+      let pageEdge = scrollable.x().offset(by: -page.frame.origin.x)
 
-      runtime.connect(pageEdge.rewriteRange(start: 0, end: 128,
-                                            destinationStart: 1, destinationEnd: 0),
-                      to: runtime.get(page).alpha)
-      runtime.connect(pageEdge.rewriteRange(start: -view.bounds.width, end: 0,
-                                            destinationStart: 0.5, destinationEnd: 1.0),
-                      to: runtime.get(page.layer).scale)
+      pageEdge.rewriteRange(start: 0, end: 128, destinationStart: 1, destinationEnd: 0).subscribeToValue { value in
+        page.alpha = value
+      }
+      pageEdge.rewriteRange(start: -view.bounds.width, end: 0, destinationStart: 0.5, destinationEnd: 1.0).subscribeToValue { value in
+        Reactive(page.layer).scale.value = value
+      }
     }
   }
 

@@ -184,6 +184,7 @@ extension MotionObservableConvertible {
   /**
    Sugar for subscribing a MotionObserver.
    */
+  @discardableResult
   public func subscribe(next: @escaping NextChannel<T>,
                         coreAnimation: @escaping CoreAnimationChannel,
                         visualization: @escaping VisualizationChannel) -> Subscription {
@@ -196,6 +197,7 @@ extension MotionObservableConvertible {
    Forwards all channel values to the provided observer except next, which is provided as an
    argument.
    */
+  @discardableResult
   public func subscribeAndForward<U>(to observer: MotionObserver<U>, next: @escaping NextChannel<T>) -> Subscription {
     return subscribe(next: next,
                      coreAnimation: { event in observer.coreAnimation?(event) },
@@ -205,6 +207,7 @@ extension MotionObservableConvertible {
   /**
    Forwards all channel values to the provided observer.
    */
+  @discardableResult
   public func subscribeAndForward(to observer: MotionObserver<T>) -> Subscription {
     return asStream().subscribe(observer: observer)
   }
@@ -212,6 +215,7 @@ extension MotionObservableConvertible {
   /**
    Subscribes only to the value channel of the stream.
    */
+  @discardableResult
   public func subscribeToValue(_ next: @escaping NextChannel<T>) -> Subscription {
     return asStream().subscribe(observer: MotionObserver<T>(next: next))
   }
