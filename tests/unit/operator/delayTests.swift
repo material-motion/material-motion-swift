@@ -42,7 +42,7 @@ class delayTests: XCTestCase {
 
     var hasReceived = false
     let didReceiveValue = expectation(description: "Did receive value")
-    let subscription = property.delay(by: .milliseconds(500)).subscribeToValue { value in
+    let subscription = property.delay(by: .milliseconds(300)).subscribeToValue { value in
       XCTAssertEqual(value, 0)
       didReceiveValue.fulfill()
       hasReceived = true
