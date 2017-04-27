@@ -14,22 +14,41 @@
  limitations under the License.
  */
 
-import Foundation
 import UIKit
 
-public final class ReactiveScroll: MotionObservableConvertible {
-  public let scrollView: UIScrollView
+public func reactive(_ object: UIScrollView) -> ReactiveScrollView {
+  return ReactiveScrollView(object)
+}
 
-  public init(_ scrollView: UIScrollView) {
-    self.scrollView = scrollView
+extension Reactive where O: UIScrollView {
+
+  public var contentOffset: ReactiveProperty<CGPoint> {
+    let view = _object
+
+    // TODO: There should be a type of property that can automatically hook in to KVO for
+    // bi-directional observation. Should register to KVO only when at least one observer is
+    // subscribed.
+
+    return _properties.named(#function) {
+      return .init("\(pretty(view)).\(#function)", initialValue: view.contentOffset) {
+        view.contentOffset = $0
+      }
+    }
+  }
+}
+
+public final class ReactiveScrollView: Reactive<UIScrollView>, MotionObservableConvertible {
+  public override init(_ scrollView: UIScrollView) {
     self.observer = ScrollViewObserver(subscribedTo: scrollView)
+
+    super.init(scrollView)
   }
 
   public let metadata = Metadata("Gesture Recognizer")
 
   public func asStream() -> MotionObservable<CGPoint> {
     let scrollViewObserver = self.observer
-    return MotionObservable(Metadata("Scroll View", args: [scrollView])) { observer in
+    return MotionObservable(Metadata("Scroll View", args: [_object])) { observer in
       scrollViewObserver.addObserver(observer)
       return {
         scrollViewObserver.removeObserver(observer)

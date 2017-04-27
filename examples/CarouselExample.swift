@@ -19,7 +19,7 @@ import MaterialMotion
 
 class CarouselExampleViewController: ExampleViewController, UIScrollViewDelegate {
 
-  var scrollable: ReactiveScroll!
+  var scrollable: Reactive<UIScrollView>!
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -46,7 +46,7 @@ class CarouselExampleViewController: ExampleViewController, UIScrollViewDelegate
       (title: "Page 3", description: "Page 3 description", color: .secondaryColor),
     ]
 
-    scrollable = ReactiveScroll(scrollView)
+    scrollable = reactive(scrollView)
 
     for (index, data) in datas.enumerated() {
       let page = CarouselPage(frame: view.bounds)
@@ -56,7 +56,7 @@ class CarouselExampleViewController: ExampleViewController, UIScrollViewDelegate
       page.iconView.backgroundColor = data.color
       scrollView.addSubview(page)
 
-      let pageEdge = scrollable.x().offset(by: -page.frame.origin.x)
+      let pageEdge = scrollable.contentOffset.x().offset(by: -page.frame.origin.x)
 
       pageEdge.rewriteRange(start: 0, end: 128, destinationStart: 1, destinationEnd: 0).subscribeToValue { value in
         page.alpha = value
