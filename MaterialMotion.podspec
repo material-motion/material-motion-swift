@@ -11,5 +11,5 @@ Pod::Spec.new do |s|
 
   s.source_files = "src/**/*.{swift}"
 
-  s.dependency "IndefiniteObservable", "~> 3.0"
+  s.dependency "IndefiniteObservable", "~> 4.0"
 end

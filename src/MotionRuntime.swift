@@ -34,6 +34,7 @@ public final class MotionRuntime {
 
   deinit {
     _visualizationView?.removeFromSuperview()
+    subscriptions.forEach { $0.unsubscribe() }
   }
 
   /**

@@ -58,9 +58,10 @@ class delayTests: XCTestCase {
   func testValueIsNotReceivedWithoutSubscription() {
     let property = createProperty()
 
-    let _ = property.delay(by: 0.01).subscribeToValue { value in
+    let subscription = property.delay(by: 0.01).subscribeToValue { value in
       assertionFailure("Should not be received.")
     }
+    subscription.unsubscribe()
 
     let delay = expectation(description: "Delay")
     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(0.05 * 1000))) {
