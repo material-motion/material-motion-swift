@@ -126,6 +126,13 @@ public final class MotionRuntime {
   }
 
   /**
+   Initiates interaction B when interaction A changes to certain state
+  */
+  public func start(_ interactionA: Togglable, when interactionB: Stateful, is state: MotionState) {
+    connect(interactionB.state.dedupe().rewrite([state: true]), to: interactionA.enabled)
+  }
+
+  /**
    Connects a stream's output to a reactive property.
 
    This method is primarily intended to be used by interactions and its presence in application
