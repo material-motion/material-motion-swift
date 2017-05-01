@@ -17,6 +17,17 @@
 import XCTest
 import MaterialMotion
 
+public class MockTween<T>: Togglable, Stateful {
+  let _state = createProperty("Tween._state", withInitialValue: MotionState.atRest)
+  public let enabled = createProperty("Tween.enabled", withInitialValue: true)
+  public func setState(state: MotionState) {
+    _state.value = state
+  }
+  public var state: MotionObservable<MotionState> {
+    return _state.asStream()
+  }
+}
+
 class MotionRuntimeTests: XCTestCase {
 
   func testReactiveObjectCacheSupportsSubclassing() {
@@ -47,17 +58,6 @@ class MotionRuntimeTests: XCTestCase {
 
     let results = runtime.interactions(for: view, ofType: Draggable.self)
     XCTAssertEqual(results.count, 1)
-  }
-
-  public class MockTween<T>: Togglable, Stateful {
-    let _state = createProperty("Tween._state", withInitialValue: MotionState.atRest)
-    public let enabled = createProperty("Tween.enabled", withInitialValue: true)
-    public func setState(state: MotionState) {
-      _state.value = state
-    }
-    public var state: MotionObservable<MotionState> {
-      return _state.asStream()
-    }
   }
 
   func testRuntimeStart() {
