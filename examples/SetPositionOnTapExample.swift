@@ -35,7 +35,7 @@ class SetPositionOnTapExampleViewController: ExampleViewController {
     let tap = UITapGestureRecognizer()
     view.addGestureRecognizer(tap)
 
-    Reactive(tap).didChange.centroid(in: view).subscribeToValue {
+    Reactive(tap).didAnything.centroid(in: view).subscribeToValue {
       square.center = $0
     }
   }

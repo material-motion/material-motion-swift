@@ -15,10 +15,11 @@
  */
 
 import UIKit
+import MaterialMotion
 import CatalogByConvention
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UINavigationControllerDelegate {
 
   var window: UIWindow?
 
@@ -28,9 +29,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     let rootViewController = CBCNodeListViewController(node: CBCCreateNavigationTree())
     rootViewController.title = "Material Motion Catalog"
-    window.rootViewController = UINavigationController(rootViewController: rootViewController)
+    let navigationController = UINavigationController(rootViewController: rootViewController)
+    window.rootViewController = navigationController
+
+    navigationController.delegate = self
 
     window.makeKeyAndVisible()
     return true
+  }
+
+  func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+    if viewController === navigationController.viewControllers.first! {
+      assertEmpty()
+    }
   }
 }

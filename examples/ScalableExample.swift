@@ -17,9 +17,23 @@
 import UIKit
 import MaterialMotion
 
-class ScalableExampleViewController: ExampleViewController {
+private class Scalable {
 
-  var runtime: MotionRuntime!
+  @discardableResult
+  class func apply(to view: UIView, relativeTo: UIView) -> Reactive<UIPinchGestureRecognizer> {
+    let gesture = UIPinchGestureRecognizer()
+    relativeTo.addGestureRecognizer(gesture)
+
+    let scale = Reactive(view.layer).scale
+    Reactive(gesture).didAnything.scaled(from: scale).subscribeToValue {
+      scale.value = $0
+    }
+
+    return Reactive(gesture)
+  }
+}
+
+class ScalableExampleViewController: ExampleViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -27,14 +41,7 @@ class ScalableExampleViewController: ExampleViewController {
     let square = center(createExampleSquareView(), within: view)
     view.addSubview(square)
 
-    runtime = MotionRuntime(containerView: view)
-
-    let scalable = Scalable()
-    runtime.add(scalable, to: square)
-
-    runtime.whenAllAtRest([scalable]) {
-      print("Is now at rest")
-    }
+    Scalable.apply(to: square, relativeTo: view)
   }
 
   override func exampleInformation() -> ExampleInfo {

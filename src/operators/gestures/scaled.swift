@@ -23,7 +23,7 @@ extension MotionObservableConvertible where T: UIPinchGestureRecognizer {
    Multiplies the current scale by the initial scale and emits the result while the gesture
    recognizer is active.
    */
-  func scaled<O: MotionObservableConvertible>(from initialScale: O) -> MotionObservable<CGFloat> where O.T == CGFloat {
+  public func scaled<O: MotionObservableConvertible>(from initialScale: O) -> MotionObservable<CGFloat> where O.T == CGFloat {
     var cachedInitialScale: CGFloat?
     var lastInitialScale: CGFloat?
 

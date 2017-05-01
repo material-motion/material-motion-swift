@@ -25,7 +25,7 @@ extension Reactive where O: CAShapeLayer {
     return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: layer.path!,
-                                          externalWrite: { layer.path = $0 },
+                                          externalWrite: { $0.path = $1 },
                                           keyPath: "path")
     })
   }

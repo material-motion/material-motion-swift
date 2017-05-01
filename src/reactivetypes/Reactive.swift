@@ -43,7 +43,7 @@ import Foundation
          }
        }
  */
-public final class Reactive<O: AnyObject> {
+public class Reactive<O: AnyObject> {
 
   /**
    Creates a reactive representation of the given object.
@@ -69,6 +69,15 @@ public final class Reactive<O: AnyObject> {
    The property cache for this object instance.
    */
   public let _properties: ReactiveCache
+}
+
+public func assertEmpty() {
+  var isEmpty = true
+  for _ in globalCache.keyEnumerator() {
+    isEmpty = false
+    break
+  }
+  assert(isEmpty)
 }
 
 /**

@@ -17,9 +17,23 @@
 import UIKit
 import MaterialMotion
 
-class DraggableExampleViewController: ExampleViewController {
+private class Draggable {
 
-  var runtime: MotionRuntime!
+  @discardableResult
+  class func apply(to view: UIView, relativeTo: UIView) -> Reactive<UIPanGestureRecognizer> {
+    let gesture = UIPanGestureRecognizer()
+    relativeTo.addGestureRecognizer(gesture)
+
+    let position = Reactive(view.layer).position
+    Reactive(gesture).didAnything.translation(addedTo: position, in: relativeTo).subscribeToValue {
+      position.value = $0
+    }
+
+    return Reactive(gesture)
+  }
+}
+
+class DraggableExampleViewController: ExampleViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -27,14 +41,7 @@ class DraggableExampleViewController: ExampleViewController {
     let square = center(createExampleView(), within: view)
     view.addSubview(square)
 
-    runtime = MotionRuntime(containerView: view)
-
-    let draggable = Draggable()
-    runtime.add(draggable, to: square)
-
-    runtime.whenAllAtRest([draggable]) {
-      print("Is now at rest")
-    }
+    Draggable.apply(to: square, relativeTo: view)
   }
 
   override func exampleInformation() -> ExampleInfo {

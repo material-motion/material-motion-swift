@@ -27,11 +27,19 @@ extension Reactive where O: UIGestureRecognizer {
     })
   }
 
-  public var didChange: MotionObservable<O> {
-    return _properties.named(#function, onCacheMiss: {
+  public var didAnything: MotionObservable<O> {
+    return _properties.named("recognition", onCacheMiss: {
       return GestureConnection(subscribedTo: _object)
     }, typeConversion: {
       return $0.asStream()
+    })
+  }
+
+  public var didRecognize: MotionObservable<O> {
+    return _properties.named("recognition", onCacheMiss: {
+      return GestureConnection(subscribedTo: _object)
+    }, typeConversion: {
+      return $0.asStream()._filter { $0.state == .recognized }
     })
   }
 }

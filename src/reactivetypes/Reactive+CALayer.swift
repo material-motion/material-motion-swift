@@ -23,7 +23,7 @@ extension Reactive where O: CALayer {
     return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: layer.anchorPoint,
-                                          externalWrite: { layer.anchorPoint = $0 },
+                                          externalWrite: { $0.anchorPoint = $1 },
                                           keyPath: "anchorPoint")
     })
   }
@@ -31,9 +31,8 @@ extension Reactive where O: CALayer {
   public var anchorPointAdjustment: ReactiveProperty<AnchorPointAdjustment> {
     let anchorPoint = self.anchorPoint
     let position = self.position
-    let layer = _object
     return _properties.named(#function, onCacheMiss: {
-      return ReactiveProperty<AnchorPointAdjustment>("\(pretty(layer)).\(#function)", initialValue: .init(anchorPoint: anchorPoint.value, position: position.value)) {
+      return ReactiveProperty<AnchorPointAdjustment>("\(pretty(_object)).\(#function)", initialValue: .init(anchorPoint: anchorPoint.value, position: position.value)) {
         anchorPoint.value = $0.anchorPoint; position.value = $0.position
       }
     })
@@ -44,7 +43,7 @@ extension Reactive where O: CALayer {
     return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: layer.cornerRadius,
-                                          externalWrite: { layer.cornerRadius = $0 },
+                                          externalWrite: { $0.cornerRadius = $1 },
                                           keyPath: "cornerRadius")
     })
   }
@@ -54,7 +53,7 @@ extension Reactive where O: CALayer {
     return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: size.value.height,
-                                          externalWrite: { var dimensions = size.value; dimensions.height = $0; size.value = dimensions },
+                                          externalWrite: { var dimensions = size.value; dimensions.height = $1; size.value = dimensions },
                                           keyPath: "bounds.size.height")
     })
   }
@@ -64,7 +63,7 @@ extension Reactive where O: CALayer {
     return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: CGFloat(layer.opacity),
-                                          externalWrite: { layer.opacity = Float($0) },
+                                          externalWrite: { $0.opacity = Float($1) },
                                           keyPath: "opacity")
     })
   }
@@ -74,7 +73,7 @@ extension Reactive where O: CALayer {
     return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: layer.position,
-                                          externalWrite: { layer.position = $0 },
+                                          externalWrite: { $0.position = $1 },
                                           keyPath: "position")
     })
   }
@@ -84,7 +83,7 @@ extension Reactive where O: CALayer {
     return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: position.value.x,
-                                          externalWrite: { var point = position.value; point.x = $0; position.value = point },
+                                          externalWrite: { var point = position.value; point.x = $1; position.value = point },
                                           keyPath: "position.x")
     })
   }
@@ -94,7 +93,7 @@ extension Reactive where O: CALayer {
     return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: position.value.y,
-                                          externalWrite: { var point = position.value; point.y = $0; position.value = point },
+                                          externalWrite: { var point = position.value; point.y = $1; position.value = point },
                                           keyPath: "position.y")
     })
   }
@@ -104,7 +103,7 @@ extension Reactive where O: CALayer {
     return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: layer.value(forKeyPath: "transform.rotation.z") as! CGFloat,
-                                          externalWrite: { layer.setValue($0, forKeyPath: "transform.rotation.z") },
+                                          externalWrite: { $0.setValue($1, forKeyPath: "transform.rotation.z") },
                                           keyPath: "transform.rotation.z")
     })
   }
@@ -114,7 +113,7 @@ extension Reactive where O: CALayer {
     return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: layer.value(forKeyPath: "transform.scale") as! CGFloat,
-                                          externalWrite: { layer.setValue($0, forKeyPath: "transform.scale") },
+                                          externalWrite: { $0.setValue($1, forKeyPath: "transform.scale") },
                                           keyPath: "transform.scale.xy")
     })
   }
@@ -124,7 +123,7 @@ extension Reactive where O: CALayer {
     return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: layer.bounds.size,
-                                          externalWrite: { layer.bounds.size = $0 },
+                                          externalWrite: { $0.bounds.size = $1 },
                                           keyPath: "bounds.size")
     })
   }
@@ -134,7 +133,7 @@ extension Reactive where O: CALayer {
     return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: layer.shadowPath!,
-                                          externalWrite: { layer.shadowPath = $0 },
+                                          externalWrite: { $0.shadowPath = $1 },
                                           keyPath: "shadowPath")
     })
   }
@@ -144,20 +143,24 @@ extension Reactive where O: CALayer {
     return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: size.value.width,
-                                          externalWrite: { var dimensions = size.value; dimensions.width = $0; size.value = dimensions },
+                                          externalWrite: { var dimensions = size.value; dimensions.width = $1; size.value = dimensions },
                                           keyPath: "bounds.size.width")
     })
   }
 
-  func createCoreAnimationProperty<T>(_ name: String, initialValue: T, externalWrite: @escaping NextChannel<T>, keyPath: String) -> ReactiveProperty<T> {
+  func createCoreAnimationProperty<T>(_ name: String, initialValue: T, externalWrite: @escaping (O, T) -> Void, keyPath: String) -> ReactiveProperty<T> {
     let layer = _object
     var decomposedKeys = Set<String>()
-    let property = ReactiveProperty("\(pretty(layer)).\(name)", initialValue: initialValue, externalWrite: { value in
+    let property = ReactiveProperty("\(pretty(layer)).\(name)", initialValue: initialValue, externalWrite: { [weak layer] value in
+      guard let layer = layer else { return }
+
       let actionsWereDisabled = CATransaction.disableActions()
       CATransaction.setDisableActions(true)
-      externalWrite(value)
+      externalWrite(layer, value)
       CATransaction.setDisableActions(actionsWereDisabled)
-    }, coreAnimation: { event in
+    }, coreAnimation: { [weak layer] event in
+      guard let layer = layer else { return }
+
       switch event {
       case .add(let info):
         if let timeline = info.timeline {
@@ -243,7 +246,9 @@ extension Reactive where O: CALayer {
       }
     })
     var lastView: UIView?
-    property.shouldVisualizeMotion = { view, containerView in
+    property.shouldVisualizeMotion = { [weak layer] view, containerView in
+      guard let layer = layer else { return }
+
       if lastView != view, let lastView = lastView {
         lastView.removeFromSuperview()
       }

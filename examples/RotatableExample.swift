@@ -17,9 +17,23 @@
 import UIKit
 import MaterialMotion
 
-class RotatableExampleViewController: ExampleViewController {
+private class Rotatable {
 
-  var runtime: MotionRuntime!
+  @discardableResult
+  class func apply(to view: UIView, relativeTo: UIView) -> Reactive<UIRotationGestureRecognizer> {
+    let gesture = UIRotationGestureRecognizer()
+    relativeTo.addGestureRecognizer(gesture)
+
+    let rotation = Reactive(view.layer).rotation
+    Reactive(gesture).didAnything.rotated(from: rotation).subscribeToValue {
+      rotation.value = $0
+    }
+
+    return Reactive(gesture)
+  }
+}
+
+class RotatableExampleViewController: ExampleViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -27,14 +41,7 @@ class RotatableExampleViewController: ExampleViewController {
     let square = center(createExampleSquareView(), within: view)
     view.addSubview(square)
 
-    runtime = MotionRuntime(containerView: view)
-
-    let rotatable = Rotatable()
-    runtime.add(rotatable, to: square)
-
-    runtime.whenAllAtRest([rotatable]) {
-      print("Is now at rest")
-    }
+    Rotatable.apply(to: square, relativeTo: view)
   }
 
   override func exampleInformation() -> ExampleInfo {
