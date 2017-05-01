@@ -59,7 +59,7 @@ class CarouselExampleViewController: ExampleViewController, UIScrollViewDelegate
         page.alpha = $0
       }
       pageEdge.rewriteRange(start: -view.bounds.width, end: 0, destinationStart: 0.5, destinationEnd: 1.0).subscribeToValue {
-        Reactive(page.layer).scale.value = $0
+        page.layer.transform = CATransform3DMakeScale($0, $0, 1)
       }
     }
 
