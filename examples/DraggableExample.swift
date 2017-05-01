@@ -17,15 +17,45 @@
 import UIKit
 import MaterialMotion
 
-private class Draggable {
+protocol Gesturable {
+  associatedtype GestureType: UIGestureRecognizer
+  associatedtype ConstraintType
 
   @discardableResult
-  class func apply(to view: UIView, relativeTo: UIView) -> Reactive<UIPanGestureRecognizer> {
-    let gesture = UIPanGestureRecognizer()
-    relativeTo.addGestureRecognizer(gesture)
+  static func apply(to view: UIView,
+                    relativeTo: UIView,
+                    withGestureRecognizer existingGesture: GestureType?,
+                    constraints applyConstraints: ConstraintType?) -> Reactive<GestureType>
+}
+
+extension Gesturable {
+  static func prepareGesture(relativeTo: UIView, withGestureRecognizer existingGesture: GestureType?) -> GestureType {
+    let gesture: GestureType
+    if let existingGesture = existingGesture {
+      gesture = existingGesture
+    } else {
+      gesture = GestureType()
+      relativeTo.addGestureRecognizer(gesture)
+    }
+    return gesture
+  }
+}
+
+private class Draggable: Gesturable {
+
+  @discardableResult
+  class func apply(to view: UIView,
+                   relativeTo: UIView,
+                   withGestureRecognizer existingGesture: UIPanGestureRecognizer? = nil,
+                   constraints applyConstraints: ConstraintApplicator<CGPoint>? = nil) -> Reactive<UIPanGestureRecognizer> {
+    let gesture = prepareGesture(relativeTo: relativeTo, withGestureRecognizer: existingGesture)
 
     let position = Reactive(view.layer).position
-    Reactive(gesture).didAnything.translation(addedTo: position, in: relativeTo).subscribeToValue {
+    var stream = Reactive(gesture).didAnything.translation(addedTo: position, in: relativeTo)
+    if let applyConstraints = applyConstraints {
+      stream = applyConstraints(stream)
+    }
+    stream.subscribeToValue {
       position.value = $0
     }
 

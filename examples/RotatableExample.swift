@@ -17,15 +17,21 @@
 import UIKit
 import MaterialMotion
 
-private class Rotatable {
+private class Rotatable: Gesturable {
 
   @discardableResult
-  class func apply(to view: UIView, relativeTo: UIView) -> Reactive<UIRotationGestureRecognizer> {
-    let gesture = UIRotationGestureRecognizer()
-    relativeTo.addGestureRecognizer(gesture)
+  class func apply(to view: UIView,
+                   relativeTo: UIView,
+                   withGestureRecognizer existingGesture: UIRotationGestureRecognizer? = nil,
+                   constraints applyConstraints: ConstraintApplicator<CGFloat>? = nil) -> Reactive<UIRotationGestureRecognizer> {
+    let gesture = prepareGesture(relativeTo: relativeTo, withGestureRecognizer: existingGesture)
 
     let rotation = Reactive(view.layer).rotation
-    Reactive(gesture).didAnything.rotated(from: rotation).subscribeToValue {
+    var stream = Reactive(gesture).didAnything.rotated(from: rotation)
+    if let applyConstraints = applyConstraints {
+      stream = applyConstraints(stream)
+    }
+    stream.subscribeToValue {
       rotation.value = $0
     }
 

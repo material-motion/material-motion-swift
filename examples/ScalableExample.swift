@@ -17,15 +17,21 @@
 import UIKit
 import MaterialMotion
 
-private class Scalable {
+private class Scalable: Gesturable {
 
   @discardableResult
-  class func apply(to view: UIView, relativeTo: UIView) -> Reactive<UIPinchGestureRecognizer> {
-    let gesture = UIPinchGestureRecognizer()
-    relativeTo.addGestureRecognizer(gesture)
+  class func apply(to view: UIView,
+                   relativeTo: UIView,
+                   withGestureRecognizer existingGesture: UIPinchGestureRecognizer? = nil,
+                   constraints applyConstraints: ConstraintApplicator<CGFloat>? = nil) -> Reactive<UIPinchGestureRecognizer> {
+    let gesture = prepareGesture(relativeTo: relativeTo, withGestureRecognizer: existingGesture)
 
     let scale = Reactive(view.layer).scale
-    Reactive(gesture).didAnything.scaled(from: scale).subscribeToValue {
+    var stream = Reactive(gesture).didAnything.scaled(from: scale)
+    if let applyConstraints = applyConstraints {
+      stream = applyConstraints(stream)
+    }
+    stream.subscribeToValue {
       scale.value = $0
     }
 
