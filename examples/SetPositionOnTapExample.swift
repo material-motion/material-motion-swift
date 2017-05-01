@@ -15,11 +15,16 @@
  */
 
 import UIKit
+import IndefiniteObservable
 import MaterialMotion
 
-class SetPositionOnTapExampleViewController: ExampleViewController {
+public func positionOnTap(inCoordinateSpace coordinateSpace: UIView, withGestureRecognizer gestureRecognizer: UITapGestureRecognizer) -> MotionObservable<CGPoint> {
+  let gestureTarget = ReactiveGestureTarget()
+  gestureRecognizer.addTarget(gestureTarget, action: #selector(ReactiveGestureTarget.gestureDidChange))
+  return gestureTarget.didChange.centroid(in: coordinateSpace)
+}
 
-  var runtime: MotionRuntime!
+class SetPositionOnTapExampleViewController: ExampleViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -27,9 +32,12 @@ class SetPositionOnTapExampleViewController: ExampleViewController {
     let square = center(createExampleView(), within: view)
     view.addSubview(square)
 
-    runtime = MotionRuntime(containerView: view)
+    let tap = UITapGestureRecognizer()
+    view.addGestureRecognizer(tap)
 
-    runtime.add(SetPositionOnTap(), to: runtime.get(square.layer).position)
+    Reactive(tap).didChange.centroid(in: view).subscribeToValue {
+      square.center = $0
+    }
   }
 
   override func exampleInformation() -> ExampleInfo {

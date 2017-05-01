@@ -20,133 +20,133 @@ extension Reactive where O: CALayer {
 
   public var anchorPoint: ReactiveProperty<CGPoint> {
     let layer = _object
-    return _properties.named(#function) {
+    return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: layer.anchorPoint,
                                           externalWrite: { layer.anchorPoint = $0 },
                                           keyPath: "anchorPoint")
-    }
+    })
   }
 
   public var anchorPointAdjustment: ReactiveProperty<AnchorPointAdjustment> {
     let anchorPoint = self.anchorPoint
     let position = self.position
     let layer = _object
-    return _properties.named(#function) {
-      return .init("\(pretty(layer)).\(#function)", initialValue: .init(anchorPoint: anchorPoint.value, position: position.value)) {
+    return _properties.named(#function, onCacheMiss: {
+      return ReactiveProperty<AnchorPointAdjustment>("\(pretty(layer)).\(#function)", initialValue: .init(anchorPoint: anchorPoint.value, position: position.value)) {
         anchorPoint.value = $0.anchorPoint; position.value = $0.position
       }
-    }
+    })
   }
 
   public var cornerRadius: ReactiveProperty<CGFloat> {
     let layer = _object
-    return _properties.named(#function) {
+    return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: layer.cornerRadius,
                                           externalWrite: { layer.cornerRadius = $0 },
                                           keyPath: "cornerRadius")
-    }
+    })
   }
 
   public var height: ReactiveProperty<CGFloat> {
     let size = self.size
-    return _properties.named(#function) {
+    return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: size.value.height,
                                           externalWrite: { var dimensions = size.value; dimensions.height = $0; size.value = dimensions },
                                           keyPath: "bounds.size.height")
-    }
+    })
   }
 
   public var opacity: ReactiveProperty<CGFloat> {
     let layer = _object
-    return _properties.named(#function) {
+    return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: CGFloat(layer.opacity),
                                           externalWrite: { layer.opacity = Float($0) },
                                           keyPath: "opacity")
-    }
+    })
   }
 
   public var position: ReactiveProperty<CGPoint> {
     let layer = _object
-    return _properties.named(#function) {
+    return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: layer.position,
                                           externalWrite: { layer.position = $0 },
                                           keyPath: "position")
-    }
+    })
   }
 
   public var positionX: ReactiveProperty<CGFloat> {
     let position = self.position
-    return _properties.named(#function) {
+    return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: position.value.x,
                                           externalWrite: { var point = position.value; point.x = $0; position.value = point },
                                           keyPath: "position.x")
-    }
+    })
   }
 
   public var positionY: ReactiveProperty<CGFloat> {
     let position = self.position
-    return _properties.named(#function) {
+    return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: position.value.y,
                                           externalWrite: { var point = position.value; point.y = $0; position.value = point },
                                           keyPath: "position.y")
-    }
+    })
   }
 
   public var rotation: ReactiveProperty<CGFloat> {
     let layer = _object
-    return _properties.named(#function) {
+    return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: layer.value(forKeyPath: "transform.rotation.z") as! CGFloat,
                                           externalWrite: { layer.setValue($0, forKeyPath: "transform.rotation.z") },
                                           keyPath: "transform.rotation.z")
-    }
+    })
   }
 
   public var scale: ReactiveProperty<CGFloat> {
     let layer = _object
-    return _properties.named(#function) {
+    return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: layer.value(forKeyPath: "transform.scale") as! CGFloat,
                                           externalWrite: { layer.setValue($0, forKeyPath: "transform.scale") },
                                           keyPath: "transform.scale.xy")
-    }
+    })
   }
 
   public var size: ReactiveProperty<CGSize> {
     let layer = _object
-    return _properties.named(#function) {
+    return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: layer.bounds.size,
                                           externalWrite: { layer.bounds.size = $0 },
                                           keyPath: "bounds.size")
-    }
+    })
   }
 
   public var shadowPath: ReactiveProperty<CGPath> {
     let layer = _object
-    return _properties.named(#function) {
+    return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: layer.shadowPath!,
                                           externalWrite: { layer.shadowPath = $0 },
                                           keyPath: "shadowPath")
-    }
+    })
   }
 
   public var width: ReactiveProperty<CGFloat> {
     let size = self.size
-    return _properties.named(#function) {
+    return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: size.value.width,
                                           externalWrite: { var dimensions = size.value; dimensions.width = $0; size.value = dimensions },
                                           keyPath: "bounds.size.width")
-    }
+    })
   }
 
   func createCoreAnimationProperty<T>(_ name: String, initialValue: T, externalWrite: @escaping NextChannel<T>, keyPath: String) -> ReactiveProperty<T> {

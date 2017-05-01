@@ -86,13 +86,13 @@ public final class ReactiveCache: CustomDebugStringConvertible {
    onCacheMiss is invoked if the property is not cached. The returned reactive property will be
    stored in the cache and returned.
    */
-  func named<T>(_ name: String, onCacheMiss: () -> ReactiveProperty<T>) -> ReactiveProperty<T> {
-    if let property = cache.object(forKey: name as NSString) {
-      return property as! ReactiveProperty<T>
+  func named<U: AnyObject, T>(_ name: String, onCacheMiss: () -> U, typeConversion: (U) -> T = { $0 as! T }) -> T {
+    if let property = cache.object(forKey: name as NSString) as? U {
+      return typeConversion(property)
     }
     let property = onCacheMiss()
     cache.setObject(property, forKey: name as NSString)
-    return property
+    return typeConversion(property)
   }
 
   // Reactive properties are weakly held because they hold a reference to the object. If we kept a
@@ -100,12 +100,12 @@ public final class ReactiveCache: CustomDebugStringConvertible {
   // zero and we'd have a memory leak, even if the property, object, and reactive instance were all
   // dereferenced in client code.
   private let cache = NSMapTable<NSString, AnyObject>(keyOptions: .strongMemory,
-                                                      valueOptions: [.weakMemory, .objectPointerPersonality])
+                                                      valueOptions: [.strongMemory, .objectPointerPersonality])
 
   public var debugDescription: String {
     return cache.debugDescription
   }
 }
 
-private var globalCache = NSMapTable<AnyObject, ReactiveCache>(keyOptions: [.weakMemory, .objectPointerPersonality],
+public var globalCache = NSMapTable<AnyObject, ReactiveCache>(keyOptions: [.weakMemory, .objectPointerPersonality],
                                                                valueOptions: [.strongMemory, .objectPointerPersonality])

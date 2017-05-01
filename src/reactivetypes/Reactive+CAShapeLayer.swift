@@ -22,12 +22,12 @@ extension Reactive where O: CAShapeLayer {
 
   public var path: ReactiveProperty<CGPath> {
     let layer = _object
-    return _properties.named(#function) {
+    return _properties.named(#function, onCacheMiss: {
       return createCoreAnimationProperty(#function,
                                           initialValue: layer.path!,
                                           externalWrite: { layer.path = $0 },
                                           keyPath: "path")
-    }
+    })
   }
 
 }
