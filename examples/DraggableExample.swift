@@ -41,7 +41,7 @@ extension Gesturable {
   }
 }
 
-private class Draggable: Gesturable {
+class Draggable2: Gesturable {
 
   @discardableResult
   class func apply(to view: UIView,
@@ -71,7 +71,7 @@ class DraggableExampleViewController: ExampleViewController {
     let square = center(createExampleView(), within: view)
     view.addSubview(square)
 
-    Draggable.apply(to: square, relativeTo: view)
+    Draggable2.apply(to: square, relativeTo: view)
   }
 
   override func exampleInformation() -> ExampleInfo {

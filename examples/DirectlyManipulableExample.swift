@@ -17,6 +17,16 @@
 import UIKit
 import MaterialMotion
 
+class DirectlyManipulable2 {
+
+  @discardableResult
+  class func apply(to view: UIView, relativeTo: UIView) {
+    Draggable2.apply(to: view, relativeTo: relativeTo)
+    Rotatable2.apply(to: view, relativeTo: relativeTo)
+    Scalable2.apply(to: view, relativeTo: relativeTo)
+  }
+}
+
 class DirectlyManipulableExampleViewController: ExampleViewController {
 
   var runtime: MotionRuntime!

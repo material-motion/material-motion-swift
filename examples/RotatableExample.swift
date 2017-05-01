@@ -17,7 +17,7 @@
 import UIKit
 import MaterialMotion
 
-private class Rotatable: Gesturable {
+class Rotatable2: Gesturable {
 
   @discardableResult
   class func apply(to view: UIView,
@@ -47,7 +47,7 @@ class RotatableExampleViewController: ExampleViewController {
     let square = center(createExampleSquareView(), within: view)
     view.addSubview(square)
 
-    Rotatable.apply(to: square, relativeTo: view)
+    Rotatable2.apply(to: square, relativeTo: view)
   }
 
   override func exampleInformation() -> ExampleInfo {

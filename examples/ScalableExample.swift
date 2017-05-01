@@ -17,7 +17,7 @@
 import UIKit
 import MaterialMotion
 
-private class Scalable: Gesturable {
+class Scalable2: Gesturable {
 
   @discardableResult
   class func apply(to view: UIView,
@@ -47,7 +47,7 @@ class ScalableExampleViewController: ExampleViewController {
     let square = center(createExampleSquareView(), within: view)
     view.addSubview(square)
 
-    Scalable.apply(to: square, relativeTo: view)
+    Scalable2.apply(to: square, relativeTo: view)
   }
 
   override func exampleInformation() -> ExampleInfo {
