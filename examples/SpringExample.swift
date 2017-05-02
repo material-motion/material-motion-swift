@@ -17,6 +17,108 @@
 import UIKit
 import MaterialMotion
 
+/**
+ A spring pulls a value from an initial position to a destination using a physical simulation of a
+ dampened oscillator.
+
+ A spring can be associated with many properties. Each property receives its own distinct simulator
+ that reads the property as the initial value and pulls the value towards the destination.
+ Configuration values are shared across all running instances.
+
+ **Constraints**
+
+ T-value constraints may be applied to this interaction.
+ */
+public class Spring2<T> where T: Subtractable {
+  /**
+   Creates a spring with a given threshold and system.
+
+   - parameter threshold: The threshold of movement defining the completion of the spring simulation. This parameter is not used by the Core Animation system and can be left as a default value.
+   - parameter system: The system that should be used to drive this spring.
+   */
+  public init(for property: ReactiveProperty<T>) {
+    self.property = property
+  }
+
+  let property: ReactiveProperty<T>
+
+  public func start() {
+    let key = NSUUID().uuidString
+
+    // TODO: Subscribe to destination
+
+    let animation = CASpringAnimation()
+
+    animation.damping = friction
+    animation.stiffness = tension
+    animation.mass = mass
+
+    animation.fromValue = property.value
+    animation.toValue = destination
+
+    if suggestedDuration != 0 {
+      animation.duration = TimeInterval(suggestedDuration)
+    } else {
+      animation.duration = animation.settlingDuration
+    }
+
+    property.value = destination!
+
+    var add = CoreAnimationChannelAdd(animation: animation, key: key) {
+      // TODO: Mark at rest.
+    }
+    add.initialVelocity = initialVelocity
+    add.makeAdditive = { from, to in
+      return (from as! T) - (to as! T)
+    }
+    property.coreAnimation(.add(add))
+  }
+
+  /**
+   The initial velocity of the spring.
+
+   Applied to the physical simulation only when it starts.
+   */
+  public var initialVelocity: T?
+
+  /**
+   The destination value of the spring represented as a property.
+
+   Changing this property will immediately affect the spring simulation.
+   */
+  public var destination: T?
+
+  /**
+   Tension defines how quickly the spring's value moves towards its destination.
+
+   Higher tension means higher initial velocity and more overshoot.
+   */
+  public var tension = defaultSpringTension
+
+  /**
+   Tension defines how quickly the spring's velocity slows down.
+
+   Higher friction means quicker deceleration and less overshoot.
+   */
+  public var friction = defaultSpringFriction
+
+  /**
+   The mass affects the value's acceleration.
+
+   Higher mass means slower acceleration and deceleration.
+   */
+  public var mass = defaultSpringMass
+
+  /**
+   The suggested duration of the spring represented as a property.
+
+   This property may not be supported by all animation systems.
+
+   A value of 0 means this property will be ignored.
+   */
+  public var suggestedDuration: CGFloat = 0
+}
+
 class SpringExampleViewController: ExampleViewController {
 
   var runtime: MotionRuntime!
@@ -29,16 +131,15 @@ class SpringExampleViewController: ExampleViewController {
 
     runtime = MotionRuntime(containerView: view)
 
-    let spring = Spring<CGFloat>(threshold: 0.01, system: coreAnimation)
-    spring.destination.value = 1
-    runtime.add(spring, to: runtime.get(square.layer).scale)
+    let spring = Spring2(for: Reactive(square.layer).position)
 
-    let tap = runtime.get(UITapGestureRecognizer())
-    runtime.connect(tap.whenRecognitionState(is: .recognized).rewriteTo(1.5), to: spring.destination)
-    runtime.connect(tap.whenRecognitionState(is: .recognized).delay(by: 0.1).rewriteTo(1), to: spring.destination)
+    let tap = UITapGestureRecognizer()
+    view.addGestureRecognizer(tap)
 
-    runtime.whenAllAtRest([spring]) {
-      print("Is now at rest")
+    Reactive(tap).didRecognize.subscribeToValue { _ in
+      spring.destination = CGPoint(x: CGFloat(arc4random_uniform(UInt32(self.view.bounds.width))),
+                                   y: CGFloat(arc4random_uniform(UInt32(self.view.bounds.height))))
+      spring.start()
     }
   }
 

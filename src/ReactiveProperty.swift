@@ -110,7 +110,7 @@ public final class ReactiveProperty<T> {
    Forwards the invocation to the channel if a core animation channel was provided to this property,
    otherwise throws an assertion.
    */
-  func coreAnimation(_ event: CoreAnimationChannelEvent) {
+  public func coreAnimation(_ event: CoreAnimationChannelEvent) {
     _coreAnimation?(event)
 
     let transformedEvent: CoreAnimationChannelEvent

@@ -18,7 +18,7 @@ import Foundation
 import CoreGraphics
 
 extension DispatchTimeInterval {
-  func toSeconds() -> CGFloat {
+  public func toSeconds() -> CGFloat {
     let seconds: CGFloat
     switch self {
     case let .seconds(arg):

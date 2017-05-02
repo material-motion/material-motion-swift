@@ -38,6 +38,10 @@ class SetPositionOnTapExampleViewController: ExampleViewController {
     Reactive(tap).didAnything.centroid(in: view).subscribeToValue {
       square.center = $0
     }
+
+    Reactive(tap).state.subscribeToValue { state in
+      print(state)
+    }
   }
 
   override func exampleInformation() -> ExampleInfo {
