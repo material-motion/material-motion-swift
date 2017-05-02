@@ -20,16 +20,67 @@ import MaterialMotion
 class DirectlyManipulable2 {
 
   @discardableResult
-  class func apply(to view: UIView, relativeTo: UIView) {
-    Draggable2.apply(to: view, relativeTo: relativeTo)
-    Rotatable2.apply(to: view, relativeTo: relativeTo)
-    Scalable2.apply(to: view, relativeTo: relativeTo)
+  class func apply(to view: UIView, relativeTo: UIView) -> [UIGestureRecognizer] {
+    let draggable = Draggable2.apply(to: view, relativeTo: relativeTo)
+    let rotatable = Rotatable2.apply(to: view, relativeTo: relativeTo)
+    let scalable = Scalable2.apply(to: view, relativeTo: relativeTo)
+
+    let stateAggregator = AggregateMotionState()
+    stateAggregator.observe(state: draggable.state)
+    stateAggregator.observe(state: rotatable.state)
+    stateAggregator.observe(state: scalable.state)
+    stateAggregator.asStream()._filter { $0 == .active }.subscribeToValue { state in
+      guard let gesture = [draggable._object, rotatable._object, scalable._object].max(by: { a, b in a.numberOfTouches < b.numberOfTouches }) else {
+        return
+      }
+      guard gesture.numberOfTouches > 1 else {
+        return
+      }
+
+      let location = gesture.location(in: view)
+
+      let newAnchorPoint = CGPoint(x: location.x / view.layer.bounds.width, y: location.y / view.layer.bounds.height)
+      let newPosition = view.layer.convert(location, to: view.layer.superlayer)
+
+      view.layer.anchorPoint = newAnchorPoint
+      view.layer.position = newPosition
+    }
+
+    return [draggable._object, rotatable._object, scalable._object]
   }
 }
 
-class DirectlyManipulableExampleViewController: ExampleViewController {
+final class AggregateMotionState {
 
-  var runtime: MotionRuntime!
+  init(initialState: MotionState = .atRest) {
+    state.value = initialState
+  }
+
+  /**
+   Observe the provided MotionState reactive object.
+   */
+  func observe<O>(state: O) where O: MotionObservableConvertible, O: AnyObject, O.T == MotionState {
+    let identifier = ObjectIdentifier(state)
+
+    state.asStream().dedupe().subscribeToValue { state in
+      if state == .active {
+        self.activeStates.insert(identifier)
+      } else {
+        self.activeStates.remove(identifier)
+      }
+      self.state.value = self.activeStates.count == 0 ? .atRest : .active
+    }
+  }
+
+  func asStream() -> MotionObservable<MotionState> {
+    return state.asStream()
+  }
+
+  private let state = createProperty("state", withInitialValue: MotionState.atRest)
+  private var activeStates = Set<ObjectIdentifier>()
+}
+
+class DirectlyManipulableExampleViewController: ExampleViewController, UIGestureRecognizerDelegate {
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -37,14 +88,14 @@ class DirectlyManipulableExampleViewController: ExampleViewController {
     let square = center(createExampleSquareView(), within: view)
     view.addSubview(square)
 
-    runtime = MotionRuntime(containerView: view)
-
-    let directlyManipulable = DirectlyManipulable()
-    runtime.add(directlyManipulable, to: square)
-
-    runtime.whenAllAtRest([directlyManipulable]) {
-      print("Is now at rest")
+    let gestures = DirectlyManipulable2.apply(to: square, relativeTo: view)
+    for gesture in gestures {
+      gesture.delegate = self
     }
+  }
+
+  func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    return true
   }
 
   override func exampleInformation() -> ExampleInfo {

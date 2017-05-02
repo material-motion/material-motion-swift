@@ -36,7 +36,7 @@ extension MotionObservableConvertible where T: UIPanGestureRecognizer {
       let upstreamSubscription = self.subscribeAndForward(to: observer) { [weak view] value in
         guard let view = view else { return }
 
-        if value.state == .began || (value.state == .changed && cachedInitialPosition == nil)  {
+        if value.state == .changed && cachedInitialPosition == nil  {
           cachedInitialPosition = lastInitialPosition
 
         } else if value.state != .began && value.state != .changed {

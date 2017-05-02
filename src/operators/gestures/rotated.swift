@@ -31,7 +31,7 @@ extension MotionObservableConvertible where T: UIRotationGestureRecognizer {
       let initialRotationSubscription = initialRotation.subscribeToValue { lastInitialRotation = $0 }
 
       let upstreamSubscription = self.subscribeAndForward(to: observer) { value in
-        if value.state == .began || (value.state == .changed && cachedInitialRotation == nil)  {
+        if value.state == .changed && cachedInitialRotation == nil  {
           cachedInitialRotation = lastInitialRotation
 
         } else if value.state != .began && value.state != .changed {

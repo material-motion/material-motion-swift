@@ -31,7 +31,7 @@ extension MotionObservableConvertible where T: UIPinchGestureRecognizer {
       let initialScaleSubscription = initialScale.subscribeToValue { lastInitialScale = $0 }
 
       let upstreamSubscription = self.subscribeAndForward(to: observer) { value in
-        if value.state == .began || (value.state == .changed && cachedInitialScale == nil)  {
+        if value.state == .changed && cachedInitialScale == nil  {
           cachedInitialScale = lastInitialScale
 
         } else if value.state != .began && value.state != .changed {
