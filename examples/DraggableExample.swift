@@ -78,7 +78,8 @@ class DraggableExampleViewController: ExampleViewController {
     let square = center(createExampleView(), within: view)
     view.addSubview(square)
 
-    Draggable2.apply(to: square, containerView: view)
+    let draggable = Draggable2(square, containerView: view)
+    draggable.enable()
   }
 
   override func exampleInformation() -> ExampleInfo {

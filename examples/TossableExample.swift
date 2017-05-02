@@ -25,6 +25,9 @@ public class Tossable2 {
     self.containerView = containerView
   }
 
+  public let draggable: Draggable2
+  public let spring: Spring2<CGPoint>
+
   public func enable() {
     guard subscriptions.count == 0 else { return }
     let spring = self.spring
@@ -43,14 +46,14 @@ public class Tossable2 {
   }
 
   public func disable() {
-    self.draggable.disable()
+    draggable.disable()
+    spring.stop()
 
     subscriptions.forEach { $0.unsubscribe() }
     subscriptions.removeAll()
   }
 
-  public let draggable: Draggable2
-  public let spring: Spring2<CGPoint>
+
   private let containerView: UIView
   private var subscriptions: [Subscription] = []
 }
