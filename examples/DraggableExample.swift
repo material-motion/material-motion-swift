@@ -31,21 +31,27 @@ func prepareGesture<GestureType: UIGestureRecognizer>(relativeTo: UIView, withGe
 
 public class Draggable2 {
 
-  public init(_ view: UIView, containerView: UIView, withGestureRecognizer existingGesture: UIPanGestureRecognizer? = nil) {
+  public convenience init(_ view: UIView, containerView: UIView, withGestureRecognizer existingGesture: UIPanGestureRecognizer? = nil) {
+    self.init(Reactive(view.layer).position, containerView: containerView, withGestureRecognizer: existingGesture)
+  }
+
+  public init(_ property: ReactiveProperty<CGPoint>, containerView: UIView, withGestureRecognizer existingGesture: UIPanGestureRecognizer? = nil) {
     let gesture = prepareGesture(relativeTo: containerView, withGestureRecognizer: existingGesture)
     self.gesture = Reactive(gesture)
-    self.property = Reactive(view.layer).position
+    self.property = property
     self.stream = self.gesture.didAnything.translation(addedTo: property, in: containerView)
   }
 
-  public func start() {
+  public func enable() {
+    guard subscription == nil else { return }
+
     let property = self.property
     subscription = stream.subscribeToValue {
       property.value = $0
     }
   }
 
-  public func stop() {
+  public func disable() {
     subscription?.unsubscribe()
     subscription = nil
   }
@@ -53,7 +59,7 @@ public class Draggable2 {
   @discardableResult
   public class func apply(to view: UIView, containerView: UIView, withGestureRecognizer existingGesture: UIPanGestureRecognizer? = nil) -> Draggable2 {
     let draggable = Draggable2(view, containerView: containerView, withGestureRecognizer: existingGesture)
-    draggable.start()
+    draggable.enable()
     return draggable
   }
 

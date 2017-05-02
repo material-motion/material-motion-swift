@@ -142,22 +142,17 @@ public class Spring2<T> where T: Subtractable {
 
 class SpringExampleViewController: ExampleViewController {
 
-  var runtime: MotionRuntime!
-
   override func viewDidLoad() {
     super.viewDidLoad()
 
     let square = center(createExampleView(), within: view)
     view.addSubview(square)
 
-    runtime = MotionRuntime(containerView: view)
-
-    let spring = Spring2(for: Reactive(square.layer).position)
-    spring.friction /= 2
-
     let tap = UITapGestureRecognizer()
     view.addGestureRecognizer(tap)
 
+    let spring = Spring2(for: Reactive(square.layer).position)
+    spring.friction /= 2
     spring.start()
 
     Reactive(tap).didRecognize.subscribeToValue { _ in

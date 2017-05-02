@@ -15,28 +15,44 @@
  */
 
 import UIKit
+import IndefiniteObservable
 import MaterialMotion
 
 public class Tossable2 {
-  public init(_ view: UIView, relativeTo: UIView) {
-    let draggable = Draggable2(view, containerView: relativeTo)
+  public init(_ view: UIView, containerView: UIView) {
+    self.draggable = Draggable2(view, containerView: containerView)
+    self.spring = Spring2(for: Reactive(view.layer).position)
+    self.containerView = containerView
+  }
 
-    let spring = Spring2(for: Reactive(view.layer).position)
+  public func enable() {
+    guard subscriptions.count == 0 else { return }
+    let spring = self.spring
 
-    draggable.gesture.didBegin().subscribeToValue { _ in
-      spring.stop()
-    }
-    draggable.gesture.didAnything._filter { $0.state == .ended }.velocity(in: view).subscribeToValue { velocity in
-      spring.initialVelocity = velocity
-      spring.start()
-    }
+    self.draggable.enable()
 
-    self.draggable = draggable
-    self.spring = spring
+    subscriptions.append(contentsOf: [
+      draggable.gesture.didBegin().subscribeToValue { _ in
+        spring.stop()
+      },
+      draggable.gesture.didAnything._filter { $0.state == .ended }.velocity(in: containerView).subscribeToValue { velocity in
+        spring.initialVelocity = velocity
+        spring.start()
+      }]
+    )
+  }
+
+  public func disable() {
+    self.draggable.disable()
+
+    subscriptions.forEach { $0.unsubscribe() }
+    subscriptions.removeAll()
   }
 
   public let draggable: Draggable2
   public let spring: Spring2<CGPoint>
+  private let containerView: UIView
+  private var subscriptions: [Subscription] = []
 }
 
 class TossableExampleViewController: ExampleViewController {
@@ -47,8 +63,9 @@ class TossableExampleViewController: ExampleViewController {
     let square = center(createExampleSquareView(), within: view)
     view.addSubview(square)
 
-    let tossable = Tossable2(square, relativeTo: view)
+    let tossable = Tossable2(square, containerView: view)
     tossable.spring.destination = CGPoint(x: view.bounds.midX, y: view.bounds.midY)
+    tossable.enable()
   }
 
   override func exampleInformation() -> ExampleInfo {
