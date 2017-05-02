@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import IndefiniteObservable
 
 /**
  A reactive representation of an object uses a global cache to fetch reactive property instances.
@@ -60,6 +61,8 @@ public class Reactive<O: AnyObject> {
     }
   }
 
+  public var subscriptions: [Subscription] = []
+
   /**
    The object backing this reactive instance.
    */
@@ -78,6 +81,7 @@ public func assertEmpty() {
     break
   }
   assert(isEmpty)
+  globalCache.removeAllObjects()
 }
 
 /**
@@ -96,8 +100,8 @@ public final class ReactiveCache: CustomDebugStringConvertible {
    stored in the cache and returned.
    */
   func named<U: AnyObject, T>(_ name: String, onCacheMiss: () -> U, typeConversion: (U) -> T = { $0 as! T }) -> T {
-    if let property = cache.object(forKey: name as NSString) as? U {
-      return typeConversion(property)
+    if let property = cache.object(forKey: name as NSString) {
+      return typeConversion(unsafeBitCast(property, to: U.self))
     }
     let property = onCacheMiss()
     cache.setObject(property, forKey: name as NSString)

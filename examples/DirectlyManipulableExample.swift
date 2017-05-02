@@ -25,33 +25,58 @@ class DirectlyManipulable2 {
     let rotatable = Rotatable2.apply(to: view, relativeTo: relativeTo)
     let scalable = Scalable2.apply(to: view, relativeTo: relativeTo)
 
-    let stateAggregator = AggregateMotionState()
-    stateAggregator.observe(state: draggable.state)
-    stateAggregator.observe(state: rotatable.state)
-    stateAggregator.observe(state: scalable.state)
-    stateAggregator.asStream()._filter { $0 == .active }.subscribeToValue { state in
-      guard let gesture = [draggable._object, rotatable._object, scalable._object].max(by: { a, b in a.numberOfTouches < b.numberOfTouches }) else {
-        return
-      }
-      guard gesture.numberOfTouches > 1 else {
-        return
-      }
-
-      let location = gesture.location(in: view)
-
-      let newAnchorPoint = CGPoint(x: location.x / view.layer.bounds.width, y: location.y / view.layer.bounds.height)
-      let newPosition = view.layer.convert(location, to: view.layer.superlayer)
-
-      view.layer.anchorPoint = newAnchorPoint
-      view.layer.position = newPosition
-    }
+    AdjustsAnchorPoint2.apply(to: view, gestures: [draggable._object, rotatable._object, scalable._object])
 
     return [draggable._object, rotatable._object, scalable._object]
   }
 }
 
-final class AggregateMotionState {
+class AdjustsAnchorPoint2 {
 
+  @discardableResult
+  class func apply(to view: UIView, gestures: [UIGestureRecognizer]) {
+    let originalAnchorPoint = view.layer.anchorPoint
+
+    let weakGestures = NSHashTable<UIGestureRecognizer>.weakObjects()
+
+    let stateAggregator = AggregateMotionState()
+    for gesture in gestures {
+      stateAggregator.observe(state: Reactive(gesture).state)
+      weakGestures.add(gesture)
+    }
+
+    Reactive(view).subscriptions.append(stateAggregator.asStream().dedupe().subscribeToValue { [weak view] state in
+      guard let view = view else { return }
+
+      guard let gesture = weakGestures.allObjects.max(by: { a, b in
+        a.numberOfTouches < b.numberOfTouches
+      }) else { return }
+
+      let reactiveLayer = Reactive(view.layer)
+
+      let newAnchorPoint: CGPoint
+      let newPosition: CGPoint
+      if state == .active {
+        let location = gesture.location(in: view)
+
+        newAnchorPoint = CGPoint(x: location.x / reactiveLayer.width.value,
+                                 y: location.y / reactiveLayer.height.value)
+        newPosition = view.layer.convert(location, to: view.layer.superlayer)
+
+      } else {
+        newAnchorPoint = originalAnchorPoint
+        let restoredPosition = CGPoint(x: originalAnchorPoint.x * reactiveLayer.width.value,
+                                       y: originalAnchorPoint.y * reactiveLayer.height.value)
+        newPosition = view.layer.convert(restoredPosition, to: view.layer.superlayer)
+      }
+
+      reactiveLayer.anchorPoint.value = newAnchorPoint
+      reactiveLayer.position.value = newPosition
+    })
+  }
+}
+
+final class AggregateMotionState {
   init(initialState: MotionState = .atRest) {
     state.value = initialState
   }
