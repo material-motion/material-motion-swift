@@ -43,9 +43,17 @@ public class Spring2<T> where T: Subtractable {
   let property: ReactiveProperty<T>
 
   public func start() {
-    let key = NSUUID().uuidString
+    started = true
 
-    // TODO: Subscribe to destination
+    checkAndEmit()
+  }
+  private var started = false
+
+  private func checkAndEmit() {
+    guard started else { return }
+    guard let destination = destination else { return }
+
+    let key = NSUUID().uuidString
 
     let animation = CASpringAnimation()
 
@@ -62,7 +70,7 @@ public class Spring2<T> where T: Subtractable {
       animation.duration = animation.settlingDuration
     }
 
-    property.value = destination!
+    property.value = destination
 
     var add = CoreAnimationChannelAdd(animation: animation, key: key) {
       // TODO: Mark at rest.
@@ -86,7 +94,11 @@ public class Spring2<T> where T: Subtractable {
 
    Changing this property will immediately affect the spring simulation.
    */
-  public var destination: T?
+  public var destination: T? {
+    didSet {
+      checkAndEmit()
+    }
+  }
 
   /**
    Tension defines how quickly the spring's value moves towards its destination.
@@ -132,14 +144,16 @@ class SpringExampleViewController: ExampleViewController {
     runtime = MotionRuntime(containerView: view)
 
     let spring = Spring2(for: Reactive(square.layer).position)
+    spring.friction /= 2
 
     let tap = UITapGestureRecognizer()
     view.addGestureRecognizer(tap)
 
+    spring.start()
+
     Reactive(tap).didRecognize.subscribeToValue { _ in
       spring.destination = CGPoint(x: CGFloat(arc4random_uniform(UInt32(self.view.bounds.width))),
                                    y: CGFloat(arc4random_uniform(UInt32(self.view.bounds.height))))
-      spring.start()
     }
   }
 
