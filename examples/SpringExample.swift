@@ -47,6 +47,13 @@ public class Spring2<T> where T: Subtractable {
 
     checkAndEmit()
   }
+  public func stop() {
+    guard started else { return }
+
+    started = false
+
+    activeKeys.forEach { property.coreAnimation(.remove($0)) }
+  }
   private var started = false
 
   private func checkAndEmit() {
@@ -72,8 +79,9 @@ public class Spring2<T> where T: Subtractable {
 
     property.value = destination
 
+    activeKeys.insert(key)
     var add = CoreAnimationChannelAdd(animation: animation, key: key) {
-      // TODO: Mark at rest.
+      self.activeKeys.remove(key)
     }
     add.initialVelocity = initialVelocity
     add.makeAdditive = { from, to in
@@ -81,6 +89,7 @@ public class Spring2<T> where T: Subtractable {
     }
     property.coreAnimation(.add(add))
   }
+  var activeKeys = Set<String>()
 
   /**
    The initial velocity of the spring.

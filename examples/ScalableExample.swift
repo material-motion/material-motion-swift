@@ -17,7 +17,7 @@
 import UIKit
 import MaterialMotion
 
-class Scalable2: Gesturable {
+class Scalable2 {
 
   @discardableResult
   class func apply(to view: UIView,

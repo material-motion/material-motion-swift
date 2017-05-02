@@ -151,6 +151,7 @@ extension Reactive where O: CALayer {
   func createCoreAnimationProperty<T>(_ name: String, initialValue: T, externalWrite: @escaping (O, T) -> Void, keyPath: String) -> ReactiveProperty<T> {
     let layer = _object
     var decomposedKeys = Set<String>()
+    var updateProperty: ((T) -> Void)?
     let property = ReactiveProperty("\(pretty(layer)).\(name)", initialValue: initialValue, externalWrite: { [weak layer] value in
       guard let layer = layer else { return }
 
@@ -233,7 +234,7 @@ extension Reactive where O: CALayer {
 
       case .remove(let key):
         if let presentationLayer = layer.presentation() {
-          layer.setValue(presentationLayer.value(forKeyPath: keyPath), forKeyPath: keyPath)
+          updateProperty?(presentationLayer.value(forKeyPath: keyPath) as! T)
         }
         if decomposedKeys.contains(key) {
           layer.removeAnimation(forKey: key + ".x")
@@ -245,6 +246,11 @@ extension Reactive where O: CALayer {
         }
       }
     })
+
+    updateProperty = { [weak property] value in
+      guard let property = property else { return }
+      property.value = value
+    }
     var lastView: UIView?
     property.shouldVisualizeMotion = { [weak layer] view, containerView in
       guard let layer = layer else { return }

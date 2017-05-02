@@ -17,9 +17,29 @@
 import UIKit
 import MaterialMotion
 
-class TossableExampleViewController: ExampleViewController {
+public class Tossable2 {
+  public init(_ view: UIView, relativeTo: UIView) {
+    let draggable = Draggable2(view, containerView: relativeTo)
 
-  var runtime: MotionRuntime!
+    let spring = Spring2(for: Reactive(view.layer).position)
+
+    draggable.gesture.didBegin().subscribeToValue { _ in
+      spring.stop()
+    }
+    draggable.gesture.didAnything._filter { $0.state == .ended }.velocity(in: view).subscribeToValue { velocity in
+      spring.initialVelocity = velocity
+      spring.start()
+    }
+
+    self.draggable = draggable
+    self.spring = spring
+  }
+
+  public let draggable: Draggable2
+  public let spring: Spring2<CGPoint>
+}
+
+class TossableExampleViewController: ExampleViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -27,16 +47,8 @@ class TossableExampleViewController: ExampleViewController {
     let square = center(createExampleSquareView(), within: view)
     view.addSubview(square)
 
-    runtime = MotionRuntime(containerView: view)
-
-    let tossable = Tossable()
-    tossable.spring.destination.value = .init(x: view.bounds.midX, y: view.bounds.midY)
-    tossable.spring.friction.value /= 2
-    runtime.add(tossable, to: square)
-
-    runtime.whenAllAtRest([tossable]) {
-      print("Is now at rest")
-    }
+    let tossable = Tossable2(square, relativeTo: view)
+    tossable.spring.destination = CGPoint(x: view.bounds.midX, y: view.bounds.midY)
   }
 
   override func exampleInformation() -> ExampleInfo {

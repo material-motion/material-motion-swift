@@ -21,13 +21,13 @@ class DirectlyManipulable2 {
 
   @discardableResult
   class func apply(to view: UIView, relativeTo: UIView) -> [UIGestureRecognizer] {
-    let draggable = Draggable2.apply(to: view, relativeTo: relativeTo)
+    let draggable = Draggable2(view, containerView: relativeTo)
     let rotatable = Rotatable2.apply(to: view, relativeTo: relativeTo)
     let scalable = Scalable2.apply(to: view, relativeTo: relativeTo)
 
-    AdjustsAnchorPoint2.apply(to: view, gestures: [draggable._object, rotatable._object, scalable._object])
+    AdjustsAnchorPoint2.apply(to: view, gestures: [draggable.gesture._object, rotatable._object, scalable._object])
 
-    return [draggable._object, rotatable._object, scalable._object]
+    return [draggable.gesture._object, rotatable._object, scalable._object]
   }
 }
 

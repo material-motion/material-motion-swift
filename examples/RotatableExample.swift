@@ -17,7 +17,7 @@
 import UIKit
 import MaterialMotion
 
-class Rotatable2: Gesturable {
+class Rotatable2 {
 
   @discardableResult
   class func apply(to view: UIView,
