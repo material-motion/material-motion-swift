@@ -27,7 +27,7 @@ class Scalable2 {
     let gesture = prepareGesture(relativeTo: relativeTo, withGestureRecognizer: existingGesture)
 
     let scale = Reactive(view.layer).scale
-    var stream = Reactive(gesture).didAnything.scaled(from: scale)
+    var stream = Reactive(gesture).events.scaled(from: scale)
     if let applyConstraints = applyConstraints {
       stream = applyConstraints(stream)
     }

@@ -39,7 +39,7 @@ public class Draggable2 {
     let gesture = prepareGesture(relativeTo: containerView, withGestureRecognizer: existingGesture)
     self.gesture = Reactive(gesture)
     self.property = property
-    self.stream = self.gesture.didAnything.translation(addedTo: property, in: containerView)
+    self.stream = self.gesture.events.translation(addedTo: property, in: containerView)
   }
 
   public func enable() {

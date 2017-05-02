@@ -32,10 +32,10 @@ public class Tossable2 {
     self.draggable.enable()
 
     subscriptions.append(contentsOf: [
-      draggable.gesture.didBegin().subscribeToValue { _ in
+      draggable.gesture.didBegin { _ in
         spring.stop()
       },
-      draggable.gesture.didAnything._filter { $0.state == .ended }.velocity(in: containerView).subscribeToValue { velocity in
+      draggable.gesture.events._filter { $0.state == .ended }.velocity(in: containerView).subscribeToValue { velocity in
         spring.initialVelocity = velocity
         spring.start()
       }]

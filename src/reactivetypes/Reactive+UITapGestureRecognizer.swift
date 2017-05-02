@@ -14,6 +14,7 @@
  limitations under the License.
  */
 
+import IndefiniteObservable
 import UIKit
 
 extension Reactive where O: UIGestureRecognizer {
@@ -35,15 +36,23 @@ extension Reactive where O: UIGestureRecognizer {
     })
   }
 
-  public func didBegin() -> MotionObservable<O> {
-    return _properties.named("recognition", onCacheMiss: {
-      return GestureConnection(subscribedTo: _object)
-    }, typeConversion: {
-      return $0.asStream()._filter { $0.state == .began }
-    })
+  @discardableResult
+  public func didBegin(callback: @escaping (O) -> Void) -> Subscription {
+    return _properties.named("recognition",
+                             onCacheMiss: { GestureConnection(subscribedTo: _object) },
+                             typeConversion: { $0.asStream()._filter { $0.state == .began } })
+      .subscribeToValue(callback)
   }
 
-  public var didAnything: MotionObservable<O> {
+  @discardableResult
+  public func didEnd(callback: @escaping (O) -> Void) -> Subscription {
+    return _properties.named("recognition",
+                             onCacheMiss: { GestureConnection(subscribedTo: _object) },
+                             typeConversion: { $0.asStream()._filter { $0.state == .ended } })
+      .subscribeToValue(callback)
+  }
+
+  public var events: MotionObservable<O> {
     return _properties.named("recognition", onCacheMiss: {
       return GestureConnection(subscribedTo: _object)
     }, typeConversion: {

@@ -27,7 +27,7 @@ class Rotatable2 {
     let gesture = prepareGesture(relativeTo: relativeTo, withGestureRecognizer: existingGesture)
 
     let rotation = Reactive(view.layer).rotation
-    var stream = Reactive(gesture).didAnything.rotated(from: rotation)
+    var stream = Reactive(gesture).events.rotated(from: rotation)
     if let applyConstraints = applyConstraints {
       stream = applyConstraints(stream)
     }
