@@ -32,8 +32,6 @@ public class Tossable2 {
     guard subscriptions.count == 0 else { return }
     let spring = self.spring
 
-    self.draggable.enable()
-
     subscriptions.append(contentsOf: [
       draggable.gesture.didBegin { _ in
         spring.stop()
@@ -43,6 +41,9 @@ public class Tossable2 {
         spring.start()
       }]
     )
+
+    draggable.enable()
+    spring.start()
   }
 
   public func disable() {

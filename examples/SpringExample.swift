@@ -29,7 +29,7 @@ import MaterialMotion
 
  T-value constraints may be applied to this interaction.
  */
-public class Spring2<T> where T: Subtractable {
+public final class Spring2<T> where T: Subtractable {
   /**
    Creates a spring with a given threshold and system.
 

@@ -15,11 +15,62 @@
  */
 
 import UIKit
+import IndefiniteObservable
 import MaterialMotion
 
-class ChangeDirectionOnReleaseExampleViewController: ExampleViewController {
+public final class TransitionSpring2<T: Subtractable> {
+  public init(with spring: Spring2<T>, direction: ReactiveProperty<TransitionDirection>) {
+    self.spring = spring
+    self.direction = direction
+  }
 
-  var runtime: MotionRuntime!
+  public func enable() {
+    guard subscription == nil else { return }
+    updateDestination(withDirection: direction.value)
+
+    subscription = direction.subscribeToValue {
+      self.updateDestination(withDirection: $0)
+    }
+  }
+
+  public func disable() {
+    subscription?.unsubscribe()
+    subscription = nil
+  }
+
+  private func updateDestination(withDirection direction: TransitionDirection) {
+    if direction == .forward {
+      spring.destination = fore
+    } else {
+      spring.destination = back
+    }
+  }
+
+  public let spring: Spring2<T>
+
+  public var back: T?
+  public var fore: T?
+
+  private let direction: ReactiveProperty<TransitionDirection>
+  private var subscription: Subscription?
+}
+
+public final class ChangeDirection2 {
+  init(_ direction: ReactiveProperty<TransitionDirection>, withVelocityOf gesture: UIPanGestureRecognizer) {
+    self.direction = direction
+    self.gesture = gesture
+  }
+
+  public func enable() {
+    Reactive(gesture).events._filter { $0.state == .ended }.subscribeToValue { _ in
+    }
+  }
+
+  private let direction: ReactiveProperty<TransitionDirection>
+  private let gesture: UIPanGestureRecognizer
+}
+
+class ChangeDirectionOnReleaseExampleViewController: ExampleViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -33,20 +84,19 @@ class ChangeDirectionOnReleaseExampleViewController: ExampleViewController {
     let exampleView = center(createExampleView(), within: view)
     view.addSubview(exampleView)
 
-    runtime = MotionRuntime(containerView: view)
-
     let direction = createProperty(withInitialValue: TransitionDirection.backward)
 
-    let positionSpring = TransitionSpring(back: CGPoint(x: view.bounds.midX, y: view.bounds.height * 4 / 10),
-                                          fore: CGPoint(x: view.bounds.midX, y: view.bounds.height * 6 / 10),
-                                          direction: direction)
-    let tossable = Tossable(spring: positionSpring)
-    runtime.add(ChangeDirection(withVelocityOf: tossable.draggable.nextGestureRecognizer,
-                                         whenNegative: .backward,
-                                         whenPositive: .forward),
-                to: direction)
-    runtime.add(tossable, to: exampleView)
-    runtime.add(positionSpring, to: runtime.get(targetView.layer).position)
+    let tossable = Tossable2(exampleView, containerView: view)
+
+    let transitionSpring = TransitionSpring2(with: tossable.spring, direction: direction)
+    transitionSpring.back = CGPoint(x: view.bounds.midX, y: view.bounds.height * 4 / 10)
+    transitionSpring.fore = CGPoint(x: view.bounds.midX, y: view.bounds.height * 6 / 10)
+
+    let changeDirection = ChangeDirection2(direction, withVelocityOf: tossable.draggable.gesture._object)
+
+    tossable.enable()
+    transitionSpring.enable()
+    changeDirection.enable()
   }
 
   override func exampleInformation() -> ExampleInfo {
