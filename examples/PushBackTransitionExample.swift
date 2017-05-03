@@ -79,16 +79,14 @@ private class PushBackTransition: Transition {
     movement.back = backPosition
     movement.fore = forePosition
 
-//    let scaleKeyPath = Reactive(ctx.fore.view.layer).scaleKeyPath
-//    positionY.rewriteRange(start: backPosition,
-//                           end: forePosition,
-//                           destinationStart: CGFloat(1),
-//                           destinationEnd: CGFloat(0.95)).subscribeToValue {
-//      scaleKeyPath.add($0, forKey: "bob")
-//    }
+    let scaleKeyPath = Reactive(ctx.back.view.layer).scaleKeyPath
+    let scale = TransitionSpring2(with: Spring2(for: scaleKeyPath), direction: ctx.direction)
+    scale.back = 1
+    scale.fore = 0.95
 
     movement.enable()
+    scale.enable()
 
-    return [movement]
+    return [movement, scale]
   }
 }

@@ -80,7 +80,9 @@ public func assertEmpty() {
     isEmpty = false
     break
   }
-  assert(isEmpty)
+  if !isEmpty {
+    print(globalCache)
+  }
   globalCache.removeAllObjects()
 }
 

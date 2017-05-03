@@ -34,8 +34,9 @@ public final class TransitionSpring2<T: Subtractable>: Stateful {
       spring.path.property.value = fore
     }
 
-    subscription = direction.subscribeToValue {
-      self.updateDestination(withDirection: $0)
+    subscription = direction.subscribeToValue { [weak self] in
+      guard let strongSelf = self else { return }
+      strongSelf.updateDestination(withDirection: $0)
     }
 
     spring.start()
