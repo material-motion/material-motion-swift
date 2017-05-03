@@ -31,12 +31,24 @@ func prepareGesture<GestureType: UIGestureRecognizer>(relativeTo: UIView, withGe
 
 public class Draggable2 {
 
-  public convenience init(_ view: UIView, containerView: UIView, withGestureRecognizer existingGesture: UIPanGestureRecognizer? = nil) {
-    self.init(Reactive(view.layer).position, containerView: containerView, withGestureRecognizer: existingGesture)
+  public convenience init(_ view: UIView,
+                          containerView: UIView,
+                          withGestureRecognizer existingGesture: UIPanGestureRecognizer) {
+    self.init(Reactive(view.layer).position,
+              containerView: containerView,
+              withGestureRecognizer: existingGesture)
   }
 
-  public init(_ property: ReactiveProperty<CGPoint>, containerView: UIView, withGestureRecognizer existingGesture: UIPanGestureRecognizer? = nil) {
-    let gesture = prepareGesture(relativeTo: containerView, withGestureRecognizer: existingGesture)
+  public convenience init(_ view: UIView, containerView: UIView) {
+    let gesture = UIPanGestureRecognizer()
+    containerView.addGestureRecognizer(gesture)
+
+    self.init(Reactive(view.layer).position,
+              containerView: containerView,
+              withGestureRecognizer: gesture)
+  }
+
+  private init(_ property: ReactiveProperty<CGPoint>, containerView: UIView, withGestureRecognizer gesture: UIPanGestureRecognizer) {
     self.gesture = Reactive(gesture)
     self.property = property
     self.stream = self.gesture.events.translation(addedTo: property, in: containerView)
@@ -57,7 +69,7 @@ public class Draggable2 {
   }
 
   @discardableResult
-  public class func apply(to view: UIView, containerView: UIView, withGestureRecognizer existingGesture: UIPanGestureRecognizer? = nil) -> Draggable2 {
+  public class func apply(to view: UIView, containerView: UIView, withGestureRecognizer existingGesture: UIPanGestureRecognizer) -> Draggable2 {
     let draggable = Draggable2(view, containerView: containerView, withGestureRecognizer: existingGesture)
     draggable.enable()
     return draggable

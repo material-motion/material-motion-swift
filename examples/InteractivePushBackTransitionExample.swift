@@ -75,6 +75,7 @@ private class PushBackTransition: Transition {
   required init() {}
 
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
+
     let draggable = Draggable(withFirstGestureIn: ctx.gestureRecognizers)
 
     runtime.add(ChangeDirection(withVelocityOf: draggable.nextGestureRecognizer, whenNegative: .forward),
