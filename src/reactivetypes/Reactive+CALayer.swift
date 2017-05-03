@@ -58,6 +58,14 @@ extension Reactive where O: CALayer {
     })
   }
 
+  public var opacityKeyPath: CoreAnimationKeyPath<CGFloat> {
+    let layer = _object
+
+    return _properties.named(#function, onCacheMiss: {
+      return CoreAnimationKeyPath("opacity", onLayer: layer, property: opacity)
+    })
+  }
+
   public var opacity: ReactiveProperty<CGFloat> {
     let layer = _object
     return _properties.named(#function, onCacheMiss: {
@@ -65,6 +73,14 @@ extension Reactive where O: CALayer {
                                           initialValue: CGFloat(layer.opacity),
                                           externalWrite: { $0.opacity = Float($1) },
                                           keyPath: "opacity")
+    })
+  }
+
+  public var positionKeyPath: CoreAnimationKeyPath<CGPoint> {
+    let layer = _object
+
+    return _properties.named(#function, onCacheMiss: {
+      return CoreAnimationKeyPath("position", onLayer: layer, property: position)
     })
   }
 

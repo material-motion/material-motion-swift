@@ -36,11 +36,11 @@ public class Spring2<T> where T: Subtractable {
    - parameter threshold: The threshold of movement defining the completion of the spring simulation. This parameter is not used by the Core Animation system and can be left as a default value.
    - parameter system: The system that should be used to drive this spring.
    */
-  public init(for property: ReactiveProperty<T>) {
-    self.property = property
+  public init(for path: CoreAnimationKeyPath<T>) {
+    self.path = path
   }
 
-  let property: ReactiveProperty<T>
+  let path: CoreAnimationKeyPath<T>
 
   public func start() {
     started = true
@@ -52,7 +52,7 @@ public class Spring2<T> where T: Subtractable {
 
     started = false
 
-    activeKeys.forEach { property.coreAnimation(.remove($0)) }
+    activeKeys.forEach { path.removeAnimation(forKey: $0) }
     activeKeys.removeAll()
   }
   private var started = false
@@ -69,7 +69,7 @@ public class Spring2<T> where T: Subtractable {
     animation.stiffness = tension
     animation.mass = mass
 
-    animation.fromValue = property.value
+    animation.fromValue = path.property.value
     animation.toValue = destination
 
     if suggestedDuration != 0 {
@@ -78,17 +78,10 @@ public class Spring2<T> where T: Subtractable {
       animation.duration = animation.settlingDuration
     }
 
-    property.value = destination
+    path.property.value = destination
 
     activeKeys.insert(key)
-    var add = CoreAnimationChannelAdd(animation: animation, key: key) {
-      self.activeKeys.remove(key)
-    }
-    add.initialVelocity = initialVelocity
-    add.makeAdditive = { from, to in
-      return (from as! T) - (to as! T)
-    }
-    property.coreAnimation(.add(add))
+    path.add(animation, forKey: key, initialVelocity: initialVelocity)
   }
   var activeKeys = Set<String>()
 
@@ -152,13 +145,14 @@ class SpringExampleViewController: ExampleViewController {
     let tap = UITapGestureRecognizer()
     view.addGestureRecognizer(tap)
 
-    let spring = Spring2(for: Reactive(square.layer).position)
+    let spring = Spring2(for: Reactive(square.layer).positionKeyPath)
     spring.friction /= 2
     spring.start()
 
-    Reactive(tap).didRecognize.subscribeToValue { _ in
-      spring.destination = CGPoint(x: CGFloat(arc4random_uniform(UInt32(self.view.bounds.width))),
-                                   y: CGFloat(arc4random_uniform(UInt32(self.view.bounds.height))))
+    Reactive(tap).didRecognize.subscribeToValue { [weak self] _ in
+      guard let strongSelf = self else { return }
+      spring.destination = CGPoint(x: CGFloat(arc4random_uniform(UInt32(strongSelf.view.bounds.width))),
+                                   y: CGFloat(arc4random_uniform(UInt32(strongSelf.view.bounds.height))))
     }
   }
 

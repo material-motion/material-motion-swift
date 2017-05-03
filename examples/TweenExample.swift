@@ -28,8 +28,8 @@ import MaterialMotion
  */
 public class Tween2<T: Subtractable> {
 
-  public init(for property: ReactiveProperty<T>) {
-    self.property = property
+  public init(for keyPath: CoreAnimationKeyPath<T>) {
+    self.keyPath = keyPath
   }
 
   func start() {
@@ -46,7 +46,7 @@ public class Tween2<T: Subtractable> {
       basicAnimation.timingFunction = timingFunctions.first
       animation = basicAnimation
     }
-    property.value = values.last!
+    keyPath.property.value = values.last!
 
     animation.beginTime = CFTimeInterval(delay)
     animation.duration = CFTimeInterval(duration)
@@ -57,19 +57,12 @@ public class Tween2<T: Subtractable> {
     let key = NSUUID().uuidString
     activeKeys.insert(key)
 
-    var info = CoreAnimationChannelAdd(animation: animation, key: key, onCompletion: {
-      self.activeKeys.remove(key)
-    })
-    info.makeAdditive = { from, to in
-      return (from as! T) - (to as! T)
-    }
-    info.timeline = timeline
-    property.coreAnimation(.add(info))
+    keyPath.add(animation, forKey: key)
   }
   var activeKeys = Set<String>()
 
   public func stop() {
-    activeKeys.forEach { property.coreAnimation(.remove($0)) }
+    activeKeys.forEach { keyPath.removeAnimation(forKey: $0) }
     activeKeys.removeAll()
   }
 
@@ -149,8 +142,7 @@ public class Tween2<T: Subtractable> {
    */
   public var timeline: Timeline? = nil
 
-  let property: ReactiveProperty<T>
-  var subscription: Subscription?
+  let keyPath: CoreAnimationKeyPath<T>
 }
 
 class TweenExampleViewController: ExampleViewController {
@@ -161,7 +153,7 @@ class TweenExampleViewController: ExampleViewController {
     let square = center(createExampleView(), within: view)
     view.addSubview(square)
 
-    let tween = Tween2(for: Reactive(square.layer).opacity)
+    let tween = Tween2(for: Reactive(square.layer).opacityKeyPath)
     tween.duration = 1
     tween.values = [1, 0, 1]
 

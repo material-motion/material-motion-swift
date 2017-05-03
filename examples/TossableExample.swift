@@ -21,7 +21,7 @@ import MaterialMotion
 public class Tossable2 {
   public init(_ view: UIView, containerView: UIView) {
     self.draggable = Draggable2(view, containerView: containerView)
-    self.spring = Spring2(for: Reactive(view.layer).position)
+    self.spring = Spring2(for: Reactive(view.layer).positionKeyPath)
     self.containerView = containerView
   }
 
