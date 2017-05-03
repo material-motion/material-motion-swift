@@ -56,18 +56,52 @@ public final class TransitionSpring2<T: Subtractable> {
 }
 
 public final class ChangeDirection2 {
-  init(_ direction: ReactiveProperty<TransitionDirection>, withVelocityOf gesture: UIPanGestureRecognizer) {
+  init(_ direction: ReactiveProperty<TransitionDirection>, withVelocityOf gesture: UIPanGestureRecognizer, containerView: UIView) {
     self.direction = direction
-    self.gesture = gesture
+
+    self.stream = Reactive(gesture).events._filter { $0.state == .ended }.velocity(in: containerView)
   }
 
   public func enable() {
-    Reactive(gesture).events._filter { $0.state == .ended }.subscribeToValue { _ in
+    stream.subscribeToValue {
+      var value: CGFloat
+      switch self.axis {
+      case .x: value = $0.x
+      case .y: value = $0.y
+      }
+      if fabs(value) >= self.minimumVelocity {
+        if value < 0 {
+          self.direction.value = self.whenNegative
+        } else if value > 0 {
+          self.direction.value = self.whenPositive
+        }
+      }
     }
   }
 
+  public var minimumVelocity: CGFloat = 100
+  public var whenNegative = TransitionDirection.backward
+  public var whenPositive = TransitionDirection.backward
+
+  /**
+   The velocity axis to observe.
+   */
+  public enum Axis {
+    /**
+     Observes the velocity's x axis.
+     */
+    case x
+
+    /**
+     Observes the velocity's y axis.
+     */
+    case y
+  }
+
+  public var axis: Axis = .y
+
   private let direction: ReactiveProperty<TransitionDirection>
-  private let gesture: UIPanGestureRecognizer
+  private let stream: MotionObservable<CGPoint>
 }
 
 class ChangeDirectionOnReleaseExampleViewController: ExampleViewController {
@@ -92,7 +126,8 @@ class ChangeDirectionOnReleaseExampleViewController: ExampleViewController {
     transitionSpring.back = CGPoint(x: view.bounds.midX, y: view.bounds.height * 4 / 10)
     transitionSpring.fore = CGPoint(x: view.bounds.midX, y: view.bounds.height * 6 / 10)
 
-    let changeDirection = ChangeDirection2(direction, withVelocityOf: tossable.draggable.gesture._object)
+    let changeDirection = ChangeDirection2(direction, withVelocityOf: tossable.draggable.gesture._object, containerView: view)
+    changeDirection.whenPositive = .forward
 
     tossable.enable()
     transitionSpring.enable()

@@ -21,7 +21,7 @@ extension MotionObservableConvertible where T: UIPanGestureRecognizer {
 
   /** Extract translational velocity from the incoming pan gesture recognizer. */
   public func velocity(in view: UIView) -> MotionObservable<CGPoint> {
-    return _nextOperator(#function, args: [view]) { [weak view] value, next in
+    return _nextOperator(#function) { [weak view] value, next in
       guard let view = view else { return }
       next(value.velocity(in: view))
     }
