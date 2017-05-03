@@ -60,6 +60,23 @@ class MotionRuntimeTests: XCTestCase {
     XCTAssertEqual(results.count, 1)
   }
 
+  func testReturnsInteractionsOfProperties() {
+    let runtime = MotionRuntime(containerView: UIView())
+
+    let view = UIView()
+    let tweenA = Tween<CGFloat>(duration: 1, values: [1, 0, 1])
+    runtime.add(tweenA, to: runtime.get(view.layer).opacity)
+
+    let tweenB = Tween<CGFloat>(duration: 1, values: [1.3])
+    runtime.add(tweenB, to: runtime.get(view.layer).scale)
+
+    var results = runtime.interactions(ofType: Tween.self, for: runtime.get(view.layer).opacity)
+    XCTAssertEqual(results.count, 1)
+
+    results = runtime.interactions(ofType: Tween.self, for: runtime.get(view.layer).scale)
+    XCTAssertEqual(results.count, 1)
+  }
+
   func testRuntimeStart() {
     let promise = expectation(description: "start interaction B when interaction A is at state")
 
