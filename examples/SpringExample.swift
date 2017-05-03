@@ -53,6 +53,7 @@ public class Spring2<T> where T: Subtractable {
     started = false
 
     activeKeys.forEach { property.coreAnimation(.remove($0)) }
+    activeKeys.removeAll()
   }
   private var started = false
 

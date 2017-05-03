@@ -26,7 +26,52 @@ import MaterialMotion
 
  T-value constraints may be applied to this interaction.
  */
-public class Tween2<T> {
+public class Tween2<T: Subtractable> {
+
+  public init(for property: ReactiveProperty<T>) {
+    self.property = property
+  }
+
+  func start() {
+    let animation: CAPropertyAnimation
+    if values.count > 1 {
+      let keyframeAnimation = CAKeyframeAnimation()
+      keyframeAnimation.values = values
+      keyframeAnimation.keyTimes = keyPositions.map { NSNumber(value: Double($0)) }
+      keyframeAnimation.timingFunctions = timingFunctions
+      animation = keyframeAnimation
+    } else {
+      let basicAnimation = CABasicAnimation()
+      basicAnimation.toValue = values.last
+      basicAnimation.timingFunction = timingFunctions.first
+      animation = basicAnimation
+    }
+    property.value = values.last!
+
+    animation.beginTime = CFTimeInterval(delay)
+    animation.duration = CFTimeInterval(duration)
+    animation.repeatCount = Float(repeatCount)
+    animation.repeatDuration = CFTimeInterval(repeatDuration)
+    animation.autoreverses = autoreverses
+
+    let key = NSUUID().uuidString
+    activeKeys.insert(key)
+
+    var info = CoreAnimationChannelAdd(animation: animation, key: key, onCompletion: {
+      self.activeKeys.remove(key)
+    })
+    info.makeAdditive = { from, to in
+      return (from as! T) - (to as! T)
+    }
+    info.timeline = timeline
+    property.coreAnimation(.add(info))
+  }
+  var activeKeys = Set<String>()
+
+  public func stop() {
+    activeKeys.forEach { property.coreAnimation(.remove($0)) }
+    activeKeys.removeAll()
+  }
 
   /**
    The duration of the animation in seconds.
@@ -104,38 +149,17 @@ public class Tween2<T> {
    */
   public var timeline: Timeline? = nil
 
-  /**
-   The current state of the tween animation.
-   */
-  public var state: MotionObservable<MotionState> {
-    return _state.asStream()
-  }
-
-  public init(for property: ReactiveProperty<T>) {
-    self.property = property
-  }
-
-  func start() {
-
-  }
-
   let property: ReactiveProperty<T>
   var subscription: Subscription?
-
-  fileprivate let _state = createProperty("Tween._state", withInitialValue: MotionState.atRest)
 }
 
 class TweenExampleViewController: ExampleViewController {
-
-  var runtime: MotionRuntime!
 
   override func viewDidLoad() {
     super.viewDidLoad()
 
     let square = center(createExampleView(), within: view)
     view.addSubview(square)
-
-    runtime = MotionRuntime(containerView: view)
 
     let tween = Tween2(for: Reactive(square.layer).opacity)
     tween.duration = 1
