@@ -38,9 +38,9 @@ public final class CoreAnimationKeyPath<T> {
 
   public func add(_ animation: CAPropertyAnimation, forKey key: String) {
     switch animation {
+    case let animation as CASpringAnimation: add(animation, forKey: key)
     case let animation as CABasicAnimation: add(animation, forKey: key)
     case let animation as CAKeyframeAnimation: add(animation, forKey: key)
-    case let animation as CASpringAnimation: add(animation, forKey: key)
     default:
       break
     }
@@ -62,7 +62,7 @@ public final class CoreAnimationKeyPath<T> {
     CATransaction.commit()
   }
 
-  public func add(_ animation: CASpringAnimation, forKey key: String, initialVelocity: Any?) {
+  public func add(_ animation: CASpringAnimation, forKey key: String, initialVelocity: Any?, completion: @escaping () -> Void) {
     guard let layer = layer else { return }
 
     let animation = prepare(animation, withLayer: layer)
@@ -84,6 +84,7 @@ public final class CoreAnimationKeyPath<T> {
                                  initialVelocity: initialVelocity)
 
       CATransaction.begin()
+      CATransaction.setCompletionBlock(completion)
       layer.add(decomposed.0, forKey: key + ".x")
       layer.add(decomposed.1, forKey: key + ".y")
       CATransaction.commit()
@@ -95,6 +96,7 @@ public final class CoreAnimationKeyPath<T> {
     }
 
     CATransaction.begin()
+    CATransaction.setCompletionBlock(completion)
     layer.add(animation, forKey: key)
     CATransaction.commit()
   }

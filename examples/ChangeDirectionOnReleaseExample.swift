@@ -18,7 +18,7 @@ import UIKit
 import IndefiniteObservable
 import MaterialMotion
 
-public final class TransitionSpring2<T: Subtractable> {
+public final class TransitionSpring2<T: Subtractable>: Stateful {
   public init(with spring: Spring2<T>, direction: ReactiveProperty<TransitionDirection>) {
     self.spring = spring
     self.direction = direction
@@ -28,14 +28,26 @@ public final class TransitionSpring2<T: Subtractable> {
     guard subscription == nil else { return }
     updateDestination(withDirection: direction.value)
 
+    if direction.value == .forward, let back = back {
+      spring.path.property.value = back
+    } else if direction.value == .backward, let fore = fore {
+      spring.path.property.value = fore
+    }
+
     subscription = direction.subscribeToValue {
       self.updateDestination(withDirection: $0)
     }
+
+    spring.start()
   }
 
   public func disable() {
     subscription?.unsubscribe()
     subscription = nil
+  }
+
+  public var state: MotionObservable<MotionState> {
+    return spring.state
   }
 
   private func updateDestination(withDirection direction: TransitionDirection) {

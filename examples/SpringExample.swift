@@ -29,7 +29,7 @@ import MaterialMotion
 
  T-value constraints may be applied to this interaction.
  */
-public final class Spring2<T> where T: Subtractable {
+public final class Spring2<T>: Stateful where T: Subtractable {
   /**
    Creates a spring with a given threshold and system.
 
@@ -40,7 +40,7 @@ public final class Spring2<T> where T: Subtractable {
     self.path = path
   }
 
-  let path: CoreAnimationKeyPath<T>
+  public let path: CoreAnimationKeyPath<T>
 
   public func start() {
     started = true
@@ -81,9 +81,20 @@ public final class Spring2<T> where T: Subtractable {
     path.property.value = destination
 
     activeKeys.insert(key)
-    path.add(animation, forKey: key, initialVelocity: initialVelocity)
+    _state.value = .active
+    path.add(animation, forKey: key, initialVelocity: initialVelocity) {
+      self.activeKeys.remove(key)
+      if self.activeKeys.count == 0 {
+        self._state.value = .atRest
+      }
+    }
   }
   var activeKeys = Set<String>()
+
+  public var state: MotionObservable<MotionState> {
+    return _state.asStream()
+  }
+  private let _state = createProperty(withInitialValue: MotionState.atRest)
 
   /**
    The initial velocity of the spring.

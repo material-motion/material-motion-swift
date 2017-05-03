@@ -104,6 +104,14 @@ extension Reactive where O: CALayer {
     })
   }
 
+  public var positionYKeyPath: CoreAnimationKeyPath<CGFloat> {
+    let layer = _object
+
+    return _properties.named(#function, onCacheMiss: {
+      return CoreAnimationKeyPath("position.y", onLayer: layer, property: positionY)
+    })
+  }
+
   public var positionY: ReactiveProperty<CGFloat> {
     let position = self.position
     return _properties.named(#function, onCacheMiss: {
@@ -121,6 +129,13 @@ extension Reactive where O: CALayer {
                                           initialValue: layer.value(forKeyPath: "transform.rotation.z") as! CGFloat,
                                           externalWrite: { $0.setValue($1, forKeyPath: "transform.rotation.z") },
                                           keyPath: "transform.rotation.z")
+    })
+  }
+
+  public var scaleKeyPath: CoreAnimationKeyPath<CGFloat> {
+    let layer = _object
+    return _properties.named(#function, onCacheMiss: {
+      return CoreAnimationKeyPath("transform.scale.xy", onLayer: layer, property: scale)
     })
   }
 

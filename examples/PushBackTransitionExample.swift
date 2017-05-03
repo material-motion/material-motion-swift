@@ -74,17 +74,20 @@ private class PushBackTransition: Transition {
     let backPosition = bounds.maxY + ctx.fore.view.bounds.height / 2
     let forePosition = bounds.midY
 
-    let movement = TransitionSpring(back: backPosition, fore: forePosition, direction: ctx.direction)
+    let positionY = Reactive(ctx.fore.view.layer).positionYKeyPath
+    let movement = TransitionSpring2(with: Spring2(for: positionY), direction: ctx.direction)
+    movement.back = backPosition
+    movement.fore = forePosition
 
-    let yPosition = runtime.get(ctx.fore.view.layer).positionY
+//    let scaleKeyPath = Reactive(ctx.fore.view.layer).scaleKeyPath
+//    positionY.rewriteRange(start: backPosition,
+//                           end: forePosition,
+//                           destinationStart: CGFloat(1),
+//                           destinationEnd: CGFloat(0.95)).subscribeToValue {
+//      scaleKeyPath.add($0, forKey: "bob")
+//    }
 
-    runtime.connect(yPosition.rewriteRange(start: movement.backwardDestination,
-                                           end: movement.forwardDestination,
-                                           destinationStart: CGFloat(1),
-                                           destinationEnd: CGFloat(0.95)),
-                    to: runtime.get(ctx.back.view.layer).scale)
-
-    runtime.add(movement, to: yPosition)
+    movement.enable()
 
     return [movement]
   }
