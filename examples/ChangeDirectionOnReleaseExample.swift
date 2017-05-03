@@ -139,7 +139,9 @@ class ChangeDirectionOnReleaseExampleViewController: ExampleViewController {
     transitionSpring.back = CGPoint(x: view.bounds.midX, y: view.bounds.height * 4 / 10)
     transitionSpring.fore = CGPoint(x: view.bounds.midX, y: view.bounds.height * 6 / 10)
 
-    let changeDirection = ChangeDirection2(direction, withVelocityOf: tossable.draggable.gesture._object, containerView: view)
+    let changeDirection = ChangeDirection2(direction,
+                                           withVelocityOf: tossable.draggable.gesture!,
+                                           containerView: view)
     changeDirection.whenPositive = .forward
 
     tossable.enable()

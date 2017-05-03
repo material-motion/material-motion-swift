@@ -18,10 +18,16 @@ import UIKit
 import IndefiniteObservable
 import MaterialMotion
 
-public class Tossable2 {
+public class Tossable2: Stateful {
   public init(_ view: UIView, containerView: UIView) {
     self.draggable = Draggable2(view, containerView: containerView)
     self.spring = Spring2(for: Reactive(view.layer).positionKeyPath)
+    self.containerView = containerView
+  }
+
+  public init(_ draggable: Draggable2, spring: Spring2<CGPoint>, containerView: UIView) {
+    self.draggable = draggable
+    self.spring = spring
     self.containerView = containerView
   }
 
@@ -30,13 +36,15 @@ public class Tossable2 {
 
   public func enable() {
     guard subscriptions.count == 0 else { return }
+    guard let gesture = draggable.gesture else { return }
     let spring = self.spring
 
+    let reactiveGesture = Reactive(gesture)
     subscriptions.append(contentsOf: [
-      draggable.gesture.didBegin { _ in
+      reactiveGesture.didBegin { _ in
         spring.stop()
       },
-      draggable.gesture.events._filter { $0.state == .ended }.velocity(in: containerView).subscribeToValue { velocity in
+      reactiveGesture.events._filter { $0.state == .ended }.velocity(in: containerView).subscribeToValue { velocity in
         spring.initialVelocity = velocity
         spring.start()
       }]
@@ -54,6 +62,9 @@ public class Tossable2 {
     subscriptions.removeAll()
   }
 
+  public var state: MotionObservable<MotionState> {
+    return spring.state // TODO: Also include drag state.
+  }
 
   private let containerView: UIView
   private var subscriptions: [Subscription] = []

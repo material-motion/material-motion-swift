@@ -75,31 +75,27 @@ private class PushBackTransition: Transition {
   required init() {}
 
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
+    let draggable = Draggable2(ctx.fore.view, containerView: ctx.containerView(), withFirstGestureIn: ctx.gestureRecognizers)
 
-    let draggable = Draggable(withFirstGestureIn: ctx.gestureRecognizers)
+    let changeDirection = ChangeDirection2(ctx.direction,
+                                           withVelocityOf: draggable.gesture!,
+                                           containerView: ctx.containerView())
+    changeDirection.enable()
 
-    runtime.add(ChangeDirection(withVelocityOf: draggable.nextGestureRecognizer, whenNegative: .forward),
-                to: ctx.direction)
+    let spring = Spring2(for: Reactive(ctx.fore.view.layer).positionKeyPath)
+
+    // TODO: This should be initializable without having to create a spring or draggable instance.
+    // TODO: We should be able to change draggable's gesture recognizer before it starts.
+    let tossable = Tossable2(draggable, spring: spring, containerView: ctx.containerView())
 
     let bounds = ctx.containerView().bounds
-    let backPosition = CGPoint(x: bounds.midX, y: bounds.maxY + ctx.fore.view.bounds.height / 2)
-    let forePosition = CGPoint(x: bounds.midX, y: bounds.midY)
-    let movement = TransitionSpring(back: backPosition,
-                                    fore: forePosition,
-                                    direction: ctx.direction)
 
-    let scale = runtime.get(ctx.back.view.layer).scale
+    // TODO: Rename this to StateMachine and allow the client to pass a map of rewrite values.
 
-    let tossable = Tossable(spring: movement, draggable: draggable)
-
-    runtime.connect(runtime.get(ctx.fore.view.layer).position.y()
-      .rewriteRange(start: movement.backwardDestination.y,
-                    end: movement.forwardDestination.y,
-                    destinationStart: 1,
-                    destinationEnd: 0.95),
-                    to: scale)
-
-    runtime.add(tossable, to: ctx.fore.view) { $0.xLocked(to: bounds.midX) }
+    let transitionSpring = TransitionSpring2(with: tossable.spring, direction: ctx.direction)
+    transitionSpring.back = CGPoint(x: bounds.midX, y: bounds.maxY + ctx.fore.view.bounds.height / 2)
+    transitionSpring.fore = CGPoint(x: bounds.midX, y: bounds.midY)
+    transitionSpring.enable()
 
     return [tossable]
   }

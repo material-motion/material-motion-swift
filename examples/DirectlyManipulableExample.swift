@@ -25,9 +25,9 @@ class DirectlyManipulable2 {
     let rotatable = Rotatable2.apply(to: view, relativeTo: relativeTo)
     let scalable = Scalable2.apply(to: view, relativeTo: relativeTo)
 
-    AdjustsAnchorPoint2.apply(to: view, gestures: [draggable.gesture._object, rotatable._object, scalable._object])
+    AdjustsAnchorPoint2.apply(to: view, gestures: [draggable.gesture!, rotatable._object, scalable._object])
 
-    return [draggable.gesture._object, rotatable._object, scalable._object]
+    return [draggable.gesture!, rotatable._object, scalable._object]
   }
 }
 

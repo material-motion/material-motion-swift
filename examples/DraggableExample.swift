@@ -39,26 +39,42 @@ public class Draggable2 {
               withGestureRecognizer: existingGesture)
   }
 
+  public convenience init<O>(_ view: UIView,
+                          containerView: UIView,
+                          withFirstGestureIn gestures: O) where O: Sequence, O.Iterator.Element == UIGestureRecognizer {
+    var first: UIPanGestureRecognizer? = nil
+    for gesture in gestures {
+      if let gesture = gesture as? UIPanGestureRecognizer {
+        first = gesture
+        break
+      }
+    }
+    self.init(Reactive(view.layer).position, containerView: containerView, withGestureRecognizer: first)
+  }
+
   public convenience init(_ view: UIView, containerView: UIView) {
     let gesture = UIPanGestureRecognizer()
     containerView.addGestureRecognizer(gesture)
 
-    self.init(Reactive(view.layer).position,
-              containerView: containerView,
-              withGestureRecognizer: gesture)
+    self.init(Reactive(view.layer).position, containerView: containerView, withGestureRecognizer: gesture)
   }
 
-  private init(_ property: ReactiveProperty<CGPoint>, containerView: UIView, withGestureRecognizer gesture: UIPanGestureRecognizer) {
-    self.gesture = Reactive(gesture)
+  private init(_ property: ReactiveProperty<CGPoint>, containerView: UIView, withGestureRecognizer gesture: UIPanGestureRecognizer?) {
+    self.gesture = gesture
     self.property = property
-    self.stream = self.gesture.events.translation(addedTo: property, in: containerView)
+
+    if let gesture = gesture {
+      self.stream = Reactive(gesture).events.translation(addedTo: property, in: containerView)
+    } else {
+      self.stream = nil
+    }
   }
 
   public func enable() {
     guard subscription == nil else { return }
 
     let property = self.property
-    subscription = stream.subscribeToValue {
+    subscription = stream?.subscribeToValue {
       property.value = $0
     }
   }
@@ -75,11 +91,11 @@ public class Draggable2 {
     return draggable
   }
 
-  private let stream: MotionObservable<CGPoint>
+  private let stream: MotionObservable<CGPoint>?
   private let property: ReactiveProperty<CGPoint>
   private var subscription: Subscription?
 
-  public let gesture: Reactive<UIPanGestureRecognizer>
+  public let gesture: UIPanGestureRecognizer?
 }
 
 class DraggableExampleViewController: ExampleViewController {
