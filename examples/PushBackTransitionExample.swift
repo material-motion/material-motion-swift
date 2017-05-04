@@ -74,16 +74,16 @@ private class PushBackTransition: Transition {
     let backPosition = bounds.maxY + ctx.fore.view.bounds.height / 2
     let forePosition = bounds.midY
 
-    let positionY = Reactive(ctx.fore.view.layer).positionYKeyPath
-    let movement = TransitionSpring2(with: Spring2(for: positionY), direction: ctx.direction)
-    movement.stateMachine.map = [
+    let movement = TransitionSpring2(for: Reactive(ctx.fore.view.layer).positionYKeyPath,
+                                     direction: ctx.direction)
+    movement.destinations = [
       .backward: backPosition,
       .forward: forePosition
     ]
 
-    let scaleKeyPath = Reactive(ctx.back.view.layer).scaleKeyPath
-    let scale = TransitionSpring2(with: Spring2(for: scaleKeyPath), direction: ctx.direction)
-    scale.stateMachine.map = [
+    let scale = TransitionSpring2(for: Reactive(ctx.back.view.layer).scaleKeyPath,
+                                  direction: ctx.direction)
+    scale.destinations = [
       .backward: 1,
       .forward: 0.95
     ]

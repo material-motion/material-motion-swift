@@ -18,7 +18,7 @@ import UIKit
 import IndefiniteObservable
 import MaterialMotion
 
-public class Tossable2: Stateful {
+public class Tossable2: Interaction2, Stateful {
   public init(_ view: UIView, containerView: UIView) {
     self.draggable = Draggable2(view, containerView: containerView)
     self.spring = Spring2(for: Reactive(view.layer).positionKeyPath)
@@ -41,17 +41,17 @@ public class Tossable2: Stateful {
 
     let gestureIsActive = gesture.state == .began || gesture.state == .changed
     if !gestureIsActive {
-      spring.start()
+      spring.enable()
     }
 
     let reactiveGesture = Reactive(gesture)
     subscriptions.append(contentsOf: [
       reactiveGesture.didBegin { _ in
-        spring.stop()
+        spring.disable()
       },
       reactiveGesture.events._filter { $0.state == .ended }.velocity(in: containerView).subscribeToValue { velocity in
         spring.initialVelocity = velocity
-        spring.start()
+        spring.enable()
       }]
     )
 
@@ -60,7 +60,7 @@ public class Tossable2: Stateful {
 
   public func disable() {
     draggable.disable()
-    spring.stop()
+    spring.disable()
 
     subscriptions.forEach { $0.unsubscribe() }
     subscriptions.removeAll()

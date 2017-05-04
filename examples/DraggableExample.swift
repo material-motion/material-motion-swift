@@ -29,7 +29,7 @@ func prepareGesture<GestureType: UIGestureRecognizer>(relativeTo: UIView, withGe
   return gesture
 }
 
-public class Draggable2 {
+public class Draggable2: Interaction2 {
 
   public convenience init(_ view: UIView,
                           containerView: UIView,

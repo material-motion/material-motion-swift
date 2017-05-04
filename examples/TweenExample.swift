@@ -26,13 +26,13 @@ import MaterialMotion
 
  T-value constraints may be applied to this interaction.
  */
-public class Tween2<T: Subtractable> {
+public class Tween2<T: Subtractable>: Interaction2 {
 
   public init(for keyPath: CoreAnimationKeyPath<T>) {
     self.keyPath = keyPath
   }
 
-  func start() {
+  public func enable() {
     let animation: CAPropertyAnimation
     if values.count > 1 {
       let keyframeAnimation = CAKeyframeAnimation()
@@ -61,7 +61,7 @@ public class Tween2<T: Subtractable> {
   }
   var activeKeys = Set<String>()
 
-  public func stop() {
+  public func disable() {
     activeKeys.forEach { keyPath.removeAnimation(forKey: $0) }
     activeKeys.removeAll()
   }
@@ -161,7 +161,7 @@ class TweenExampleViewController: ExampleViewController {
     view.addGestureRecognizer(tap)
 
     Reactive(tap).didRecognize.subscribeToValue { _ in
-      tween.start()
+      tween.enable()
     }
   }
 

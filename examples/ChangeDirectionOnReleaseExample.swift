@@ -18,7 +18,7 @@ import UIKit
 import IndefiniteObservable
 import MaterialMotion
 
-public final class StateMachine<T: Hashable, U> {
+public final class StateMachine<T: Hashable, U>: Interaction2 {
   init<O>(stream: O, map: [T: U]? = nil, didChange: @escaping (U) -> Void) where O: MotionObservableConvertible, O.T == T {
     self.stream = stream.asStream()
     if let map = map {
@@ -47,8 +47,9 @@ public final class StateMachine<T: Hashable, U> {
   private var subscription: Subscription?
 }
 
-public final class TransitionSpring2<T: Subtractable>: Stateful {
-  public init(with spring: Spring2<T>, direction: ReactiveProperty<TransitionDirection>) {
+public final class TransitionSpring2<T: Subtractable>: Interaction2, Stateful {
+  public init(for path: CoreAnimationKeyPath<T>, direction: ReactiveProperty<TransitionDirection>) {
+    let spring = Spring2(for: path)
     self.spring = spring
     self.direction = direction
 
@@ -70,11 +71,11 @@ public final class TransitionSpring2<T: Subtractable>: Stateful {
 
     stateMachine.enable()
 
-    spring.start()
+    spring.enable()
   }
 
   public func disable() {
-    spring.stop()
+    spring.disable()
     stateMachine.disable()
     subscription?.unsubscribe()
     subscription = nil
@@ -95,7 +96,7 @@ public final class TransitionSpring2<T: Subtractable>: Stateful {
   private var subscription: Subscription?
 }
 
-public final class ChangeDirection2 {
+public final class ChangeDirection2: Interaction2 {
   init(_ direction: ReactiveProperty<TransitionDirection>, withVelocityOf gesture: UIPanGestureRecognizer, containerView: UIView) {
     self.direction = direction
 
@@ -109,7 +110,7 @@ public final class ChangeDirection2 {
     let whenPositive = self.whenPositive
     let direction = self.direction
 
-    stream.subscribeToValue {
+    subscription = stream.subscribeToValue {
       var value: CGFloat
       switch axis {
       case .x: value = $0.x
@@ -123,6 +124,11 @@ public final class ChangeDirection2 {
         }
       }
     }
+  }
+
+  public func disable() {
+    subscription?.unsubscribe()
+    subscription = nil
   }
 
   public var minimumVelocity: CGFloat = 100
@@ -148,6 +154,7 @@ public final class ChangeDirection2 {
 
   private let direction: ReactiveProperty<TransitionDirection>
   private let stream: MotionObservable<CGPoint>
+  private var subscription: Subscription?
 }
 
 class ChangeDirectionOnReleaseExampleViewController: ExampleViewController {
@@ -166,13 +173,15 @@ class ChangeDirectionOnReleaseExampleViewController: ExampleViewController {
 
     let direction = createProperty(withInitialValue: TransitionDirection.backward)
 
-    let tossable = Tossable2(exampleView, containerView: view)
-
-    let transitionSpring = TransitionSpring2(with: tossable.spring, direction: direction)
+    let transitionSpring = TransitionSpring2(for: Reactive(exampleView.layer).positionKeyPath,
+                                             direction: direction)
     transitionSpring.destinations = [
       .backward: CGPoint(x: view.bounds.midX, y: view.bounds.height * 4 / 10),
       .forward: CGPoint(x: view.bounds.midX, y: view.bounds.height * 6 / 10)
     ]
+
+    let tossable = Tossable2(exampleView, containerView: view)
+
     transitionSpring.enable()
 
     tossable.enable()

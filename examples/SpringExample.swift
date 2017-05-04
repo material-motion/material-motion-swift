@@ -17,6 +17,11 @@
 import UIKit
 import MaterialMotion
 
+public protocol Interaction2 {
+  func enable()
+  func disable()
+}
+
 /**
  A spring pulls a value from an initial position to a destination using a physical simulation of a
  dampened oscillator.
@@ -29,7 +34,7 @@ import MaterialMotion
 
  T-value constraints may be applied to this interaction.
  */
-public final class Spring2<T>: Stateful where T: Subtractable {
+public final class Spring2<T>: Interaction2, Stateful where T: Subtractable {
   /**
    Creates a spring with a given threshold and system.
 
@@ -42,12 +47,12 @@ public final class Spring2<T>: Stateful where T: Subtractable {
 
   public let path: CoreAnimationKeyPath<T>
 
-  public func start() {
+  public func enable() {
     started = true
 
     checkAndEmit()
   }
-  public func stop() {
+  public func disable() {
     guard started else { return }
 
     started = false
@@ -159,7 +164,7 @@ class SpringExampleViewController: ExampleViewController {
 
     let spring = Spring2(for: Reactive(square.layer).positionKeyPath)
     spring.friction /= 2
-    spring.start()
+    spring.enable()
 
     Reactive(tap).didRecognize.subscribeToValue { [weak self] _ in
       guard let strongSelf = self else { return }
