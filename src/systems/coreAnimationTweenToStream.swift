@@ -35,7 +35,7 @@ public func coreAnimation<T>(_ tween: TweenShadow<T>) -> MotionObservable<T> whe
 }
 
 private func streamFromTween<T>(_ tween: TweenShadow<T>, configureEvent: @escaping (CoreAnimationChannelAdd) -> CoreAnimationChannelAdd) -> MotionObservable<T> {
-  return MotionObservable(Metadata("Core Animation Tween", args: [tween])) { observer in
+  return MotionObservable { observer in
 
     var animationKeys: [String] = []
     var activeAnimations = Set<String>()

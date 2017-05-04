@@ -25,7 +25,7 @@ extension MotionObservableConvertible {
    The returned stream is therefor guaranteed to always immediately emit a value upon subscription.
    */
   public func startWith(_ value: T) -> MotionObservable<T> {
-    return MotionObservable(self.metadata.createChild(Metadata(#function, type: .constraint, args: [value]))) { observer in
+    return MotionObservable { observer in
       observer.next(value)
       return self.asStream().subscribeAndForward(to: observer).unsubscribe
     }._remember()
@@ -33,7 +33,7 @@ extension MotionObservableConvertible {
 
   @available(*, deprecated, message: "Use startWith() instead.")
   public func initialValue(_ value: T) -> MotionObservable<T> {
-    return MotionObservable(self.metadata.createChild(Metadata(#function, type: .constraint, args: [value]))) { observer in
+    return MotionObservable { observer in
       observer.next(value)
       return self.asStream().subscribeAndForward(to: observer).unsubscribe
     }

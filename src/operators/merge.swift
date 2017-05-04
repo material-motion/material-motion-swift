@@ -22,7 +22,7 @@ extension MotionObservableConvertible {
    Emits values as it receives them, both from upstream and from the provided stream.
    */
   public func merge<O>(with stream: O) -> MotionObservable<T> where O: MotionObservableConvertible, O.T == T {
-    return MotionObservable<T>(Metadata(#function, args: [stream])) { observer in
+    return MotionObservable<T> { observer in
       let upstreamSubscription = self.asStream().subscribeAndForward(to: observer)
       let subscription = stream.asStream().subscribeAndForward(to: observer)
       return {

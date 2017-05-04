@@ -91,7 +91,7 @@ public final class TransitionTween<T>: Tween<T> {
   public override func add(to property: ReactiveProperty<T>,
                            withRuntime runtime: MotionRuntime,
                            constraints: ConstraintApplicator<T>? = nil) {
-    let unlocked = createProperty("TransitionTween.unlocked", withInitialValue: false)
+    let unlocked = createProperty(withInitialValue: false)
     runtime.connect(direction.rewriteTo(false), to: unlocked)
     runtime.connect(toggledValues, to: values)
     runtime.connect(toggledKeyPositions, to: keyPositions)

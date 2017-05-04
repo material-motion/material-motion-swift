@@ -19,7 +19,7 @@ import UIKit
 
 /** Create a gesture source that will connect to the provided gesture recognizer. */
 func gestureToStream<T: UIGestureRecognizer>(_ gesture: T) -> MotionObservable<T> {
-  return MotionObservable(Metadata("Gesture Recognizer", args: [gesture])) { observer in
+  return MotionObservable { observer in
     let connection = GestureConnection(subscribedTo: gesture, observer: observer)
     return {
       connection.disconnect()

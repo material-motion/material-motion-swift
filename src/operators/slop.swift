@@ -48,11 +48,11 @@ extension MotionObservableConvertible where T == CGFloat {
                      size.
    */
   public func slop(size: CGFloat) -> MotionObservable<SlopEvent> {
-    let didLeaveSlopRegion = createProperty("slop.didLeaveSlopRegion", withInitialValue: false)
+    let didLeaveSlopRegion = createProperty(withInitialValue: false)
 
     let size = abs(size)
 
-    return MotionObservable(self.metadata.createChild(Metadata(#function, type: .constraint, args: [size]))) { observer in
+    return MotionObservable { observer in
       let upstreamSubscription = self
         .thresholdRange(min: -size, max: size)
         .rewrite([.below: true, .above: true])

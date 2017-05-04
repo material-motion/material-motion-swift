@@ -48,7 +48,7 @@ extension MotionObservableConvertible where T == CGPoint {
   public func distance<O: MotionObservableConvertible>(from location: O) -> MotionObservable<CGFloat> where O.T == CGPoint {
     var lastLocation: CGPoint?
     var lastValue: CGPoint?
-    return MotionObservable(self.metadata.createChild(Metadata(#function, type: .constraint, args: [location]))) { observer in
+    return MotionObservable { observer in
 
       let checkAndEmit = {
         guard let location = lastLocation, let value = lastValue else {

@@ -58,7 +58,7 @@ final class AggregateMotionState {
    */
   func observe<O>(state: O, withRuntime runtime: MotionRuntime) where O: MotionObservableConvertible, O: AnyObject, O.T == MotionState {
     let identifier = ObjectIdentifier(state)
-    runtime.connect(state.asStream().dedupe(), to: ReactiveProperty("Aggregate state", initialValue: .atRest) { state in
+    runtime.connect(state.asStream().dedupe(), to: ReactiveProperty(initialValue: .atRest) { state in
       if state == .active {
         self.activeStates.insert(identifier)
       } else {
@@ -72,6 +72,6 @@ final class AggregateMotionState {
     return state.asStream()
   }
 
-  private let state = createProperty("state", withInitialValue: MotionState.atRest)
+  private let state = createProperty(withInitialValue: MotionState.atRest)
   private var activeStates = Set<ObjectIdentifier>()
 }

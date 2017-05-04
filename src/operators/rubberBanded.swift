@@ -56,7 +56,7 @@ extension MotionObservableConvertible where T == CGPoint {
     var lastRect: CGRect?
     var lastMaxLength: CGFloat?
     var lastValue: CGPoint?
-    return MotionObservable(self.metadata.createChild(Metadata(#function, type: .constraint, args: [rectStream, maxLengthStream]))) { observer in
+    return MotionObservable { observer in
 
       let checkAndEmit = {
         guard let rect = lastRect, let maxLength = lastMaxLength, let value = lastValue else {

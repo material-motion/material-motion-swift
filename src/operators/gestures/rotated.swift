@@ -27,7 +27,7 @@ extension MotionObservableConvertible where T: UIRotationGestureRecognizer {
     var cachedInitialRotation: CGFloat?
     var lastInitialRotation: CGFloat?
 
-    return MotionObservable(metadata.createChild(Metadata(#function, type: .constraint, args: [initialRotation]))) { observer in
+    return MotionObservable { observer in
       let initialRotationSubscription = initialRotation.subscribeToValue { lastInitialRotation = $0 }
 
       let upstreamSubscription = self.subscribeAndForward(to: observer) { value in

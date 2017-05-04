@@ -30,12 +30,12 @@ public final class ArcMove: Interaction, Togglable, Stateful {
   /**
    The initial position of the arc move animation.
    */
-  public let from = createProperty("ArcMove.from", withInitialValue: CGPoint.zero)
+  public let from = createProperty(withInitialValue: CGPoint.zero)
 
   /**
    The final position of the arc move animation.
    */
-  public let to = createProperty("ArcMove.to", withInitialValue: CGPoint.zero)
+  public let to = createProperty(withInitialValue: CGPoint.zero)
 
   /**
    The tween interaction that will interpolate between the from and to values.
@@ -61,8 +61,6 @@ public final class ArcMove: Interaction, Togglable, Stateful {
   public var state: MotionObservable<MotionState> {
     return tween.state
   }
-
-  public let metadata = Metadata("ArcMove")
 }
 
 // Given two positional streams, returns a stream that emits an arc move path between the two
@@ -70,7 +68,7 @@ public final class ArcMove: Interaction, Togglable, Stateful {
 private func arcMove<O1: MotionObservableConvertible, O2: MotionObservableConvertible>
   (from: O1, to: O2)
   -> MotionObservable<CGPath> where O1.T == CGPoint, O2.T == CGPoint {
-    return MotionObservable(Metadata(#function, args: [from, to])) { observer in
+    return MotionObservable { observer in
       var latestFrom: CGPoint?
       var latestTo: CGPoint?
 

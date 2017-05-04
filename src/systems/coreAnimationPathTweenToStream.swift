@@ -20,7 +20,7 @@ import IndefiniteObservable
 
 /** Create a core animation tween system for a Tween plan. */
 public func coreAnimation(_ tween: PathTweenShadow) -> MotionObservable<CGPoint> {
-  return MotionObservable(Metadata("Core Animation Path Tween", args: [tween.duration, tween.delay, tween.path, tween.timeline as Any, tween.enabled, tween.state])) { observer in
+  return MotionObservable { observer in
 
     var subscriptions: [Subscription] = []
     let key = NSUUID().uuidString

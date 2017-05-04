@@ -56,6 +56,4 @@ public final class ReactiveScrollViewDelegate: NSObject, UIScrollViewDelegate, M
     didScrollObservers.forEach { $0.next(scrollView) }
   }
   private var didScrollObservers: [MotionObserver<UIScrollView>] = []
-
-  public let metadata = Metadata("Scroll view delegate")
 }

@@ -247,23 +247,6 @@ public final class MotionRuntime {
   }
 
   /**
-   Generates a graphviz-compatiable representation of all interactions associated with the runtime.
-
-   For quick previewing, use an online graphviz visualization tool like http://www.webgraphviz.com/
-   */
-  public func asGraphviz() -> String {
-    var lines: [String] = [
-      "digraph G {",
-      "node [shape=rect]"
-    ]
-    for metadata in metadata {
-      lines.append(metadata.debugDescription)
-    }
-    lines.append("}")
-    return lines.joined(separator: "\n")
-  }
-
-  /**
    A Boolean stream indicating whether the runtime is currently being directly manipulated by the
    user.
    */
@@ -273,7 +256,6 @@ public final class MotionRuntime {
   private let aggregateManipulationState = AggregateMotionState()
 
   private func write<O: MotionObservableConvertible, T>(_ stream: O, to property: ReactiveProperty<T>) where O.T == T {
-    metadata.append(stream.metadata.createChild(property.metadata))
     subscriptions.append(stream.subscribe(next: { property.value = $0 },
                                           coreAnimation: property.coreAnimation,
                                           visualization: { [weak self] view in
@@ -300,7 +282,6 @@ public final class MotionRuntime {
   private var reactiveObjects: [ObjectIdentifier: AnyObject] = [:]
   private var targets: [ObjectIdentifier: [Any]] = [:]
 
-  private var metadata: [Metadata] = []
   private var subscriptions: [Subscription] = []
   private var interactions: [Any] = []
 }

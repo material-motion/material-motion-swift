@@ -34,7 +34,7 @@ extension MotionObservableConvertible where T == CGPoint {
   public func xLocked<O: MotionObservableConvertible>(to xValueStream: O) -> MotionObservable<CGPoint> where O.T == CGFloat {
     var lastUpstreamValue: CGPoint?
     var lastXValue: CGFloat?
-    return MotionObservable(self.metadata.createChild(Metadata(#function, type: .constraint, args: [xValueStream]))) { observer in
+    return MotionObservable { observer in
 
       let checkAndEmit = {
         guard let lastUpstreamValue = lastUpstreamValue, let lastXValue = lastXValue else { return }

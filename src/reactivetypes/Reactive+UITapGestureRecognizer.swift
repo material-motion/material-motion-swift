@@ -22,7 +22,7 @@ extension Reactive where O: UIGestureRecognizer {
   public var isEnabled: ReactiveProperty<Bool> {
     let gesture = _object
     return _properties.named(#function, onCacheMiss: {
-      return ReactiveProperty("\(pretty(gesture)).\(#function)", initialValue: gesture.isEnabled) {
+      return ReactiveProperty(initialValue: gesture.isEnabled) {
         gesture.isEnabled = $0
       }
     })
@@ -92,6 +92,4 @@ private final class GestureConnection<O: UIGestureRecognizer>: MotionObservableC
   }
   private var didChangeObservers: [MotionObserver<O>] = []
   private weak var gesture: O?
-
-  public let metadata = Metadata("Gesture delegate")
 }

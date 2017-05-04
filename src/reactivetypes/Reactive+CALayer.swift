@@ -32,7 +32,7 @@ extension Reactive where O: CALayer {
     let anchorPoint = self.anchorPoint
     let position = self.position
     return _properties.named(#function, onCacheMiss: {
-      return ReactiveProperty<AnchorPointAdjustment>("\(pretty(_object)).\(#function)", initialValue: .init(anchorPoint: anchorPoint.value, position: position.value)) {
+      return ReactiveProperty<AnchorPointAdjustment>(initialValue: .init(anchorPoint: anchorPoint.value, position: position.value)) {
         anchorPoint.value = $0.anchorPoint; position.value = $0.position
       }
     })
@@ -183,7 +183,7 @@ extension Reactive where O: CALayer {
     let layer = _object
     var decomposedKeys = Set<String>()
     var updateProperty: ((T) -> Void)?
-    let property = ReactiveProperty("\(pretty(layer)).\(name)", initialValue: initialValue, externalWrite: { [weak layer] value in
+    let property = ReactiveProperty(initialValue: initialValue, externalWrite: { [weak layer] value in
       guard let layer = layer else { return }
 
       let actionsWereDisabled = CATransaction.disableActions()

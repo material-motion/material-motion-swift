@@ -101,7 +101,7 @@ final class AggregateMotionState {
     return state.asStream()
   }
 
-  private let state = createProperty("state", withInitialValue: MotionState.atRest)
+  private let state = createProperty(withInitialValue: MotionState.atRest)
   private var activeStates = Set<ObjectIdentifier>()
 }
 

@@ -25,7 +25,7 @@ extension MotionObservableConvertible {
    operator that only needs to modify values. All state events are forwarded along.
    */
   func _nextOperator<U>(_ name: String? = nil, args: [Any]? = nil, operation: @escaping (T, @escaping (U) -> Void) -> Void) -> MotionObservable<U> {
-    return MotionObservable<U>(self.metadata.createChild(Metadata(name, args: args), type: .constraint)) { observer in
+    return MotionObservable<U> { observer in
       return self.subscribe(next: {
         return operation($0, observer.next)
       }, coreAnimation: { _ in
@@ -41,7 +41,7 @@ extension MotionObservableConvertible {
    forwarded along.
    */
   func _nextOperator<U>(_ name: String? = nil, args: [Any]? = nil, operation: @escaping (T, (U) -> Void) -> Void, coreAnimation: @escaping (CoreAnimationChannelEvent, CoreAnimationChannel?) -> Void) -> MotionObservable<U> {
-    return MotionObservable<U>(self.metadata.createChild(Metadata(name, args: args), type: .constraint)) { observer in
+    return MotionObservable<U> { observer in
       return self.subscribe(next: {
         return operation($0, observer.next)
       }, coreAnimation: {
