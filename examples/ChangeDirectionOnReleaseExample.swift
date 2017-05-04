@@ -189,11 +189,8 @@ class ChangeDirectionOnReleaseExampleViewController: ExampleViewController {
       .backward: CGPoint(x: view.bounds.midX, y: view.bounds.height * 4 / 10),
       .forward: CGPoint(x: view.bounds.midX, y: view.bounds.height * 6 / 10)
     ]
-
-    let tossable = createTossable(exampleView, containerView: view)
-
-    transitionSpring.enable()
-
+    let draggable = Draggable2(exampleView, containerView: view)
+    let tossable = Tossable2(draggable, spring: transitionSpring, containerView: view)
     tossable.enable()
 
     let changeDirection = ChangeDirection2(direction,

@@ -218,6 +218,7 @@
 			isa = PBXGroup;
 			children = (
 				667E94451E71EF0E005CAC78 /* ArcMoveExample.swift */,
+				66F09E501E88B7EF00FC8D1B /* ChangeDirectionOnReleaseExample.swift */,
 				667E94481E71EF0E005CAC78 /* DirectlyManipulableExample.swift */,
 				66DDFD0C1E71F0F100AA46B7 /* DraggableExample.swift */,
 				660DA30E1E79EA62008F7401 /* RotatableExample.swift */,
@@ -226,7 +227,6 @@
 				660DA31C1E7A07BC008F7401 /* SpringExample.swift */,
 				660DA3151E79F6A3008F7401 /* TossableExample.swift */,
 				660DA3201E7A106D008F7401 /* TweenExample.swift */,
-				66F09E501E88B7EF00FC8D1B /* ChangeDirectionOnReleaseExample.swift */,
 			);
 			name = Interactions;
 			sourceTree = "<group>";
