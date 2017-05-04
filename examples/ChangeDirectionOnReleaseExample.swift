@@ -69,9 +69,12 @@ public final class TransitionSpring2<T: Subtractable>: Stateful {
     }
 
     stateMachine.enable()
+
+    spring.start()
   }
 
   public func disable() {
+    spring.stop()
     stateMachine.disable()
     subscription?.unsubscribe()
     subscription = nil
@@ -81,8 +84,12 @@ public final class TransitionSpring2<T: Subtractable>: Stateful {
     return spring.state
   }
 
+  public var destinations: [TransitionDirection: T] {
+    get { return stateMachine.map }
+    set { stateMachine.map = newValue }
+  }
   public let spring: Spring2<T>
-  public let stateMachine: StateMachine<TransitionDirection, T>
+  private let stateMachine: StateMachine<TransitionDirection, T>
 
   private let direction: ReactiveProperty<TransitionDirection>
   private var subscription: Subscription?
@@ -162,12 +169,12 @@ class ChangeDirectionOnReleaseExampleViewController: ExampleViewController {
     let tossable = Tossable2(exampleView, containerView: view)
 
     let transitionSpring = TransitionSpring2(with: tossable.spring, direction: direction)
-    transitionSpring.stateMachine.map = [
+    transitionSpring.destinations = [
       .backward: CGPoint(x: view.bounds.midX, y: view.bounds.height * 4 / 10),
       .forward: CGPoint(x: view.bounds.midX, y: view.bounds.height * 6 / 10)
     ]
-
     transitionSpring.enable()
+
     tossable.enable()
 
     let changeDirection = ChangeDirection2(direction,
