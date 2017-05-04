@@ -21,12 +21,18 @@ import MaterialMotion
 public func createTossable(_ view: UIView, containerView: UIView) -> Tossable2<Spring2<CGPoint>> {
   let draggable = Draggable2(view, containerView: containerView)
   let spring = Spring2(for: Reactive(view.layer).positionKeyPath)
-  return Tossable2(draggable, spring: spring, containerView: containerView)
+  return Tossable2(draggable, containerView: containerView, spring: spring)
 }
 
 public class Tossable2<S>: Interaction2, Stateful where S: SpringInteraction, S: Stateful, S.T == CGPoint {
-  public init(_ draggable: Draggable2, spring: S, containerView: UIView) {
+  public init(_ draggable: Draggable2, containerView: UIView, spring: S) {
     self.draggable = draggable
+    self.spring = spring
+    self.containerView = containerView
+  }
+
+  public init(_ view: UIView, containerView: UIView, spring: S) {
+    self.draggable = Draggable2(view, containerView: containerView)
     self.spring = spring
     self.containerView = containerView
   }
