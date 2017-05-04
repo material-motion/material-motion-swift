@@ -71,18 +71,14 @@ private class PushBackTransition: Transition {
 
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
     let bounds = ctx.containerView().bounds
-    let backPosition = bounds.maxY + ctx.fore.view.bounds.height / 2
-    let forePosition = bounds.midY
 
-    let movement = TransitionSpring2(for: Reactive(ctx.fore.view.layer).positionYKeyPath,
-                                     direction: ctx.direction)
+    let movement = TransitionSpring2(for: Reactive(ctx.fore.view.layer).positionYKeyPath, direction: ctx.direction)
     movement.destinations = [
-      .backward: backPosition,
-      .forward: forePosition
+      .backward: bounds.maxY + ctx.fore.view.bounds.height / 2,
+      .forward: bounds.midY
     ]
 
-    let scale = TransitionSpring2(for: Reactive(ctx.back.view.layer).scaleKeyPath,
-                                  direction: ctx.direction)
+    let scale = TransitionSpring2(for: Reactive(ctx.back.view.layer).scaleKeyPath, direction: ctx.direction)
     scale.destinations = [
       .backward: 1,
       .forward: 0.95
