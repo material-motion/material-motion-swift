@@ -24,7 +24,7 @@ public func createTossable(_ view: UIView, containerView: UIView) -> Tossable2<S
   return Tossable2(draggable, spring: spring, containerView: containerView)
 }
 
-public class Tossable2<S: SpringInteraction>: Interaction2, Stateful where S.T == CGPoint {
+public class Tossable2<S>: Interaction2, Stateful where S: SpringInteraction, S: Stateful, S.T == CGPoint {
   public init(_ draggable: Draggable2, spring: S, containerView: UIView) {
     self.draggable = draggable
     self.spring = spring

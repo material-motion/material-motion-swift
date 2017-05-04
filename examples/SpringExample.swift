@@ -27,11 +27,6 @@ public protocol SpringInteraction: Interaction2 {
 
   var initialVelocity: T? { get set }
   var destination: T? { get set }
-  var tension: CGFloat { get set }
-  var friction: CGFloat { get set }
-  var mass: CGFloat { get set }
-
-  var state: MotionObservable<MotionState> { get }
 }
 
 /**

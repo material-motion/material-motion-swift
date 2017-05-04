@@ -47,7 +47,7 @@ public final class StateMachine<T: Hashable, U>: Interaction2 {
   private var subscription: Subscription?
 }
 
-public final class TransitionSpring2<T: Subtractable>: Interaction2, Stateful {
+public final class TransitionSpring2<T: Subtractable>: SpringInteraction, Stateful {
   public init(for path: CoreAnimationKeyPath<T>, direction: ReactiveProperty<TransitionDirection>) {
     let spring = Spring2(for: path)
     self.spring = spring
@@ -79,6 +79,16 @@ public final class TransitionSpring2<T: Subtractable>: Interaction2, Stateful {
     stateMachine.disable()
     subscription?.unsubscribe()
     subscription = nil
+  }
+
+  public var initialVelocity: T? {
+    get { return spring.initialVelocity }
+    set { spring.initialVelocity = newValue }
+  }
+
+  public var destination: T? {
+    get { return spring.destination }
+    set { spring.destination = newValue }
   }
 
   public var state: MotionObservable<MotionState> {
