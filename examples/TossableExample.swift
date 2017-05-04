@@ -39,9 +39,11 @@ public class Tossable2<S>: Interaction2, Stateful where S: SpringInteraction, S:
     guard let gesture = draggable.gesture else { return }
     var spring = self.spring
 
+    spring.enable()
+
     let gestureIsActive = gesture.state == .began || gesture.state == .changed
-    if !gestureIsActive {
-      spring.enable()
+    if gestureIsActive {
+      spring.disable()
     }
 
     let reactiveGesture = Reactive(gesture)

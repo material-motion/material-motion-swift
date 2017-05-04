@@ -63,16 +63,20 @@ public final class TransitionSpring2<T: Subtractable>: SpringInteraction, Statef
 
     let spring = self.spring
 
-    if direction.value == .forward, let back = stateMachine.map[.backward] {
-      spring.path.property.value = back
-    } else if direction.value == .backward, let fore = stateMachine.map[.forward] {
-      spring.path.property.value = fore
+    if !didStart {
+      didStart = true
+      if direction.value == .forward, let back = stateMachine.map[.backward] {
+        spring.path.property.value = back
+      } else if direction.value == .backward, let fore = stateMachine.map[.forward] {
+        spring.path.property.value = fore
+      }
     }
 
     stateMachine.enable()
 
     spring.enable()
   }
+  private var didStart = false
 
   public func disable() {
     spring.disable()
@@ -198,7 +202,6 @@ class ChangeDirectionOnReleaseExampleViewController: ExampleViewController {
                                            containerView: view)
     changeDirection.whenPositive = .forward
     changeDirection.enable()
-
   }
 
   override func exampleInformation() -> ExampleInfo {
