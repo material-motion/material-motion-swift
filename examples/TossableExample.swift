@@ -39,6 +39,11 @@ public class Tossable2: Stateful {
     guard let gesture = draggable.gesture else { return }
     let spring = self.spring
 
+    let gestureIsActive = gesture.state == .began || gesture.state == .changed
+    if !gestureIsActive {
+      spring.start()
+    }
+
     let reactiveGesture = Reactive(gesture)
     subscriptions.append(contentsOf: [
       reactiveGesture.didBegin { _ in
@@ -51,7 +56,6 @@ public class Tossable2: Stateful {
     )
 
     draggable.enable()
-    spring.start()
   }
 
   public func disable() {

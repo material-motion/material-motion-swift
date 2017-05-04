@@ -60,21 +60,17 @@ public class Draggable2 {
   }
 
   private init(_ property: ReactiveProperty<CGPoint>, containerView: UIView, withGestureRecognizer gesture: UIPanGestureRecognizer?) {
-    self.gesture = gesture
+    self.containerView = containerView
     self.property = property
-
-    if let gesture = gesture {
-      self.stream = Reactive(gesture).events.translation(addedTo: property, in: containerView)
-    } else {
-      self.stream = nil
-    }
+    self.gesture = gesture
   }
 
   public func enable() {
     guard subscription == nil else { return }
+    guard let gesture = gesture else { return }
 
     let property = self.property
-    subscription = stream?.subscribeToValue {
+    subscription = Reactive(gesture).events.translation(addedTo: property, in: containerView).subscribeToValue {
       property.value = $0
     }
   }
@@ -91,11 +87,11 @@ public class Draggable2 {
     return draggable
   }
 
-  private let stream: MotionObservable<CGPoint>?
   private let property: ReactiveProperty<CGPoint>
   private var subscription: Subscription?
+  private let containerView: UIView
 
-  public let gesture: UIPanGestureRecognizer?
+  public var gesture: UIPanGestureRecognizer?
 }
 
 class DraggableExampleViewController: ExampleViewController {

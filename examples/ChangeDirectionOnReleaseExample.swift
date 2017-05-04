@@ -18,6 +18,60 @@ import UIKit
 import IndefiniteObservable
 import MaterialMotion
 
+public final class StateMachine<T: Hashable, U> {
+  init<O>(stream: O, map: [T: U], didChange: @escaping (U) -> Void) where O: MotionObservableConvertible, O.T == T {
+    self.stream = stream.asStream()
+    self.map = map
+    self.didChange = didChange
+  }
+  public let map: [T: U]
+
+  public func enable() {
+    guard subscription == nil else { return }
+
+    subscription = stream.rewrite(map).subscribeToValue { [weak self] in
+      guard let strongSelf = self else { return }
+      strongSelf.didChange($0)
+    }
+  }
+
+  public func disable() {
+    subscription?.unsubscribe()
+    subscription = nil
+  }
+
+  private let stream: MotionObservable<T>
+  private let didChange: (U) -> Void
+  private var subscription: Subscription?
+}
+
+public final class TransitionMachine<T: Hashable, U> {
+  init<O>(stream: O, map: [T: U], initialValue: T, didChange: @escaping (U) -> Void) where O: MotionObservableConvertible, O.T == T {
+    self.stream = stream.asStream()
+    self.map = map
+    self.didChange = didChange
+  }
+  public let map: [T: U]
+
+  public func enable() {
+    guard subscription == nil else { return }
+
+    subscription = stream.rewrite(map).subscribeToValue { [weak self] in
+      guard let strongSelf = self else { return }
+      strongSelf.didChange($0)
+    }
+  }
+
+  public func disable() {
+    subscription?.unsubscribe()
+    subscription = nil
+  }
+
+  private let stream: MotionObservable<T>
+  private let didChange: (U) -> Void
+  private var subscription: Subscription?
+}
+
 public final class TransitionSpring2<T: Subtractable>: Stateful {
   public init(with spring: Spring2<T>, direction: ReactiveProperty<TransitionDirection>) {
     self.spring = spring
@@ -26,7 +80,8 @@ public final class TransitionSpring2<T: Subtractable>: Stateful {
 
   public func enable() {
     guard subscription == nil else { return }
-    updateDestination(withDirection: direction.value)
+
+    let spring = self.spring
 
     if direction.value == .forward, let back = back {
       spring.path.property.value = back
@@ -34,9 +89,16 @@ public final class TransitionSpring2<T: Subtractable>: Stateful {
       spring.path.property.value = fore
     }
 
-    subscription = direction.subscribeToValue { [weak self] in
-      guard let strongSelf = self else { return }
-      strongSelf.updateDestination(withDirection: $0)
+    var map: [TransitionDirection: T] = [:]
+    if let back = back {
+      map[.backward] = back
+    }
+    if let fore = fore {
+      map[.forward] = fore
+    }
+
+    subscription = direction.rewrite(map).subscribeToValue {
+      spring.destination = $0
     }
 
     spring.start()
@@ -49,14 +111,6 @@ public final class TransitionSpring2<T: Subtractable>: Stateful {
 
   public var state: MotionObservable<MotionState> {
     return spring.state
-  }
-
-  private func updateDestination(withDirection direction: TransitionDirection) {
-    if direction == .forward {
-      spring.destination = fore
-    } else {
-      spring.destination = back
-    }
   }
 
   public let spring: Spring2<T>
@@ -76,17 +130,23 @@ public final class ChangeDirection2 {
   }
 
   public func enable() {
+    let axis = self.axis
+    let minimumVelocity = self.minimumVelocity
+    let whenNegative = self.whenNegative
+    let whenPositive = self.whenPositive
+    let direction = self.direction
+
     stream.subscribeToValue {
       var value: CGFloat
-      switch self.axis {
+      switch axis {
       case .x: value = $0.x
       case .y: value = $0.y
       }
-      if fabs(value) >= self.minimumVelocity {
+      if fabs(value) >= minimumVelocity {
         if value < 0 {
-          self.direction.value = self.whenNegative
+          direction.value = whenNegative
         } else if value > 0 {
-          self.direction.value = self.whenPositive
+          direction.value = whenPositive
         }
       }
     }

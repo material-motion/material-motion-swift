@@ -82,10 +82,11 @@ public final class Spring2<T>: Stateful where T: Subtractable {
 
     activeKeys.insert(key)
     _state.value = .active
-    path.add(animation, forKey: key, initialVelocity: initialVelocity) {
-      self.activeKeys.remove(key)
-      if self.activeKeys.count == 0 {
-        self._state.value = .atRest
+    path.add(animation, forKey: key, initialVelocity: initialVelocity) { [weak self] in
+      guard let strongSelf = self else { return }
+      strongSelf.activeKeys.remove(key)
+      if strongSelf.activeKeys.count == 0 {
+        strongSelf._state.value = .atRest
       }
     }
   }

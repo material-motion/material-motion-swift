@@ -53,15 +53,15 @@ private class ModalViewController: UIViewController, UIGestureRecognizerDelegate
     super.viewDidLoad()
 
     view.backgroundColor = .primaryColor
-
-    scrollView = UIScrollView(frame: view.bounds)
-    scrollView.contentSize = .init(width: view.bounds.width, height: view.bounds.height * 10)
-    view.addSubview(scrollView)
+//
+//    scrollView = UIScrollView(frame: view.bounds)
+//    scrollView.contentSize = .init(width: view.bounds.width, height: view.bounds.height * 10)
+//    view.addSubview(scrollView)
 
     let pan = UIPanGestureRecognizer()
-    pan.delegate = transitionController.topEdgeDismisserDelegate(for: scrollView)
+//    pan.delegate = transitionController.topEdgeDismisserDelegate(for: scrollView)
     transitionController.dismissWhenGestureRecognizerBegins(pan)
-    scrollView.panGestureRecognizer.require(toFail: pan)
+//    scrollView.panGestureRecognizer.require(toFail: pan)
     view.addGestureRecognizer(pan)
   }
 
@@ -75,27 +75,25 @@ private class PushBackTransition: Transition {
   required init() {}
 
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
-    let draggable = Draggable2(ctx.fore.view, containerView: ctx.containerView(), withFirstGestureIn: ctx.gestureRecognizers)
-
-    let changeDirection = ChangeDirection2(ctx.direction,
-                                           withVelocityOf: draggable.gesture!,
-                                           containerView: ctx.containerView())
-    changeDirection.enable()
-
-    let spring = Spring2(for: Reactive(ctx.fore.view.layer).positionKeyPath)
-
-    // TODO: This should be initializable without having to create a spring or draggable instance.
-    // TODO: We should be able to change draggable's gesture recognizer before it starts.
-    let tossable = Tossable2(draggable, spring: spring, containerView: ctx.containerView())
+    let tossable = Tossable2(ctx.fore.view, containerView: ctx.containerView())
+    tossable.draggable.gesture = ctx.gestureRecognizers.flatMap { $0 as? UIPanGestureRecognizer }.first
 
     let bounds = ctx.containerView().bounds
 
-    // TODO: Rename this to StateMachine and allow the client to pass a map of rewrite values.
+    ctx.direction.rewrite([ .backward: CGPoint(x: bounds.midX, y: bounds.midY), .forward: CGPoint(x: bounds.midX, y: bounds.maxY + ctx.fore.view.bounds.height / 2)]).subscribeToValue {
+      tossable.spring.path.property.value = $0
+    }.unsubscribe()
+    ctx.direction.rewrite([ .forward: CGPoint(x: bounds.midX, y: bounds.midY), .backward: CGPoint(x: bounds.midX, y: bounds.maxY + ctx.fore.view.bounds.height / 2)]).subscribeToValue {
+      tossable.spring.destination = $0
+    }
 
-    let transitionSpring = TransitionSpring2(with: tossable.spring, direction: ctx.direction)
-    transitionSpring.back = CGPoint(x: bounds.midX, y: bounds.maxY + ctx.fore.view.bounds.height / 2)
-    transitionSpring.fore = CGPoint(x: bounds.midX, y: bounds.midY)
-    transitionSpring.enable()
+    if let gesture = tossable.draggable.gesture {
+      let changeDirection = ChangeDirection2(ctx.direction, withVelocityOf: gesture, containerView: ctx.containerView())
+      changeDirection.whenNegative = .forward
+      changeDirection.enable()
+    }
+
+    tossable.enable()
 
     return [tossable]
   }
