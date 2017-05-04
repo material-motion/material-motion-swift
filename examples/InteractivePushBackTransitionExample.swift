@@ -75,7 +75,7 @@ private class PushBackTransition: Transition {
   required init() {}
 
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
-    let tossable = Tossable2(ctx.fore.view, containerView: ctx.containerView())
+    let tossable = createTossable(ctx.fore.view, containerView: ctx.containerView())
     tossable.draggable.gesture = ctx.gestureRecognizers.flatMap { $0 as? UIPanGestureRecognizer }.first
 
     let bounds = ctx.containerView().bounds

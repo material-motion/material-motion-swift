@@ -18,26 +18,26 @@ import UIKit
 import IndefiniteObservable
 import MaterialMotion
 
-public class Tossable2: Interaction2, Stateful {
-  public init(_ view: UIView, containerView: UIView) {
-    self.draggable = Draggable2(view, containerView: containerView)
-    self.spring = Spring2(for: Reactive(view.layer).positionKeyPath)
-    self.containerView = containerView
-  }
+public func createTossable(_ view: UIView, containerView: UIView) -> Tossable2<Spring2<CGPoint>> {
+  let draggable = Draggable2(view, containerView: containerView)
+  let spring = Spring2(for: Reactive(view.layer).positionKeyPath)
+  return Tossable2(draggable, spring: spring, containerView: containerView)
+}
 
-  public init(_ draggable: Draggable2, spring: Spring2<CGPoint>, containerView: UIView) {
+public class Tossable2<S: SpringInteraction>: Interaction2, Stateful where S.T == CGPoint {
+  public init(_ draggable: Draggable2, spring: S, containerView: UIView) {
     self.draggable = draggable
     self.spring = spring
     self.containerView = containerView
   }
 
   public let draggable: Draggable2
-  public let spring: Spring2<CGPoint>
+  public let spring: S
 
   public func enable() {
     guard subscriptions.count == 0 else { return }
     guard let gesture = draggable.gesture else { return }
-    let spring = self.spring
+    var spring = self.spring
 
     let gestureIsActive = gesture.state == .began || gesture.state == .changed
     if !gestureIsActive {
@@ -82,7 +82,7 @@ class TossableExampleViewController: ExampleViewController {
     let square = center(createExampleSquareView(), within: view)
     view.addSubview(square)
 
-    let tossable = Tossable2(square, containerView: view)
+    let tossable = createTossable(square, containerView: view)
     tossable.spring.destination = CGPoint(x: view.bounds.midX, y: view.bounds.midY)
     tossable.enable()
   }

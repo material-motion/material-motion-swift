@@ -22,6 +22,18 @@ public protocol Interaction2 {
   func disable()
 }
 
+public protocol SpringInteraction: Interaction2 {
+  associatedtype T
+
+  var initialVelocity: T? { get set }
+  var destination: T? { get set }
+  var tension: CGFloat { get set }
+  var friction: CGFloat { get set }
+  var mass: CGFloat { get set }
+
+  var state: MotionObservable<MotionState> { get }
+}
+
 /**
  A spring pulls a value from an initial position to a destination using a physical simulation of a
  dampened oscillator.
@@ -34,7 +46,7 @@ public protocol Interaction2 {
 
  T-value constraints may be applied to this interaction.
  */
-public final class Spring2<T>: Interaction2, Stateful where T: Subtractable {
+public final class Spring2<T>: SpringInteraction, Stateful where T: Subtractable {
   /**
    Creates a spring with a given threshold and system.
 
