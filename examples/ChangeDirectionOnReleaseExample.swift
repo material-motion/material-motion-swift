@@ -19,46 +19,21 @@ import IndefiniteObservable
 import MaterialMotion
 
 public final class StateMachine<T: Hashable, U> {
-  init<O>(stream: O, map: [T: U], didChange: @escaping (U) -> Void) where O: MotionObservableConvertible, O.T == T {
+  init<O>(stream: O, map: [T: U]? = nil, didChange: @escaping (U) -> Void) where O: MotionObservableConvertible, O.T == T {
     self.stream = stream.asStream()
-    self.map = map
-    self.didChange = didChange
-  }
-  public let map: [T: U]
-
-  public func enable() {
-    guard subscription == nil else { return }
-
-    subscription = stream.rewrite(map).subscribeToValue { [weak self] in
-      guard let strongSelf = self else { return }
-      strongSelf.didChange($0)
+    if let map = map {
+      self.map = map
     }
-  }
-
-  public func disable() {
-    subscription?.unsubscribe()
-    subscription = nil
-  }
-
-  private let stream: MotionObservable<T>
-  private let didChange: (U) -> Void
-  private var subscription: Subscription?
-}
-
-public final class TransitionMachine<T: Hashable, U> {
-  init<O>(stream: O, map: [T: U], initialValue: T, didChange: @escaping (U) -> Void) where O: MotionObservableConvertible, O.T == T {
-    self.stream = stream.asStream()
-    self.map = map
     self.didChange = didChange
   }
-  public let map: [T: U]
+  public var map: [T: U] = [:]
 
   public func enable() {
     guard subscription == nil else { return }
 
-    subscription = stream.rewrite(map).subscribeToValue { [weak self] in
-      guard let strongSelf = self else { return }
-      strongSelf.didChange($0)
+    let didChange = self.didChange
+    subscription = stream.rewrite(map).subscribeToValue {
+      didChange($0)
     }
   }
 
@@ -76,6 +51,10 @@ public final class TransitionSpring2<T: Subtractable>: Stateful {
   public init(with spring: Spring2<T>, direction: ReactiveProperty<TransitionDirection>) {
     self.spring = spring
     self.direction = direction
+
+    self.stateMachine = StateMachine(stream: direction, didChange: {
+      spring.destination = $0
+    })
   }
 
   public func enable() {
@@ -83,28 +62,17 @@ public final class TransitionSpring2<T: Subtractable>: Stateful {
 
     let spring = self.spring
 
-    if direction.value == .forward, let back = back {
+    if direction.value == .forward, let back = stateMachine.map[.backward] {
       spring.path.property.value = back
-    } else if direction.value == .backward, let fore = fore {
+    } else if direction.value == .backward, let fore = stateMachine.map[.forward] {
       spring.path.property.value = fore
     }
 
-    var map: [TransitionDirection: T] = [:]
-    if let back = back {
-      map[.backward] = back
-    }
-    if let fore = fore {
-      map[.forward] = fore
-    }
-
-    subscription = direction.rewrite(map).subscribeToValue {
-      spring.destination = $0
-    }
-
-    spring.start()
+    stateMachine.enable()
   }
 
   public func disable() {
+    stateMachine.disable()
     subscription?.unsubscribe()
     subscription = nil
   }
@@ -114,9 +82,7 @@ public final class TransitionSpring2<T: Subtractable>: Stateful {
   }
 
   public let spring: Spring2<T>
-
-  public var back: T?
-  public var fore: T?
+  public let stateMachine: StateMachine<TransitionDirection, T>
 
   private let direction: ReactiveProperty<TransitionDirection>
   private var subscription: Subscription?
@@ -196,17 +162,20 @@ class ChangeDirectionOnReleaseExampleViewController: ExampleViewController {
     let tossable = Tossable2(exampleView, containerView: view)
 
     let transitionSpring = TransitionSpring2(with: tossable.spring, direction: direction)
-    transitionSpring.back = CGPoint(x: view.bounds.midX, y: view.bounds.height * 4 / 10)
-    transitionSpring.fore = CGPoint(x: view.bounds.midX, y: view.bounds.height * 6 / 10)
+    transitionSpring.stateMachine.map = [
+      .backward: CGPoint(x: view.bounds.midX, y: view.bounds.height * 4 / 10),
+      .forward: CGPoint(x: view.bounds.midX, y: view.bounds.height * 6 / 10)
+    ]
+
+    transitionSpring.enable()
+    tossable.enable()
 
     let changeDirection = ChangeDirection2(direction,
                                            withVelocityOf: tossable.draggable.gesture!,
                                            containerView: view)
     changeDirection.whenPositive = .forward
-
-    tossable.enable()
-    transitionSpring.enable()
     changeDirection.enable()
+
   }
 
   override func exampleInformation() -> ExampleInfo {
