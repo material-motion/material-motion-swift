@@ -54,7 +54,6 @@ public class Tossable2<S>: Interaction2, Stateful where S: SpringInteraction, S:
     var spring = self.spring
 
     spring.stop()
-
     spring.enable()
 
     let gestureIsActive = gesture.state == .began || gesture.state == .changed

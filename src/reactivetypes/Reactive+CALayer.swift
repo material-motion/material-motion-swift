@@ -149,6 +149,13 @@ extension Reactive where O: CALayer {
     })
   }
 
+  public var sizeKeyPath: CoreAnimationKeyPath<CGSize> {
+    let layer = _object
+    return _properties.named(#function, onCacheMiss: {
+      return CoreAnimationKeyPath("bounds.size", onLayer: layer, property: size)
+    })
+  }
+
   public var size: ReactiveProperty<CGSize> {
     let layer = _object
     return _properties.named(#function, onCacheMiss: {

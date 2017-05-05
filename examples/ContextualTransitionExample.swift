@@ -272,20 +272,45 @@ private class PushBackTransition: Transition {
                        foreImageView.bounds.height / imageSize.height)
     let fitSize = CGSize(width: fitScale * imageSize.width, height: fitScale * imageSize.height)
 
-    let draggable = Draggable(withFirstGestureIn: ctx.gestureRecognizers)
-
-    runtime.add(SlopRegion(withTranslationOf: draggable.nextGestureRecognizer, size: 100), to: ctx.direction)
-    runtime.add(ChangeDirection(withVelocityOf: draggable.nextGestureRecognizer), to: ctx.direction)
-
     let backPosition = contextView.superview!.convert(contextView.layer.position, to: ctx.containerView())
     let forePosition = foreImageView.superview!.convert(foreImageView.layer.position, to: ctx.containerView())
-    let movement = TransitionSpring(back: backPosition, fore: forePosition, direction: ctx.direction)
-    let tossable = Tossable(spring: movement, draggable: draggable)
-    runtime.add(tossable, to: replicaView)
 
-    let size = TransitionSpring(back: contextView.bounds.size, fore: fitSize, direction: ctx.direction)
-    runtime.toggle(size, inReactionTo: draggable)
-    runtime.add(size, to: runtime.get(replicaView).layer.size)
+    let transitionSpring = TransitionSpring2(for: Reactive(replicaView.layer).positionKeyPath,
+                                             direction: ctx.direction)
+    transitionSpring.destinations = [
+      .backward: backPosition,
+      .forward: forePosition
+    ]
+    let tossable = Tossable2(replicaView, relativeTo: ctx.containerView(), spring: transitionSpring)
+
+    tossable.draggable.gesture = ctx.gestureRecognizers.flatMap { $0 as? UIPanGestureRecognizer }.first
+
+    if let gesture = tossable.draggable.gesture {
+      runtime.add(SlopRegion(withTranslationOf: gesture, size: 100), to: ctx.direction)
+
+      let changeDirection = ChangeDirection2(ctx.direction, withVelocityOf: gesture, containerView: ctx.containerView())
+      changeDirection.enable()
+    }
+
+    let size = TransitionSpring2(for: Reactive(replicaView.layer).sizeKeyPath, direction: ctx.direction)
+    size.destinations = [ .backward: contextView.bounds.size, .forward: fitSize ]
+
+    ctx.direction.subscribeToValue {
+      print($0)
+    }
+
+    size.stop()
+    size.enable()
+
+    tossable.draggable.state.subscribeToValue {
+      if $0 == .active {
+        size.stop()
+      } else {
+        size.start()
+      }
+    }
+
+    tossable.enable()
 
     let opacity = TransitionSpring2(for: Reactive(ctx.fore.view.layer).opacityKeyPath, direction: ctx.direction)
     opacity.destinations = [ .backward: 0, .forward: 1 ]

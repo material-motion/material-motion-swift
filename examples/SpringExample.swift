@@ -58,21 +58,21 @@ public final class Spring2<T>: SpringInteraction, Stateful where T: Subtractable
   public let path: CoreAnimationKeyPath<T>
 
   public func enable() {
-    guard !started else { return }
+    guard !enabled else { return }
 
-    started = true
+    enabled = true
 
     checkAndEmit()
   }
   public func disable() {
-    guard started else { return }
+    guard enabled else { return }
 
-    started = false
+    enabled = false
 
     activeKeys.allObjects.forEach { path.removeAnimation(forKey: $0 as String) }
     activeKeys.removeAllObjects()
   }
-  private var started = false
+  private var enabled = false
 
   public func stop() {
     guard !stopped else { return }
@@ -90,7 +90,7 @@ public final class Spring2<T>: SpringInteraction, Stateful where T: Subtractable
   private var stopped = false
 
   private func checkAndEmit() {
-    guard started && !stopped else { return }
+    guard enabled && !stopped else { return }
     guard let destination = destination else { return }
 
     let key = NSUUID().uuidString

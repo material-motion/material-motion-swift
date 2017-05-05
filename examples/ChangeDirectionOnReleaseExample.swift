@@ -131,7 +131,7 @@ public final class ChangeDirection2: Interaction2 {
     let whenPositive = self.whenPositive
     let direction = self.direction
 
-    subscription = stream.subscribeToValue {
+    subscription = stream.dedupe().subscribeToValue {
       var value: CGFloat
       switch axis {
       case .x: value = $0.x

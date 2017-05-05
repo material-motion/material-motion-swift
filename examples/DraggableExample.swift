@@ -106,7 +106,12 @@ public class Draggable2: Interaction2, Stateful {
   private var subscriptions: [Subscription] = []
   private let relativeView: UIView
 
-  public var gesture: UIPanGestureRecognizer?
+  public var gesture: UIPanGestureRecognizer? {
+    didSet {
+      guard let gesture = gesture else { return }
+      _state.value = (gesture.state == .began || gesture.state == .changed) ? .active : .atRest
+    }
+  }
 }
 
 class DraggableExampleViewController: ExampleViewController {
