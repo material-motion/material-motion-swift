@@ -53,15 +53,15 @@ private class ModalViewController: UIViewController, UIGestureRecognizerDelegate
     super.viewDidLoad()
 
     view.backgroundColor = .primaryColor
-//
-//    scrollView = UIScrollView(frame: view.bounds)
-//    scrollView.contentSize = .init(width: view.bounds.width, height: view.bounds.height * 10)
-//    view.addSubview(scrollView)
+
+    scrollView = UIScrollView(frame: view.bounds)
+    scrollView.contentSize = .init(width: view.bounds.width, height: view.bounds.height * 10)
+    view.addSubview(scrollView)
 
     let pan = UIPanGestureRecognizer()
-//    pan.delegate = transitionController.topEdgeDismisserDelegate(for: scrollView)
+    pan.delegate = transitionController.topEdgeDismisserDelegate(for: scrollView)
     transitionController.dismissWhenGestureRecognizerBegins(pan)
-//    scrollView.panGestureRecognizer.require(toFail: pan)
+    scrollView.panGestureRecognizer.require(toFail: pan)
     view.addGestureRecognizer(pan)
   }
 
@@ -93,6 +93,8 @@ private class PushBackTransition: Transition {
     ]
     let tossable = Tossable2(ctx.fore.view, containerView: ctx.containerView(), spring: transitionSpring)
 
+    tossable.draggable.addConstraint { $0.xLocked(to: bounds.midX) }
+
     tossable.draggable.gesture = ctx.gestureRecognizers.flatMap { $0 as? UIPanGestureRecognizer }.first
 
     if let gesture = tossable.draggable.gesture {
@@ -102,19 +104,6 @@ private class PushBackTransition: Transition {
     }
 
     tossable.enable()
-
-    tossable.draggable.state.subscribeToValue {
-      print("Draggable: \($0)")
-    }
-    tossable.spring.state.subscribeToValue {
-      print("Spring: \($0)")
-    }
-    tossable.state.subscribeToValue {
-      print("Tossable: \($0)")
-    }
-    Reactive(ctx.fore.view.layer).positionKeyPath.property.subscribeToValue {
-      print($0)
-    }
 
     self.tossable = tossable
 

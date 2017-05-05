@@ -80,7 +80,7 @@ public class Draggable2: Interaction2, Stateful {
     let state = _state
 
     subscriptions.append(contentsOf: [
-      Reactive(gestureRecognizer).events.translation(addedTo: property, in: containerView).subscribeToValue {
+      constraints.reduce(Reactive(gestureRecognizer).events.translation(addedTo: property, in: containerView)) { $1($0) }.subscribeToValue {
         property.value = $0
       },
       Reactive(gestureRecognizer).state.subscribeToValue {
@@ -94,6 +94,11 @@ public class Draggable2: Interaction2, Stateful {
     subscriptions.removeAll()
     _state.value = .atRest
   }
+
+  public func addConstraint(_ constraint: @escaping (MotionObservable<CGPoint>) -> MotionObservable<CGPoint>) {
+    constraints.append(constraint)
+  }
+  public private(set) var constraints: [(MotionObservable<CGPoint>) -> MotionObservable<CGPoint>] = []
 
   public var state: MotionObservable<MotionState> {
     return _state.asStream()
