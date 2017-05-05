@@ -24,7 +24,7 @@ class Scalable2 {
                    relativeTo: UIView,
                    withGestureRecognizer existingGesture: UIPinchGestureRecognizer? = nil,
                    constraints applyConstraints: ConstraintApplicator<CGFloat>? = nil) -> Reactive<UIPinchGestureRecognizer> {
-    let gesture = prepareGesture(relativeTo: relativeTo, withGestureRecognizer: existingGesture)
+    let gesture = prepareGesture(relativeTo: view, withGestureRecognizer: existingGesture)
 
     let scale = Reactive(view.layer).scale
     var stream = Reactive(gesture).events.scaled(from: scale)

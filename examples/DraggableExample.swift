@@ -54,7 +54,7 @@ public class Draggable2: Interaction2, Stateful {
 
   public convenience init(_ view: UIView, containerView: UIView) {
     let gesture = UIPanGestureRecognizer()
-    containerView.addGestureRecognizer(gesture)
+    view.addGestureRecognizer(gesture)
 
     self.init(Reactive(view.layer).position, containerView: containerView, withGestureRecognizer: gesture)
   }

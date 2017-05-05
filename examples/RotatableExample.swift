@@ -24,7 +24,7 @@ class Rotatable2 {
                    relativeTo: UIView,
                    withGestureRecognizer existingGesture: UIRotationGestureRecognizer? = nil,
                    constraints applyConstraints: ConstraintApplicator<CGFloat>? = nil) -> Reactive<UIRotationGestureRecognizer> {
-    let gesture = prepareGesture(relativeTo: relativeTo, withGestureRecognizer: existingGesture)
+    let gesture = prepareGesture(relativeTo: view, withGestureRecognizer: existingGesture)
 
     let rotation = Reactive(view.layer).rotation
     var stream = Reactive(gesture).events.rotated(from: rotation)

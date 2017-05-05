@@ -18,16 +18,12 @@ import Foundation
 import UIKit
 import MaterialMotion
 
-class StickerPickerExampleViewController: ExampleViewController, StickerListViewControllerDelegate {
-
-  var runtime: MotionRuntime!
+class StickerPickerExampleViewController: ExampleViewController, StickerListViewControllerDelegate, UIGestureRecognizerDelegate {
 
   override func viewDidLoad() {
     super.viewDidLoad()
 
     navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTapAdd))
-
-    runtime = MotionRuntime(containerView: view)
   }
 
   fileprivate func didPickSticker(_ sticker: Sticker) {
@@ -36,17 +32,25 @@ class StickerPickerExampleViewController: ExampleViewController, StickerListView
     stickerView.center = .init(x: view.bounds.midX, y: view.bounds.midY)
     view.addSubview(stickerView)
 
-    let direction = createProperty(withInitialValue: TransitionDirection.forward)
-    let spring = TransitionSpring(back: CGFloat(1.5), fore: 1, direction: direction)
-    runtime.add(spring, to: runtime.get(stickerView.layer).scale)
+    let spring = Spring2(for: Reactive(stickerView.layer).scaleKeyPath)
+    spring.path.property.value = 1.5
+    spring.destination = 1
+    spring.enable()
 
-    runtime.add(DirectlyManipulable(), to: stickerView)
+    let gestures = DirectlyManipulable2.apply(to: stickerView, relativeTo: view)
+    for gesture in gestures {
+      gesture.delegate = self
+    }
   }
 
   func didTapAdd() {
     let picker = StickerListViewController()
     picker.delegate = self
     present(picker, animated: true)
+  }
+
+  func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    return true
   }
 
   override func exampleInformation() -> ExampleInfo {
@@ -195,15 +199,9 @@ private class ModalTransition: Transition {
   required init() {}
 
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
-    let size = ctx.fore.preferredContentSize == .zero() ? ctx.fore.view.bounds.size : ctx.fore.preferredContentSize
-
-    if ctx.direction == .forward {
-      ctx.fore.view.bounds = CGRect(origin: .zero, size: size)
-    }
-
-    let spring = TransitionSpring<CGFloat>(back: 0, fore: 1, direction: ctx.direction)
-    runtime.add(spring, to: runtime.get(ctx.fore.view.layer).opacity)
-
-    return [spring]
+    let fade = TransitionSpring2(for: Reactive(ctx.fore.view.layer).opacityKeyPath, direction: ctx.direction)
+    fade.destinations = [ .backward: 0, .forward: 1 ]
+    fade.enable()
+    return [fade]
   }
 }
