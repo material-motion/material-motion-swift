@@ -74,6 +74,14 @@ private class PushBackTransition: Transition {
 
   required init() {}
 
+  private var tossable: Tossable2<TransitionSpring2<CGPoint>>?
+  deinit {
+    // TODO: It's important that we tear down any subscriptions after the transition completes or
+    // we'll end up having multiple subscriptions hanging around forever.
+    // TODO: Perhaps we want Reactive to be able to retrieve all of the subscriptions for a given object?
+    tossable?.disable()
+  }
+
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
     let bounds = ctx.containerView().bounds
 
@@ -104,6 +112,11 @@ private class PushBackTransition: Transition {
     tossable.state.subscribeToValue {
       print("Tossable: \($0)")
     }
+    Reactive(ctx.fore.view.layer).positionKeyPath.property.subscribeToValue {
+      print($0)
+    }
+
+    self.tossable = tossable
 
     return [tossable]
   }
