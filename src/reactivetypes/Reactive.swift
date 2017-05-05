@@ -83,7 +83,6 @@ public func assertEmpty() {
   if !isEmpty {
     print(globalCache)
   }
-  globalCache.removeAllObjects()
 }
 
 /**

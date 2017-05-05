@@ -21,7 +21,7 @@ class DirectlyManipulable2 {
 
   @discardableResult
   class func apply(to view: UIView, relativeTo: UIView) -> [UIGestureRecognizer] {
-    let draggable = Draggable2(view, containerView: relativeTo)
+    let draggable = Draggable2(view, relativeTo: relativeTo)
     draggable.enable()
     let rotatable = Rotatable2.apply(to: view, relativeTo: relativeTo)
     let scalable = Scalable2.apply(to: view, relativeTo: relativeTo)

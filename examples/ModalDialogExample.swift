@@ -91,7 +91,7 @@ class ModalDialogTransition: SelfDismissingTransition {
       .backward: backPosition,
       .forward: forePosition
     ]
-    let tossable = Tossable2(ctx.fore.view, containerView: ctx.containerView(), spring: transitionSpring)
+    let tossable = Tossable2(ctx.fore.view, relativeTo: ctx.containerView(), spring: transitionSpring)
 
     tossable.draggable.addConstraint { $0.xLocked(to: bounds.midX) }
     tossable.draggable.gesture = ctx.gestureRecognizers.flatMap { $0 as? UIPanGestureRecognizer }.first
@@ -100,7 +100,9 @@ class ModalDialogTransition: SelfDismissingTransition {
 
       let centerY = ctx.containerView().bounds.height / 2.0
 
+      let direction = ctx.direction
       // TODO: Turn this into an interaction.
+      // TODO: Add a writeToProperty method that keeps a weak reference to the property.
       Reactive(gesture)
         .events
         ._filter { $0.state == .ended }
@@ -109,7 +111,7 @@ class ModalDialogTransition: SelfDismissingTransition {
         .thresholdRange(min: -100, max: 100)
         .rewrite([.within: transitionSpring.spring.path.property.y().threshold(centerY).rewrite([.below: .forward,
                                                                                                  .above: .backward])]).subscribeToValue {
-          ctx.direction.value = $0
+          direction.value = $0
       }
 
       let changeDirection = ChangeDirection2(ctx.direction, withVelocityOf: gesture, containerView: ctx.containerView())
@@ -120,8 +122,6 @@ class ModalDialogTransition: SelfDismissingTransition {
     tossable.enable()
 
     self.tossable = tossable
-
-    print(ctx.fore.view.gestureRecognizers)
 
     return [tossable.spring]
   }

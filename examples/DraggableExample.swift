@@ -32,16 +32,16 @@ func prepareGesture<GestureType: UIGestureRecognizer>(relativeTo: UIView, withGe
 public class Draggable2: Interaction2, Stateful {
 
   public convenience init(_ view: UIView,
-                          containerView: UIView,
-                          withGestureRecognizer existingGesture: UIPanGestureRecognizer) {
+                          withGestureRecognizer existingGesture: UIPanGestureRecognizer,
+                          relativeTo relativeView: UIView) {
     self.init(Reactive(view.layer).position,
-              containerView: containerView,
-              withGestureRecognizer: existingGesture)
+              withGestureRecognizer: existingGesture,
+              relativeTo: relativeView)
   }
 
   public convenience init<O>(_ view: UIView,
-                          containerView: UIView,
-                          withFirstGestureIn gestures: O) where O: Sequence, O.Iterator.Element == UIGestureRecognizer {
+                          withFirstGestureIn gestures: O,
+                          relativeTo relativeView: UIView) where O: Sequence, O.Iterator.Element == UIGestureRecognizer {
     var first: UIPanGestureRecognizer? = nil
     for gesture in gestures {
       if let gesture = gesture as? UIPanGestureRecognizer {
@@ -49,17 +49,17 @@ public class Draggable2: Interaction2, Stateful {
         break
       }
     }
-    self.init(Reactive(view.layer).position, containerView: containerView, withGestureRecognizer: first)
+    self.init(Reactive(view.layer).position, withGestureRecognizer: first, relativeTo: relativeView)
   }
 
-  public convenience init(_ view: UIView, containerView: UIView) {
-    self.init(Reactive(view.layer).position, containerView: containerView, withGestureRecognizer: nil)
+  public convenience init(_ view: UIView, relativeTo relativeView: UIView) {
+    self.init(Reactive(view.layer).position, withGestureRecognizer: nil, relativeTo: relativeView)
   }
 
-  private init(_ property: ReactiveProperty<CGPoint>, containerView: UIView, withGestureRecognizer gesture: UIPanGestureRecognizer?) {
-    self.containerView = containerView
+  private init(_ property: ReactiveProperty<CGPoint>, withGestureRecognizer gesture: UIPanGestureRecognizer?, relativeTo relativeView: UIView) {
     self.property = property
     self.gesture = gesture
+    self.relativeView = relativeView
   }
 
   public func enable() {
@@ -70,7 +70,7 @@ public class Draggable2: Interaction2, Stateful {
     let state = _state
 
     subscriptions.append(contentsOf: [
-      constraints.reduce(Reactive(gesture).events.translation(addedTo: property, in: containerView)) { $1($0) }.subscribeToValue {
+      constraints.reduce(Reactive(gesture).events.translation(addedTo: property, in: relativeView)) { $1($0) }.subscribeToValue {
         property.value = $0
       },
       Reactive(gesture).state.subscribeToValue {
@@ -96,15 +96,15 @@ public class Draggable2: Interaction2, Stateful {
   private let _state = createProperty(withInitialValue: MotionState.atRest)
 
   @discardableResult
-  public class func apply(to view: UIView, containerView: UIView, withGestureRecognizer existingGesture: UIPanGestureRecognizer) -> Draggable2 {
-    let draggable = Draggable2(view, containerView: containerView, withGestureRecognizer: existingGesture)
+  public class func apply(to view: UIView, withGestureRecognizer existingGesture: UIPanGestureRecognizer, relativeTo relativeView: UIView) -> Draggable2 {
+    let draggable = Draggable2(view, withGestureRecognizer: existingGesture, relativeTo: relativeView)
     draggable.enable()
     return draggable
   }
 
   private let property: ReactiveProperty<CGPoint>
   private var subscriptions: [Subscription] = []
-  private let containerView: UIView
+  private let relativeView: UIView
 
   public var gesture: UIPanGestureRecognizer?
 }
@@ -117,7 +117,10 @@ class DraggableExampleViewController: ExampleViewController {
     let square = center(createExampleView(), within: view)
     view.addSubview(square)
 
-    let draggable = Draggable2(square, containerView: view)
+    let gesture = UIPanGestureRecognizer()
+    view.addGestureRecognizer(gesture)
+
+    let draggable = Draggable2(square, withGestureRecognizer: gesture, relativeTo: view)
     draggable.enable()
   }
 

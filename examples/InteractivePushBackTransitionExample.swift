@@ -91,10 +91,9 @@ private class PushBackTransition: Transition {
       .backward: CGPoint(x: bounds.midX, y: bounds.maxY + ctx.fore.view.bounds.height / 2),
       .forward: CGPoint(x: bounds.midX, y: bounds.midY)
     ]
-    let tossable = Tossable2(ctx.fore.view, containerView: ctx.containerView(), spring: transitionSpring)
+    let tossable = Tossable2(ctx.fore.view, relativeTo: ctx.containerView(), spring: transitionSpring)
 
     tossable.draggable.addConstraint { $0.xLocked(to: bounds.midX) }
-
     tossable.draggable.gesture = ctx.gestureRecognizers.flatMap { $0 as? UIPanGestureRecognizer }.first
 
     if let gesture = tossable.draggable.gesture {

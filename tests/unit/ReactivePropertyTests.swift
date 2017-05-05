@@ -91,7 +91,7 @@ class ReactivePropertyTests: XCTestCase {
 
   func testCoreAnimation() {
     let didReceiveEvent = expectation(description: "Did receive event")
-    let property = ReactiveProperty("test", initialValue: 10, externalWrite: { _ in }, coreAnimation: { event in
+    let property = ReactiveProperty(initialValue: 10, externalWrite: { _ in }, coreAnimation: { event in
       didReceiveEvent.fulfill()
     })
 

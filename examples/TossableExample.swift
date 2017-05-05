@@ -18,10 +18,10 @@ import UIKit
 import IndefiniteObservable
 import MaterialMotion
 
-public func createTossable(_ view: UIView, containerView: UIView) -> Tossable2<Spring2<CGPoint>> {
-  let draggable = Draggable2(view, containerView: containerView)
+public func createTossable(_ view: UIView, relativeTo relativeView: UIView) -> Tossable2<Spring2<CGPoint>> {
+  let draggable = Draggable2(view, relativeTo: relativeView)
   let spring = Spring2(for: Reactive(view.layer).positionKeyPath)
-  return Tossable2(draggable, containerView: containerView, spring: spring)
+  return Tossable2(draggable, relativeTo: relativeView, spring: spring)
 }
 
 extension Array where Element: MotionObservable<MotionState> {
@@ -33,16 +33,16 @@ extension Array where Element: MotionObservable<MotionState> {
 }
 
 public class Tossable2<S>: Interaction2, Stateful where S: SpringInteraction, S: Stateful, S.T == CGPoint {
-  public init(_ draggable: Draggable2, containerView: UIView, spring: S) {
+  public init(_ draggable: Draggable2, relativeTo relativeView: UIView, spring: S) {
     self.draggable = draggable
     self.spring = spring
-    self.containerView = containerView
+    self.relativeView = relativeView
   }
 
-  public init(_ view: UIView, containerView: UIView, spring: S) {
-    self.draggable = Draggable2(view, containerView: containerView)
+  public init(_ view: UIView, relativeTo relativeView: UIView, spring: S) {
+    self.draggable = Draggable2(view, relativeTo: relativeView)
     self.spring = spring
-    self.containerView = containerView
+    self.relativeView = relativeView
   }
 
   public let draggable: Draggable2
@@ -67,7 +67,7 @@ public class Tossable2<S>: Interaction2, Stateful where S: SpringInteraction, S:
       reactiveGesture.didBegin { _ in
         spring.stop()
       },
-      reactiveGesture.events._filter { $0.state == .ended }.velocity(in: containerView).subscribeToValue { velocity in
+      reactiveGesture.events._filter { $0.state == .ended }.velocity(in: relativeView).subscribeToValue { velocity in
         spring.initialVelocity = velocity
         spring.start()
       }]
@@ -88,7 +88,7 @@ public class Tossable2<S>: Interaction2, Stateful where S: SpringInteraction, S:
     return [spring.state, draggable.state].asStream()
   }
 
-  private let containerView: UIView
+  private let relativeView: UIView
   private var subscriptions: [Subscription] = []
 }
 
@@ -100,7 +100,7 @@ class TossableExampleViewController: ExampleViewController {
     let square = center(createExampleSquareView(), within: view)
     view.addSubview(square)
 
-    let tossable = createTossable(square, containerView: view)
+    let tossable = createTossable(square, relativeTo: view)
     tossable.spring.destination = CGPoint(x: view.bounds.midX, y: view.bounds.midY)
     tossable.enable()
   }
