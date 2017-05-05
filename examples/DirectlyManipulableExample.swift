@@ -39,7 +39,7 @@ class AdjustsAnchorPoint2 {
 
     let weakGestures = NSHashTable<UIGestureRecognizer>.weakObjects()
 
-    let stateAggregator = AggregateMotionState()
+    let stateAggregator = AggregateMotionState2()
     for gesture in gestures {
       stateAggregator.observe(state: Reactive(gesture).state)
       weakGestures.add(gesture)
@@ -76,7 +76,7 @@ class AdjustsAnchorPoint2 {
   }
 }
 
-final class AggregateMotionState {
+public final class AggregateMotionState2 {
   init(initialState: MotionState = .atRest) {
     state.value = initialState
   }

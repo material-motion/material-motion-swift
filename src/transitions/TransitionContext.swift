@@ -212,6 +212,7 @@ extension TransitionContext {
 
     let terminators = transition.willBeginTransition(withContext: self, runtime: self.runtime)
     runtime.whenAllAtRest(terminators) { [weak self] in
+      print("Terminated")
       self?.terminate()
     }
 

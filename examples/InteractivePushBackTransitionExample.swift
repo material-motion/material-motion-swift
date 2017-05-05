@@ -75,17 +75,17 @@ private class PushBackTransition: Transition {
   required init() {}
 
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
-    let tossable = createTossable(ctx.fore.view, containerView: ctx.containerView())
-    tossable.draggable.gesture = ctx.gestureRecognizers.flatMap { $0 as? UIPanGestureRecognizer }.first
-
     let bounds = ctx.containerView().bounds
 
-    ctx.direction.rewrite([ .backward: CGPoint(x: bounds.midX, y: bounds.midY), .forward: CGPoint(x: bounds.midX, y: bounds.maxY + ctx.fore.view.bounds.height / 2)]).subscribeToValue {
-      tossable.spring.path.property.value = $0
-    }.unsubscribe()
-    ctx.direction.rewrite([ .forward: CGPoint(x: bounds.midX, y: bounds.midY), .backward: CGPoint(x: bounds.midX, y: bounds.maxY + ctx.fore.view.bounds.height / 2)]).subscribeToValue {
-      tossable.spring.destination = $0
-    }
+    let transitionSpring = TransitionSpring2(for: Reactive(ctx.fore.view.layer).positionKeyPath,
+                                             direction: ctx.direction)
+    transitionSpring.destinations = [
+      .backward: CGPoint(x: bounds.midX, y: bounds.maxY + ctx.fore.view.bounds.height / 2),
+      .forward: CGPoint(x: bounds.midX, y: bounds.midY)
+    ]
+    let tossable = Tossable2(ctx.fore.view, containerView: ctx.containerView(), spring: transitionSpring)
+
+    tossable.draggable.gesture = ctx.gestureRecognizers.flatMap { $0 as? UIPanGestureRecognizer }.first
 
     if let gesture = tossable.draggable.gesture {
       let changeDirection = ChangeDirection2(ctx.direction, withVelocityOf: gesture, containerView: ctx.containerView())
@@ -94,6 +94,16 @@ private class PushBackTransition: Transition {
     }
 
     tossable.enable()
+
+    tossable.draggable.state.subscribeToValue {
+      print("Draggable: \($0)")
+    }
+    tossable.spring.state.subscribeToValue {
+      print("Spring: \($0)")
+    }
+    tossable.state.subscribeToValue {
+      print("Tossable: \($0)")
+    }
 
     return [tossable]
   }

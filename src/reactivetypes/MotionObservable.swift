@@ -121,10 +121,6 @@ public final class MotionObservable<T>: IndefiniteObservable<MotionObserver<T>> 
 public final class MotionObserver<T>: Observer {
   public typealias Value = T
 
-  deinit {
-    print("Deallocated")
-  }
-
   public init(next: @escaping NextChannel<T>,
               coreAnimation: @escaping CoreAnimationChannel,
               visualization: @escaping VisualizationChannel) {

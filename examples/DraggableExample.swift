@@ -29,7 +29,7 @@ func prepareGesture<GestureType: UIGestureRecognizer>(relativeTo: UIView, withGe
   return gesture
 }
 
-public class Draggable2: Interaction2 {
+public class Draggable2: Interaction2, Stateful {
 
   public convenience init(_ view: UIView,
                           containerView: UIView,
@@ -66,19 +66,39 @@ public class Draggable2: Interaction2 {
   }
 
   public func enable() {
-    guard subscription == nil else { return }
-    guard let gesture = gesture else { return }
+    guard subscriptions.isEmpty else { return }
+
+    let gestureRecognizer: UIPanGestureRecognizer
+    if let existingGestureRecognizer = self.gesture {
+      gestureRecognizer = existingGestureRecognizer
+    } else {
+      gestureRecognizer = UIPanGestureRecognizer()
+      self.containerView.addGestureRecognizer(gestureRecognizer)
+    }
 
     let property = self.property
-    subscription = Reactive(gesture).events.translation(addedTo: property, in: containerView).subscribeToValue {
-      property.value = $0
-    }
+    let state = _state
+
+    subscriptions.append(contentsOf: [
+      Reactive(gestureRecognizer).events.translation(addedTo: property, in: containerView).subscribeToValue {
+        property.value = $0
+      },
+      Reactive(gestureRecognizer).state.subscribeToValue {
+        state.value = $0
+      }
+    ])
   }
 
   public func disable() {
-    subscription?.unsubscribe()
-    subscription = nil
+    subscriptions.forEach { $0.unsubscribe() }
+    subscriptions.removeAll()
+    _state.value = .atRest
   }
+
+  public var state: MotionObservable<MotionState> {
+    return _state.asStream()
+  }
+  private let _state = createProperty(withInitialValue: MotionState.atRest)
 
   @discardableResult
   public class func apply(to view: UIView, containerView: UIView, withGestureRecognizer existingGesture: UIPanGestureRecognizer) -> Draggable2 {
@@ -88,7 +108,7 @@ public class Draggable2: Interaction2 {
   }
 
   private let property: ReactiveProperty<CGPoint>
-  private var subscription: Subscription?
+  private var subscriptions: [Subscription] = []
   private let containerView: UIView
 
   public var gesture: UIPanGestureRecognizer?

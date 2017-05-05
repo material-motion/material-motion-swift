@@ -24,6 +24,14 @@ public func createTossable(_ view: UIView, containerView: UIView) -> Tossable2<S
   return Tossable2(draggable, containerView: containerView, spring: spring)
 }
 
+extension Array where Element: MotionObservable<MotionState> {
+  public func asStream() -> MotionObservable<MotionState> {
+    let aggregate = AggregateMotionState2()
+    self.forEach { aggregate.observe(state: $0) }
+    return aggregate.asStream()
+  }
+}
+
 public class Tossable2<S>: Interaction2, Stateful where S: SpringInteraction, S: Stateful, S.T == CGPoint {
   public init(_ draggable: Draggable2, containerView: UIView, spring: S) {
     self.draggable = draggable
@@ -45,21 +53,23 @@ public class Tossable2<S>: Interaction2, Stateful where S: SpringInteraction, S:
     guard let gesture = draggable.gesture else { return }
     var spring = self.spring
 
+    spring.stop()
+
     spring.enable()
 
     let gestureIsActive = gesture.state == .began || gesture.state == .changed
-    if gestureIsActive {
-      spring.disable()
+    if !gestureIsActive {
+      spring.start()
     }
 
     let reactiveGesture = Reactive(gesture)
     subscriptions.append(contentsOf: [
       reactiveGesture.didBegin { _ in
-        spring.disable()
+        spring.stop()
       },
       reactiveGesture.events._filter { $0.state == .ended }.velocity(in: containerView).subscribeToValue { velocity in
         spring.initialVelocity = velocity
-        spring.enable()
+        spring.start()
       }]
     )
 
@@ -75,7 +85,7 @@ public class Tossable2<S>: Interaction2, Stateful where S: SpringInteraction, S:
   }
 
   public var state: MotionObservable<MotionState> {
-    return spring.state // TODO: Also include drag state.
+    return [spring.state, draggable.state].asStream()
   }
 
   private let containerView: UIView

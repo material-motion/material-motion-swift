@@ -85,6 +85,13 @@ public final class TransitionSpring2<T: Subtractable>: SpringInteraction, Statef
     subscription = nil
   }
 
+  public func start() {
+    spring.start()
+  }
+  public func stop() {
+    spring.stop()
+  }
+
   public var initialVelocity: T? {
     get { return spring.initialVelocity }
     set { spring.initialVelocity = newValue }

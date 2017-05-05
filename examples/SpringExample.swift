@@ -27,6 +27,9 @@ public protocol SpringInteraction: Interaction2 {
 
   var initialVelocity: T? { get set }
   var destination: T? { get set }
+
+  func start()
+  func stop()
 }
 
 /**
@@ -55,6 +58,8 @@ public final class Spring2<T>: SpringInteraction, Stateful where T: Subtractable
   public let path: CoreAnimationKeyPath<T>
 
   public func enable() {
+    guard !started else { return }
+
     started = true
 
     checkAndEmit()
@@ -64,13 +69,28 @@ public final class Spring2<T>: SpringInteraction, Stateful where T: Subtractable
 
     started = false
 
-    activeKeys.forEach { path.removeAnimation(forKey: $0) }
-    activeKeys.removeAll()
+    activeKeys.allObjects.forEach { path.removeAnimation(forKey: $0 as String) }
+    activeKeys.removeAllObjects()
   }
   private var started = false
 
+  public func stop() {
+    guard !stopped else { return }
+
+    stopped = true
+
+    activeKeys.allObjects.forEach { path.removeAnimation(forKey: $0 as String) }
+    activeKeys.removeAllObjects()
+  }
+  public func start() {
+    guard stopped else { return }
+    stopped = false
+    checkAndEmit()
+  }
+  private var stopped = false
+
   private func checkAndEmit() {
-    guard started else { return }
+    guard started && !stopped else { return }
     guard let destination = destination else { return }
 
     let key = NSUUID().uuidString
@@ -92,17 +112,20 @@ public final class Spring2<T>: SpringInteraction, Stateful where T: Subtractable
 
     path.property.value = destination
 
-    activeKeys.insert(key)
+    let activeKeys = self.activeKeys
+    let hashKey = key as NSString
+    activeKeys.add(hashKey)
     _state.value = .active
-    path.add(animation, forKey: key, initialVelocity: initialVelocity) { [weak self] in
-      guard let strongSelf = self else { return }
-      strongSelf.activeKeys.remove(key)
-      if strongSelf.activeKeys.count == 0 {
-        strongSelf._state.value = .atRest
+
+    let state = _state
+    path.add(animation, forKey: key, initialVelocity: initialVelocity) {
+      activeKeys.remove(hashKey)
+      if activeKeys.count == 0 {
+        state.value = .atRest
       }
     }
   }
-  var activeKeys = Set<String>()
+  var activeKeys = NSHashTable<NSString>()
 
   public var state: MotionObservable<MotionState> {
     return _state.asStream()

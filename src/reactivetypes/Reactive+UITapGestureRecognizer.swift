@@ -32,7 +32,7 @@ extension Reactive where O: UIGestureRecognizer {
     return _properties.named("recognition", onCacheMiss: {
       return GestureConnection(subscribedTo: _object)
     }, typeConversion: {
-      return $0.asStream().asMotionState()
+      return $0.asStream().asMotionState().startWith((_object.state == .began || _object.state == .changed ) ? .active : .atRest)
     })
   }
 
