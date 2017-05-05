@@ -354,9 +354,9 @@ private class PushBackTransition: Transition {
     let size = TransitionSpring2(for: Reactive(replicaView.layer).sizeKeyPath, direction: ctx.direction)
     size.destinations = [ .backward: contextView.bounds.size, .forward: fitSize ]
 
+    // TODO: How do better define this pattern of "when dragging, stop this animation".
     size.stop()
     size.enable()
-
     tossable.draggable.state.subscribeToValue {
       if $0 == .active {
         size.stop()
