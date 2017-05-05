@@ -71,37 +71,57 @@ class ModalDialogTransition: SelfDismissingTransition {
 
   required init() {}
 
+  private var tossable: Tossable2<TransitionSpring2<CGPoint>>?
+  deinit {
+    // TODO: It's important that we tear down any subscriptions after the transition completes or
+    // we'll end up having multiple subscriptions hanging around forever.
+    // TODO: Perhaps we want Reactive to be able to retrieve all of the subscriptions for a given object?
+    tossable?.disable()
+  }
+
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
     let size = ctx.fore.view.frame.size
     let bounds = ctx.containerView().bounds
     let backPosition = CGPoint(x: bounds.midX, y: bounds.maxY + size.height * 3 / 4)
     let forePosition = ctx.fore.view.layer.position
 
-    let reactiveForeLayer = runtime.get(ctx.fore.view.layer)
-    let position = reactiveForeLayer.position
+    let transitionSpring = TransitionSpring2(for: Reactive(ctx.fore.view.layer).positionKeyPath,
+                                             direction: ctx.direction)
+    transitionSpring.destinations = [
+      .backward: backPosition,
+      .forward: forePosition
+    ]
+    let tossable = Tossable2(ctx.fore.view, containerView: ctx.containerView(), spring: transitionSpring)
 
-    let draggable = Draggable(withFirstGestureIn: ctx.gestureRecognizers)
+    tossable.draggable.addConstraint { $0.xLocked(to: bounds.midX) }
+    tossable.draggable.gesture = ctx.gestureRecognizers.flatMap { $0 as? UIPanGestureRecognizer }.first
 
-    let centerY = ctx.containerView().bounds.height / 2.0
+    if let gesture = tossable.draggable.gesture {
 
-    runtime.add(ChangeDirection(withVelocityOf: draggable.nextGestureRecognizer, whenNegative: .forward),
-                to: ctx.direction)
+      let centerY = ctx.containerView().bounds.height / 2.0
 
-    if let gesture = draggable.nextGestureRecognizer {
-      runtime.connect(runtime.get(gesture)
-        .velocityOnReleaseStream()
+      // TODO: Turn this into an interaction.
+      Reactive(gesture)
+        .events
+        ._filter { $0.state == .ended }
+        .velocity(in: ctx.containerView())
         .y()
         .thresholdRange(min: -100, max: 100)
-        .rewrite([.within: position.y().threshold(centerY).rewrite([.below: .forward,
-                                                                    .above: .backward])]),
-                  to: ctx.direction)
+        .rewrite([.within: transitionSpring.spring.path.property.y().threshold(centerY).rewrite([.below: .forward,
+                                                                                                 .above: .backward])]).subscribeToValue {
+          ctx.direction.value = $0
+      }
+
+      let changeDirection = ChangeDirection2(ctx.direction, withVelocityOf: gesture, containerView: ctx.containerView())
+      changeDirection.whenNegative = .forward
+      changeDirection.enable()
     }
 
-    let movement = TransitionSpring(back: backPosition,
-                                    fore: forePosition,
-                                    direction: ctx.direction)
-    let tossable = Tossable(spring: movement, draggable: draggable)
-    runtime.add(tossable, to: ctx.fore.view)
+    tossable.enable()
+
+    self.tossable = tossable
+
+    print(ctx.fore.view.gestureRecognizers)
 
     return [tossable.spring]
   }

@@ -53,10 +53,7 @@ public class Draggable2: Interaction2, Stateful {
   }
 
   public convenience init(_ view: UIView, containerView: UIView) {
-    let gesture = UIPanGestureRecognizer()
-    view.addGestureRecognizer(gesture)
-
-    self.init(Reactive(view.layer).position, containerView: containerView, withGestureRecognizer: gesture)
+    self.init(Reactive(view.layer).position, containerView: containerView, withGestureRecognizer: nil)
   }
 
   private init(_ property: ReactiveProperty<CGPoint>, containerView: UIView, withGestureRecognizer gesture: UIPanGestureRecognizer?) {
@@ -67,23 +64,16 @@ public class Draggable2: Interaction2, Stateful {
 
   public func enable() {
     guard subscriptions.isEmpty else { return }
-
-    let gestureRecognizer: UIPanGestureRecognizer
-    if let existingGestureRecognizer = self.gesture {
-      gestureRecognizer = existingGestureRecognizer
-    } else {
-      gestureRecognizer = UIPanGestureRecognizer()
-      self.containerView.addGestureRecognizer(gestureRecognizer)
-    }
+    guard let gesture = gesture else { return }
 
     let property = self.property
     let state = _state
 
     subscriptions.append(contentsOf: [
-      constraints.reduce(Reactive(gestureRecognizer).events.translation(addedTo: property, in: containerView)) { $1($0) }.subscribeToValue {
+      constraints.reduce(Reactive(gesture).events.translation(addedTo: property, in: containerView)) { $1($0) }.subscribeToValue {
         property.value = $0
       },
-      Reactive(gestureRecognizer).state.subscribeToValue {
+      Reactive(gesture).state.subscribeToValue {
         state.value = $0
       }
     ])

@@ -106,8 +106,7 @@ final class GestureDelegate: NSObject, UIGestureRecognizerDelegate {
     if soloGestureRecognizers.contains(gestureRecognizer) || soloGestureRecognizers.contains(otherGestureRecognizer) {
       return false
     }
-    return gestureRecognizers.contains(gestureRecognizer)
-      && gestureRecognizers.contains(otherGestureRecognizer)
+    return gestureRecognizers.contains(gestureRecognizer) && gestureRecognizers.contains(otherGestureRecognizer)
   }
 }
 
