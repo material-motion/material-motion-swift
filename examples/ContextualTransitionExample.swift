@@ -342,6 +342,7 @@ private class PushBackTransition: Transition {
     tossable.draggable.gesture = ctx.gestureRecognizers.flatMap { $0 as? UIPanGestureRecognizer }.first
 
     if let gesture = tossable.draggable.gesture {
+      // TODO: There appears to be a memory leak in this example.
       let slopRegion = SlopRegion2(ctx.direction, size: 100, withTranslationOf: gesture, relativeTo: ctx.containerView())
       slopRegion.enable()
 
