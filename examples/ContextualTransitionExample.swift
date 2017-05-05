@@ -287,8 +287,9 @@ private class PushBackTransition: Transition {
     runtime.toggle(size, inReactionTo: draggable)
     runtime.add(size, to: runtime.get(replicaView).layer.size)
 
-    let opacity = TransitionSpring<CGFloat>(back: 0, fore: 1, direction: ctx.direction)
-    runtime.add(opacity, to: runtime.get(ctx.fore.view.layer).opacity)
+    let opacity = TransitionSpring2(for: Reactive(ctx.fore.view.layer).opacityKeyPath, direction: ctx.direction)
+    opacity.destinations = [ .backward: 0, .forward: 1 ]
+    opacity.enable()
 
     runtime.add(Hidden(), to: foreImageView)
 
