@@ -15,6 +15,7 @@
  */
 
 import UIKit
+import IndefiniteObservable
 import MaterialMotion
 
 let numberOfImageAssets = 10
@@ -256,6 +257,61 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
   }
 }
 
+public final class SlopRegion2: Interaction2 {
+  init(_ direction: ReactiveProperty<TransitionDirection>, size: CGFloat, withTranslationOf gesture: UIPanGestureRecognizer, relativeTo: UIView) {
+    self.direction = direction
+    self.size = size
+
+    self.stream = Reactive(gesture).events.translation(in: relativeTo)
+  }
+
+  private let direction: ReactiveProperty<TransitionDirection>
+  private let stream: MotionObservable<CGPoint>
+  private var subscription: Subscription?
+
+  /**
+   The velocity axis to observe.
+   */
+  public enum Axis {
+    /**
+     Observes the velocity's x axis.
+     */
+    case x
+
+    /**
+     Observes the velocity's y axis.
+     */
+    case y
+  }
+
+  public var axis: Axis = .y
+
+  public var size: CGFloat
+
+  public func enable() {
+
+    let axis = self.axis
+    let size = self.size
+    let direction = self.direction
+
+    let chooseAxis: (MotionObservable<CGPoint>) -> MotionObservable<CGFloat>
+    switch axis {
+    case .x:
+      chooseAxis = { $0.x() }
+    case .y:
+      chooseAxis = { $0.y() }
+    }
+
+    subscription = chooseAxis(stream).slop(size: size).rewrite([.onExit: .backward, .onReturn: .forward]).subscribeToValue {
+      direction.value = $0
+    }
+  }
+  public func disable() {
+    subscription?.unsubscribe()
+    subscription = nil
+  }
+}
+
 private class PushBackTransition: Transition {
 
   required init() {}
@@ -286,18 +342,17 @@ private class PushBackTransition: Transition {
     tossable.draggable.gesture = ctx.gestureRecognizers.flatMap { $0 as? UIPanGestureRecognizer }.first
 
     if let gesture = tossable.draggable.gesture {
-      runtime.add(SlopRegion(withTranslationOf: gesture, size: 100), to: ctx.direction)
+      let slopRegion = SlopRegion2(ctx.direction, size: 100, withTranslationOf: gesture, relativeTo: ctx.containerView())
+      slopRegion.enable()
 
+      // TODO: Create a FlickToDismiss interaction and a separate ChangeDirection interaction for
+      // modal transitions.
       let changeDirection = ChangeDirection2(ctx.direction, withVelocityOf: gesture, containerView: ctx.containerView())
       changeDirection.enable()
     }
 
     let size = TransitionSpring2(for: Reactive(replicaView.layer).sizeKeyPath, direction: ctx.direction)
     size.destinations = [ .backward: contextView.bounds.size, .forward: fitSize ]
-
-    ctx.direction.subscribeToValue {
-      print($0)
-    }
 
     size.stop()
     size.enable()
