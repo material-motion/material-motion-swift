@@ -92,6 +92,8 @@ public final class TransitionContext: NSObject {
   /** The runtime to which motion should be registered. */
   fileprivate var runtime: MotionRuntime!
 
+  fileprivate let presentationController: UIPresentationController?
+
   weak var delegate: TransitionDelegate?
 
   init(transitionType: Transition.Type,
@@ -99,7 +101,8 @@ public final class TransitionContext: NSObject {
        back: UIViewController,
        fore: UIViewController,
        gestureRecognizers: Set<UIGestureRecognizer>,
-       foreAlignmentEdge: CGRectEdge?) {
+       foreAlignmentEdge: CGRectEdge?,
+       presentationController: UIPresentationController?) {
     self.direction = createProperty("Transition.direction", withInitialValue: direction)
     self.initialDirection = direction
     self.back = back
@@ -107,6 +110,7 @@ public final class TransitionContext: NSObject {
     self.gestureRecognizers = gestureRecognizers
     self.foreAlignmentEdge = foreAlignmentEdge
     self.window = TransitionTimeWindow(duration: TransitionContext.defaultDuration)
+    self.presentationController = presentationController
 
     // TODO: Create a Timeline.
 
@@ -146,30 +150,6 @@ extension TransitionContext: UIViewControllerInteractiveTransitioning {
   }
 }
 
-private func preferredFrame(for viewController: UIViewController,
-                            inBounds bounds: CGRect,
-                            alignmentEdge: CGRectEdge?) -> CGRect? {
-  guard viewController.preferredContentSize != .zero() else {
-    return nil
-  }
-
-  let size = viewController.preferredContentSize
-  let origin: CGPoint
-  switch alignmentEdge {
-  case nil: // Centered
-    origin = .init(x: bounds.midX - size.width / 2, y: bounds.midY - size.height / 2)
-  case .minXEdge?:
-    origin = .init(x: bounds.minX, y: bounds.midY - size.height / 2)
-  case .minYEdge?:
-    origin = .init(x: bounds.midX - size.width / 2, y: bounds.minY)
-  case .maxXEdge?:
-    origin = .init(x: bounds.maxX - size.width, y: bounds.midY - size.height / 2)
-  case .maxYEdge?:
-    origin = .init(x: bounds.midX - size.width / 2, y: bounds.maxY - size.height)
-  }
-  return CGRect(origin: origin, size: size)
-}
-
 extension TransitionContext {
   fileprivate func initiateTransition() {
     if let from = context.viewController(forKey: .from) {
@@ -180,15 +160,7 @@ extension TransitionContext {
     }
 
     if let to = context.viewController(forKey: .to) {
-      let finalFrame: CGRect
-
-      if let preferredFrame = preferredFrame(for: to,
-                                             inBounds: context.containerView.bounds,
-                                             alignmentEdge: (direction.value == .forward) ? foreAlignmentEdge : nil) {
-        finalFrame = preferredFrame
-      } else {
-        finalFrame = context.finalFrame(for: to)
-      }
+      let finalFrame = context.finalFrame(for: to)
       if !finalFrame.isEmpty {
         to.view.frame = finalFrame
       }
@@ -210,7 +182,13 @@ extension TransitionContext {
 
     pokeSystemAnimations()
 
-    let terminators = transition.willBeginTransition(withContext: self, runtime: self.runtime)
+    var terminators = transition.willBeginTransition(withContext: self, runtime: self.runtime)
+
+    if let presentationController = presentationController as? WillBeginTransition {
+      terminators.append(contentsOf: presentationController.willBeginTransition(withContext: self,
+                                                                                runtime: self.runtime))
+    }
+
     runtime.whenAllAtRest(terminators) { [weak self] in
       self?.terminate()
     }

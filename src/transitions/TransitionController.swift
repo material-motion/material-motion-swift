@@ -69,6 +69,32 @@ public final class TransitionController {
   }
 
   /**
+   The presentation controller to be used during this transition.
+
+   Will be read from and cached when the view controller is first presented. Changes made to this
+   property after presentation will be ignored.
+   */
+  public var presentationController: UIPresentationController? {
+    set { _transitioningDelegate.presentationController = newValue }
+    get { return _transitioningDelegate.presentationController }
+  }
+
+  /**
+   The edge to align the fore view's frame to.
+
+   Defaults to nil, which will center the fore view's frame in the container's bounds.
+
+   Use this property in conjunction with fore's preferredContentSize to create dialogs that fill
+   part of the screen.
+
+   This property will only be read if the fore view controller's modalPresentationStyle is .custom.
+   */
+  public var foreAlignmentEdge: CGRectEdge? {
+    set { _transitioningDelegate.foreAlignmentEdge = newValue }
+    get { return _transitioningDelegate.foreAlignmentEdge }
+  }
+
+  /**
    Start a dismiss transition when the given gesture recognizer enters its began or recognized
    state.
 
@@ -107,11 +133,6 @@ public final class TransitionController {
   public var gestureRecognizers: Set<UIGestureRecognizer> {
     set { _transitioningDelegate.gestureDelegate.gestureRecognizers = newValue }
     get { return _transitioningDelegate.gestureDelegate.gestureRecognizers }
-  }
-
-  public var foreAlignmentEdge: CGRectEdge? {
-    set { _transitioningDelegate.foreAlignmentEdge = newValue }
-    get { return _transitioningDelegate.foreAlignmentEdge }
   }
 
   /**
@@ -163,6 +184,7 @@ private final class TransitioningDelegate: NSObject, UIViewControllerTransitioni
 
   let dismisser: ViewControllerDismisser
   let gestureDelegate = GestureDelegate()
+  var presentationController: UIPresentationController?
 
   weak var associatedViewController: UIViewController?
 
@@ -187,7 +209,8 @@ private final class TransitioningDelegate: NSObject, UIViewControllerTransitioni
                               back: back,
                               fore: fore,
                               gestureRecognizers: gestureDelegate.gestureRecognizers,
-                              foreAlignmentEdge: foreAlignmentEdge)
+                              foreAlignmentEdge: foreAlignmentEdge,
+                              presentationController: presentationController)
       ctx?.delegate = self
     }
   }
@@ -195,10 +218,7 @@ private final class TransitioningDelegate: NSObject, UIViewControllerTransitioni
   public func animationController(forPresented presented: UIViewController,
                                   presenting: UIViewController,
                                   source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-    prepareForTransition(withSource: source,
-                         back: presenting,
-                         fore: presented,
-                         direction: .forward)
+    prepareForTransition(withSource: source, back: presenting, fore: presented, direction: .forward)
     return ctx
   }
 
@@ -239,6 +259,19 @@ private final class TransitioningDelegate: NSObject, UIViewControllerTransitioni
 
   func isInteractive() -> Bool {
     return gestureDelegate.gestureRecognizers.filter { $0.state == .began || $0.state == .changed }.count > 0
+  }
+
+  func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+    guard let transitionWithPresentation = transitionType as? TransitionWithPresentation.Type else {
+      return nil
+    }
+    if let presentationController = presentationController {
+      return presentationController
+    }
+    presentationController = transitionWithPresentation.presentationController(forPresented: presented,
+                                                                               presenting: presenting,
+                                                                               source: source)
+    return presentationController
   }
 }
 

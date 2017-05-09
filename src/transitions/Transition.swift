@@ -18,12 +18,9 @@ import Foundation
 import UIKit
 
 /**
- A transition is responsible for describing the motion that will occur during a UIViewController
- transition.
+ An object that is capable of responding to a transition that is about to begin.
  */
-public protocol Transition {
-  /** Transition directors must be instantiable. */
-  init()
+public protocol WillBeginTransition {
 
   /**
    Invoked on initiation of a view controller transition.
@@ -31,6 +28,39 @@ public protocol Transition {
    Must return a list of streams that will determine when this transition comes to rest.
    */
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful]
+}
+
+/**
+ A transition is responsible for describing the motion that will occur during a UIViewController
+ transition.
+ */
+public protocol Transition: WillBeginTransition {
+
+  /**
+   Transitions must be instantiable.
+   */
+  init()
+}
+
+/**
+ A transition with presentation is able to customize the overall presentation of the transition,
+ including adding temporary views and changing the destination frame of the presented view
+ controller.
+ */
+public protocol TransitionWithPresentation: Transition {
+
+  /**
+   Queried before the Transition object is instantiated and only once, when the fore view controller
+   is initially presented.
+
+   The returned object is cached for the lifetime of the fore view controller.
+
+   The returned presentation controller may choose to conform to WillBeginTransition in order to
+   associate reactive motion with the transition.
+   */
+  static func presentationController(forPresented presented: UIViewController,
+                                     presenting: UIViewController?,
+                                     source: UIViewController) -> UIPresentationController
 }
 
 /**
