@@ -108,7 +108,7 @@ private class StickerListViewController: UICollectionViewController {
   init() {
     super.init(collectionViewLayout: UICollectionViewFlowLayout())
 
-    transitionController.transitionType = ModalTransition.self
+    transitionController.transition = ModalTransition()
 
     modalPresentationStyle = .overCurrentContext
   }

@@ -63,9 +63,9 @@ public final class TransitionController {
 
    Must be a subclass of MDMTransition.
    */
-  public var transitionType: Transition.Type? {
-    set { _transitioningDelegate.transitionType = newValue }
-    get { return _transitioningDelegate.transitionType }
+  public var transition: Transition? {
+    set { _transitioningDelegate.transition = newValue }
+    get { return _transitioningDelegate.transition }
   }
 
   /**
@@ -164,7 +164,7 @@ private final class TransitioningDelegate: NSObject, UIViewControllerTransitioni
   }
 
   var ctx: TransitionContext?
-  var transitionType: Transition.Type?
+  var transition: Transition?
 
   let dismisser: ViewControllerDismisser
   let gestureDelegate = GestureDelegate()
@@ -183,12 +183,12 @@ private final class TransitioningDelegate: NSObject, UIViewControllerTransitioni
     }
     assert(ctx == nil, "A transition is already active.")
 
-    if let transitionType = transitionType {
-      if direction == .forward, let selfDismissingDirector = transitionType as? SelfDismissingTransition.Type {
+    if let transition = transition {
+      if direction == .forward, let selfDismissingDirector = transition as? SelfDismissingTransition {
         selfDismissingDirector.willPresent(fore: fore, dismisser: dismisser)
       }
 
-      ctx = TransitionContext(transitionType: transitionType,
+      ctx = TransitionContext(transition: transition,
                               direction: direction,
                               back: back,
                               fore: fore,
@@ -245,15 +245,15 @@ private final class TransitioningDelegate: NSObject, UIViewControllerTransitioni
   }
 
   func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-    guard let transitionWithPresentation = transitionType as? TransitionWithPresentation.Type else {
+    guard let transitionWithPresentation = transition as? TransitionWithPresentation else {
       return nil
     }
     if let presentationController = presentationController {
       return presentationController
     }
-    presentationController = transitionWithPresentation.presentationController(forPresented: presented,
-                                                                               presenting: presenting,
-                                                                               source: source)
+    presentationController = type(of: transitionWithPresentation).presentationController(forPresented: presented,
+                                                                                         presenting: presenting,
+                                                                                         source: source)
     return presentationController
   }
 }

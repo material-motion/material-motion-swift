@@ -41,7 +41,7 @@ private class ModalViewController: UIViewController, UIGestureRecognizerDelegate
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
     super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
-    transitionController.transitionType = PushBackTransition.self
+    transitionController.transition = PushBackTransition()
   }
 
   required init?(coder aDecoder: NSCoder) {
@@ -71,8 +71,6 @@ private class ModalViewController: UIViewController, UIGestureRecognizerDelegate
 }
 
 private class PushBackTransition: Transition {
-
-  required init() {}
 
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
     let draggable = Draggable(withFirstGestureIn: ctx.gestureRecognizers)

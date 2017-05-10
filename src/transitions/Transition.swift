@@ -18,10 +18,10 @@ import Foundation
 import UIKit
 
 /**
- An object that is capable of responding to a transition that is about to begin.
+ A transition is responsible for describing the motion that will occur during a UIViewController
+ transition.
  */
-public protocol WillBeginTransition {
-
+public protocol Transition {
   /**
    Invoked on initiation of a view controller transition.
 
@@ -34,12 +34,11 @@ public protocol WillBeginTransition {
  A transition is responsible for describing the motion that will occur during a UIViewController
  transition.
  */
-public protocol Transition: WillBeginTransition {
-
+public protocol TransitionWithTermination: Transition {
   /**
-   Transitions must be instantiable.
+   Invoked on completion of a view controller transition.
    */
-  init()
+  func didEndTransition(withContext ctx: TransitionContext, runtime: MotionRuntime)
 }
 
 /**
@@ -68,5 +67,5 @@ public protocol TransitionWithPresentation: Transition {
  cause the presented view controller to be dismissed.
  */
 public protocol SelfDismissingTransition: Transition {
-  static func willPresent(fore: UIViewController, dismisser: ViewControllerDismisser)
+  func willPresent(fore: UIViewController, dismisser: ViewControllerDismisser)
 }

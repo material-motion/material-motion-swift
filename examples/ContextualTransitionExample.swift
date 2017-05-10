@@ -165,7 +165,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 
     super.init(nibName: nil, bundle: nil)
 
-    transitionController.transitionType = PushBackTransition.self
+    transitionController.transition = PushBackTransition()
   }
 
   required init?(coder aDecoder: NSCoder) {
@@ -257,8 +257,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 }
 
 private class PushBackTransition: Transition {
-
-  required init() {}
 
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
     let foreVC = ctx.fore as! PhotoAlbumViewController

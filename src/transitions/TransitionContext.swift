@@ -94,7 +94,7 @@ public final class TransitionContext: NSObject {
 
   weak var delegate: TransitionDelegate?
 
-  init(transitionType: Transition.Type,
+  init(transition: Transition,
        direction: TransitionDirection,
        back: UIViewController,
        fore: UIViewController,
@@ -108,7 +108,7 @@ public final class TransitionContext: NSObject {
     self.window = TransitionTimeWindow(duration: TransitionContext.defaultDuration)
     self.presentationController = presentationController
 
-    self.transition = transitionType.init()
+    self.transition = transition
 
     super.init()
   }
@@ -178,7 +178,7 @@ extension TransitionContext {
 
     var terminators = transition.willBeginTransition(withContext: self, runtime: self.runtime)
 
-    if let presentationController = presentationController as? WillBeginTransition {
+    if let presentationController = presentationController as? Transition {
       terminators.append(contentsOf: presentationController.willBeginTransition(withContext: self,
                                                                                 runtime: self.runtime))
     }
@@ -250,6 +250,10 @@ extension TransitionContext {
       }
     }
     context.completeTransition(completedInOriginalDirection)
+
+    if let transitionWithTermination = transition as? TransitionWithTermination {
+      transitionWithTermination.didEndTransition(withContext: self, runtime: runtime)
+    }
 
     runtime = nil
     transition = nil

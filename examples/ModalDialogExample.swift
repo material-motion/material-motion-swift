@@ -45,7 +45,7 @@ class ModalDialogViewController: UIViewController {
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
     super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
-    transitionController.transitionType = ModalDialogTransition.self
+    transitionController.transition = ModalDialogTransition()
     preferredContentSize = .init(width: 200, height: 200)
     modalPresentationStyle = .overCurrentContext
   }
@@ -68,8 +68,6 @@ class ModalDialogViewController: UIViewController {
 }
 
 class ModalDialogTransition: SelfDismissingTransition {
-
-  required init() {}
 
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
     let size = ctx.fore.view.frame.size
@@ -106,7 +104,7 @@ class ModalDialogTransition: SelfDismissingTransition {
     return [tossable.spring]
   }
 
-  static func willPresent(fore: UIViewController, dismisser: ViewControllerDismisser) {
+  func willPresent(fore: UIViewController, dismisser: ViewControllerDismisser) {
     let tap = UITapGestureRecognizer()
     fore.view.addGestureRecognizer(tap)
     dismisser.dismissWhenGestureRecognizerBegins(tap)
