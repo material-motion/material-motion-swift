@@ -84,8 +84,6 @@ public final class TransitionContext: NSObject {
    */
   public let fore: UIViewController
 
-  public let foreAlignmentEdge: CGRectEdge?
-
   /** The set of gesture recognizers associated with this transition. */
   public let gestureRecognizers: Set<UIGestureRecognizer>
 
@@ -101,18 +99,14 @@ public final class TransitionContext: NSObject {
        back: UIViewController,
        fore: UIViewController,
        gestureRecognizers: Set<UIGestureRecognizer>,
-       foreAlignmentEdge: CGRectEdge?,
        presentationController: UIPresentationController?) {
     self.direction = createProperty("Transition.direction", withInitialValue: direction)
     self.initialDirection = direction
     self.back = back
     self.fore = fore
     self.gestureRecognizers = gestureRecognizers
-    self.foreAlignmentEdge = foreAlignmentEdge
     self.window = TransitionTimeWindow(duration: TransitionContext.defaultDuration)
     self.presentationController = presentationController
-
-    // TODO: Create a Timeline.
 
     self.transition = transitionType.init()
 

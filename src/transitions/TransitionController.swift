@@ -80,21 +80,6 @@ public final class TransitionController {
   }
 
   /**
-   The edge to align the fore view's frame to.
-
-   Defaults to nil, which will center the fore view's frame in the container's bounds.
-
-   Use this property in conjunction with fore's preferredContentSize to create dialogs that fill
-   part of the screen.
-
-   This property will only be read if the fore view controller's modalPresentationStyle is .custom.
-   */
-  public var foreAlignmentEdge: CGRectEdge? {
-    set { _transitioningDelegate.foreAlignmentEdge = newValue }
-    get { return _transitioningDelegate.foreAlignmentEdge }
-  }
-
-  /**
    Start a dismiss transition when the given gesture recognizer enters its began or recognized
    state.
 
@@ -178,7 +163,6 @@ private final class TransitioningDelegate: NSObject, UIViewControllerTransitioni
     self.dismisser.delegate = self
   }
 
-  var foreAlignmentEdge: CGRectEdge?
   var ctx: TransitionContext?
   var transitionType: Transition.Type?
 
@@ -209,7 +193,6 @@ private final class TransitioningDelegate: NSObject, UIViewControllerTransitioni
                               back: back,
                               fore: fore,
                               gestureRecognizers: gestureDelegate.gestureRecognizers,
-                              foreAlignmentEdge: foreAlignmentEdge,
                               presentationController: presentationController)
       ctx?.delegate = self
     }
