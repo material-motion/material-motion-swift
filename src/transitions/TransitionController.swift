@@ -64,7 +64,13 @@ public final class TransitionController {
    Must be a subclass of MDMTransition.
    */
   public var transition: Transition? {
-    set { _transitioningDelegate.transition = newValue }
+    set {
+      _transitioningDelegate.transition = newValue
+
+      if let transition = newValue as? TransitionWithPresentation {
+        _transitioningDelegate.associatedViewController?.modalPresentationStyle = .custom
+      }
+    }
     get { return _transitioningDelegate.transition }
   }
 
