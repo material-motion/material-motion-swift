@@ -208,6 +208,13 @@ public final class MotionRuntime {
   /**
    Returns a reactive version of the given object and caches the returned result for future access.
    */
+  public func get(_ slider: UISlider) -> MotionObservable<CGFloat> {
+    return get(slider) { sliderToStream($0) }
+  }
+
+  /**
+   Returns a reactive version of the given object and caches the returned result for future access.
+   */
   public func get<O: UIGestureRecognizer>(_ gestureRecognizer: O) -> ReactiveUIGestureRecognizer<O> {
     return get(gestureRecognizer) {
       let reactiveObject = ReactiveUIGestureRecognizer<O>($0, containerView: containerView)
