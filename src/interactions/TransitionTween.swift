@@ -57,6 +57,8 @@ public final class TransitionTween<T>: Tween<T> {
   public init(duration: CGFloat,
               forwardValues: [T],
               direction: ReactiveProperty<TransitionDirection>,
+              delayBefore: CGFloat = 0,
+              delayAfter: CGFloat = 0,
               forwardKeyPositions: [CGFloat] = [],
               system: @escaping TweenToStream<T> = coreAnimation,
               timeline: Timeline? = nil) {
@@ -70,6 +72,7 @@ public final class TransitionTween<T>: Tween<T> {
 
     self.toggledValues = direction.dedupe().rewrite([.backward: backwardValues, .forward: forwardValues])
     self.toggledOffsets = direction.dedupe().rewrite([.backward: backwardKeyPositions, .forward: forwardKeyPositions])
+    self.toggledDelay = direction.dedupe().rewrite([.backward: delayAfter, .forward: delayBefore])
     super.init(duration: duration, values: values, system: system, timeline: timeline)
   }
 
@@ -93,6 +96,7 @@ public final class TransitionTween<T>: Tween<T> {
                            constraints: ConstraintApplicator<T>? = nil) {
     let unlocked = createProperty(withInitialValue: false)
     runtime.connect(direction.dedupe().rewriteTo(false), to: unlocked)
+    runtime.connect(toggledDelay, to: delay)
     runtime.connect(toggledValues, to: values)
     runtime.connect(toggledOffsets, to: offsets)
     super.add(to: property, withRuntime: runtime) {
@@ -108,4 +112,5 @@ public final class TransitionTween<T>: Tween<T> {
   private let direction: ReactiveProperty<TransitionDirection>
   private let toggledValues: MotionObservable<[T]>
   private let toggledOffsets: MotionObservable<[CGFloat]>
+  private let toggledDelay: MotionObservable<CGFloat>
 }
