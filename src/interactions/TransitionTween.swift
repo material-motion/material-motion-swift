@@ -69,7 +69,7 @@ public final class TransitionTween<T>: Tween<T> {
     self.direction = direction
 
     self.toggledValues = direction.dedupe().rewrite([.backward: backwardValues, .forward: forwardValues])
-    self.toggledKeyPositions = direction.dedupe().rewrite([.backward: backwardKeyPositions, .forward: forwardKeyPositions])
+    self.toggledOffsets = direction.dedupe().rewrite([.backward: backwardKeyPositions, .forward: forwardKeyPositions])
     super.init(duration: duration, values: values, system: system, timeline: timeline)
   }
 
@@ -94,7 +94,7 @@ public final class TransitionTween<T>: Tween<T> {
     let unlocked = createProperty("TransitionTween.unlocked", withInitialValue: false)
     runtime.connect(direction.dedupe().rewriteTo(false), to: unlocked)
     runtime.connect(toggledValues, to: values)
-    runtime.connect(toggledKeyPositions, to: keyPositions)
+    runtime.connect(toggledOffsets, to: offsets)
     super.add(to: property, withRuntime: runtime) {
       var stream = $0
       if let constraints = constraints {
@@ -107,5 +107,5 @@ public final class TransitionTween<T>: Tween<T> {
 
   private let direction: ReactiveProperty<TransitionDirection>
   private let toggledValues: MotionObservable<[T]>
-  private let toggledKeyPositions: MotionObservable<[CGFloat]>
+  private let toggledOffsets: MotionObservable<[CGFloat]>
 }

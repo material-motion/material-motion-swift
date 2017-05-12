@@ -40,10 +40,10 @@ private func streamFromTween<T>(_ tween: TweenShadow<T>, configureEvent: @escapi
     var animationKeys: [String] = []
     var activeAnimations = Set<String>()
     var lastValues: [T]?
-    var lastKeyPositions: [CGFloat]?
+    var lastOffsets: [CGFloat]?
 
     let checkAndEmit = {
-      guard let values = lastValues, let keyPositions = lastKeyPositions, tween.enabled.value else {
+      guard let values = lastValues, let offsets = lastOffsets, tween.enabled.value else {
         return
       }
       let animation: CAPropertyAnimation
@@ -51,7 +51,7 @@ private func streamFromTween<T>(_ tween: TweenShadow<T>, configureEvent: @escapi
       if values.count > 1 {
         let keyframeAnimation = CAKeyframeAnimation()
         keyframeAnimation.values = values
-        keyframeAnimation.keyTimes = keyPositions.map { NSNumber(value: Double($0)) }
+        keyframeAnimation.keyTimes = offsets.map { NSNumber(value: Double($0)) }
         keyframeAnimation.timingFunctions = timingFunctions.value
         animation = keyframeAnimation
       } else {
@@ -108,8 +108,8 @@ private func streamFromTween<T>(_ tween: TweenShadow<T>, configureEvent: @escapi
       checkAndEmit()
     }
 
-    let keyPositionsSubscription = tween.keyPositions.subscribeToValue { keyPositions in
-      lastKeyPositions = keyPositions
+    let offsetsSubscription = tween.offsets.subscribeToValue { offsets in
+      lastOffsets = offsets
       checkAndEmit()
     }
 
@@ -119,10 +119,10 @@ private func streamFromTween<T>(_ tween: TweenShadow<T>, configureEvent: @escapi
       activeAnimations.removeAll()
 
       lastValues = nil
-      lastKeyPositions = nil
+      lastOffsets = nil
       activeSubscription.unsubscribe()
       valuesSubscription.unsubscribe()
-      keyPositionsSubscription.unsubscribe()
+      offsetsSubscription.unsubscribe()
     }
   }
 }

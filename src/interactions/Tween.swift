@@ -82,7 +82,7 @@ public class Tween<T>: Interaction, Togglable, Stateful {
 
    See CAKeyframeAnimation documentation for more details.
    */
-  public let keyPositions = createProperty("Tween.keyPositions", withInitialValue: [] as [CGFloat])
+  public let offsets = createProperty("Tween.offsets", withInitialValue: [] as [CGFloat])
 
   /**
    An array of CAMediaTimingFunction objects. If the `values' array defines n keyframes,
@@ -168,7 +168,7 @@ public struct TweenShadow<T> {
   public let repeatDuration: ReactiveProperty<CGFloat>
   public let autoreverses: ReactiveProperty<Bool>
   public let values: ReactiveProperty<[T]>
-  public let keyPositions: ReactiveProperty<[CGFloat]>
+  public let offsets: ReactiveProperty<[CGFloat]>
   public let timingFunctions: ReactiveProperty<[CAMediaTimingFunction]>
   public let timeline: Timeline?
 
@@ -181,7 +181,7 @@ public struct TweenShadow<T> {
     self.autoreverses = tween.autoreverses
     self.delay = tween.delay
     self.values = tween.values
-    self.keyPositions = tween.keyPositions
+    self.offsets = tween.offsets
     self.timingFunctions = tween.timingFunctions
     self.timeline = tween.timeline
   }

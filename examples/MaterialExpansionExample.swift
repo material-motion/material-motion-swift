@@ -61,7 +61,7 @@ class MaterialExpansionExampleViewController: ExampleViewController {
     let floodExpansion = Tween<CGFloat>(duration: 0.375, values: [0, 1])
     floodExpansion.timingFunctions.value = [CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)]
     let fadeOut = Tween<CGFloat>(duration: 0.375, values: [0.75, 0])
-    fadeOut.keyPositions.value = [0.2, 1]
+    fadeOut.offsets.value = [0.2, 1]
 
     runtime.add(SetPositionOnTap(.withExistingRecognizer(tap.gestureRecognizer)),
                 to: runtime.get(flood.layer).position)
