@@ -147,14 +147,6 @@ public final class TransitionController {
     _transitioningDelegate = TransitioningDelegate(viewController: viewController)
   }
 
-  /**
-   Deprecated. Please use methods directly on the transitionController instead.
-   */
-  @available(*, deprecated, message: "Please use methods directly on the transitionController instead.")
-  public var dismisser: ViewControllerDismisser {
-    return _transitioningDelegate.dismisser
-  }
-
   fileprivate let _transitioningDelegate: TransitioningDelegate
 }
 

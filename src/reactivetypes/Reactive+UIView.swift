@@ -49,10 +49,4 @@ extension Reactive where O: UIView {
     let view = _object
     return Reactive<CALayer>(view.layer)
   }
-
-  @available(*, deprecated, message: "Use layer instead.")
-  public var reactiveLayer: Reactive<CALayer> {
-    let view = _object
-    return Reactive<CALayer>(view.layer)
-  }
 }

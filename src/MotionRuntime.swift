@@ -93,22 +93,6 @@ public final class MotionRuntime {
     return interactions.flatMap { $0 as? I }
   }
 
-  @available(*, deprecated, message: "Use interactions(ofType:for:) instead.")
-  public func interactions<I>(for target: I.Target, ofType: I.Type) -> [I] where I: Interaction, I.Target: AnyObject {
-    guard let interactions = targets[ObjectIdentifier(target)] else {
-      return []
-    }
-    return interactions.flatMap { $0 as? I }
-  }
-
-  @available(*, deprecated, message: "Use interactions(ofType:for:) instead.")
-  public func interactions<I>(for target: I.Target, filter: (Any) -> I?) -> [I] where I: Interaction, I.Target: AnyObject {
-    guard let interactions = targets[ObjectIdentifier(target)] else {
-      return []
-    }
-    return interactions.flatMap { $0 as? I }
-  }
-
   /**
    Creates a toggling association between one interaction's state and the other interaction's
    enabling.

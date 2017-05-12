@@ -77,20 +77,4 @@ class startWithTests: XCTestCase {
     subscription.unsubscribe()
     secondSubscription.unsubscribe()
   }
-
-  @available(*, deprecated)
-  func testDeprecatedInitialValueIsReceivedFirst() {
-    let property = createProperty()
-
-    var values: [CGFloat] = []
-    let subscription = property.initialValue(10).subscribeToValue { value in
-      values.append(value)
-    }
-
-    property.value = -10
-
-    XCTAssertEqual(values, [10, 0, -10])
-
-    subscription.unsubscribe()
-  }
 }
