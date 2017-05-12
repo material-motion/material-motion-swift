@@ -67,7 +67,7 @@ public final class TransitionController {
     set {
       _transitioningDelegate.transition = newValue
 
-      if let transition = newValue as? TransitionWithPresentation {
+      if newValue is TransitionWithPresentation {
         _transitioningDelegate.associatedViewController?.modalPresentationStyle = .custom
       }
     }

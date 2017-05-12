@@ -30,7 +30,6 @@ extension Reactive where O: CALayer {
   public var anchorPointAdjustment: ReactiveProperty<AnchorPointAdjustment> {
     let anchorPoint = self.anchorPoint
     let position = self.position
-    let layer = _object
     return _properties.named(#function) {
       return .init(initialValue: .init(anchorPoint: anchorPoint.value, position: position.value)) {
         anchorPoint.value = $0.anchorPoint; position.value = $0.position
