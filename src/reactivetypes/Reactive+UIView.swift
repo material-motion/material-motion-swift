@@ -21,7 +21,7 @@ extension Reactive where O: UIView {
   public var isUserInteractionEnabled: ReactiveProperty<Bool> {
     let view = _object
     return _properties.named(#function) {
-      return .init("\(pretty(view)).\(#function)", initialValue: view.isUserInteractionEnabled) {
+      return .init(initialValue: view.isUserInteractionEnabled) {
         view.isUserInteractionEnabled = $0
       }
     }
@@ -30,7 +30,7 @@ extension Reactive where O: UIView {
   public var backgroundColor: ReactiveProperty<UIColor> {
     let view = _object
     return _properties.named(#function) {
-      return .init("\(pretty(view)).\(#function)", initialValue: view.backgroundColor!) {
+      return .init(initialValue: view.backgroundColor!) {
         view.backgroundColor = $0
       }
     }
@@ -39,7 +39,7 @@ extension Reactive where O: UIView {
   public var alpha: ReactiveProperty<CGFloat> {
     let view = _object
     return _properties.named(#function) {
-      return .init("\(pretty(view)).\(#function)", initialValue: view.alpha) {
+      return .init(initialValue: view.alpha) {
         view.alpha = $0
       }
     }

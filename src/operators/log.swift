@@ -24,7 +24,7 @@ extension MotionObservableConvertible {
    - parameter context: An optional string to be printed before the value.
    */
   public func log(_ context: String? = nil) -> MotionObservable<T> {
-    return _nextOperator(#function, args: [context as Any], operation: { value, next in
+    return _nextOperator(operation: { value, next in
       if let context = context {
         print(context, value)
       } else {

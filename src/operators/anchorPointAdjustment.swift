@@ -26,7 +26,7 @@ extension MotionObservableConvertible where T == CGPoint {
    top/left-most edge of the view's bounds and 1 means the right/bottom-most edge of the bounds.
    */
   public func anchorPointAdjustment(in view: UIView) -> MotionObservable<AnchorPointAdjustment> {
-    return _map(#function, args: [view]) {
+    return _map {
       let newPosition = CGPoint(x: $0.x * view.layer.bounds.width, y: $0.y * view.layer.bounds.height)
       let positionInSuperview = view.layer.convert(newPosition, to: view.layer.superlayer)
       return .init(anchorPoint: $0, position: positionInSuperview)

@@ -91,7 +91,7 @@ class ReactivePropertyTests: XCTestCase {
 
   func testCoreAnimation() {
     let didReceiveEvent = expectation(description: "Did receive event")
-    let property = ReactiveProperty("test", initialValue: 10, externalWrite: { _ in }, coreAnimation: { event in
+    let property = ReactiveProperty(initialValue: 10, externalWrite: { _ in }, coreAnimation: { event in
       didReceiveEvent.fulfill()
     })
 
@@ -121,7 +121,7 @@ class ReactivePropertyTests: XCTestCase {
     XCTAssertTrue(Reactive(view).isUserInteractionEnabled === Reactive(view).isUserInteractionEnabled)
   }
 
-  func testPropertiesReleasedWhenDereferenced() {
+  func testPropertiesNotReleasedWhenDereferenced() {
     let view = UIView()
     var prop1: ReactiveProperty<Bool>? = Reactive(view).isUserInteractionEnabled
     let objectIdentifier = ObjectIdentifier(prop1!)
@@ -129,7 +129,7 @@ class ReactivePropertyTests: XCTestCase {
     prop1 = nil
 
     let prop2 = Reactive(view).isUserInteractionEnabled
-    XCTAssertTrue(objectIdentifier != ObjectIdentifier(prop2))
+    XCTAssertTrue(objectIdentifier == ObjectIdentifier(prop2))
   }
 
   func testObjectRetainedByReactiveType() {

@@ -21,8 +21,7 @@ public class ReactiveUIGestureRecognizer<O: UIGestureRecognizer>: Stateful {
 
   public lazy var isEnabled: ReactiveProperty<Bool> = {
     let gestureRecognizer = self.gestureRecognizer
-    return ReactiveProperty(#function,
-                            initialValue: gestureRecognizer.isEnabled,
+    return ReactiveProperty(initialValue: gestureRecognizer.isEnabled,
                             externalWrite: { gestureRecognizer.isEnabled = $0 })
   }()
 
@@ -31,8 +30,6 @@ public class ReactiveUIGestureRecognizer<O: UIGestureRecognizer>: Stateful {
     self.containerView = containerView
     self.stream = gestureToStream(gestureRecognizer)
   }
-
-  public let metadata = Metadata("Gesture Recognizer")
 
   public var state: MotionObservable<MotionState> {
     return asStream().asMotionState()

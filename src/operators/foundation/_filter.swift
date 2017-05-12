@@ -23,8 +23,8 @@ extension MotionObservableConvertible {
 
    This operator is meant to be used when building other operators.
    */
-  public func _filter(_ name: String? = nil, args: [Any]? = nil, predicate: @escaping (T) -> Bool) -> MotionObservable<T> {
-    return _nextOperator(name, args: args) { value, next in
+  public func _filter(predicate: @escaping (T) -> Bool) -> MotionObservable<T> {
+    return _nextOperator { value, next in
       if predicate(value) {
         next(value)
       }

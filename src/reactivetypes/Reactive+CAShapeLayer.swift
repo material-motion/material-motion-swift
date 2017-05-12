@@ -23,10 +23,9 @@ extension Reactive where O: CAShapeLayer {
   public var path: ReactiveProperty<CGPath> {
     let layer = _object
     return _properties.named(#function) {
-      return createCoreAnimationProperty(#function,
-                                          initialValue: layer.path!,
-                                          externalWrite: { layer.path = $0 },
-                                          keyPath: "path")
+      return createCoreAnimationProperty(initialValue: layer.path!,
+                                         externalWrite: { layer.path = $0 },
+                                         keyPath: "path")
     }
   }
 

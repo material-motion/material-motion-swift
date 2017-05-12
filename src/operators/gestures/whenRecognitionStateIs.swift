@@ -21,20 +21,20 @@ extension MotionObservableConvertible where T: UIGestureRecognizer {
 
   /** Only forwards the gesture recognizer if its state matches the provided value. */
   public func whenRecognitionState(is state: UIGestureRecognizerState) -> MotionObservable<T> {
-    return _filter(#function, args: [state]) { value in
+    return _filter { value in
       return value.state == state
     }
   }
 
   /** Only forwards the gesture recognizer if its state matches any of the provided values. */
   public func whenRecognitionState(isAnyOf states: [UIGestureRecognizerState]) -> MotionObservable<T> {
-    return _filter(#function, args: [states]) { value in
+    return _filter { value in
       return states.contains(value.state)
     }
   }
 
   public func asMotionState() -> MotionObservable<MotionState> {
-    return _nextOperator(#function) { value, next in
+    return _nextOperator { value, next in
       if value is UITapGestureRecognizer {
         if value.state == .recognized {
           // Tap gestures are momentary, so we won't have another opportunity to send an .atRest event
@@ -53,13 +53,13 @@ extension MotionObservableConvertible where T: UIGestureRecognizer {
   }
 
   public func active() -> MotionObservable<Bool> {
-    return _map(#function) { value in
+    return _map { value in
       return value.state == .began || value.state == .changed
     }
   }
 
   public func atRest() -> MotionObservable<Bool> {
-    return _map(#function) { value in
+    return _map { value in
       return value.state != .began && value.state != .changed
     }
   }

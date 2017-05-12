@@ -31,7 +31,7 @@ extension MotionObservableConvertible {
    This operator assumes that the label will be added to a MotionRuntime's `visualizationView`.
    */
   public func visualize(_ prefix: String? = nil, in view: UIView) -> MotionObservable<T> {
-    return MotionObservable<T>(Metadata(#function, args: [prefix as Any, view])) { observer in
+    return MotionObservable<T> { observer in
       let label = UILabel()
       let highlight = UIView()
       highlight.backgroundColor = .white

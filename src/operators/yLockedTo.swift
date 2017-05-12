@@ -23,8 +23,6 @@ extension MotionObservableConvertible where T == CGPoint {
    Lock the point's y value to the given value.
    */
   public func yLocked(to yValue: CGFloat) -> MotionObservable<CGPoint> {
-    return _map(#function, args: [yValue]) {
-      .init(x: $0.x, y: yValue)
-    }
+    return _map { .init(x: $0.x, y: yValue) }
   }
 }

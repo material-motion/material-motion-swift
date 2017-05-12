@@ -24,8 +24,8 @@ extension MotionObservableConvertible {
 
    This operator is meant to be used when building other operators.
    */
-  public func _map<U>(_ name: String? = nil, args: [Any]? = nil, transformVelocity: Bool = false, transform: @escaping (T) -> U) -> MotionObservable<U> {
-    return _nextOperator(name, args: args, operation: { value, next in
+  public func _map<U>(transformVelocity: Bool = false, transform: @escaping (T) -> U) -> MotionObservable<U> {
+    return _nextOperator(operation: { value, next in
       next(transform(value))
 
     }, coreAnimation: { event, coreAnimation in

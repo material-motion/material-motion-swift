@@ -53,6 +53,4 @@ public final class ReactiveButtonTarget: NSObject {
     didHighlightObservers.forEach { $0.next(false) }
   }
   private var didHighlightObservers: [MotionObserver<Bool>] = []
-
-  public let metadata = Metadata("Button target")
 }

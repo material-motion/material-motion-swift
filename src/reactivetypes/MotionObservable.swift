@@ -113,28 +113,6 @@ public typealias VisualizationChannel = (UIView) -> Void
  Throughout this documentation we will treat the words "observable" and "stream" as synonyms.
  */
 public final class MotionObservable<T>: IndefiniteObservable<MotionObserver<T>> {
-
-  /**
-   Creates a new motion observable with the provided metadata and connect function.
-
-   The connect function will be invoked each time this observable is subscribed to.
-   */
-  public init(_ metadata: Metadata, connect: @escaping Connect<MotionObserver<T>>) {
-    self.metadata = metadata
-    super.init(connect)
-  }
-
-  /**
-   The provided name is used to create this observable's Metadata information.
-   */
-  public convenience init(_ name: String? = nil, args: [Any]? = nil, connect: @escaping Connect<MotionObserver<T>>) {
-    self.init(Metadata(name, args: args), connect: connect)
-  }
-
-  /**
-   The metadata describing this stream.
-   */
-  public let metadata: Metadata
 }
 
 /**
@@ -165,7 +143,7 @@ public final class MotionObserver<T>: Observer {
 /**
  A MotionObservableConvertible has a canonical MotionObservable that it can return.
  */
-public protocol MotionObservableConvertible: Inspectable {
+public protocol MotionObservableConvertible {
   associatedtype T
 
   /**

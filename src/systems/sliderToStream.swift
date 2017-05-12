@@ -23,7 +23,7 @@ import UIKit
  This scroll source will not emit state updates.
  */
 func sliderToStream(_ slider: UISlider) -> MotionObservable<CGFloat> {
-  return MotionObservable(Metadata("Slider", args: [slider])) { observer in
+  return MotionObservable { observer in
     return SliderConnection(subscribedTo: slider, observer: observer).disconnect
   }
 }

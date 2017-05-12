@@ -100,7 +100,7 @@ public final class TransitionContext: NSObject {
        fore: UIViewController,
        gestureRecognizers: Set<UIGestureRecognizer>,
        presentationController: UIPresentationController?) {
-    self.direction = createProperty("Transition.direction", withInitialValue: direction)
+    self.direction = createProperty(withInitialValue: direction)
     self.initialDirection = direction
     self.back = back
     self.fore = fore

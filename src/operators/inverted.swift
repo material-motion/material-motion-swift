@@ -22,7 +22,7 @@ extension MotionObservableConvertible where T == Bool {
    Emits the negation of the upstream Boolean value.
    */
   public func inverted() -> MotionObservable<Bool> {
-    return _map(#function) { value in
+    return _map { value in
       return !value
     }
   }
@@ -34,6 +34,6 @@ extension MotionObservableConvertible where T: Invertible {
    Emits the inversion of the upstream value.
    */
   public func inverted() -> MotionObservable<T> {
-    return _map(#function) { $0.inverted() }
+    return _map { $0.inverted() }
   }
 }

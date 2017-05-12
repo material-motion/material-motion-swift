@@ -21,7 +21,7 @@ extension MotionObservableConvertible where T: UIGestureRecognizer {
 
   /** Extract centroid from the incoming gesture recognizer. */
   public func centroid(in view: UIView) -> MotionObservable<CGPoint> {
-    return _map(#function, args: [view]) { value in
+    return _map { value in
       value.location(in: view)
     }
   }

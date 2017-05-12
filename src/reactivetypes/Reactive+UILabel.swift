@@ -21,7 +21,7 @@ extension Reactive where O: UILabel {
   public var text: ReactiveProperty<String> {
     let view = _object
     return _properties.named(#function) {
-      return .init("\(pretty(view)).\(#function)", initialValue: view.text ?? "") {
+      return .init(initialValue: view.text ?? "") {
         view.text = $0
       }
     }

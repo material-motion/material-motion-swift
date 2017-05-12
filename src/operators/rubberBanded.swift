@@ -23,7 +23,7 @@ extension MotionObservableConvertible where T == CGFloat {
    Applies resistance to values that fall outside of the given range.
    */
   public func rubberBanded(below: CGFloat, above: CGFloat, maxLength: CGFloat) -> MotionObservable<CGFloat> {
-    return _map(#function, args: [below, above, maxLength]) {
+    return _map {
       return rubberBand(value: $0, min: below, max: above, bandLength: maxLength)
     }
   }
@@ -37,7 +37,7 @@ extension MotionObservableConvertible where T == CGPoint {
    Does not modify the value if CGRect is .null.
    */
   public func rubberBanded(outsideOf rect: CGRect, maxLength: CGFloat) -> MotionObservable<CGPoint> {
-    return _map(#function, args: [rect, maxLength]) {
+    return _map {
       guard rect != .null else {
         return $0
       }
@@ -56,7 +56,7 @@ extension MotionObservableConvertible where T == CGPoint {
     var lastRect: CGRect?
     var lastMaxLength: CGFloat?
     var lastValue: CGPoint?
-    return MotionObservable(self.metadata.createChild(Metadata(#function, type: .constraint, args: [rectStream, maxLengthStream]))) { observer in
+    return MotionObservable { observer in
 
       let checkAndEmit = {
         guard let rect = lastRect, let maxLength = lastMaxLength, let value = lastValue else {

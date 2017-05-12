@@ -18,8 +18,8 @@ import XCTest
 import MaterialMotion
 
 public class MockTween<T>: Togglable, Stateful {
-  let _state = createProperty("Tween._state", withInitialValue: MotionState.atRest)
-  public let enabled = createProperty("Tween.enabled", withInitialValue: true)
+  let _state = createProperty(withInitialValue: MotionState.atRest)
+  public let enabled = createProperty(withInitialValue: true)
   public func setState(state: MotionState) {
     _state.value = state
   }
