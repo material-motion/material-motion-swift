@@ -70,10 +70,12 @@ public protocol TransitionWithPresentation: Transition {
 
    The returned presentation controller may choose to conform to WillBeginTransition in order to
    associate reactive motion with the transition.
+
+   If nil is returned then no presentation controller will be used.
    */
   func presentationController(forPresented presented: UIViewController,
                               presenting: UIViewController?,
-                              source: UIViewController) -> UIPresentationController
+                              source: UIViewController) -> UIPresentationController?
 }
 
 /**
