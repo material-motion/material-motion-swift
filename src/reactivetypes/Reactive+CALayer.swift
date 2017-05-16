@@ -153,8 +153,10 @@ extension Reactive where O: CALayer {
 
         let animation = info.animation.copy() as! CAPropertyAnimation
 
-        animation.duration *= TimeInterval(simulatorDragCoefficient())
-        animation.beginTime *= TimeInterval(simulatorDragCoefficient())
+        if !(animation is CASpringAnimation) {
+          animation.duration *= TimeInterval(simulatorDragCoefficient())
+          animation.beginTime *= TimeInterval(simulatorDragCoefficient())
+        }
 
         if layer.speed == 0, let lastTimelineState = layer.lastTimelineState {
           animation.beginTime = TimeInterval(lastTimelineState.beginTime) + animation.beginTime
