@@ -249,9 +249,9 @@ private final class TransitioningDelegate: NSObject, UIViewControllerTransitioni
     if let presentationController = presentationController {
       return presentationController
     }
-    presentationController = type(of: transitionWithPresentation).presentationController(forPresented: presented,
-                                                                                         presenting: presenting,
-                                                                                         source: source)
+    presentationController = transitionWithPresentation.presentationController(forPresented: presented,
+                                                                               presenting: presenting,
+                                                                               source: source)
     return presentationController
   }
 }
