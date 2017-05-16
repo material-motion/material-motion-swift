@@ -111,6 +111,14 @@ public final class TransitionContext: NSObject {
     self.transition = transition
 
     super.init()
+
+    while let fallbackTransition = self.transition as? TransitionWithFallback {
+      let fallback = fallbackTransition.fallbackTansition(withContext: self)
+      if fallback === self.transition {
+        break
+      }
+      self.transition = fallback
+    }
   }
 
   fileprivate let initialDirection: TransitionDirection

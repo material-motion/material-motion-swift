@@ -21,13 +21,27 @@ import UIKit
  A transition is responsible for describing the motion that will occur during a UIViewController
  transition.
  */
-public protocol Transition {
+public protocol Transition: class {
   /**
    Invoked on initiation of a view controller transition.
 
    Must return a list of streams that will determine when this transition comes to rest.
    */
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful]
+}
+
+/**
+ A transition can return an alternative fallback transition instance.
+ */
+public protocol TransitionWithFallback: Transition {
+  /**
+   Invoked before the transition begins.
+
+   If the returned instance also conforms to TransitionWithFallback, then the returned instance's
+   fallback will be queried. This repeats until a returned instance does not conform to
+   TransitionWithFallback or it returns self.
+   */
+  func fallbackTansition(withContext ctx: TransitionContext) -> Transition
 }
 
 /**
