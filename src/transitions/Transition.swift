@@ -63,6 +63,17 @@ public protocol TransitionWithTermination: Transition {
 public protocol TransitionWithPresentation: Transition {
 
   /**
+   The modal presentation style this transition expects to use.
+
+   This value is queried when the transition is assigned to a view controller's
+   transitionController. The result, if any, is assigned to the view controller's
+   modalPresentationStyle property.
+
+   In order for a presentationController to be used, this method should return `.custom`.
+   */
+  func defaultModalPresentationStyle() -> UIModalPresentationStyle?
+
+  /**
    Queried before the Transition object is instantiated and only once, when the fore view controller
    is initially presented.
 
