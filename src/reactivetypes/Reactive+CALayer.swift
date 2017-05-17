@@ -37,6 +37,15 @@ extension Reactive where O: CALayer {
     }
   }
 
+  public var backgroundColor: ReactiveProperty<CGColor> {
+    let layer = _object
+    return _properties.named(#function) {
+      return createCoreAnimationProperty(initialValue: layer.backgroundColor!,
+                                         externalWrite: { layer.backgroundColor = $0 },
+                                         keyPath: "backgroundColor")
+    }
+  }
+
   public var cornerRadius: ReactiveProperty<CGFloat> {
     let layer = _object
     return _properties.named(#function) {
