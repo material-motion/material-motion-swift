@@ -111,14 +111,6 @@ public final class TransitionContext: NSObject {
     self.transition = transition
 
     super.init()
-
-    while let fallbackTransition = self.transition as? TransitionWithFallback {
-      let fallback = fallbackTransition.fallbackTansition(withContext: self)
-      if fallback === self.transition {
-        break
-      }
-      self.transition = fallback
-    }
   }
 
   fileprivate let initialDirection: TransitionDirection
@@ -181,6 +173,16 @@ extension TransitionContext {
 
     self.runtime = MotionRuntime(containerView: containerView())
     self.replicator.containerView = containerView()
+
+    // We query the fallback just before initiating the transition so that the transition context is
+    // primed with the content view and other transition-related information.
+    while let fallbackTransition = self.transition as? TransitionWithFallback {
+      let fallback = fallbackTransition.fallbackTansition(withContext: self)
+      if fallback === self.transition {
+        break
+      }
+      self.transition = fallback
+    }
 
     pokeSystemAnimations()
 
