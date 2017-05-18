@@ -123,10 +123,12 @@ class ReactivePropertyTests: XCTestCase {
 
   func testPropertiesNotReleasedWhenDereferenced() {
     let view = UIView()
-    var prop1: ReactiveProperty<Bool>? = Reactive(view).isUserInteractionEnabled
-    let objectIdentifier = ObjectIdentifier(prop1!)
 
-    prop1 = nil
+    var objectIdentifier: ObjectIdentifier!
+    autoreleasepool {
+      let prop1 = Reactive(view).isUserInteractionEnabled
+      objectIdentifier = ObjectIdentifier(prop1)
+    }
 
     let prop2 = Reactive(view).isUserInteractionEnabled
     XCTAssertTrue(objectIdentifier == ObjectIdentifier(prop2))
