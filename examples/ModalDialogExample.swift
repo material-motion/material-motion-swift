@@ -46,8 +46,6 @@ class ModalDialogViewController: UIViewController {
     super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
     transitionController.transition = ModalDialogTransition()
-    preferredContentSize = .init(width: 200, height: 200)
-    modalPresentationStyle = .overCurrentContext
   }
 
   required init?(coder aDecoder: NSCoder) {
@@ -67,7 +65,19 @@ class ModalDialogViewController: UIViewController {
   }
 }
 
-class ModalDialogTransition: SelfDismissingTransition {
+class ModalDialogTransition: SelfDismissingTransition, TransitionWithPresentation {
+
+  public func defaultModalPresentationStyle() -> UIModalPresentationStyle? {
+    return .custom
+  }
+
+  public func presentationController(forPresented presented: UIViewController,
+                                     presenting: UIViewController?,
+                                     source: UIViewController) -> UIPresentationController? {
+    return ModalDialogPresentationController(presentedViewController: presented,
+                                             presenting: presenting)
+  }
+
 
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
     let size = ctx.fore.view.frame.size
@@ -111,5 +121,20 @@ class ModalDialogTransition: SelfDismissingTransition {
     let pan = UIPanGestureRecognizer()
     fore.view.addGestureRecognizer(pan)
     dismisser.dismissWhenGestureRecognizerBegins(pan)
+  }
+}
+
+private final class ModalDialogPresentationController: UIPresentationController {
+
+  override var frameOfPresentedViewInContainerView: CGRect {
+    guard let containerView = containerView else {
+      assertionFailure("Missing container view during frame query.")
+      return .zero()
+    }
+    let size = CGSize(width: 200, height: 200)
+    return CGRect(x: containerView.bounds.midX - size.width / 2,
+                  y: containerView.bounds.midY - size.height / 2,
+                  width: size.width,
+                  height: size.height)
   }
 }
