@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import CoreGraphics
 
 extension MotionObservableConvertible {
 

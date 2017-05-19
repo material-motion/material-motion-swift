@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import UIKit
 
 /**
  A UIScrollViewDelegate implementation that exposes observable streams for the scroll view delegate

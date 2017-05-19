@@ -63,7 +63,7 @@ public final class DirectlyManipulable: NSObject, Interaction, Togglable, Statef
   public func add(to view: UIView, withRuntime runtime: MotionRuntime, constraints: NoConstraints) {
     for gestureRecognizer in [draggable.nextGestureRecognizer,
                               rotatable.nextGestureRecognizer,
-                              scalable.nextGestureRecognizer] {
+                              scalable.nextGestureRecognizer] as [UIGestureRecognizer?] {
                                 if gestureRecognizer?.delegate == nil {
                                   gestureRecognizer?.delegate = self
                                 }
@@ -73,7 +73,8 @@ public final class DirectlyManipulable: NSObject, Interaction, Togglable, Statef
     runtime.connect(enabled, to: rotatable.enabled)
     runtime.connect(enabled, to: scalable.enabled)
 
-    let anchorPointRecognizers = [rotatable.nextGestureRecognizer, scalable.nextGestureRecognizer].flatMap { $0 }
+    let gestures: [UIGestureRecognizer?] = [rotatable.nextGestureRecognizer, scalable.nextGestureRecognizer]
+    let anchorPointRecognizers = gestures.flatMap { $0 }
     let adjustsAnchorPoint = AdjustsAnchorPoint(gestureRecognizers: anchorPointRecognizers)
     runtime.add(adjustsAnchorPoint, to: view)
 
