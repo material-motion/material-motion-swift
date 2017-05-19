@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name         = "MaterialMotion"
   s.summary      = "Reactive motion driven by Core Animation."
-  s.version      = "1.3.0"
+  s.version      = "2.0.0"
   s.authors      = "The Material Motion Authors"
   s.license      = "Apache 2.0"
   s.homepage     = "https://github.com/material-motion/material-motion-swift"
