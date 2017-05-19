@@ -1,5 +1,7 @@
 # 2.0.0
 
+This major release of Material Motion focuses includes improvements to the transitioning architecture, the reactive architecture, and new features on many of the interactions.
+
 ## Breaking changes
 
 • The `IndefiniteObservable` dependency has been bumped to 4.0.0. [View the release notes](https://github.com/material-motion/indefinite-observable-swift/releases/tag/v4.0.0).
@@ -69,6 +71,14 @@ draggable.resistance.perimeter.value = someRect
 • `Tween` has new properties for creating repeating animations: `repeatCount`, `repeatDuration`, and `autoreverses`.
 
 These properties directly map to the corresponding properties in Core Animation.
+
+• `TransitionTween` has new initializer values `delayBefore` and `delayAfter`.
+
+`delayBefore` is the delay used when transitioning forward. `delayAfter` is the delay used when transitioning backward.
+
+• The gesture property for gesture-based interactions is now optional. When nil, the interaction will do nothing.
+
+This is primarily useful when building transitions that have optional interactivity.
 
 ### Transitions
 
