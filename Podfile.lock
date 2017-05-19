@@ -1,10 +1,10 @@
 PODS:
-  - CatalogByConvention (2.0.0)
-  - IndefiniteObservable (3.1.0):
-    - IndefiniteObservable/lib (= 3.1.0)
-  - IndefiniteObservable/lib (3.1.0)
-  - MaterialMotion (1.3.0):
-    - IndefiniteObservable (~> 3.0)
+  - CatalogByConvention (2.1.0)
+  - IndefiniteObservable (4.0.0):
+    - IndefiniteObservable/lib (= 4.0.0)
+  - IndefiniteObservable/lib (4.0.0)
+  - MaterialMotion (2.0.0):
+    - IndefiniteObservable (~> 4.0)
 
 DEPENDENCIES:
   - CatalogByConvention
@@ -15,10 +15,10 @@ EXTERNAL SOURCES:
     :path: "./"
 
 SPEC CHECKSUMS:
-  CatalogByConvention: be55c2263132e4f9f59299ac8a528ee8715b3275
-  IndefiniteObservable: 2789d61f487d8d37fa2b9c3153cc44d4447ff744
-  MaterialMotion: b5040104b109cf9680a2c4a77296c429dab2c376
+  CatalogByConvention: ef0913973b86b4234bcadf22aa84037c4a47cbbd
+  IndefiniteObservable: 1ee6af37efa8763a222cc6d414cd125e26ed9b6a
+  MaterialMotion: a412b109cfe4ab7b1fd956409a5da9a3635d3dce
 
 PODFILE CHECKSUM: f503265a0d60526a0d28c96dd4bdcfb40fb562fc
 
-COCOAPODS: 1.2.0
+COCOAPODS: 1.2.1

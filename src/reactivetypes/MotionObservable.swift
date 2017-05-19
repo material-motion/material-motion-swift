@@ -113,28 +113,6 @@ public typealias VisualizationChannel = (UIView) -> Void
  Throughout this documentation we will treat the words "observable" and "stream" as synonyms.
  */
 public final class MotionObservable<T>: IndefiniteObservable<MotionObserver<T>> {
-
-  /**
-   Creates a new motion observable with the provided metadata and connect function.
-
-   The connect function will be invoked each time this observable is subscribed to.
-   */
-  public init(_ metadata: Metadata, connect: @escaping Connect<MotionObserver<T>>) {
-    self.metadata = metadata
-    super.init(connect)
-  }
-
-  /**
-   The provided name is used to create this observable's Metadata information.
-   */
-  public convenience init(_ name: String? = nil, args: [Any]? = nil, connect: @escaping Connect<MotionObserver<T>>) {
-    self.init(Metadata(name, args: args), connect: connect)
-  }
-
-  /**
-   The metadata describing this stream.
-   */
-  public let metadata: Metadata
 }
 
 /**
@@ -165,7 +143,7 @@ public final class MotionObserver<T>: Observer {
 /**
  A MotionObservableConvertible has a canonical MotionObservable that it can return.
  */
-public protocol MotionObservableConvertible: Inspectable {
+public protocol MotionObservableConvertible {
   associatedtype T
 
   /**
@@ -184,6 +162,7 @@ extension MotionObservableConvertible {
   /**
    Sugar for subscribing a MotionObserver.
    */
+  @discardableResult
   public func subscribe(next: @escaping NextChannel<T>,
                         coreAnimation: @escaping CoreAnimationChannel,
                         visualization: @escaping VisualizationChannel) -> Subscription {
@@ -196,6 +175,7 @@ extension MotionObservableConvertible {
    Forwards all channel values to the provided observer except next, which is provided as an
    argument.
    */
+  @discardableResult
   public func subscribeAndForward<U>(to observer: MotionObserver<U>, next: @escaping NextChannel<T>) -> Subscription {
     return subscribe(next: next,
                      coreAnimation: { event in observer.coreAnimation?(event) },
@@ -205,6 +185,7 @@ extension MotionObservableConvertible {
   /**
    Forwards all channel values to the provided observer.
    */
+  @discardableResult
   public func subscribeAndForward(to observer: MotionObserver<T>) -> Subscription {
     return asStream().subscribe(observer: observer)
   }
@@ -212,6 +193,7 @@ extension MotionObservableConvertible {
   /**
    Subscribes only to the value channel of the stream.
    */
+  @discardableResult
   public func subscribeToValue(_ next: @escaping NextChannel<T>) -> Subscription {
     return asStream().subscribe(observer: MotionObserver<T>(next: next))
   }

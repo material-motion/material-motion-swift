@@ -30,13 +30,15 @@ import UIKit
 
  CGFloat constraints may be applied to this interaction.
  */
-public final class Rotatable: Gesturable<UIRotationGestureRecognizer>, Interaction, Togglable, Stateful {
+public final class Rotatable: Gesturable<UIRotationGestureRecognizer>, Interaction, Togglable, Manipulation {
   public func add(to view: UIView,
                   withRuntime runtime: MotionRuntime,
                   constraints applyConstraints: ConstraintApplicator<CGFloat>? = nil) {
     let reactiveView = runtime.get(view)
-    let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView)
-    let rotation = reactiveView.reactiveLayer.rotation
+    guard let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView) else {
+      return
+    }
+    let rotation = reactiveView.layer.rotation
 
     runtime.connect(enabled, to: ReactiveProperty(initialValue: gestureRecognizer.isEnabled) { enabled in
       gestureRecognizer.isEnabled = enabled

@@ -27,7 +27,7 @@ extension MotionObservableConvertible where T: UIPanGestureRecognizer {
     var cachedInitialPosition: CGPoint?
     var lastInitialPosition: CGPoint?
 
-    return MotionObservable(metadata.createChild(Metadata(#function, type: .constraint, args: [initialPosition, view]))) { observer in
+    return MotionObservable { observer in
       let initialPositionSubscription = initialPosition.subscribeToValue { lastInitialPosition = $0 }
 
       let upstreamSubscription = self.subscribeAndForward(to: observer) { value in

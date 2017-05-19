@@ -33,7 +33,26 @@ import UIKit
  - `{ $0.xLocked(to: somePosition) }`
  - `{ $0.yLocked(to: somePosition) }`
  */
-public final class Draggable: Gesturable<UIPanGestureRecognizer>, Interaction, Togglable, Stateful {
+public final class Draggable: Gesturable<UIPanGestureRecognizer>, Interaction, Togglable, Manipulation {
+
+  /**
+   When a non-null resistance perimiter is provided, dragging beyond the perimeter will result in
+   resistance being applied to the position until the max length is reached.
+   */
+  public let resistance = (
+    /**
+     The region beyond which resistance should take effect, in absolute coordinates.
+
+     If .null, no resistance will be applied to the drag position.
+     */
+    perimeter: createProperty(withInitialValue: CGRect.null),
+
+    /**
+     The maximum distance the drag position is able to move beyond the perimeter.
+     */
+    maxLength: createProperty(withInitialValue: 48)
+  )
+
   /**
    A sub-interaction for writing the next gesture recognizer's final velocity to a property.
 
@@ -47,8 +66,10 @@ public final class Draggable: Gesturable<UIPanGestureRecognizer>, Interaction, T
                   withRuntime runtime: MotionRuntime,
                   constraints applyConstraints: ConstraintApplicator<CGPoint>? = nil) {
     let reactiveView = runtime.get(view)
-    let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView)
-    let position = reactiveView.reactiveLayer.position
+    guard let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView) else {
+      return
+    }
+    let position = reactiveView.layer.position
 
     runtime.connect(enabled, to: ReactiveProperty(initialValue: gestureRecognizer.isEnabled) { enabled in
       gestureRecognizer.isEnabled = enabled
@@ -61,6 +82,8 @@ public final class Draggable: Gesturable<UIPanGestureRecognizer>, Interaction, T
     if let applyConstraints = applyConstraints {
       stream = applyConstraints(stream)
     }
+    stream = stream.rubberBanded(outsideOf: resistance.perimeter,
+                                 maxLength: resistance.maxLength)
     runtime.connect(stream, to: position)
   }
 }
@@ -75,17 +98,20 @@ public final class Draggable: Gesturable<UIPanGestureRecognizer>, Interaction, T
  CGPoint constraints may be applied to this interaction.
  */
 public final class DraggableFinalVelocity: Interaction {
-  fileprivate init(gestureRecognizer: UIPanGestureRecognizer) {
+  fileprivate init(gestureRecognizer: UIPanGestureRecognizer?) {
     self.gestureRecognizer = gestureRecognizer
   }
 
   public func add(to target: ReactiveProperty<CGPoint>,
                   withRuntime runtime: MotionRuntime,
                   constraints applyConstraints: ConstraintApplicator<CGPoint>? = nil) {
+    guard let gestureRecognizer = gestureRecognizer else {
+      return
+    }
     let gesture = runtime.get(gestureRecognizer)
     runtime.connect(gesture.velocityOnReleaseStream(in: runtime.containerView),
                     to: target)
   }
 
-  let gestureRecognizer: UIPanGestureRecognizer
+  let gestureRecognizer: UIPanGestureRecognizer?
 }

@@ -85,32 +85,30 @@ public final class TransitionContext: NSObject {
   public let fore: UIViewController
 
   /** The set of gesture recognizers associated with this transition. */
-  public var gestureRecognizers: Set<UIGestureRecognizer> {
-    get {
-      return dismisser.gestureRecognizers
-    }
-  }
+  public let gestureRecognizers: Set<UIGestureRecognizer>
 
   /** The runtime to which motion should be registered. */
   fileprivate var runtime: MotionRuntime!
 
+  fileprivate let presentationController: UIPresentationController?
+
   weak var delegate: TransitionDelegate?
 
-  init(transitionType: Transition.Type,
+  init(transition: Transition,
        direction: TransitionDirection,
        back: UIViewController,
        fore: UIViewController,
-       dismisser: ViewControllerDismisser) {
-    self.direction = createProperty("Transition.direction", withInitialValue: direction)
+       gestureRecognizers: Set<UIGestureRecognizer>,
+       presentationController: UIPresentationController?) {
+    self.direction = createProperty(withInitialValue: direction)
     self.initialDirection = direction
     self.back = back
     self.fore = fore
-    self.dismisser = dismisser
+    self.gestureRecognizers = gestureRecognizers
     self.window = TransitionTimeWindow(duration: TransitionContext.defaultDuration)
+    self.presentationController = presentationController
 
-    // TODO: Create a Timeline.
-
-    self.transition = transitionType.init()
+    self.transition = transition
 
     super.init()
   }
@@ -118,8 +116,9 @@ public final class TransitionContext: NSObject {
   fileprivate let initialDirection: TransitionDirection
   fileprivate var transition: Transition!
   fileprivate var context: UIViewControllerContextTransitioning!
-  fileprivate let dismisser: ViewControllerDismisser
   fileprivate var didRegisterTerminator = false
+  fileprivate var interactiveSubscription: Subscription?
+  fileprivate var isBeingManipulated = false
 }
 
 extension TransitionContext: UIViewControllerAnimatedTransitioning {
@@ -175,9 +174,72 @@ extension TransitionContext {
     self.runtime = MotionRuntime(containerView: containerView())
     self.replicator.containerView = containerView()
 
-    let terminators = transition.willBeginTransition(withContext: self, runtime: self.runtime)
+    // We query the fallback just before initiating the transition so that the transition context is
+    // primed with the content view and other transition-related information.
+    while let fallbackTransition = self.transition as? TransitionWithFallback {
+      let fallback = fallbackTransition.fallbackTansition(withContext: self)
+      if fallback === self.transition {
+        break
+      }
+      self.transition = fallback
+    }
+
+    pokeSystemAnimations()
+
+    var terminators = transition.willBeginTransition(withContext: self, runtime: self.runtime)
+
+    if let presentationController = presentationController as? Transition {
+      terminators.append(contentsOf: presentationController.willBeginTransition(withContext: self,
+                                                                                runtime: self.runtime))
+    }
+
     runtime.whenAllAtRest(terminators) { [weak self] in
       self?.terminate()
+    }
+
+    observeInteractiveState()
+  }
+
+  // UIKit transitions will not animate any of the system animations (status bar changes, notably)
+  // unless we have at least one implicit UIView animation. Material Motion doesn't use implicit
+  // animations out of the box, so to ensure that system animations still occur we create an
+  // invisible throwaway view and apply an animation to it.
+  private func pokeSystemAnimations() {
+    let throwawayView = UIView()
+    containerView().addSubview(throwawayView)
+    UIView.animate(withDuration: transitionDuration(using: context), animations: {
+      throwawayView.frame = throwawayView.frame.offsetBy(dx: 1, dy: 0)
+    }, completion: { didComplete in
+      throwawayView.removeFromSuperview()
+    })
+  }
+
+  // UIKit view controller transitions are either animated or interactive and we must inform UIKit
+  // when this state changes. Certain system animations (status bar) will not be initiated until
+  // interactivity has completed. We consider an "interactive transition" to be one that has one or
+  // more active Manipulation types.
+  private func observeInteractiveState() {
+    interactiveSubscription = runtime.isBeingManipulated.dedupe().subscribeToValue { [weak self] isBeingManipulated in
+      guard let strongSelf = self else {
+        return
+      }
+      strongSelf.isBeingManipulated = isBeingManipulated
+
+      // Becoming interactive
+      if !strongSelf.context.isInteractive && isBeingManipulated {
+        if #available(iOS 10.0, *) {
+          strongSelf.context.pauseInteractiveTransition()
+        }
+
+      // Becoming non-interactive
+      } else if strongSelf.context.isInteractive && !isBeingManipulated {
+        let completedInOriginalDirection = strongSelf.direction.value == strongSelf.initialDirection
+        if completedInOriginalDirection {
+          strongSelf.context.finishInteractiveTransition()
+        } else {
+          strongSelf.context.cancelInteractiveTransition()
+        }
+      }
     }
   }
 
@@ -188,14 +250,20 @@ extension TransitionContext {
     // UIKit container view controllers will replay their transition animation if the transition
     // percentage is exactly 0 or 1, so we fake being super close to these values in order to avoid
     // this flickering animation.
-    if completedInOriginalDirection {
-      context.updateInteractiveTransition(0.999)
-      context.finishInteractiveTransition()
-    } else {
-      context.updateInteractiveTransition(0.001)
-      context.cancelInteractiveTransition()
+    if context.isInteractive {
+      if completedInOriginalDirection {
+        context.updateInteractiveTransition(0.999)
+        context.finishInteractiveTransition()
+      } else {
+        context.updateInteractiveTransition(0.001)
+        context.cancelInteractiveTransition()
+      }
     }
     context.completeTransition(completedInOriginalDirection)
+
+    if let transitionWithTermination = transition as? TransitionWithTermination {
+      transitionWithTermination.didEndTransition(withContext: self, runtime: runtime)
+    }
 
     runtime = nil
     transition = nil

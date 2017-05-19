@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import CoreGraphics
 
 extension MotionObservableConvertible {
 
@@ -22,6 +23,18 @@ extension MotionObservableConvertible {
    Emits a string representation of the incoming value.
    */
   public func toString() -> MotionObservable<String> {
-    return _map(#function) { String(describing: $0) }
+    return _map { String(describing: $0) }
+  }
+}
+
+extension MotionObservableConvertible where T == CGFloat {
+
+  /**
+   Emits a string representation of the incoming value.
+
+   The incoming value may optionally be formatted according to the provided format string.
+   */
+  public func toString(format: String) -> MotionObservable<String> {
+    return _map { String(format: format, $0) }
   }
 }

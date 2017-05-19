@@ -165,7 +165,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 
     super.init(nibName: nil, bundle: nil)
 
-    transitionController.transitionType = PushBackTransition.self
+    transitionController.transition = PushBackTransition()
   }
 
   required init?(coder aDecoder: NSCoder) {
@@ -202,11 +202,10 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 
     view.addSubview(collectionView)
 
-    let dismisser = transitionController.dismisser
-    dismisser.disableSimultaneousRecognition(of: collectionView.panGestureRecognizer)
+    transitionController.disableSimultaneousRecognition(of: collectionView.panGestureRecognizer)
 
     for gesture in [UIPanGestureRecognizer(), UIPinchGestureRecognizer(), UIRotationGestureRecognizer()] {
-      dismisser.dismissWhenGestureRecognizerBegins(gesture)
+      transitionController.dismissWhenGestureRecognizerBegins(gesture)
       view.addGestureRecognizer(gesture)
     }
   }
@@ -225,6 +224,10 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     let photoIndex = album.photos.index { $0.image == currentPhoto.image }!
     let indexPath = IndexPath(item: photoIndex, section: 0)
     collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
+  }
+
+  override var preferredStatusBarStyle: UIStatusBarStyle {
+    return .lightContent
   }
 
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -255,8 +258,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 
 private class PushBackTransition: Transition {
 
-  required init() {}
-
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
     let foreVC = ctx.fore as! PhotoAlbumViewController
     let foreImageView = (foreVC.collectionView.cellForItem(at: foreVC.indexPathForCurrentPhoto()) as! PhotoCollectionViewCell).imageView
@@ -282,7 +283,7 @@ private class PushBackTransition: Transition {
 
     let size = TransitionSpring(back: contextView.bounds.size, fore: fitSize, direction: ctx.direction)
     runtime.toggle(size, inReactionTo: draggable)
-    runtime.add(size, to: runtime.get(replicaView).reactiveLayer.size)
+    runtime.add(size, to: runtime.get(replicaView).layer.size)
 
     let opacity = TransitionSpring<CGFloat>(back: 0, fore: 1, direction: ctx.direction)
     runtime.add(opacity, to: runtime.get(ctx.fore.view.layer).opacity)

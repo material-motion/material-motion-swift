@@ -35,7 +35,7 @@ public final class Timeline {
    Unpausing a timeline should allow all associated interactions to continue progressing in time on
    their own, starting from timeOffset.
    */
-  public let paused = createProperty("Timeline.paused", withInitialValue: false)
+  public let paused = createProperty(withInitialValue: false)
 
   /**
    The starting time for all interactions associated with this timeline.
@@ -47,9 +47,7 @@ public final class Timeline {
 
    Only affects associated interactions if the timeline is paused.
    */
-  public let timeOffset = createProperty("Timeline.timeOffset", withInitialValue: 0)
-
-  public let metadata = Metadata("Timeline")
+  public let timeOffset = createProperty(withInitialValue: 0)
 }
 
 extension Timeline: MotionObservableConvertible {
@@ -80,7 +78,7 @@ extension Timeline: MotionObservableConvertible {
    Returns a stream representation of the Timeline.
    */
   public func asStream() -> MotionObservable<Snapshot> {
-    return MotionObservable(metadata) { observer in
+    return MotionObservable { observer in
       var paused = self.paused.value
       var timeOffset = self.timeOffset.value
 

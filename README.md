@@ -9,6 +9,7 @@
 [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/MaterialMotion.svg)](https://cocoapods.org/pods/MaterialMotion)
 [![Platform](https://img.shields.io/cocoapods/p/MaterialMotion.svg)](http://cocoadocs.org/docsets/MaterialMotion)
 [![Docs](https://img.shields.io/cocoapods/metrics/doc-percent/MaterialMotion.svg)](http://cocoadocs.org/docsets/MaterialMotion)
+[![Chat](https://img.shields.io/discord/198544450366996480.svg)](https://discord.gg/material-motion)
 
 This library includes a variety of ready-to-use **interactions**. Interactions are registered to an
 instance of `MotionRuntime`:

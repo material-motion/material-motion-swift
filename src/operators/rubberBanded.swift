@@ -23,7 +23,7 @@ extension MotionObservableConvertible where T == CGFloat {
    Applies resistance to values that fall outside of the given range.
    */
   public func rubberBanded(below: CGFloat, above: CGFloat, maxLength: CGFloat) -> MotionObservable<CGFloat> {
-    return _map(#function, args: [below, above, maxLength]) {
+    return _map {
       return rubberBand(value: $0, min: below, max: above, bandLength: maxLength)
     }
   }
@@ -33,11 +33,63 @@ extension MotionObservableConvertible where T == CGPoint {
 
   /**
    Applies resistance to values that fall outside of the given range.
+
+   Does not modify the value if CGRect is .null.
    */
   public func rubberBanded(outsideOf rect: CGRect, maxLength: CGFloat) -> MotionObservable<CGPoint> {
-    return _map(#function, args: [rect, maxLength]) {
+    return _map {
+      guard rect != .null else {
+        return $0
+      }
+
       return CGPoint(x: rubberBand(value: $0.x, min: rect.minX, max: rect.maxX, bandLength: maxLength),
                      y: rubberBand(value: $0.y, min: rect.minY, max: rect.maxY, bandLength: maxLength))
+    }
+  }
+
+  /**
+   Applies resistance to values that fall outside of the given range.
+
+   Does not modify the value if CGRect is .null.
+   */
+  public func rubberBanded<O1, O2>(outsideOf rectStream: O1, maxLength maxLengthStream: O2) -> MotionObservable<CGPoint> where O1: MotionObservableConvertible, O1.T == CGRect, O2: MotionObservableConvertible, O2.T == CGFloat {
+    var lastRect: CGRect?
+    var lastMaxLength: CGFloat?
+    var lastValue: CGPoint?
+    return MotionObservable { observer in
+
+      let checkAndEmit = {
+        guard let rect = lastRect, let maxLength = lastMaxLength, let value = lastValue else {
+          return
+        }
+        guard lastRect != .null else {
+          observer.next(value)
+          return
+        }
+        observer.next(CGPoint(x: rubberBand(value: value.x, min: rect.minX, max: rect.maxX, bandLength: maxLength),
+                              y: rubberBand(value: value.y, min: rect.minY, max: rect.maxY, bandLength: maxLength)))
+      }
+
+      let rectSubscription = rectStream.subscribeToValue { rect in
+        lastRect = rect
+        checkAndEmit()
+      }
+
+      let maxLengthSubscription = maxLengthStream.subscribeToValue { maxLength in
+        lastMaxLength = maxLength
+        checkAndEmit()
+      }
+
+      let upstreamSubscription = self.subscribeAndForward(to: observer) { value in
+        lastValue = value
+        checkAndEmit()
+      }
+
+      return {
+        rectSubscription.unsubscribe()
+        maxLengthSubscription.unsubscribe()
+        upstreamSubscription.unsubscribe()
+      }
     }
   }
 }

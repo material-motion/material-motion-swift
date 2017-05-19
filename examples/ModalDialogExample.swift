@@ -45,9 +45,7 @@ class ModalDialogViewController: UIViewController {
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
     super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
-    transitionController.transitionType = ModalDialogTransition.self
-
-    modalPresentationStyle = .overCurrentContext
+    transitionController.transition = ModalDialogTransition()
   }
 
   required init?(coder aDecoder: NSCoder) {
@@ -64,44 +62,48 @@ class ModalDialogViewController: UIViewController {
     view.layer.shadowRadius = 5
     view.layer.shadowOpacity = 1
     view.layer.shadowOffset = .init(width: 0, height: 2)
-
-    preferredContentSize = .init(width: 200, height: 200)
   }
 }
 
-class ModalDialogTransition: SelfDismissingTransition {
+class ModalDialogTransition: SelfDismissingTransition, TransitionWithPresentation {
 
-  required init() {}
+  public func defaultModalPresentationStyle() -> UIModalPresentationStyle? {
+    return .custom
+  }
+
+  public func presentationController(forPresented presented: UIViewController,
+                                     presenting: UIViewController?,
+                                     source: UIViewController) -> UIPresentationController? {
+    return ModalDialogPresentationController(presentedViewController: presented,
+                                             presenting: presenting)
+  }
+
 
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
-    let size = ctx.fore.preferredContentSize
-
-    if ctx.direction == .forward {
-      ctx.fore.view.bounds = CGRect(origin: .zero, size: size)
-    }
-
+    let size = ctx.fore.view.frame.size
     let bounds = ctx.containerView().bounds
     let backPosition = CGPoint(x: bounds.midX, y: bounds.maxY + size.height * 3 / 4)
-    let forePosition = CGPoint(x: bounds.midX, y: bounds.midY)
+    let forePosition = ctx.fore.view.layer.position
 
     let reactiveForeLayer = runtime.get(ctx.fore.view.layer)
     let position = reactiveForeLayer.position
 
     let draggable = Draggable(withFirstGestureIn: ctx.gestureRecognizers)
 
-    let gesture = runtime.get(draggable.nextGestureRecognizer)
     let centerY = ctx.containerView().bounds.height / 2.0
 
     runtime.add(ChangeDirection(withVelocityOf: draggable.nextGestureRecognizer, whenNegative: .forward),
                 to: ctx.direction)
 
-    runtime.connect(gesture
-      .velocityOnReleaseStream()
-      .y()
-      .thresholdRange(min: -100, max: 100)
-      .rewrite([.within: position.y().threshold(centerY).rewrite([.below: .forward,
-                                                                  .above: .backward])]),
-                to: ctx.direction)
+    if let gesture = draggable.nextGestureRecognizer {
+      runtime.connect(runtime.get(gesture)
+        .velocityOnReleaseStream()
+        .y()
+        .thresholdRange(min: -100, max: 100)
+        .rewrite([.within: position.y().threshold(centerY).rewrite([.below: .forward,
+                                                                    .above: .backward])]),
+                  to: ctx.direction)
+    }
 
     let movement = TransitionSpring(back: backPosition,
                                     fore: forePosition,
@@ -112,12 +114,27 @@ class ModalDialogTransition: SelfDismissingTransition {
     return [tossable.spring]
   }
 
-  static func willPresent(fore: UIViewController, dismisser: ViewControllerDismisser) {
+  func willPresent(fore: UIViewController, dismisser: ViewControllerDismisser) {
     let tap = UITapGestureRecognizer()
     fore.view.addGestureRecognizer(tap)
     dismisser.dismissWhenGestureRecognizerBegins(tap)
     let pan = UIPanGestureRecognizer()
     fore.view.addGestureRecognizer(pan)
     dismisser.dismissWhenGestureRecognizerBegins(pan)
+  }
+}
+
+private final class ModalDialogPresentationController: UIPresentationController {
+
+  override var frameOfPresentedViewInContainerView: CGRect {
+    guard let containerView = containerView else {
+      assertionFailure("Missing container view during frame query.")
+      return .zero()
+    }
+    let size = CGSize(width: 200, height: 200)
+    return CGRect(x: containerView.bounds.midX - size.width / 2,
+                  y: containerView.bounds.midY - size.height / 2,
+                  width: size.width,
+                  height: size.height)
   }
 }

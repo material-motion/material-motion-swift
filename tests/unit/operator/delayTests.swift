@@ -42,7 +42,7 @@ class delayTests: XCTestCase {
 
     var hasReceived = false
     let didReceiveValue = expectation(description: "Did receive value")
-    let subscription = property.delay(by: .milliseconds(500)).subscribeToValue { value in
+    let subscription = property.delay(by: .milliseconds(10)).subscribeToValue { value in
       XCTAssertEqual(value, 0)
       didReceiveValue.fulfill()
       hasReceived = true
@@ -50,7 +50,7 @@ class delayTests: XCTestCase {
 
     XCTAssertFalse(hasReceived)
 
-    waitForExpectations(timeout: 0.5)
+    waitForExpectations(timeout: 0.1)
 
     subscription.unsubscribe()
   }
@@ -58,9 +58,10 @@ class delayTests: XCTestCase {
   func testValueIsNotReceivedWithoutSubscription() {
     let property = createProperty()
 
-    let _ = property.delay(by: 0.01).subscribeToValue { value in
+    let subscription = property.delay(by: 0.01).subscribeToValue { value in
       assertionFailure("Should not be received.")
     }
+    subscription.unsubscribe()
 
     let delay = expectation(description: "Delay")
     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(0.05 * 1000))) {

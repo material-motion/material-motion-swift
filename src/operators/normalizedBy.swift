@@ -23,7 +23,7 @@ extension MotionObservableConvertible where T == CGFloat {
    Emits the incoming value / amount.
    */
   public func normalized(by amount: CGFloat) -> MotionObservable<CGFloat> {
-    return _map(#function, args: [amount]) {
+    return _map {
       $0 / amount
     }
   }
@@ -35,7 +35,7 @@ extension MotionObservableConvertible where T == CGPoint {
    Emits the incoming value / amount.
    */
   public func normalized(by amount: CGSize) -> MotionObservable<CGPoint> {
-    return _map(#function, args: [amount]) {
+    return _map {
       return CGPoint(x: $0.x / amount.width,
                      y: $0.y / amount.height)
     }

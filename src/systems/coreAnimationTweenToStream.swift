@@ -35,15 +35,15 @@ public func coreAnimation<T>(_ tween: TweenShadow<T>) -> MotionObservable<T> whe
 }
 
 private func streamFromTween<T>(_ tween: TweenShadow<T>, configureEvent: @escaping (CoreAnimationChannelAdd) -> CoreAnimationChannelAdd) -> MotionObservable<T> {
-  return MotionObservable(Metadata("Core Animation Tween", args: [tween])) { observer in
+  return MotionObservable { observer in
 
     var animationKeys: [String] = []
     var activeAnimations = Set<String>()
     var lastValues: [T]?
-    var lastKeyPositions: [CGFloat]?
+    var lastOffsets: [CGFloat]?
 
     let checkAndEmit = {
-      guard let values = lastValues, let keyPositions = lastKeyPositions, tween.enabled.value else {
+      guard let values = lastValues, let offsets = lastOffsets, tween.enabled.value else {
         return
       }
       let animation: CAPropertyAnimation
@@ -51,7 +51,7 @@ private func streamFromTween<T>(_ tween: TweenShadow<T>, configureEvent: @escapi
       if values.count > 1 {
         let keyframeAnimation = CAKeyframeAnimation()
         keyframeAnimation.values = values
-        keyframeAnimation.keyTimes = keyPositions.map { NSNumber(value: Double($0)) }
+        keyframeAnimation.keyTimes = offsets.map { NSNumber(value: Double($0)) }
         keyframeAnimation.timingFunctions = timingFunctions.value
         animation = keyframeAnimation
       } else {
@@ -66,7 +66,13 @@ private func streamFromTween<T>(_ tween: TweenShadow<T>, configureEvent: @escapi
         return
       }
       animation.beginTime = CFTimeInterval(tween.delay.value)
+      if tween.delay.value > 0 {
+        animation.fillMode = kCAFillModeBackwards
+      }
       animation.duration = CFTimeInterval(duration)
+      animation.repeatCount = Float(tween.repeatCount.value)
+      animation.repeatDuration = CFTimeInterval(tween.repeatDuration.value)
+      animation.autoreverses = tween.autoreverses.value
 
       let key = NSUUID().uuidString
       activeAnimations.insert(key)
@@ -105,8 +111,8 @@ private func streamFromTween<T>(_ tween: TweenShadow<T>, configureEvent: @escapi
       checkAndEmit()
     }
 
-    let keyPositionsSubscription = tween.keyPositions.subscribeToValue { keyPositions in
-      lastKeyPositions = keyPositions
+    let offsetsSubscription = tween.offsets.subscribeToValue { offsets in
+      lastOffsets = offsets
       checkAndEmit()
     }
 
@@ -116,10 +122,10 @@ private func streamFromTween<T>(_ tween: TweenShadow<T>, configureEvent: @escapi
       activeAnimations.removeAll()
 
       lastValues = nil
-      lastKeyPositions = nil
+      lastOffsets = nil
       activeSubscription.unsubscribe()
       valuesSubscription.unsubscribe()
-      keyPositionsSubscription.unsubscribe()
+      offsetsSubscription.unsubscribe()
     }
   }
 }

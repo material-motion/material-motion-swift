@@ -23,7 +23,7 @@ extension MotionObservableConvertible where T == CGFloat {
    Emits the incoming value + amount.
    */
   public func offset(by amount: CGFloat) -> MotionObservable<CGFloat> {
-    return _map(#function, args: [amount]) {
+    return _map {
       $0 + amount
     }
   }

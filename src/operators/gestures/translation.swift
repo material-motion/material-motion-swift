@@ -20,7 +20,7 @@ import UIKit
 extension MotionObservableConvertible where T: UIPanGestureRecognizer {
 
   public func translation(in view: UIView) -> MotionObservable<CGPoint> {
-    return _map(#function, args: [view]) {
+    return _map {
       return $0.translation(in: view)
     }
   }

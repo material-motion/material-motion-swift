@@ -1,3 +1,331 @@
+# 2.0.0
+
+This major release of Material Motion focuses includes improvements to the transitioning architecture, the reactive architecture, and new features on many of the interactions.
+
+## Breaking changes
+
+• The `IndefiniteObservable` dependency has been bumped to 4.0.0. [View the release notes](https://github.com/material-motion/indefinite-observable-swift/releases/tag/v4.0.0).
+
+• The `Metadata` and `Inspectable` types have been removed from Material Motion. All related APIs have been simplified accordingly.
+
+• The `MotionRuntime.toGraphViz` API has been removed. There is no replacement API.
+
+• `Tossable`'s `init(system:draggable:)` has been removed. Use `init(spring:draggable:)` instead.
+
+• `SelfDismissingTransition`'s `willPresent(fore:dismisser:)` is no longer a static method. Implement the method as an instance method instead.
+
+• `Transition` is now a class protocol. This means that only object-types can conform to `Transition`.
+
+• `TransitionController`'s `dismisser` has been removed. All methods have been moved directly to the TransitionController object.
+
+• `Tween`'s `keyPositions` has been removed. Use `offsets` instead.
+
+• `MotionRuntime`'s `interactions(for:filter:)` has been removed. Use `interactions(ofType:for:)` instead.
+
+## New features
+
+### Reactive architecture
+
+• Subscriptions no longer automatically unsubscribe when the Subscription object is released. Subscriptions will stay active for as long as the head of the stream is alive.
+
+• Reactive types are now global and shared across all instances of MotionRuntime. You can use `Reactive(object)` to fetch a cached reactive version of a supported type.
+
+• MotionRuntime now supports a `.get` for UISlider instances. This will return an Observable of the slider's value.
+
+• New operator `ignoreUntil`.
+
+• New reactive variant of operator `rubberBanded(outsideOf:maxLength:)`.
+
+• New operator for float types `toString(format:)`.
+
+• New `ReactiveScrollViewDelegate` API turns UIScrollViewDelegate events into observable streams.
+
+For example, the delegate itself is an observable on the scroll view's content offset:
+
+```swift
+let delegate = ReactiveScrollViewDelegate()
+scrollView.delegate = delegate
+delegate.x().subscribeToValue { contentOffset in
+  print(contentOffset)
+}
+```
+
+• New `ReactiveButtonTarget` API for building reactive UIButtons.
+
+• `MotionRuntime` has a new API `start(_:when:is:)` for starting interactions when another interaction reaches a given state.
+
+• `MotionRuntime` has a new `isBeingManipulated` stream. This stream emits true when any `Manipulable` interaction becomes active and false when all `Manipulable` interactions come to rest.
+
+### Interactions
+
+• `MotionRuntime` now has a new `isBeingManipulated` property that indicates whether any manipulation interaction is active.
+
+Any interaction that conforms to the new `Manipulation` type will affect the runtime's `isBeingManipulated` property.
+
+• `Draggable` now has a `resistance` property that can be used to create drag resistance beyond a draggable region.
+
+```swift
+draggable.resistance.perimeter.value = someRect
+```
+
+• `Tween` has new properties for creating repeating animations: `repeatCount`, `repeatDuration`, and `autoreverses`.
+
+These properties directly map to the corresponding properties in Core Animation.
+
+• `TransitionTween` has new initializer values `delayBefore` and `delayAfter`.
+
+`delayBefore` is the delay used when transitioning forward. `delayAfter` is the delay used when transitioning backward.
+
+• The gesture property for gesture-based interactions is now optional. When nil, the interaction will do nothing.
+
+This is primarily useful when building transitions that have optional interactivity.
+
+### Transitions
+
+• New `TransitionWithFallback` protocol allows transitions to swap themselves out for another transition instance.
+
+• New `TransitionWithPresentation` protocol allows transitions to customize their presentation using an iOS presentation controller. See the modal dialog case study for an example of using this new functionality.
+
+• New `TransitionWithTermination` protocol allows transitions to perform cleanup logic at the end of a transition.
+
+• `TransitionContext`'s `gestureRecognizers` is now settable. This makes it possible to add arbitrary gesture recognizers to a transition.
+
+## Source changes
+
+* [Attempt to reduce the flakiness of the PropertiesNotReleasedWhenDereferenced test.](https://github.com/material-motion/material-motion-swift/commit/e0090c9c0175a1dd2cee7a20edde951faed577bf) (Jeff Verkoeyen)
+* [Move fallback calculations to later in the transition lifecycle.](https://github.com/material-motion/material-motion-swift/commit/7ae1b04bbd458c65c7c4d09152c90464ef2fd5bc) (Jeff Verkoeyen)
+* [Add a backgroundColor property to Reactive+CALayer.](https://github.com/material-motion/material-motion-swift/commit/9c40e0b8e045312a1c9b256f8fd166a86e70bb2d) (Jeff Verkoeyen)
+* [Add a defaultModalPresentationStyle API for transitions with presentation.](https://github.com/material-motion/material-motion-swift/commit/c11949ebad03e306a755325e4f27bfe517485bdf) (Jeff Verkoeyen)
+* [Allow TransitionWithPresentation to return nil for conditional presentation.](https://github.com/material-motion/material-motion-swift/commit/5a6570a1e4fe8eef29d3fcffd4d1219fdff47590) (Jeff Verkoeyen)
+* [Add support for fallback transitions.](https://github.com/material-motion/material-motion-swift/commit/12acff94e9d0070014c41dd39a7083d57dd4ff5f) (Jeff Verkoeyen)
+* [Make TransitionWithPresentation's method an instance method.](https://github.com/material-motion/material-motion-swift/commit/4ad2c55e1cc1f9b5efd50f39195b0d23085b2af4) (Jeff Verkoeyen)
+* [Don't attempt to slow down CASpringAnimation animations when slow-motion animations is enabled.](https://github.com/material-motion/material-motion-swift/commit/9d796f374bfb859f5bff1170ca2c1da407373a9d) (Jeff Verkoeyen)
+* [Add support for pre/post delay to TransitionTween.](https://github.com/material-motion/material-motion-swift/commit/c0b341672856aa7447f339688bba067e9868679d) (Jeff Verkoeyen)
+* [Also slow down the beginTime for tweens when simulator slow motion is enabled.](https://github.com/material-motion/material-motion-swift/commit/fa28ef906310d1ae6794959037d48de98339227b) (Jeff Verkoeyen)
+* [When emitting Tweens with a delay, set the fill mode to backward.](https://github.com/material-motion/material-motion-swift/commit/b3908da854352e882b6084a7939e00175d57097b) (Jeff Verkoeyen)
+* [Resolve new Xcode 8.3.2 warnings.](https://github.com/material-motion/material-motion-swift/commit/ad99804c4c0c3723e0d3ab7e6ee5a8f7581fee73) (Jeff Verkoeyen)
+* [Remove all deprecated APIs in preparation for major release.](https://github.com/material-motion/material-motion-swift/commit/715c97222ab8c73c2432f01033d1a3b12bd616b8) (Jeff Verkoeyen)
+* [Remove Metadata.](https://github.com/material-motion/material-motion-swift/commit/fddbc7e888f41e4ac0e10803c365d8116d245b57) (Jeff Verkoeyen)
+* [Rename keyPositions to offsets](https://github.com/material-motion/material-motion-swift/commit/8d73d04ff707851e639e11c48f88ec1a363a66e3) (Eric Tang)
+* [Add a reactive button target type and an initial isHighlighted stream.](https://github.com/material-motion/material-motion-swift/commit/af75058c6896195a689873eab06613a2adec2798) (Jeff Verkoeyen)
+* [Add format support to the toString operator for numerical types.](https://github.com/material-motion/material-motion-swift/commit/6c9d84da86f4d5e614c6e1b9e9cc5baed685a1be) (Jeff Verkoeyen)
+* [Add runtime.get for UISlider instances.](https://github.com/material-motion/material-motion-swift/commit/0bcd0f14adcfd4d0f5aa92bfe56647e00372cf2d) (Jeff Verkoeyen)
+* [Add reactive UILabel type with text property.](https://github.com/material-motion/material-motion-swift/commit/5bef83680ad50d7b683f7f61e923274e6996ef08) (Jeff Verkoeyen)
+* [When using a transition with presentation, use the .custom modal presentation style.](https://github.com/material-motion/material-motion-swift/commit/b0be085ca0a5474e3c27a0ba1bf1029161e28471) (Jeff Verkoeyen)
+* [Allow transition types to be instantiated and stored on the transition controller.](https://github.com/material-motion/material-motion-swift/commit/5b6149d5646e3fab1188e8e2c1714d02dc5d0ce8) (Jeff Verkoeyen)
+* [Remove the foreAlignmentEdge property from the transition controller.](https://github.com/material-motion/material-motion-swift/commit/235a3e7f3a4b78678b6e841c6e196471436555f4) (Jeff Verkoeyen)
+* [Add support for customizing transition presentation.](https://github.com/material-motion/material-motion-swift/commit/d93233e8e433592d6445da9a5bfc382d5f622f44) (Jeff Verkoeyen)
+* [Avoid excessive TransitionTween emissions when the transition direction changes.](https://github.com/material-motion/material-motion-swift/commit/33f60d7b260f3c4b9f0c8ad64230bfd68d643e71) (Jeff Verkoeyen)
+* [Added ignoreUntil and simplified slop](https://github.com/material-motion/material-motion-swift/commit/86bf12b91ee6d2f1857160a30582221a8a9c4ce7) (Eric Tang)
+* [Added unit test](https://github.com/material-motion/material-motion-swift/commit/cb8ba4ff8387d688e47f84cd3e5980ef6ab8d030) (Eric Tang)
+* [Swap params for runtime.interactions() API](https://github.com/material-motion/material-motion-swift/commit/7fe07b0f1e3d599aba8727645367df0b553df529) (Eric Tang)
+* [Fix build failure.](https://github.com/material-motion/material-motion-swift/commit/98065f2504dec4da267e6f60c7bdd3b7809b3215) (Jeff Verkoeyen)
+* [Add a ReactiveScrollViewDelegate and replace usage of the MotionRuntime in the carousel demo.](https://github.com/material-motion/material-motion-swift/commit/db2d5bc8540b282e7dcc72271db62ff3d9565071) (Jeff Verkoeyen)
+* [Mark all MotionObservable subscribe methods with @discardableResult.](https://github.com/material-motion/material-motion-swift/commit/ffc8f8c7d3557587721db5e2f1cff0d37ceee0f5) (Jeff Verkoeyen)
+* [Add a new Reactive type for querying reactive properties.](https://github.com/material-motion/material-motion-swift/commit/be0ea019c4d2db5ec63e625895f64ec73ca7b702) (Jeff Verkoeyen)
+* [Shorten the delayBy test delay.](https://github.com/material-motion/material-motion-swift/commit/67cb7b18dccce117e1a7d248e0919b4f9edb613d) (Jeff Verkoeyen)
+* [Added new start function to MotionRuntime](https://github.com/material-motion/material-motion-swift/commit/9c5010e54b8380eae6ce337408aeb1778fc39cc8) (Eric Tang)
+* [Reduce flakiness of delay test.](https://github.com/material-motion/material-motion-swift/commit/d584666c449e5a6304a22e8f2fcdcb1d66b6e56a) (Jeff Verkoeyen)
+* [Move Timeline to a timeline folder.](https://github.com/material-motion/material-motion-swift/commit/f83c027067fe0ebcc0792d69648362660bcb3279) (Jeff Verkoeyen)
+* [Bump IndefiniteObservable to 4.0 and add explicit unsubscriptions to the runtime.](https://github.com/material-motion/material-motion-swift/commit/7adfe179843218713e11001a7839144b0203124f) (Jeff Verkoeyen)
+* [Add repeat APIs to Tween](https://github.com/material-motion/material-motion-swift/commit/5022aad2777f16fcb373e2c155e1f0d47ada9a36) (Eric Tang)
+* [Change runtime.interactions API to use an ofType: argument instead of a block.](https://github.com/material-motion/material-motion-swift/commit/d6ab9d281ea15f388fe0d099686bb812df3caba8) (Jeff Verkoeyen)
+* [Add a resistance property to Draggable.](https://github.com/material-motion/material-motion-swift/commit/dbff13d9018514e67d54742cac1dd4e176ac2b30) (Jeff Verkoeyen)
+* [Add a Manipulation type and implement UIKit view controller transitioning interactivity APIs.](https://github.com/material-motion/material-motion-swift/commit/9fa2b22dabc9a7fcd7bfb9a702007db1680d8fd4) (Jeff Verkoeyen)
+* [View controllers are only interactive if at least one gesture recognizer is active.](https://github.com/material-motion/material-motion-swift/commit/a921f721ffc5c8b9cc75dc27b589eb949f5c7112) (Jeff Verkoeyen)
+* [Ensure that system animations take effect during view controller transitions.](https://github.com/material-motion/material-motion-swift/commit/9b2347005135d11a7c28a5b27af8730c6467724b) (Jeff Verkoeyen)
+* [Operators that use _map no longer transform velocity by default.](https://github.com/material-motion/material-motion-swift/commit/dab2e7de73cb8b4485b548b3ca192b9b9484db88) (Jeff Verkoeyen)
+* [When no gesture recognizer is provided to a gestural interaction that expects one, the interaction now does nothing.](https://github.com/material-motion/material-motion-swift/commit/d43a5f69cdcf1029273f8873f225845c62a994d1) (Jeff Verkoeyen)
+* [Fix build failure.](https://github.com/material-motion/material-motion-swift/commit/3e471897d3b9f2d401ba6d125b480bf1c621405e) (Jeff Verkoeyen)
+* [Add foreAlignmentEdge property to TransitionController.](https://github.com/material-motion/material-motion-swift/commit/3498a0f8e7d177e21e89fc2934c371423e79f1f2) (Jeff Verkoeyen)
+* [Deprecate transitionController.dismisser and move the APIs into TransitionController.](https://github.com/material-motion/material-motion-swift/commit/e2ad598ae466e4dfe034be751796fd96a82cb37b) (Jeff Verkoeyen)
+* [Add missing imports.](https://github.com/material-motion/material-motion-swift/commit/3f16a4d90fc842999fb23b3af7954c69bf6c64a2) (Jeff Verkoeyen)
+* [Add missing Foundation import.](https://github.com/material-motion/material-motion-swift/commit/b31c1361ca6744c0c069db98bb6c6b89e3ffbb4b) (Jeff Verkoeyen)
+* [Add Togglable conformity to Rotatable and Scalable.](https://github.com/material-motion/material-motion-swift/commit/f90e15b7d62b7f7102e7827a5a850bcbfa7a0451) (Jeff Verkoeyen)
+
+## API changes
+
+Auto-generated by running:
+
+    apidiff origin/stable release-candidate swift MaterialMotion.xcworkspace MaterialMotion
+
+### Debugging
+
+#### Inspectable
+
+*removed* protocol: `Inspectable`
+
+#### Metadata
+
+*removed* class: `Metadata`
+
+### Interactions
+
+#### Draggable
+
+*new* var: `resistance` in `Draggable`
+
+*modified* class: `Draggable`
+
+| Type of change: | Declaration |
+|---|---|
+| From: | `public final class Draggable : Gesturable<UIPanGestureRecognizer>, Interaction, Togglable, Stateful` |
+| To: | `public final class Draggable : Gesturable<UIPanGestureRecognizer>, Interaction, Togglable, Manipulation` |
+
+#### Manipulation
+
+*new* protocol: `Manipulation`
+
+#### Rotatable
+
+*modified* class: `Rotatable`
+
+| Type of change: | Declaration |
+|---|---|
+| From: | `public final class Rotatable : Gesturable<UIRotationGestureRecognizer>, Interaction, Togglable, Stateful` |
+| To: | `public final class Rotatable : Gesturable<UIRotationGestureRecognizer>, Interaction, Togglable, Manipulation` |
+
+#### Scalable
+
+*modified* class: `Scalable`
+
+| Type of change: | Declaration |
+|---|---|
+| From: | `public final class Scalable : Gesturable<UIPinchGestureRecognizer>, Interaction, Togglable, Stateful` |
+| To: | `public final class Scalable : Gesturable<UIPinchGestureRecognizer>, Interaction, Togglable, Manipulation` |
+
+#### Tossable
+
+*removed* method: `init(system:draggable:)` in `Tossable`
+
+#### Tween
+
+*new* var: `offsets` in `Tween`
+
+*new* var: `repeatCount` in `Tween`
+
+*new* var: `repeatDuration` in `Tween`
+
+*new* var: `autoreverses` in `Tween`
+
+*removed* var: `keyPositions` in `Tween`
+
+### Reactive architecture
+
+#### MotionObservableConvertible
+
+*new* method: `ignoreUntil(_:)` in `MotionObservableConvertible`
+
+*new* method: `rubberBanded(outsideOf:maxLength:)` in `MotionObservableConvertible`
+
+*new* method: `toString(format:)` in `MotionObservableConvertible`
+
+#### MotionRuntime
+
+*new* method: `interactions(ofType:for:)` in `MotionRuntime`
+
+*new* method: `start(_:when:is:)` in `MotionRuntime`
+
+*new* var: `isBeingManipulated` in `MotionRuntime`
+
+*removed* method: `interactions(for:filter:)` in `MotionRuntime`
+
+*removed* method: `asGraphviz()` in `MotionRuntime`
+
+#### ReactiveButtonTarget
+
+*new* class: `ReactiveButtonTarget`
+
+*new* var: `didHighlight` in `ReactiveButtonTarget`
+
+#### ReactiveUIView
+
+*removed* class: `ReactiveUIView`
+
+#### ReactiveCAShapeLayer
+
+*removed* class: `ReactiveCAShapeLayer`
+
+#### ReactiveScrollViewDelegate
+
+*new* class: `ReactiveScrollViewDelegate`
+
+### Transitions
+
+#### SelfDismissingTransition
+
+*new* method: `willPresent(fore:dismisser:)` in `SelfDismissingTransition`
+
+*removed* static method: `willPresent(fore:dismisser:)` in `SelfDismissingTransition`
+
+#### Transition
+
+*removed* method: `init()` in `Transition`
+
+*modified* protocol: `Transition`
+
+| Type of change: | Declaration |
+|---|---|
+| From: | `public protocol Transition` |
+| To: | `public protocol Transition : class` |
+
+#### TransitionWithFallback
+
+*new* protocol: `TransitionWithFallback`
+
+*new* method: `fallbackTansition(withContext:)` in `TransitionWithFallback`
+
+#### TransitionWithPresentation
+
+*new* protocol: `TransitionWithPresentation`
+
+*new* method: `presentationController(forPresented:presenting:source:)` in `TransitionWithPresentation`
+
+*new* method: `defaultModalPresentationStyle()` in `TransitionWithPresentation`
+
+#### TransitionWithTermination
+
+*new* protocol: `TransitionWithTermination`
+
+*new* method: `didEndTransition(withContext:runtime:)` in `TransitionWithTermination`
+
+#### TransitionContext
+
+*modified* var: `gestureRecognizers` in `TransitionContext`
+
+| Type of change: | Declaration |
+|---|---|
+| From: | `public var gestureRecognizers: Set<UIGestureRecognizer> { get }` |
+| To: | `public let gestureRecognizers: Set<UIGestureRecognizer>` |
+
+#### TransitionController
+
+*new* method: `disableSimultaneousRecognition(of:)` in `TransitionController`
+
+*new* var: `presentationController` in `TransitionController`
+
+*new* method: `topEdgeDismisserDelegate(for:)` in `TransitionController`
+
+*new* var: `gestureRecognizers` in `TransitionController`
+
+*new* var: `transition` in `TransitionController`
+
+*new* var: `gestureDelegate` in `TransitionController`
+
+*new* method: `dismissWhenGestureRecognizerBegins(_:)` in `TransitionController`
+
+*removed* var: `transitionType` in `TransitionController`
+
+*removed* var: `dismisser` in `TransitionController`
+
+## Non-source changes
+
+* [Update modal dialog example to make use of a presentation controller.](https://github.com/material-motion/material-motion-swift/commit/40decaf295aa1e41417e7f4dec8a7391c29e27ab) (Jeff Verkoeyen)
+* [Update CocoaPods to 1.2.1.](https://github.com/material-motion/material-motion-swift/commit/483d52bf017a4c760c83a0d0a6150559d9c5f9e8) (Jeff Verkoeyen)
+* [Add Discord badge](https://github.com/material-motion/material-motion-swift/commit/7b5e51f534a206f054b40a9a61a1bdd03a8da957) (Brenton Simpson)
+* [Remove use of Reactive type in carousel example.](https://github.com/material-motion/material-motion-swift/commit/27edf6b1f12c2587fa096c22ed9d3d484fc0ca39) (Jeff Verkoeyen)
+* [Make both push back case studies use a light status bar in the modal view.](https://github.com/material-motion/material-motion-swift/commit/eaecd862aabb193de5a45024f52365fa1fbcb027) (Jeff Verkoeyen)
+
 # 1.3.0
 
 Highlights:

@@ -24,8 +24,8 @@ extension MotionObservableConvertible {
 
    This operator is meant to be used when building other operators.
    */
-  public func _map<U>(_ name: String? = nil, args: [Any]? = nil, transform: @escaping (T) -> U) -> MotionObservable<U> {
-    return _nextOperator(name, args: args, operation: { value, next in
+  public func _map<U>(transformVelocity: Bool = false, transform: @escaping (T) -> U) -> MotionObservable<U> {
+    return _nextOperator(operation: { value, next in
       next(transform(value))
 
     }, coreAnimation: { event, coreAnimation in
@@ -33,7 +33,7 @@ extension MotionObservableConvertible {
       switch event {
       case .add(let info):
         if let initialVelocity = info.initialVelocity {
-          transformedInitialVelocity = transform(initialVelocity as! T)
+          transformedInitialVelocity = transformVelocity ? transform(initialVelocity as! T) : initialVelocity
         } else {
           transformedInitialVelocity = nil
         }

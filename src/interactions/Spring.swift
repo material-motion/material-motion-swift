@@ -53,7 +53,7 @@ public class Spring<T>: Interaction, Togglable, Stateful where T: Zeroable, T: S
    - parameter system: The system that should be used to drive this spring.
    */
   public init(threshold: CGFloat = 1, system: @escaping SpringToStream<T> = coreAnimation) {
-    self.threshold = createProperty("Spring.threshold", withInitialValue: threshold)
+    self.threshold = createProperty(withInitialValue: threshold)
     self.system = system
   }
 
@@ -62,35 +62,35 @@ public class Spring<T>: Interaction, Togglable, Stateful where T: Zeroable, T: S
 
    Applied to the physical simulation only when it starts.
    */
-  public let initialVelocity = createProperty("Spring.initialVelocity", withInitialValue: T.zero() as! T)
+  public let initialVelocity = createProperty(withInitialValue: T.zero() as! T)
 
   /**
    The destination value of the spring represented as a property.
 
    Changing this property will immediately affect the spring simulation.
    */
-  public let destination = createProperty("Spring.destination", withInitialValue: T.zero() as! T)
+  public let destination = createProperty(withInitialValue: T.zero() as! T)
 
   /**
    Tension defines how quickly the spring's value moves towards its destination.
 
    Higher tension means higher initial velocity and more overshoot.
    */
-  public let tension = createProperty("Spring.tension", withInitialValue: defaultSpringTension)
+  public let tension = createProperty(withInitialValue: defaultSpringTension)
 
   /**
    Tension defines how quickly the spring's velocity slows down.
 
    Higher friction means quicker deceleration and less overshoot.
    */
-  public let friction = createProperty("Spring.friction", withInitialValue: defaultSpringFriction)
+  public let friction = createProperty(withInitialValue: defaultSpringFriction)
 
   /**
    The mass affects the value's acceleration.
 
    Higher mass means slower acceleration and deceleration.
    */
-  public let mass = createProperty("Spring.mass", withInitialValue: defaultSpringMass)
+  public let mass = createProperty(withInitialValue: defaultSpringMass)
 
   /**
    The suggested duration of the spring represented as a property.
@@ -99,7 +99,7 @@ public class Spring<T>: Interaction, Togglable, Stateful where T: Zeroable, T: S
 
    A value of 0 means this property will be ignored.
    */
-  public let suggestedDuration = createProperty("Spring.suggestedDuration", withInitialValue: 0)
+  public let suggestedDuration = createProperty(withInitialValue: 0)
 
   /**
    The value used when determining completion of the spring simulation.
@@ -111,7 +111,7 @@ public class Spring<T>: Interaction, Togglable, Stateful where T: Zeroable, T: S
 
    Enabling a previously disabled spring will restart the animation from the current initial value.
    */
-  public let enabled = createProperty("Spring.enabled", withInitialValue: true)
+  public let enabled = createProperty(withInitialValue: true)
 
   /**
    The current state of the spring animation.
@@ -131,8 +131,6 @@ public class Spring<T>: Interaction, Togglable, Stateful where T: Zeroable, T: S
     }
     runtime.connect(stream, to: property)
   }
-
-  public let metadata = Metadata("Spring")
 
   fileprivate let system: SpringToStream<T>
   private let aggregateState = AggregateMotionState()

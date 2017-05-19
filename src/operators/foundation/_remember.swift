@@ -35,7 +35,7 @@ extension MotionObservableConvertible {
     var lastCoreAnimationEvent: CoreAnimationChannelEvent?
     var lastVisualizationView: UIView?
 
-    return MotionObservable<T>(self.metadata.createChild(Metadata(#function, type: .constraint))) { observer in
+    return MotionObservable<T> { observer in
       if observers.count == 0 {
         subscription = self.subscribe(next: { value in
           lastValue = value

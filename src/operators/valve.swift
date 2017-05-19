@@ -25,7 +25,7 @@ extension MotionObservableConvertible {
    when the valveStream emits false.
    */
   public func valve<O: MotionObservableConvertible>(openWhenTrue valveStream: O) -> MotionObservable<T> where O.T == Bool {
-    return MotionObservable<T>(Metadata(#function, args: [valveStream])) { observer in
+    return MotionObservable<T> { observer in
       var upstreamSubscription: Subscription?
 
       let valveSubscription = valveStream.subscribeToValue { shouldOpen in

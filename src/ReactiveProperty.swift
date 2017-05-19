@@ -21,22 +21,22 @@ import IndefiniteObservable
 /**
  Creates a property with an initial value of zero.
  */
-public func createProperty<T>(_ name: String? = nil) -> ReactiveProperty<T> where T: Zeroable {
-  return ReactiveProperty(name, initialValue: T.zero() as! T)
+public func createProperty<T>() -> ReactiveProperty<T> where T: Zeroable {
+  return ReactiveProperty(initialValue: T.zero() as! T)
 }
 
 /**
  Creates a CGFloat property with an initial value of zero.
  */
-public func createProperty(_ name: String? = nil) -> ReactiveProperty<CGFloat> {
-  return ReactiveProperty(name, initialValue: 0)
+public func createProperty() -> ReactiveProperty<CGFloat> {
+  return ReactiveProperty(initialValue: 0)
 }
 
 /**
  Creates a property with a given initial value.
  */
-public func createProperty<T>(_ name: String? = nil, withInitialValue initialValue: T) -> ReactiveProperty<T> {
-  return ReactiveProperty(name, initialValue: initialValue)
+public func createProperty<T>(withInitialValue initialValue: T) -> ReactiveProperty<T> {
+  return ReactiveProperty(initialValue: initialValue)
 }
 
 /**
@@ -44,8 +44,8 @@ public func createProperty<T>(_ name: String? = nil, withInitialValue initialVal
 
  If you need a ReactiveProperty<Int> instance, use ReactiveProperty's initializer instead.
  */
-public func createProperty(_ name: String? = nil, withInitialValue initialValue: Int) -> ReactiveProperty<CGFloat> {
-  return ReactiveProperty(name, initialValue: CGFloat(initialValue))
+public func createProperty(withInitialValue initialValue: Int) -> ReactiveProperty<CGFloat> {
+  return ReactiveProperty(initialValue: CGFloat(initialValue))
 }
 
 /**
@@ -71,8 +71,7 @@ public final class ReactiveProperty<T> {
   /**
    Creates a new anonymous property.
    */
-  public init(_ name: String? = nil, initialValue: T) {
-    self.metadata = Metadata(name, type: .property)
+  public init(initialValue: T) {
     self.value = initialValue
     self._externalWrite = nil
     self._coreAnimation = nil
@@ -81,8 +80,7 @@ public final class ReactiveProperty<T> {
   /**
    Creates a property that writes to some external information.
    */
-  init(_ name: String? = nil, initialValue: T, externalWrite: @escaping NextChannel<T>) {
-    self.metadata = Metadata(name, type: .property)
+  init(initialValue: T, externalWrite: @escaping NextChannel<T>) {
     self.value = initialValue
     self._externalWrite = externalWrite
     self._coreAnimation = nil
@@ -91,11 +89,7 @@ public final class ReactiveProperty<T> {
   /**
    Creates a property that writes to some external information and supports Core Animation.
    */
-  init(_ name: String? = nil,
-       initialValue: T,
-       externalWrite: @escaping NextChannel<T>,
-       coreAnimation: @escaping CoreAnimationChannel) {
-    self.metadata = Metadata(name, type: .property)
+  init(initialValue: T, externalWrite: @escaping NextChannel<T>, coreAnimation: @escaping CoreAnimationChannel) {
     self.value = initialValue
     self._externalWrite = externalWrite
     self._coreAnimation = coreAnimation
@@ -128,11 +122,6 @@ public final class ReactiveProperty<T> {
       observer.coreAnimation?(transformedEvent)
     }
   }
-
-  /**
-   The metadata describing this property.
-   */
-  public let metadata: Metadata
 
   private let _externalWrite: NextChannel<T>?
   private let _coreAnimation: CoreAnimationChannel?
@@ -167,7 +156,7 @@ extension ReactiveProperty where T: Equatable {
 // Reactive properties can be used as streams.
 extension ReactiveProperty: MotionObservableConvertible {
   public func asStream() -> MotionObservable<T> {
-    return MotionObservable<T>(metadata) { observer in
+    return MotionObservable<T> { observer in
       self.observers.append(observer)
 
       observer.next(self.value)

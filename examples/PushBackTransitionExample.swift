@@ -41,7 +41,7 @@ private class ModalViewController: UIViewController {
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
     super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
-    transitionController.transitionType = PushBackTransition.self
+    transitionController.transition = PushBackTransition()
   }
 
   required init?(coder aDecoder: NSCoder) {
@@ -59,11 +59,13 @@ private class ModalViewController: UIViewController {
   func didTap() {
     dismiss(animated: true)
   }
+
+  override var preferredStatusBarStyle: UIStatusBarStyle {
+    return .lightContent
+  }
 }
 
 private class PushBackTransition: Transition {
-
-  required init() {}
 
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
     let bounds = ctx.containerView().bounds

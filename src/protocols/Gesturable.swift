@@ -34,11 +34,13 @@ public enum GesturableConfiguration <T: UIGestureRecognizer> {
   case registerNewRecognizerTo(UIView)
 
   /**
-   The interaction will make use of the provided gesture recognizer.
+   The interaction will make use of the provided gesture recognizer, if provided.
+
+   If no gesture recognizer is provided then this interaction will do nothing.
 
    The interaction will not associate this gesture recognizer with any view.
    */
-  case withExistingRecognizer(T)
+  case withExistingRecognizer(T?)
 }
 
 /**
@@ -68,11 +70,7 @@ public class Gesturable<T: UIGestureRecognizer> {
         break
       }
     }
-    if let first = first {
-      self.init(.withExistingRecognizer(first))
-    } else {
-      self.init()
-    }
+    self.init(.withExistingRecognizer(first))
   }
 
   public init(_ config: GesturableConfiguration<T>) {
@@ -81,7 +79,11 @@ public class Gesturable<T: UIGestureRecognizer> {
     let initialState: MotionState
     switch self.config {
     case .withExistingRecognizer(let recognizer):
-      initialState = (recognizer.state == .began || recognizer.state == .changed) ? .active : .atRest
+      if let recognizer = recognizer {
+        initialState = (recognizer.state == .began || recognizer.state == .changed) ? .active : .atRest
+      } else {
+        initialState = .atRest
+      }
     default: ()
       initialState = .atRest
     }
@@ -95,20 +97,21 @@ public class Gesturable<T: UIGestureRecognizer> {
    This property may change after the interaction has been added to a view depending on the
    interaction's configuration.
    */
-  public var nextGestureRecognizer: T {
+  public var nextGestureRecognizer: T? {
     if let nextGestureRecognizer = _nextGestureRecognizer {
       return nextGestureRecognizer
     }
 
-    let gestureRecognizer: T
+    let gestureRecognizer: T?
 
     switch config {
     case .registerNewRecognizerToTargetView:
       gestureRecognizer = T()
 
     case .registerNewRecognizerTo(let view):
-      gestureRecognizer = T()
-      view.addGestureRecognizer(gestureRecognizer)
+      let recognizer = T()
+      view.addGestureRecognizer(recognizer)
+      gestureRecognizer = recognizer
 
     case .withExistingRecognizer(let existingGestureRecognizer):
       gestureRecognizer = existingGestureRecognizer
@@ -121,18 +124,18 @@ public class Gesturable<T: UIGestureRecognizer> {
   /**
    Prepares and returns the gesture recognizer that should be used to drive this interaction.
    */
-  func dequeueGestureRecognizer(withReactiveView reactiveView: ReactiveUIView) -> T {
+  func dequeueGestureRecognizer(withReactiveView reactiveView: Reactive<UIView>) -> T? {
     let gestureRecognizer = self.nextGestureRecognizer
     _nextGestureRecognizer = nil
 
     switch config {
     case .registerNewRecognizerToTargetView:
-      reactiveView.view.addGestureRecognizer(gestureRecognizer)
+      reactiveView._object.addGestureRecognizer(gestureRecognizer!)
     default: ()
     }
 
-    gestureRecognizer.view?.isUserInteractionEnabled = true
-    gestureRecognizer.isEnabled = enabled.value
+    gestureRecognizer?.view?.isUserInteractionEnabled = true
+    gestureRecognizer?.isEnabled = enabled.value
 
     return gestureRecognizer
   }

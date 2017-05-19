@@ -121,7 +121,7 @@ class _mapTests: XCTestCase {
     }
 
     let eventReceived = expectation(description: "Event was received")
-    let _ = observable._map { value in
+    let _ = observable._map(transformVelocity: true) { value in
       return value * scalar
 
       }.subscribe(next: { _ in }, coreAnimation: { event in

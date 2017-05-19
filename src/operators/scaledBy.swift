@@ -23,7 +23,7 @@ extension MotionObservableConvertible where T == CGFloat {
    Emits the incoming value * amount.
    */
   public func scaled(by amount: CGFloat) -> MotionObservable<CGFloat> {
-    return _map(#function, args: [amount]) {
+    return _map {
       $0 * amount
     }
   }
@@ -34,7 +34,7 @@ extension MotionObservableConvertible where T == CGFloat {
   public func scaled(by amount: MotionObservable<T>) -> MotionObservable<T> {
     var lastValue: CGFloat?
     var amountValue: CGFloat?
-    return MotionObservable<T>(Metadata(#function, args: [amount])) { observer in
+    return MotionObservable<T> { observer in
       let checkAndEmit = {
         guard let amount = amountValue, let value = lastValue else { return }
         observer.next(value * amount)

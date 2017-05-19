@@ -33,9 +33,36 @@ public class Tween<T>: Interaction, Togglable, Stateful {
   public let duration: ReactiveProperty<CGFloat>
 
   /**
+   The number of times the animation will repeat.
+
+   If the repeatCount is 0, it is ignored. If both repeatDuration and repeatCount are specified the behavior is undefined.
+
+   Setting this property to greatestFiniteMagnitude will cause the animation to repeat forever.
+
+   See https://developer.apple.com/reference/quartzcore/camediatiming/1427666-repeatcount for more information.
+   */
+  public let repeatCount: ReactiveProperty<CGFloat> = createProperty(withInitialValue: 0)
+
+  /**
+   The number of seconds the animation will repeat for.
+
+   If the repeatDuration is 0, it is ignored. If both repeatDuration and repeatCount are specified the behavior is undefined.
+
+   See https://developer.apple.com/reference/quartzcore/camediatiming/1427643-repeatduration for more information.
+   */
+  public let repeatDuration: ReactiveProperty<CGFloat> = createProperty(withInitialValue: 0)
+
+  /**
+   Will the animation play in the reverse upon completion.
+
+   See https://developer.apple.com/reference/quartzcore/camediatiming/1427645-autoreverses for more information.
+   */
+  public let autoreverses: ReactiveProperty<Bool> = createProperty(withInitialValue: false)
+
+  /**
    The delay of the animation in seconds.
    */
-  public let delay = createProperty("Tween.delay", withInitialValue: 0)
+  public let delay = createProperty(withInitialValue: 0)
 
   /**
    An array of objects providing the value of the animation for each keyframe.
@@ -55,7 +82,7 @@ public class Tween<T>: Interaction, Togglable, Stateful {
 
    See CAKeyframeAnimation documentation for more details.
    */
-  public let keyPositions = createProperty("Tween.keyPositions", withInitialValue: [] as [CGFloat])
+  public let offsets = createProperty(withInitialValue: [] as [CGFloat])
 
   /**
    An array of CAMediaTimingFunction objects. If the `values' array defines n keyframes,
@@ -67,7 +94,7 @@ public class Tween<T>: Interaction, Togglable, Stateful {
 
    See CAKeyframeAnimation documentation for more details.
    */
-  public let timingFunctions = createProperty("Tween.timingFunctions", withInitialValue:
+  public let timingFunctions = createProperty(withInitialValue:
     [CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)]
   )
 
@@ -83,7 +110,7 @@ public class Tween<T>: Interaction, Togglable, Stateful {
 
    Enabling a previously disabled tween will restart the animation from the beginning.
    */
-  public let enabled = createProperty("Tween.enabled", withInitialValue: true)
+  public let enabled = createProperty(withInitialValue: true)
 
   /**
    The current state of the tween animation.
@@ -96,8 +123,8 @@ public class Tween<T>: Interaction, Togglable, Stateful {
    Initializes a tween instance with its required properties.
    */
   public init(duration: CGFloat, values: [T], system: @escaping TweenToStream<T> = coreAnimation, timeline: Timeline? = nil) {
-    self.duration = createProperty("Tween.duration", withInitialValue: duration)
-    self.values = createProperty("Tween.values", withInitialValue: values)
+    self.duration = createProperty(withInitialValue: duration)
+    self.values = createProperty(withInitialValue: values)
     self.system = system
     self.timeline = timeline
   }
@@ -129,7 +156,7 @@ public class Tween<T>: Interaction, Togglable, Stateful {
 
   fileprivate let system: TweenToStream<T>
   fileprivate var stream: MotionObservable<T>?
-  fileprivate let _state = createProperty("Tween._state", withInitialValue: MotionState.atRest)
+  fileprivate let _state = createProperty(withInitialValue: MotionState.atRest)
 }
 
 public struct TweenShadow<T> {
@@ -137,8 +164,11 @@ public struct TweenShadow<T> {
   public let state: ReactiveProperty<MotionState>
   public let duration: ReactiveProperty<CGFloat>
   public let delay: ReactiveProperty<CGFloat>
+  public let repeatCount: ReactiveProperty<CGFloat>
+  public let repeatDuration: ReactiveProperty<CGFloat>
+  public let autoreverses: ReactiveProperty<Bool>
   public let values: ReactiveProperty<[T]>
-  public let keyPositions: ReactiveProperty<[CGFloat]>
+  public let offsets: ReactiveProperty<[CGFloat]>
   public let timingFunctions: ReactiveProperty<[CAMediaTimingFunction]>
   public let timeline: Timeline?
 
@@ -146,9 +176,12 @@ public struct TweenShadow<T> {
     self.enabled = tween.enabled
     self.state = tween._state
     self.duration = tween.duration
+    self.repeatCount = tween.repeatCount
+    self.repeatDuration = tween.repeatDuration
+    self.autoreverses = tween.autoreverses
     self.delay = tween.delay
     self.values = tween.values
-    self.keyPositions = tween.keyPositions
+    self.offsets = tween.offsets
     self.timingFunctions = tween.timingFunctions
     self.timeline = tween.timeline
   }

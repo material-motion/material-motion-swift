@@ -28,7 +28,7 @@ extension MotionObservableConvertible where T: Subtractable, T: Lerpable {
       destinationEnd: U
     ) -> MotionObservable<U>
   where U: Lerpable, U: Subtractable, U: Addable {
-    return _map(#function, args: [start, end, destinationStart, destinationEnd]) {
+    return _map {
       let position = $0 - start
 
       let vector = end - start

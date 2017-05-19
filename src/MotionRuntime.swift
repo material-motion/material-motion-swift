@@ -34,6 +34,7 @@ public final class MotionRuntime {
 
   deinit {
     _visualizationView?.removeFromSuperview()
+    subscriptions.forEach { $0.unsubscribe() }
   }
 
   /**
@@ -68,6 +69,10 @@ public final class MotionRuntime {
     interactions.append(interaction)
     interaction.add(to: target, withRuntime: self, constraints: constraints)
 
+    if let manipulation = interaction as? Manipulation {
+      aggregateManipulationState.observe(state: manipulation.state, withRuntime: self)
+    }
+
     let identifier = ObjectIdentifier(target)
     var targetInteractions = targets[identifier] ?? []
     targetInteractions.append(interaction)
@@ -79,13 +84,13 @@ public final class MotionRuntime {
 
    Example usage:
 
-       let draggables = runtime.interactions(for: view) { $0 as? Draggable }
+       let draggables = runtime.interactions(ofType: Draggable.self, for: view)
    */
-  public func interactions<I>(for target: I.Target, filter: (Any) -> I?) -> [I] where I: Interaction, I.Target: AnyObject {
+  public func interactions<I>(ofType: I.Type, for target: I.Target) -> [I] where I: Interaction, I.Target: AnyObject {
     guard let interactions = targets[ObjectIdentifier(target)] else {
       return []
     }
-    return interactions.flatMap(filter)
+    return interactions.flatMap { $0 as? I }
   }
 
   /**
@@ -110,6 +115,13 @@ public final class MotionRuntime {
     interaction.enabled.value = false
     connect(state.rewrite([.active: false]), to: interaction.enabled)
     connect(state.rewrite([.active: true]), to: interaction.enabled)
+  }
+
+  /**
+   Initiates interaction B when interaction A changes to certain state
+  */
+  public func start(_ interactionA: Togglable, when interactionB: Stateful, is state: MotionState) {
+    connect(interactionB.state.dedupe().rewrite([state: true]), to: interactionA.enabled)
   }
 
   /**
@@ -150,24 +162,24 @@ public final class MotionRuntime {
   // MARK: Reactive object storage
 
   /**
-   Returns a reactive version of the given object and caches the returned result for future access.
+   Returns a reactive version of the given object.
    */
-  public func get(_ view: UIView) -> ReactiveUIView {
-    return get(view) { .init($0, runtime: self) }
+  public func get(_ view: UIView) -> Reactive<UIView> {
+    return Reactive(view)
   }
 
   /**
-   Returns a reactive version of the given object and caches the returned result for future access.
+   Returns a reactive version of the given object.
    */
-  public func get(_ layer: CALayer) -> ReactiveCALayer {
-    return get(layer) { .init($0) }
+  public func get(_ layer: CALayer) -> Reactive<CALayer> {
+    return Reactive(layer)
   }
 
   /**
-   Returns a reactive version of the given object and caches the returned result for future access.
+   Returns a reactive version of the given object.
    */
-  public func get(_ layer: CAShapeLayer) -> ReactiveCAShapeLayer {
-    return get(layer) { .init($0) }
+  public func get(_ layer: CAShapeLayer) -> Reactive<CAShapeLayer> {
+    return Reactive(layer)
   }
 
   /**
@@ -175,6 +187,13 @@ public final class MotionRuntime {
    */
   public func get(_ scrollView: UIScrollView) -> MotionObservable<CGPoint> {
     return get(scrollView) { scrollViewToStream($0) }
+  }
+
+  /**
+   Returns a reactive version of the given object and caches the returned result for future access.
+   */
+  public func get(_ slider: UISlider) -> MotionObservable<CGFloat> {
+    return get(slider) { sliderToStream($0) }
   }
 
   /**
@@ -219,24 +238,15 @@ public final class MotionRuntime {
   }
 
   /**
-   Generates a graphviz-compatiable representation of all interactions associated with the runtime.
-
-   For quick previewing, use an online graphviz visualization tool like http://www.webgraphviz.com/
+   A Boolean stream indicating whether the runtime is currently being directly manipulated by the
+   user.
    */
-  public func asGraphviz() -> String {
-    var lines: [String] = [
-      "digraph G {",
-      "node [shape=rect]"
-    ]
-    for metadata in metadata {
-      lines.append(metadata.debugDescription)
-    }
-    lines.append("}")
-    return lines.joined(separator: "\n")
+  public var isBeingManipulated: MotionObservable<Bool> {
+    return aggregateManipulationState.asStream().rewrite([.active: true, .atRest: false])
   }
+  private let aggregateManipulationState = AggregateMotionState()
 
   private func write<O: MotionObservableConvertible, T>(_ stream: O, to property: ReactiveProperty<T>) where O.T == T {
-    metadata.append(stream.metadata.createChild(property.metadata))
     subscriptions.append(stream.subscribe(next: { property.value = $0 },
                                           coreAnimation: property.coreAnimation,
                                           visualization: { [weak self] view in
@@ -263,7 +273,6 @@ public final class MotionRuntime {
   private var reactiveObjects: [ObjectIdentifier: AnyObject] = [:]
   private var targets: [ObjectIdentifier: [Any]] = [:]
 
-  private var metadata: [Metadata] = []
   private var subscriptions: [Subscription] = []
   private var interactions: [Any] = []
 }

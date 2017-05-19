@@ -91,7 +91,7 @@ class ReactivePropertyTests: XCTestCase {
 
   func testCoreAnimation() {
     let didReceiveEvent = expectation(description: "Did receive event")
-    let property = ReactiveProperty("test", initialValue: 10, externalWrite: { _ in }, coreAnimation: { event in
+    let property = ReactiveProperty(initialValue: 10, externalWrite: { _ in }, coreAnimation: { event in
       didReceiveEvent.fulfill()
     })
 
@@ -112,5 +112,75 @@ class ReactivePropertyTests: XCTestCase {
     property.visualize(UIView(), in: UIView())
 
     waitForExpectations(timeout: 0)
+  }
+
+  // MARK: Reactive objects
+
+  func testReactivePropertyInstancesAreIdenticalAcrossInstances() {
+    let view = UIView()
+    XCTAssertTrue(Reactive(view).isUserInteractionEnabled === Reactive(view).isUserInteractionEnabled)
+  }
+
+  func testPropertiesNotReleasedWhenDereferenced() {
+    let view = UIView()
+
+    var objectIdentifier: ObjectIdentifier!
+    autoreleasepool {
+      let prop1 = Reactive(view).isUserInteractionEnabled
+      objectIdentifier = ObjectIdentifier(prop1)
+    }
+
+    let prop2 = Reactive(view).isUserInteractionEnabled
+    XCTAssertTrue(objectIdentifier == ObjectIdentifier(prop2))
+  }
+
+  func testObjectRetainedByReactiveType() {
+    var reactive: Reactive<UIView>?
+    weak var weakView: UIView?
+
+    autoreleasepool {
+      let view = UIView()
+      weakView = view
+      reactive = Reactive(view)
+    }
+
+    XCTAssertNotNil(weakView)
+    XCTAssertNotNil(reactive)
+  }
+
+  func testObjectReleasedWhenReactiveTypeReleased() {
+    var reactive: Reactive<UIView>?
+    weak var weakView: UIView?
+
+    let allocate = {
+      let view = UIView()
+      weakView = view
+      reactive = Reactive(view)
+    }
+    allocate()
+
+    reactive = nil
+
+    XCTAssertNil(weakView)
+
+    // Resolve compiler warning about not reading reactive after writing to it.
+    XCTAssertNil(reactive)
+  }
+
+  func testReactiveObjectNotGloballyRetained() {
+    let view = UIView()
+    weak var weakReactive: Reactive<UIView>? = Reactive(view)
+
+    XCTAssertNil(weakReactive)
+  }
+
+  func testObjectNotGloballyRetained() {
+    var view: UIView? = UIView()
+    weak var weakView: UIView? = view
+    let _ = Reactive(view!)
+
+    view = nil
+
+    XCTAssertNil(weakView)
   }
 }

@@ -40,8 +40,6 @@ class HowToMakeACustomOperatorExampleViewController: ExampleViewController {
 extension MotionObservableConvertible where T == CGPoint {
 
   fileprivate func wobble(width: CGFloat) -> MotionObservable<CGPoint> {
-    return _map(#function) {
-      .init(x: $0.x + sin($0.y / 50) * width, y: $0.y)
-    }
+    return _map { .init(x: $0.x + sin($0.y / 50) * width, y: $0.y) }
   }
 }

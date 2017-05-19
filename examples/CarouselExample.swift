@@ -19,7 +19,7 @@ import MaterialMotion
 
 class CarouselExampleViewController: ExampleViewController, UIScrollViewDelegate {
 
-  var runtime: MotionRuntime!
+  let delegate = ReactiveScrollViewDelegate()
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -29,10 +29,10 @@ class CarouselExampleViewController: ExampleViewController, UIScrollViewDelegate
     scrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     scrollView.isPagingEnabled = true
     scrollView.contentSize = .init(width: view.bounds.size.width * 3, height: view.bounds.size.height)
-    scrollView.delegate = self
+    scrollView.delegate = delegate
     view.addSubview(scrollView)
 
-    pager = UIPageControl()
+    let pager = UIPageControl()
     let size = pager.sizeThatFits(view.bounds.size)
     pager.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
     pager.frame = .init(x: 0, y: view.bounds.height - size.height - 20, width: view.bounds.width, height: size.height)
@@ -45,9 +45,6 @@ class CarouselExampleViewController: ExampleViewController, UIScrollViewDelegate
       (title: "Page 3", description: "Page 3 description", color: .secondaryColor),
     ]
 
-    runtime = MotionRuntime(containerView: view)
-
-    let stream = runtime.get(scrollView)
     for (index, data) in datas.enumerated() {
       let page = CarouselPage(frame: view.bounds)
       page.frame.origin.x = CGFloat(index) * view.bounds.width
@@ -56,21 +53,19 @@ class CarouselExampleViewController: ExampleViewController, UIScrollViewDelegate
       page.iconView.backgroundColor = data.color
       scrollView.addSubview(page)
 
-      let pageEdge = stream.x().offset(by: -page.frame.origin.x)
+      let pageEdge = delegate.x().offset(by: -page.frame.origin.x)
 
-      runtime.connect(pageEdge.rewriteRange(start: 0, end: 128,
-                                            destinationStart: 1, destinationEnd: 0),
-                      to: runtime.get(page).alpha)
-      runtime.connect(pageEdge.rewriteRange(start: -view.bounds.width, end: 0,
-                                            destinationStart: 0.5, destinationEnd: 1.0),
-                      to: runtime.get(page.layer).scale)
+      pageEdge.rewriteRange(start: 0, end: 128, destinationStart: 1, destinationEnd: 0).subscribeToValue {
+        page.alpha = $0
+      }
+      pageEdge.rewriteRange(start: -view.bounds.width, end: 0, destinationStart: 0.5, destinationEnd: 1.0).subscribeToValue {
+        page.layer.transform = CATransform3DMakeScale($0, $0, 1)
+      }
     }
-  }
 
-  var pager: UIPageControl!
-
-  func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    pager.currentPage = Int((scrollView.contentOffset.x + scrollView.bounds.width / 2) / scrollView.bounds.width)
+    delegate.x().offset(by: scrollView.bounds.width / 2).scaled(by: 1 / scrollView.bounds.width).subscribeToValue {
+      pager.currentPage = Int($0)
+    }
   }
 
   override func exampleInformation() -> ExampleInfo {

@@ -42,6 +42,11 @@ public protocol Interaction {
 }
 
 /**
+ A manipulation is an object whose state represents direct manipulation from the user.
+ */
+public protocol Manipulation: Stateful {}
+
+/**
  A typical constraint shape for an interaction.
  */
 public typealias ConstraintApplicator<T> = (MotionObservable<T>) -> MotionObservable<T>

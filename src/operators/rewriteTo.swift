@@ -22,13 +22,13 @@ extension MotionObservableConvertible {
    Emit a constant value each time this operator receives a value.
    */
   public func rewriteTo<U>(_ value: U) -> MotionObservable<U> {
-    return _map(#function, args: [value]) { _ in value }
+    return _map { _ in value }
   }
 
   /**
    Emit a constant value each time this operator receives a value.
    */
   public func rewriteTo<O: MotionObservableConvertible>(_ value: O) -> MotionObservable<O.T> {
-    return _map(#function, args: [value]) { _ in value._read()! }
+    return _map { _ in value._read()! }
   }
 }

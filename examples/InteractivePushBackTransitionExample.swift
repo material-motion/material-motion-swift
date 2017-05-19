@@ -41,7 +41,7 @@ private class ModalViewController: UIViewController, UIGestureRecognizerDelegate
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
     super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
-    transitionController.transitionType = PushBackTransition.self
+    transitionController.transition = PushBackTransition()
   }
 
   required init?(coder aDecoder: NSCoder) {
@@ -59,16 +59,18 @@ private class ModalViewController: UIViewController, UIGestureRecognizerDelegate
     view.addSubview(scrollView)
 
     let pan = UIPanGestureRecognizer()
-    pan.delegate = transitionController.dismisser.topEdgeDismisserDelegate(for: scrollView)
-    transitionController.dismisser.dismissWhenGestureRecognizerBegins(pan)
+    pan.delegate = transitionController.topEdgeDismisserDelegate(for: scrollView)
+    transitionController.dismissWhenGestureRecognizerBegins(pan)
     scrollView.panGestureRecognizer.require(toFail: pan)
     view.addGestureRecognizer(pan)
+  }
+
+  override var preferredStatusBarStyle: UIStatusBarStyle {
+    return .lightContent
   }
 }
 
 private class PushBackTransition: Transition {
-
-  required init() {}
 
   func willBeginTransition(withContext ctx: TransitionContext, runtime: MotionRuntime) -> [Stateful] {
     let draggable = Draggable(withFirstGestureIn: ctx.gestureRecognizers)

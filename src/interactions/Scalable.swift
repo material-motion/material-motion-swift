@@ -30,13 +30,15 @@ import UIKit
 
  CGFloat constraints may be applied to this interaction.
  */
-public final class Scalable: Gesturable<UIPinchGestureRecognizer>, Interaction, Togglable, Stateful {
+public final class Scalable: Gesturable<UIPinchGestureRecognizer>, Interaction, Togglable, Manipulation {
   public func add(to view: UIView,
                   withRuntime runtime: MotionRuntime,
                   constraints applyConstraints: ConstraintApplicator<CGFloat>? = nil) {
     let reactiveView = runtime.get(view)
-    let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView)
-    let scale = reactiveView.reactiveLayer.scale
+    guard let gestureRecognizer = dequeueGestureRecognizer(withReactiveView: reactiveView) else {
+      return
+    }
+    let scale = reactiveView.layer.scale
 
     runtime.connect(enabled, to: ReactiveProperty(initialValue: gestureRecognizer.isEnabled) { enabled in
       gestureRecognizer.isEnabled = enabled
