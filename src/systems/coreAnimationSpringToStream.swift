@@ -41,8 +41,8 @@ public func coreAnimation<T>(_ spring: SpringShadow<T>) -> (MotionObservable<T>)
 
       let animation = CASpringAnimation()
 
-      animation.damping = spring.friction.value
-      animation.stiffness = spring.tension.value
+      animation.damping = spring.damping.value
+      animation.stiffness = spring.stiffness.value
       animation.mass = spring.mass.value
 
       animation.fromValue = spring.initialValue.value

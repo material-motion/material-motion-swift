@@ -31,7 +31,7 @@ class TossableExampleViewController: ExampleViewController {
 
     let tossable = Tossable()
     tossable.spring.destination.value = .init(x: view.bounds.midX, y: view.bounds.midY)
-    tossable.spring.friction.value /= 2
+    tossable.spring.damping.value /= 2
     runtime.add(tossable, to: square)
 
     runtime.whenAllAtRest([tossable]) {

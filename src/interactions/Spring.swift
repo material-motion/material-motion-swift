@@ -19,14 +19,14 @@ import CoreGraphics
 import IndefiniteObservable
 
 /**
- The default tension configuration.
+ The default stiffness configuration.
  */
-public let defaultSpringTension: CGFloat = 342
+public let defaultSpringStiffness: CGFloat = 342
 
 /**
- The default friction configuration.
+ The default damping configuration.
  */
-public let defaultSpringFriction: CGFloat = 30
+public let defaultSpringDamping: CGFloat = 30
 
 /**
  The default mass configuration.
@@ -72,18 +72,18 @@ public class Spring<T>: Interaction, Togglable, Stateful where T: Zeroable, T: S
   public let destination = createProperty(withInitialValue: T.zero() as! T)
 
   /**
-   Tension defines how quickly the spring's value moves towards its destination.
+   Stiffness defines how quickly the spring's value moves towards its destination.
 
-   Higher tension means higher initial velocity and more overshoot.
+   Higher stiffness means higher initial velocity and more overshoot.
    */
-  public let tension = createProperty(withInitialValue: defaultSpringTension)
+  public let stiffness = createProperty(withInitialValue: defaultSpringStiffness)
 
   /**
-   Tension defines how quickly the spring's velocity slows down.
+   Stiffness defines how quickly the spring's velocity slows down.
 
-   Higher friction means quicker deceleration and less overshoot.
+   Higher damping means quicker deceleration and less overshoot.
    */
-  public let friction = createProperty(withInitialValue: defaultSpringFriction)
+  public let damping = createProperty(withInitialValue: defaultSpringDamping)
 
   /**
    The mass affects the value's acceleration.
@@ -144,8 +144,8 @@ public struct SpringShadow<T>: Hashable where T: Zeroable, T: Subtractable {
   public let initialValue: ReactiveProperty<T>
   public let initialVelocity: ReactiveProperty<T>
   public let destination: ReactiveProperty<T>
-  public let tension: ReactiveProperty<CGFloat>
-  public let friction: ReactiveProperty<CGFloat>
+  public let stiffness: ReactiveProperty<CGFloat>
+  public let damping: ReactiveProperty<CGFloat>
   public let mass: ReactiveProperty<CGFloat>
   public let suggestedDuration: ReactiveProperty<CGFloat>
   public let threshold: ReactiveProperty<CGFloat>
@@ -155,8 +155,8 @@ public struct SpringShadow<T>: Hashable where T: Zeroable, T: Subtractable {
     self.initialValue = initialValue
     self.initialVelocity = spring.initialVelocity
     self.destination = spring.destination
-    self.tension = spring.tension
-    self.friction = spring.friction
+    self.stiffness = spring.stiffness
+    self.damping = spring.damping
     self.mass = spring.mass
     self.suggestedDuration = spring.suggestedDuration
     self.threshold = spring.threshold
