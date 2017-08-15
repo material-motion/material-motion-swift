@@ -79,7 +79,7 @@ public class Spring<T>: Interaction, Togglable, Stateful where T: Zeroable, T: S
   public let stiffness = createProperty(withInitialValue: defaultSpringStiffness)
 
   /**
-   Stiffness defines how quickly the spring's velocity slows down.
+   Damping defines how quickly the spring's velocity slows down.
 
    Higher damping means quicker deceleration and less overshoot.
    */
